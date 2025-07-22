@@ -1,0 +1,673 @@
+replicas: 2
+image: "hub.nexdev.net/base/logstash/logstash"
+
+logstashConfig:
+  logstash.yml: |
+    http.host: "0.0.0.0"
+
+logstashPipeline:
+  logstash.conf: |
+    input {
+      http {
+        port => 8080
+        type => "dev-logs"
+        tags => ["http"]
+        add_field => { "[@metadata][input-http]" => "" }
+      }
+
+      tcp {
+        port => 5044
+        type => "dev-logs"
+        tags => ["tcp"]
+      }
+
+      syslog {
+        port => 5045
+        type => "syslog"
+        tags => ["local"]
+      }
+
+      tcp {
+        port => 5064
+        type => "vault"
+        tags => ["local", "starix"]
+      }
+
+      tcp {
+        port => 5065
+        type => "vault"
+        tags => ["dev", "starix"]
+      }
+
+      syslog {
+        port => 5077
+        type => "debug"
+        tags => ["local"]
+      }
+
+      syslog {
+        port => 5078
+        type => "debug-gitlab"
+        tags => ["local"]
+      }
+    }
+
+  vault_filter.conf: |
+    filter {
+      if [type] == "vault" {
+        json {
+          source => "message"
+        }
+        mutate {
+          rename => {
+            "[type]" => "[event_type]"
+            "[response][data][error]" => "[response_error]"
+          }
+          remove_field => ["[event][original]","[response][data]"]
+          add_field => {"[type]" => "vault"}
+        }
+
+        if [auth][display_name] == "approle" and [request][mount_type] == "kv" and [request][operation] == "read" { drop {} }
+        else if [auth][display_name] == "approle" and [request][operation] == "read" and [request][path] == "auth/token/lookup-self" { drop {} }
+      }
+    }
+
+  syslog_filter.conf: |
+    filter {
+      if [type] == "syslog" {
+        if [program] == "haproxy" {
+          if [facility_label] == "local1" {
+            mutate {
+              add_tag => ["haproxy_access", "hap-ing", "nexprod"]
+            }
+          } 
+          else if [facility_label] == "local2" {
+            mutate {
+              add_tag => ["haproxy_access", "hap-gw", "core"]
+            }
+          }
+          else if [facility_label] == "local5" {
+            mutate {
+              add_tag => ["haproxy_access", "hap-ing", "starix"]
+            }
+          }
+          else {
+            mutate {
+              add_tag => ["haproxy_access"]
+            }
+          }
+        }
+      }
+      if "haproxy_access" in [tags] {
+        if "hap-gw" in [tags] {
+          grok {
+            match => {
+              "message" => [
+                "%{HAPROXYHTTPBASE}",
+                "%{HAPROXYHTTP}",
+                "%{HAPROXYTCP}",
+                "%{HAPROXYGW}"
+              ]
+            }
+          }
+          if ![accept_date] {
+            grok { match => {message => ["%{HAPROXYDATE:accept_date}"]} }
+          }
+          if [captured_request_headers] {
+          grok { match => {
+              "captured_request_headers" => [
+                "%{DATA:request_host}\|(%{DATA:user-agent})?\|(%{DATA:request_referer})?\|(%{IP:TrueClientIP})?" 
+              ]
+            }
+          }
+
+          # Define expected headers
+          mutate {
+            add_field => {
+              "[_tmp][header_names]" => "Host|User-Agent|Referer|X-Forwarded-For"
+            }
+          }
+
+          # Standarized headers field
+          ruby {
+            code => '
+              raw_header = event.get("captured_request_headers")
+              if raw_header.is_a?(String)
+                split_headers = raw_header.split("|", -1)
+                event.set("captured_request_headers", split_headers)
+              end
+              raw_header_name = event.get("[_tmp][header_names]")
+              if raw_header_name.is_a?(String)
+                split_headers = raw_header_name.split("|", -1)
+                event.set("[_tmp][header_names]", split_headers)
+              end
+              header_keys = event.get("[_tmp][header_names]")
+              header_vals = event.get("captured_request_headers")
+
+              if header_keys.is_a?(Array) && header_vals.is_a?(Array)
+                if header_keys.length == header_vals.length
+                  headers = header_keys.zip(header_vals).map do |k, v|
+                    { "name" => k, "value" => v }
+                  end
+                  event.set("[httpRequest][headers]", headers)
+                else
+                  event.tag("header_parse_mismatch")
+                  event.set("[httpRequest][headers_parse_error]", {
+                    "expected_keys" => header_keys.length,
+                    "actual_values" => header_vals.length
+                  })
+                end
+              else
+                event.tag("header_parse_error")
+              end
+            '
+          }
+
+          # Cleanup temporary fields
+          mutate {
+            remove_field => ["_tmp"]
+          }
+        }
+          mutate {
+            remove_field => ["captured_response_cookie","haproxy_time","haproxy_month","haproxy_hour","srvconn","backend_queue","retries","termination_state"]
+            remove_field => ["haproxy_monthday","time_backend_connect","pid","srv_queue","beat","beconn","client_port","haproxy_milliseconds","@version"]
+            remove_field => ["haproxy_minute","offset","haproxy_second","actconn","source","program","haproxy_year","feconn","http_version"]
+            remove_field => ["prospector","time_duration","time_queue","syslog_timestamp","captured_request_cookie","timestamp8601"]
+            convert => {
+              "http_status_code" => "integer"
+              "time_backend_response" => "integer"
+            }
+            rename => {"syslog_server" => "SyslogSrv"}
+          }
+          date {
+            match => ["accept_date", "dd/MMM/yyyy:HH:mm:ss.SSS"]
+            timezone => "Asia/Bangkok"
+          }
+          if [TrueClientIP] {
+            geoip { source => "TrueClientIP" }
+          }
+          if [captured_request_headers] =~ /^(Zabbix|Prometheus|sentry|sonarqube|portainer|axios|grafana|whoami|ansible|deploy|rocketor|kibana|haproxy|logs.lumigame.com|npm.lumigame.com|ci.nexdev.net)/ {
+            drop {}
+          }
+          if [message] =~ /^(Zabbix|Prometheus|sentry|sonarqube|portainer|axios|health|whoami|healthz|grafana|ansible|deploy|rocketor|kibana|haproxy|logs.lumigame.com|npm.lumigame.com)/ {
+            drop {}
+          }
+          if [http_status_code] == 400 or [http_status_code] == 404 or [http_status_code] == 403 or [http_status_code] == 201 or [http_status_code] == 204 or [http_status_code] == 101 or [http_status_code] == 301 or [http_status_code] == 405 or [http_status_code] == 302 or [http_status_code] == 304 {
+            drop {}
+          }
+          if [http_status_code] == 200 and  [time_backend_response] < 5000 {
+            drop {}
+          }
+          if [referrer] == "hub.lumigame.com" and [http_status_code] == 401 and [http_verb] == "GET" {
+            drop {}
+          }
+          if [user-agent] =~ /containerd/ or [user-agent] =~ /Go-http-client/ or [user-agent] =~ /docker/ or [user-agent] =~ /buildkit/ {
+            drop {}
+          }
+          if [backend_name] == "grafana_be" {
+            drop {}
+          }
+          if [http_request] =~ /(png|jpg|jpeg|gif|svg|css|js|xml|ico|json|mp3|ttf|atlas|otf|webp|csv)$/ {
+            drop {}
+          }
+        }
+        else if "hap-ing" in [tags] {
+          grok {
+            match => { "message" => [
+              "%{HAPROXYHTTPBASE}",
+              "%{HAPROXYHTTP}",
+              "%{HAPROXYTCP}"
+            ]
+            }
+          }
+          grok {
+            match => ["message", "%{HAPROXYDATE:accept_date}"]
+          }
+          mutate {
+            remove_field => ["captured_response_cookie","haproxy_time","haproxy_month","haproxy_hour","srvconn","backend_queue","retries","termination_state"]
+            remove_field => ["haproxy_monthday","time_backend_connect","pid","srv_queue","beconn","client_port","haproxy_milliseconds","@version"]
+            remove_field => ["haproxy_minute","haproxy_second","actconn","program","haproxy_year","feconn","http_version"]
+            remove_field => ["prospector","time_duration","time_queue","syslog_timestamp","captured_request_cookie","bytes_read","timestamp8601"]
+            convert => {
+              "http_status_code" => "integer"
+              "time_backend_response" => "integer"
+            }
+            rename => {"syslog_server" => "haproxy-ing-pod"}
+          }
+          if [http_status_code] == 200 and  [time_backend_response] < 5000 { drop {} }
+          else if [backend_name] == "stats" { drop {} }
+        }
+      }
+    }
+
+  debug_filter.conf: |
+    filter {
+      if [type] == "debug" {
+        grok {
+          match => {
+            "message" => [
+              "%{HAPROXYHTTPBASE}",
+              "%{HAPROXYHTTP}",
+              "%{HAPROXYTCP}",
+              "%{HAPROXYGW}"
+            ]
+          }
+        }
+        if [backend_name] == "olympus_nap_fanexdataservice_LOCAL_be" or [backend_name] == "olympus_nap_fanexdataservice_LOCAL_1_be" {
+          if ![accept_date] {
+            grok { match => {message => ["%{HAPROXYDATE:accept_date}"]} }
+          }
+          if [captured_request_headers] {
+            grok { match => {"captured_request_headers" => "%{DATA:request_host}\|%{DATA:user-agent}\|(%{DATA:request_referer}\|%{IP:TrueClientIP})"} }
+          }
+          mutate {
+            convert => {
+              "http_status_code" => "integer"
+              "time_backend_response" => "integer"
+            }
+          }
+          date {
+            match => ["accept_date", "dd/MMM/yyyy:HH:mm:ss.SSS"]
+            timezone => "Asia/Bangkok"
+          }
+          if [TrueClientIP] {
+            geoip { source => "TrueClientIP" }
+          }
+        }
+      }
+      else if [type] == "debug-gitlab" {
+
+      }
+    }
+
+  dev_filter.conf: |
+    filter {
+      if [type] == "dev-logs"{
+        json {
+          source => "message"
+        }
+
+        ### FPS TEAM
+        if "Transaction07" in [Tags] or 
+           "FingerprintAttribute" in [Tags] {
+          mutate { add_tag => ["fps"] }
+          useragent {
+            source => '[Message][UserAgent]'
+            target => "user_agent"
+          }
+          geoip {
+            source => "[Message][IP]"
+            target => "geo"
+          }
+        }
+
+        ### LEGION TEAM
+        if [Properties][Team] == "Legion" or
+           [Properties][Team] == "Subarashi" {
+          mutate {
+            remove_field => ["[Renderings][HttpLog]", "[Properties][HttpLog]" ]
+            add_tag => ["subarashi"]
+          }
+        }
+
+        ### ROME TEAM
+        if [Properties][Team] == "Rome" {
+          mutate {
+            # remove_field => ["[Renderings]", "[Properties][HttpLog]", "MessageTemplate", "[Properties][Elapsed]", "[Properties][SourceContext]"]
+            add_tag => ["rome"]
+          }
+
+          if [Properties][RequestPath] == "/" {
+            drop {}
+          }
+
+          if [Properties][Application] == "Deposit.ApiGateways" {
+            mutate {
+              add_tag => ["deposit-apigw"]
+            }
+          }
+          if [Properties][Application] == "Licensee.AdminSetting.API" {
+            mutate {
+              add_tag => ["licensee-adminsetting"]
+            }
+          }
+        }        
+      }
+    }
+
+  vault_output.conf: |
+    output {
+      if [type] == "vault" {
+        if "local" in [tags] and "starix" in [tags] {
+          opensearch {
+            hosts => ["https://opensearch-cluster-master.logging:9200"]
+            user => "logstash"
+            password => "logstash"
+            ssl => true
+            ssl_certificate_verification => false
+            index => "logstash-vault-audit-local"
+            action => "create"
+          }
+        }
+        else if "dev" in [tags] and "starix" in [tags] {
+          opensearch {
+            hosts => ["https://opensearch-cluster-master.logging:9200"]
+            user => "logstash"
+            password => "logstash"
+            ssl => true
+            ssl_certificate_verification => false
+            index => "logstash-vault-audit-dev"
+            action => "create"
+          }
+        }
+      }
+    }
+
+  dev_output.conf: |
+    output {
+      if [type] == "dev-logs" {
+        if "subarashi" in [tags] {
+          if [Properties][Application] == "Deposit API Gateway" {
+            opensearch {
+              hosts => ["https://opensearch-cluster-master.logging:9200"]
+              user => "logstash"
+              password => "logstash"
+              ssl => true
+              ssl_certificate_verification => false
+              index => "logstash-subarashi-deposit-api-local"
+              action => "create"
+            }
+          }
+          else {
+            opensearch {
+              hosts => ["https://opensearch-cluster-master.logging:9200"]
+              user => "logstash"
+              password => "logstash"
+              ssl => true
+              ssl_certificate_verification => false
+              index => "logstash-subarashi-local-default"
+              action => "create"
+            }
+          }
+        }
+
+        else if "rome" in [tags] {
+          if [Properties][Environment] == "LOCAL" {
+            if "deposit-apigw" in [tags] {
+              opensearch {
+                hosts => ["https://opensearch-cluster-master.logging:9200"]
+                user => "logstash"
+                password => "logstash"
+                ssl => true
+                ssl_certificate_verification => false
+                index => "logstash-rome-deposit-apigw-local-%{+YYYY.MM.dd}"
+              }
+            }
+            else if "licensee-adminsetting" in [tags] {
+              opensearch {
+                hosts => ["https://opensearch-cluster-master.logging:9200"]
+                user => "logstash"
+                password => "logstash"
+                ssl => true
+                ssl_certificate_verification => false
+                index => "logstash-rome-licensee-adminsetting-local-%{+YYYY.MM.dd}"
+              }              
+            }
+            else {
+              opensearch {
+                hosts => ["https://opensearch-cluster-master.logging:9200"]
+                user => "logstash"
+                password => "logstash"
+                ssl => true
+                ssl_certificate_verification => false
+                index => "logstash-dev-unknown-%{+YYYY.MM.dd}"
+              } 
+            }
+          }
+        }
+
+        else if "fps" in [tags] {
+          if "Transaction07" in [Tags] {
+            opensearch {
+              hosts => ["https://opensearch-cluster-master.logging:9200"]
+              user => "logstash"
+              password => "logstash"
+              ssl => true
+              ssl_certificate_verification => false
+              index => "logstash-wabisabi-login-trans7"
+              action => "create"
+            }      
+          }
+          else if "FingerprintAttribute" in [Tags] {
+            opensearch {
+              hosts => ["https://opensearch-cluster-master.logging:9200"]
+              user => "logstash"
+              password => "logstash"
+              ssl => true
+              ssl_certificate_verification => false
+              index => "logstash-wabisabi-fingerprint-attribute"
+              action => "create"
+            }      
+          }
+          else {
+            opensearch {
+              hosts => ["https://opensearch-cluster-master.logging:9200"]
+              user => "logstash"
+              password => "logstash"
+              ssl => true
+              ssl_certificate_verification => false
+              index => "logstash-dev-unknown-%{+YYYY.MM.dd}"
+            } 
+          }
+        }
+        else {
+          opensearch {
+            hosts => ["https://opensearch-cluster-master.logging:9200"]
+            user => "logstash"
+            password => "logstash"
+            ssl => true
+            ssl_certificate_verification => false
+            index => "logstash-dev-unknown-%{+YYYY.MM.dd}"
+          } 
+        }
+      }
+    }
+
+  syslog_output.conf: |
+    output {
+      if [type] == "syslog" {
+        if "haproxy_access" in [tags] {
+          if "core" in [tags] {
+            opensearch {
+              hosts => ["https://opensearch-cluster-master.logging:9200"]
+              user => "logstash"
+              password => "logstash"
+              ssl => true
+              ssl_certificate_verification => false
+              index => "logstash-haproxy-gw-local"
+              action => "create"
+            }         
+          }
+          else if "nexprod" in [tags] {
+            opensearch {
+              hosts => ["https://opensearch-cluster-master.logging:9200"]
+              user => "logstash"
+              password => "logstash"
+              ssl => true
+              ssl_certificate_verification => false
+              index => "logstash-haproxy-ing-nexprod"
+              action => "create"
+            }  
+          }
+          else if "starix" in [tags] {
+            opensearch {
+              hosts => ["https://opensearch-cluster-master.logging:9200"]
+              user => "logstash"
+              password => "logstash"
+              ssl => true
+              ssl_certificate_verification => false
+              index => "logstash-haproxy-ing-starix-local"
+              action => "create"
+            }  
+          }
+          else {
+            opensearch {
+              hosts => ["https://opensearch-cluster-master.logging:9200"]
+              user => "logstash"
+              password => "logstash"
+              ssl => true
+              ssl_certificate_verification => false
+              index => "logstash-haproxy-unknown-local"
+              action => "create"
+            }         
+          }
+        }
+        else {
+          opensearch {
+            hosts => ["https://opensearch-cluster-master.logging:9200"]
+            user => "logstash"
+            password => "logstash"
+            ssl => true
+            ssl_certificate_verification => false
+            index => "logstash-syslog-unknown-local"
+            action => "create"
+          }
+        }
+      }
+    }
+
+  debug_output.conf: |
+    output {
+      if [type] == "debug" or
+         [type] == "debug-gitlab" {
+        opensearch {
+          hosts => ["https://opensearch-cluster-master.logging:9200"]
+          user => "logstash"
+          password => "logstash"
+          ssl => true
+          ssl_certificate_verification => false
+          index => "logstash-debug-local"
+          action => "create"
+        }   
+      }
+    }
+
+  main_output.conf: |
+    output {
+      if [type] not in ["syslog", "vault", "dev-logs", "debug"] {
+        opensearch {
+          hosts => ["https://opensearch-cluster-master.logging:9200"]
+          user => "logstash"
+          password => "logstash"
+          ssl => true
+          ssl_certificate_verification => false
+          index => "logstash-unknown-local"
+        }   
+      }
+    }
+    
+
+
+logstashJavaOpts: "-Xmx2g -Xms2g"
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "2560Mi"
+  limits:
+    cpu: "1000m"
+    memory: "2560Mi"
+
+httpPort: 9600
+extraPorts:
+  - name: httplog
+    containerPort: 8080
+  - name: tcp
+    containerPort: 5044
+  - name: syslog-tcp
+    containerPort: 5045
+    protocol: TCP
+  - name: syslog-udp
+    containerPort: 5045
+    protocol: UDP
+  - name: vault-st-local
+    containerPort: 5064
+  - name: vault-st-dev
+    containerPort: 5065
+
+
+  - name: debug-tcp
+    containerPort: 5077
+    protocol: TCP
+  - name: debug-udp
+    containerPort: 5077
+    protocol: UDP
+  - name: dbg-gitlab-tcp
+    containerPort: 5078
+    protocol: TCP
+  - name: dbg-gitlab-udp
+    containerPort: 5078
+    protocol: UDP
+
+service:
+  type: NodePort
+  ports:
+  - name: httplog
+    port: 8080
+    nodePort: 31055
+    protocol: TCP
+    targetPort: httplog
+  - name: tcp
+    nodePort: 30504
+    port: 5044
+    protocol: TCP
+    targetPort: tcp
+  - name: syslog-tcp
+    nodePort: 30505
+    port: 5045
+    protocol: TCP
+    targetPort: syslog-tcp
+  - name: syslog-udp
+    nodePort: 30505
+    port: 5045
+    protocol: UDP
+    targetPort: syslog-udp
+  - name: vault-st-local
+    nodePort: 30064
+    port: 5064
+    protocol: TCP
+    targetPort: vault-st-local
+  - name: vault-st-dev
+    nodePort: 30065
+    port: 5065
+    protocol: TCP
+    targetPort: vault-st-dev
+
+  - name: debug-tcp
+    nodePort: 30077
+    port: 5077
+    protocol: TCP
+    targetPort: debug-tcp
+  - name: debug-udp
+    nodePort: 30077
+    port: 5077
+    protocol: UDP
+    targetPort: debug-udp
+  - name: dbg-gitlab-tcp
+    nodePort: 30078
+    port: 5078
+    protocol: TCP
+    targetPort: dbg-gitlab-tcp
+  - name: dbg-gitlab-udp
+    nodePort: 30078
+    port: 5078
+    protocol: UDP
+    targetPort: dbg-gitlab-udp
+
+nodeSelector: 
+  nexops-tools: "yes"
+tolerations:
+- key: cattle.io/os
+  value: zabbix-server
+  operator: Equal
+  effect: NoSchedule

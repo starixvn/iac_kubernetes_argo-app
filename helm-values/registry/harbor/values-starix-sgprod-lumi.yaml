@@ -1,0 +1,110 @@
+expose:
+  tls:
+    enabled: false
+  ingress:
+    className: "haproxy"
+    hosts:
+      core: lumhub.sc-t1prod.gamora.prod
+externalURL: https://lumhub.sc-t1prod.gamora.prod
+
+
+persistence:
+  persistentVolumeClaim:
+    registry:
+      storageClass: "ebs-aws"
+      size: 40Gi
+    jobservice:
+      jobLog:
+        storageClass: "ebs-aws"
+        size: 5Gi
+    database:
+      storageClass: "ebs-aws"
+      size: 10Gi
+    redis:
+      storageClass: "ebs-aws"
+      size: 10Gi
+
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true  
+
+
+proxy:
+  httpProxy: "http://infra-proxy.vpcbukittimah.com:8801"
+  httpsProxy: "http://infra-proxy.vpcbukittimah.com:8801"
+  noProxy: "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+  components:
+    - core
+    - jobservice
+    - trivy
+
+
+cache:
+  enabled: true
+  expireHours: 8
+
+
+portal:
+  nodeSelector:
+    nexops: "yes"
+    eks.amazonaws.com/capacityType: "ON_DEMAND"
+  tolerations:
+  - effect: NoSchedule
+    key: cattle.io/os
+    value: harbor-workload
+core:
+  nodeSelector:
+    nexops: "yes"
+    eks.amazonaws.com/capacityType: "ON_DEMAND"
+  tolerations:
+  - effect: NoSchedule
+    key: cattle.io/os
+    value: harbor-workload
+jobservice:
+  nodeSelector:
+    nexops: "yes"
+    eks.amazonaws.com/capacityType: "ON_DEMAND"
+  tolerations:
+  - effect: NoSchedule
+    key: cattle.io/os
+    value: harbor-workload
+registry:
+  nodeSelector:
+    nexops: "yes"
+    eks.amazonaws.com/capacityType: "ON_DEMAND"
+  tolerations:
+  - effect: NoSchedule
+    key: cattle.io/os
+    value: harbor-workload
+trivy:
+  enabled: false
+
+database:
+  internal:
+    nodeSelector:
+      nexops: "yes"
+      eks.amazonaws.com/capacityType: "ON_DEMAND"
+    tolerations:
+    - effect: NoSchedule
+      key: cattle.io/os
+      value: harbor-workload
+redis:
+  internal:
+    nodeSelector:
+      nexops: "yes"
+      eks.amazonaws.com/capacityType: "ON_DEMAND"
+    tolerations:
+    - effect: NoSchedule
+      key: cattle.io/os
+      value: harbor-workload
+exporter:
+  nodeSelector:
+    nexops: "yes"
+    eks.amazonaws.com/capacityType: "ON_DEMAND"
+  tolerations:
+  - effect: NoSchedule
+    key: cattle.io/os
+    value: harbor-workload
+

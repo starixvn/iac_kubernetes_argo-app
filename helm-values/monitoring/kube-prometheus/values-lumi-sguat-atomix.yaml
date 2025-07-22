@@ -1,0 +1,127 @@
+---
+# clusterDomain: lumi.prod
+
+# global:
+#   imageRegistry: "lumhub.ops-klprod.gamora.prod/kbt/base"
+
+operator:
+  enabled: true
+
+prometheus:
+  nodeSelector:
+    nexops-mon: "yes"
+  service:
+    type: NodePort
+    ports:
+      http: 9090
+    nodePorts:
+      http: "30062"
+  ingress:
+    enabled: true
+    ingressClassName: "haproxy"
+    pathType: ImplementationSpecific
+    hostname: prometheus-eks-sguat.sportsfun.app
+    path: /
+
+  retention: 7d
+  retentionSize: "25GB"
+
+  persistence:
+    enabled: true
+    size: 30Gi
+
+  ## @param prometheus.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if prometheus.resources is set (prometheus.resources is recommended for production).
+  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ##
+  resources:
+    requests:
+      cpu: 10m
+    limits:
+      memory: 4Gi
+
+  additionalScrapeConfigs:
+    enabled: false
+    type: external
+    external:
+      ## Name of the secret that Prometheus should use for the additional scrape configuration
+      name: ""
+      ## Name of the key inside the secret to be used for the additional scrape configuration.
+      key: ""
+    internal:
+      jobList: []
+  ##
+  additionalScrapeConfigsExternal:
+    enabled: false
+    name: ""
+    key: ""
+  
+  #additionalPrometheusRules: []
+
+kube-state-metrics:
+  resourcesPreset: "none"
+  nodeSelector:
+    nexops-mon: "yes"
+
+alertmanager:
+  nodeSelector:
+    nexops-mon: "yes"
+  resourcesPreset: "none"
+  enabled: true
+  config:
+    global:
+      resolve_timeout: 15m
+      # http_config:
+      #   proxy_url: "http://infra-proxy.bukittimah.com:8801"
+
+    route:
+      receiver: default-receiver
+      routes:
+      - receiver: 'null'
+        match_re:
+          namespace: "l1|l2|gn|hd|sk|sp|tg|mg|cattle-system"
+      - receiver: 'eks_sc_uat'
+        match_re:
+          alertname: "Kubernetes.*"
+      - receiver: "velero_alerts"
+        match_re:
+          alertname: "Velero.*"
+      group_by: ['alertname', 'cluster', 'namespace', 'pod', 'description']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 9999h
+
+    receivers:
+      - name: 'null'
+      - name: 'eks_sc_uat'
+        slack_configs:
+          - api_url: "https://hooks.slack.com/services/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"
+            channel: '#eks_sc_uat'
+            send_resolved: true
+            icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+            title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
+            text: |
+              *Cluster:* `EKS-SC-UAT`
+              *Summary:* `{{ .CommonLabels.alertname }}`
+              *Description:* `{{ .CommonAnnotations.description }}`
+            color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+
+      - name: "velero_alerts"
+        slack_configs:
+          - api_url: "https://hooks.slack.com/services/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"
+            channel: "#velero_alerts"
+            send_resolved: true
+            icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+            title: '{{ if eq .Status "firing" }}🔥 PROBLEM 🔥 {{ .CommonLabels.alertname }}{{ else }}✅ RESOLVED ✅ {{ .CommonLabels.alertname }}{{ end }}'
+            text: |
+              *Cluster:* `EKS-SC-UAT`
+              ❗ *{{ .CommonLabels.severity }}*
+              📝 *{{ .CommonAnnotations.message }}*
+
+      - name: default-receiver
+
+node-exporter:
+  resourcesPreset: "medium"
+
+blackboxExporter:
+  nodeSelector:
+    nexops-mon: "yes"

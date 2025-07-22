@@ -1,0 +1,45 @@
+AWX:
+  # enable use of awx-deploy template
+  enabled: true
+  name: awx
+  spec:
+    ipv6_disabled: true
+    postgres_data_volume_init: true
+    ingress_type: "ingress"
+    ingress_class_name: "haproxy"
+    ingress_hosts:
+    - hostname: "vn-awx.sportsfun.app"
+    node_selector: |
+      nexops-mon: "yes"
+    web_node_selector: |
+      nexops-mon: "yes"
+    task_node_selector: |
+      nexops: "yes"
+    task_tolerations: |
+      - effect: NoSchedule
+        key: node-role
+        value: ansible-job
+    postgres_selector: |
+      nexops-mon: "yes"
+    csrf_cookie_secure: "False"
+    session_cookie_secure: "False"
+    extra_settings_files:
+      configmaps:
+      - name: my-custom-settings
+        key: custom_job_settings.py
+
+extraDeploy:
+- |
+  apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: my-custom-settings
+  data:
+    custom_job_settings.py: |
+      AWX_TASK_ENV = {
+          "HTTPS_PROXY": "http://infra-proxy.vpcbukittimah.com:8801",
+          "HTTP_PROXY": "http://infra-proxy.vpcbukittimah.com:8801",
+          "NO_PROXY": "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,127.0.0.1,localhost,.example.com,.svc,.local"
+      }
+
+

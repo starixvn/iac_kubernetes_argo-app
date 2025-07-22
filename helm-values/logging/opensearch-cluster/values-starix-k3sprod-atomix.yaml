@@ -1,0 +1,203 @@
+cluster:
+  general:
+    httpPort: 9200
+    version: 2.19.2
+    image: nexhub.ops-klprod.gamora.prod/kbt/base/opensearchproject/opensearch
+    drainDataNodes: false
+    monitoring:
+      enable: true
+      pluginUrl: "https://s3-api.starixsoft.com:9000/awx-install/prometheus-exporter-2.19.2.zip"
+      scrapeInterval: 30s
+      tlsConfig:
+        insecureSkipVerify: true
+
+  dashboards:
+    enable: true
+    replicas: 1
+    image: nexhub.ops-klprod.gamora.prod/kbt/base/opensearchproject/opensearch-dashboards
+    version: 2.19.2
+    opensearchCredentialsSecret:
+      name: ops-admin-creds
+    resources:
+      requests:
+        memory: "1Gi"
+        cpu: "500m"
+      limits:
+        memory: "4Gi"
+        cpu: "4"
+    additionalConfig:
+      opensearch.hosts: "['https://opsearch-atx-k3sprod:9200']"
+      opensearchDashboards.index: ".kibana"
+      opensearch_security.multitenancy.enabled: "true"
+      opensearch_security.readonly_mode.roles: "[kibana_read_only]"
+      opensearch.requestHeadersWhitelist: "[authorization, securitytenant]"
+
+  nodePools:
+  - component: masters
+    diskSize: "10Gi"
+    replicas: 2
+    jvm: "-Xmx3G -Xms3G -Dhttp.proxyHost=iusqd.gamora.prod -Dhttp.proxyPort=8801 -Dhttps.proxyHost=iusqd.gamora.prod -Dhttps.proxyPort=8801"
+    roles:
+    - "master"
+    - "ingest"
+    persistence:
+      pvc:
+        storageClass: longhorn
+        accessModes:
+        - ReadWriteOnce
+    resources: {}
+    nodeSelector:
+      opsearch-master: "yes"
+      node-role.kubernetes.io/opsearch: ""
+    tolerations:
+    - key: "node.role"
+      value: "opsearch"
+      operator: Equal
+      effect: NoSchedule
+
+  - component: nodes-hot
+    diskSize: "1800Gi"
+    replicas: 2
+    jvm: "-Xmx16G -Xms16G -Dhttp.proxyHost=iusqd.gamora.prod -Dhttp.proxyPort=8801 -Dhttps.proxyHost=iusqd.gamora.prod -Dhttps.proxyPort=8801"
+    roles:
+    - "data"
+    additionalConfig:
+      node.attr.temp: hot
+    persistence:
+      pvc:
+        storageClass: local-path
+        accessModes:
+        - ReadWriteOnce
+    resources: {}
+    nodeSelector:
+      opsearch-hot: "yes"
+      node-role.kubernetes.io/opsearch: ""
+    tolerations:
+    - key: "node.role"
+      value: "opsearch"
+      operator: Equal
+      effect: NoSchedule
+
+  - component: nodes-cold
+    diskSize: "4800Gi"
+    replicas: 1
+    jvm: "-Xmx4G -Xms4G -Dhttp.proxyHost=iusqd.gamora.prod -Dhttp.proxyPort=8801 -Dhttps.proxyHost=iusqd.gamora.prod -Dhttps.proxyPort=8801"
+    roles:
+      - "data"
+    additionalConfig:
+      node.attr.temp: cold
+    persistence:
+      pvc:
+        storageClass: local-path
+        accessModes:
+        - ReadWriteOnce
+    resources: {}
+    nodeSelector:
+      opsearch-cold: "yes"
+      node-role.kubernetes.io/opsearch: ""
+    tolerations:
+    - key: "node.role"
+      value: "opsearch"
+      operator: Equal
+      effect: NoSchedule
+
+  security:
+    config:
+      adminCredentialsSecret:
+        name: ops-admin-creds
+      # Warning: Using securityConfigSecret will overwrite data being created directly in opensearch dashboard 
+      # securityConfigSecret:
+      #   name: ops-securityconfig
+    # tls:
+    #   http:
+    #     generate: true
+    #     secret:
+    #       name: starixplay-cert
+
+  ingress:
+    opensearch:
+      enabled: true
+      className: "haproxy"
+      annotations:
+        haproxy.org/ssl-passthrough: 'false'
+        haproxy.org/server-ssl: 'true'
+      hosts:
+      - host: opsi-klp.starixplay.com
+        paths:
+        - path: /
+          pathType: ImplementationSpecific
+      - host: opsi.ops-klprod.gamora.prod
+        paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+    dashboards:
+      enabled: true
+      className: "haproxy"
+      hosts:
+      - host: ops-klp.starixplay.com
+        paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+# -- List of Opensearch Resources
+roles:
+- name: "nexpe-member"
+  clusterPermissions:
+  - cluster_composite_ops
+  - cluster_monitor
+  indexPermissions:
+  - indexPatterns:
+    - "*haproxy*"
+    allowedActions:
+    - index
+    - read
+  tenantPermissions:
+  - tenantPatterns:
+    - nexpe
+    allowedActions:
+    - kibana_all_write
+
+- name: "subarashi-member"
+  clusterPermissions:
+  - cluster_composite_ops
+  - cluster_monitor
+  indexPermissions:
+  - indexPatterns:
+    - "*subarashi*"
+    allowedActions:
+    - index
+    - read
+  tenantPermissions:
+  - tenantPatterns:
+    - subarashi
+    allowedActions:
+    - kibana_all_write
+
+- name: "pioneers-member"
+  clusterPermissions:
+  - cluster_composite_ops
+  - cluster_monitor
+  indexPermissions:
+  - indexPatterns:
+    - "logstash-haproxy-swarm-starix-klprod"
+    - "logstash-haproxy-swarm-starix-alphaklprod"
+    - "logstash-haproxy-swarm-starix-*prod"
+    - "*rome*"
+    - "*pioneers*"
+    allowedActions:
+    - index
+    - read
+  tenantPermissions:
+  - tenantPatterns:
+    - pioneers
+    allowedActions:
+    - kibana_all_write
+
+tenants:
+- name: "pioneers"
+- name: "subarashi"
+- name: "nexpe"
+
+actionGroups: []
+

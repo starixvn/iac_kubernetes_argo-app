@@ -1,0 +1,75 @@
+---
+tenant:
+  name: gitcache
+  configuration:
+    name: myminio-env-configuration
+  configSecret:
+    name: myminio-env-configuration
+    accessKey: nexops
+    secretKey: Ilu@n3xc3l12
+
+
+  pools:
+  - servers: 2
+    name: pool-0
+    volumesPerServer: 2
+    size: 95Gi
+    storageClassName: directpv-min-io
+    nodeSelector:
+      node-role.kubernetes.io/minio: "yes"
+
+  metrics:
+    enabled: true
+    port: 9000
+    protocol: http
+
+  certificate:
+    requestAutoCert: false
+
+  features:
+    bucketDNS: false
+    domains: { }
+    enableSFTP: false
+
+  buckets: [ ]
+  users: [ ]
+
+  prometheusOperator: true
+
+  env:
+  - name: MINIO_PROMETHEUS_URL
+    value: "http://prometheus-atx-backup-kube-prometheus.monitoring.svc:9090"
+  - name: MINIO_STORAGE_CLASS_STANDARD
+    value: "EC:0"
+
+
+ingress:
+  api:
+    enabled: false
+    ingressClassName: "haproxy"
+    annotations:
+      haproxy.org/ssl-redirect: "false"
+    tls: [ ]
+    hosts:
+    - host: "s3-api.nexdev.net"       # API-access from LOCAL
+      paths: []
+    - host: "s3-api.starixsoft.com"   # API-access from KBT
+      paths: []
+    - host: "s3-api.lumigame.com"     # API-access for git3
+      paths: []
+    tls:
+    - hosts:
+      - s3-api.starixsoft.com
+      - s3-api.nexdev.net
+      - s3-api.lumigame.com
+    pathType: Prefix
+  console:
+    enabled: false
+    ingressClassName: "haproxy"
+    annotations:
+      haproxy.org/ssl-redirect: "false"
+    tls: [ ]
+    hosts:
+    - host: "s3.nexdev.net"
+      paths: []
+    pathType: Prefix

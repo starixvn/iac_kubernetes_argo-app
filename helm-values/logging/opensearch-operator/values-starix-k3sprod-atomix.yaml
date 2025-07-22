@@ -1,0 +1,27 @@
+---
+tolerations:
+- key: "node.role"
+  value: "opsearch"
+  operator: Equal
+  effect: NoSchedule
+
+manager:
+  extraEnv:
+  - name: HTTP_PROXY
+    value: iusqd.gamora.prod:8801
+  - name: HTTPS_PROXY
+    value: iusqd.gamora.prod:8801
+  - name: NO_PROXY
+    value: 127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.nebula.prod,.svc,.starix.k3sprod
+  resources:
+    limits:
+      cpu: 200m
+      memory: 500Mi
+    requests:
+      cpu: 100m
+      memory: 350Mi
+  dnsBase: starix.k3sprod
+
+installCRDs: true
+
+nodeSelector: {}

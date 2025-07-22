@@ -1,0 +1,70 @@
+image:
+  repository: lumhub.ops-klprod.gamora.prod/kbt/base/velero
+  tag: v1.14.1
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+  prometheusRule:
+    autodetect: true
+    enabled: true
+
+kubectl:
+  image:
+    repository:  lumhub.ops-klprod.gamora.prod/kbt/base/kubectl
+    tag: "1.16.15"
+
+# AWS backend plugin configuration
+initContainers:
+  - name: velero-plugin-for-aws
+    image:  lumhub.ops-klprod.gamora.prod/kbt/base/velero/velero-plugin-for-aws:v1.10.0
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
+
+# Minio storage configuration
+configuration:
+  backupStorageLocation:
+    - provider: aws
+      bucket: k8slumi-prod-backup
+      config:
+        region: minio
+        s3ForcePathStyle: true
+        s3Url: https://s3-api.starixsoft.com:9000
+  extraEnvVars:
+    HTTP_PROXY: "iusqd.gamora.prod:8801"
+    HTTPS_PROXY: "iusqd.gamora.prod:8801"
+    NO_PROXY: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+credentials:
+  existingSecret: velero-secret
+# Disable VolumeSnapshotLocation CRD. It is not needed for CSI integration
+snapshotsEnabled: false
+
+
+schedules:
+  web:
+    disabled: false
+    labels:
+      env: prod
+      org: lumi
+    schedule: "0 3 * * *"
+    useOwnerReferencesInBackup: false
+    paused: false
+    template:
+      ttl: "168h"
+      excludedNamespaces:
+      - cattle-fleet-system
+      - cattle-impersonation-system
+      - cattle-system
+      - default
+      - haproxy-ingress
+      - kube-node-lease
+      - kube-public
+      - kube-system   
+      - local
+      - local-path-storage
+      - logging
+      - monitoring
+      - velero

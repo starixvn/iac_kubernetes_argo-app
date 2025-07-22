@@ -1,0 +1,68 @@
+replicaCount: 1
+
+enterpriseEdition: 
+  enabled: false
+  image:
+    repository: nexhub.ops-klprod.gamora.prod/kbt/base/portainer/portainer-ce
+    tag: 2.27.3
+    pullPolicy: Always
+
+image:
+  repository: nexhub.ops-klprod.gamora.prod/kbt/base/portainer/portainer-ce
+  tag: 2.27.3
+  pullPolicy: Always
+
+imagePullSecrets: []
+
+#nodeSelector:
+#  nexops-tools: "yes"
+
+serviceAccount:
+  annotations: {}
+  name: portainer-sa-clusteradmin
+
+service:
+  type: NodePort
+  httpPort: 9000
+  httpsPort: 9443
+  httpNodePort: 30777
+  httpsNodePort: 30779
+  edgePort: 8000
+  edgeNodePort: 30776
+  annotations: {}
+
+tls:
+  force: false
+  existingSecret: ""
+
+mtls:
+  enable: false
+  existingSecret: ""
+
+feature:
+  flags: []
+
+ingress:
+  enabled: true
+  ingressClassName: "haproxy"
+  annotations: {}
+  hosts:
+    - host: "vn-portainer-klprod.byb6181.com"
+      paths:
+      - path: "/"
+        pathType: "Prefix"
+    - host: "portainer-klp.starixplay.com"
+      paths:
+      - path: "/"
+        pathType: "Prefix"
+  tls: []
+
+resources: {}
+
+persistence:
+  enabled: true
+  size: "5Gi"
+  annotations: {}
+  storageClass: "longhorn"
+  existingClaim:
+

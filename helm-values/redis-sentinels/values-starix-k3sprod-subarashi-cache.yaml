@@ -1,0 +1,79 @@
+clusterDomain: "starix.k3sprod"
+useHostnames: false
+commonLabels:
+  redis-system: oddfeed-cache
+  department: subarashi
+
+
+
+global:
+  storageClass: "longhorn-effort-2rep"
+  imageRegistry: "nexhub.ops-klprod.gamora.prod"
+
+image:
+  repository: kbt/base/redis
+  tag: 7.2.4-debian-12-r9
+
+
+metrics:
+  image:
+    repository: kbt/base/redis-exporter
+    tag: 1.58.0-debian-12-r3
+  enabled: true
+  serviceMonitor:
+    enabled: true
+  podMonitor:
+    enabled: true
+
+
+auth:
+  password: "foo1@bared"
+
+commonConfiguration: |-
+  save 900 1
+  save 300 10
+  save 60 10000
+  appendonly yes
+  appendfilename "appendonly.aof"
+  appendfsync everysec
+  notify-keyspace-events Kx
+  client-output-buffer-limit normal 256mb 128mb 30
+  client-output-buffer-limit pubsub 64mb 32mb 30
+  client-output-buffer-limit slave 512mb 256mb 60
+  slowlog-log-slower-than 5000
+  latency-monitor-threshold 100
+  slowlog-max-len 512
+  lua-time-limit 7000
+
+
+volumePermissions:
+  enabled: true
+  image:
+    repository: kbt/base/os-shell
+    tag: 12-debian-12-r16
+
+master:
+  persistence:
+    size: 10Gi
+
+sentinel:
+  enabled: true
+  image:
+    registry: 
+    repository: kbt/base/redis-sentinel
+    tag: 7.2.4-debian-12-r7
+  persistence:
+    size: 1Gi    
+
+replica:
+  replicaCount: 3
+  persistence:
+    size: 10Gi
+  resources:
+    requests:
+      cpu: "1.0"
+      memory: "2048Mi"
+    limits:
+      memory: "4096Mi"
+
+

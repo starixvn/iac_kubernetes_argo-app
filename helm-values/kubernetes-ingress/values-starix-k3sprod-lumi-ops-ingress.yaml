@@ -1,0 +1,77 @@
+---
+controller:
+  kind: DaemonSet
+
+  ingressClassResource:
+    name: sc-ops-ingress
+    default: false
+    parameters: {}
+
+  ingressClass: sc-ops-ingress
+
+  config:
+    stats-config-snippet: |
+      stats auth nexops:NexOps!QAZ
+      stats refresh 300s
+      stats show-legends
+      stats show-node
+      stats show-modules
+    frontend-config-snippet: |
+      capture request header Host len 46
+      capture request header User-Agent len 200
+      capture request header Referer len 800
+      capture request header X-Forwarded-For len 20
+    backend-config-snippet: |
+      option forwardfor if-none
+
+    timeout-connect: "5s"
+    scale-server-slots: "7"
+    maxconn: "20000"
+    forwarded-for: "true"
+    dontlognull: "true"
+
+  extraArgs:
+    - --disable-ipv6
+    - --configmap-errorfiles=haproxy-ingress/errorfile
+
+  service:
+    type: LoadBalancer
+    externalTrafficPolicy: "Cluster"
+    ipFamilyPolicy: SingleStack
+    ipFamilies: [IPv4]
+    loadBalancerIP: "10.143.58.203"
+
+    tcpPorts:
+    - name: nats
+      port: 4222
+      targetPort: 4222
+
+  logging:
+    level: info
+    traffic:
+      address: "stdout"
+      format: "raw"
+      facility: "daemon"
+  #   traffic:
+  #     address: "logstash-starix-k3sprod-logstash.logging-starix.svc"
+  #     port: "5045"
+  #     format: "rfc3164"
+  #     facility: "local1"
+
+  nodeSelector:
+    node-role.kubernetes.io/master: "true"
+    node-role.kubernetes.io/control-plane: "true"
+
+  serviceMonitor:
+    enabled: true
+    extraLabels: {}
+    endpoints:
+      - port: stat
+        path: /metrics
+        scheme: http
+        interval: 30s
+
+  image:
+    repository: "nexhub.ops-klprod.gamora.prod/kbt/base/haproxytech/kubernetes-ingress"
+
+extraResources: {}

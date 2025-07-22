@@ -1,0 +1,24 @@
+replicaCount: 1
+
+
+nodeSelector:
+  nexops-mon: "yes"
+
+
+
+
+ingress:
+  enabled: true
+  ingressClassName: "haproxy"
+  annotations: {}
+  hosts:
+    - host: "vn-portainer-sgprod.sportsfun.app"
+      paths:
+      - path: "/"
+        pathType: "Prefix"
+
+persistence:
+  enabled: true
+  size: "5Gi"
+  storageClass: "ebs-aws"
+

@@ -1,0 +1,128 @@
+---
+clusterDomain: starix.backup
+
+global:
+  imageRegistry: "hub.nexdev.net/base"
+
+operator:
+  enabled: true
+
+prometheus:
+  service:
+    type: NodePort
+    ports:
+      http: 9090
+    nodePorts:
+      http: "30062"
+
+  retention: 3d
+  retentionSize: "18GB"
+
+  persistence:
+    enabled: true
+    size: 20Gi
+
+  ## @param prometheus.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if prometheus.resources is set (prometheus.resources is recommended for production).
+  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ##
+  resourcesPreset: "large"
+
+  additionalScrapeConfigs:
+    enabled: false
+    type: external
+    external:
+      ## Name of the secret that Prometheus should use for the additional scrape configuration
+      name: ""
+      ## Name of the key inside the secret to be used for the additional scrape configuration.
+      key: ""
+    internal:
+      jobList: []
+  ##
+  additionalScrapeConfigsExternal:
+    enabled: false
+    name: ""
+    key: ""
+  
+  additionalPrometheusRules:
+  - name: minio.rules
+    groups:
+    - name: minio.rules
+      rules:
+      - alert: MinioDiskSpaceUsage
+        expr: (100 - round(minio_cluster_capacity_usable_free_bytes / minio_cluster_capacity_usable_total_bytes * 100, 0.01)) > 90
+        for: 0m
+        labels:
+          severity: critical
+          service: Minio
+        annotations:
+          summary: Minio disk space usage Over 90%
+          description: "Minio available free space is low ~ {{ $value }}%"
+
+kube-state-metrics:
+  resourcesPreset: "none"
+
+alertmanager:
+  resourcesPreset: "none"
+  enabled: true
+  config:
+    global:
+      http_config:
+        proxy_url: "http://proxysqd.nexdev.net:3128"
+
+    route:
+      receiver: 'null'
+      routes:
+      # - receiver: kubernetes
+      #   match_re:
+      #     service: "prometheus-lumi-prod-kube-state-metrics|prometheus-lumi-prod-node-exporter"
+      - receiver: minio-services
+        match:
+          service: "Minio"
+        group_by: ['alertname', 'job']
+      group_by: ['alertname', 'cluster', 'namespace', 'pod']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 24h
+
+    receivers:
+    - name: 'null'
+    # - name: kubernetes
+    #   slack_configs:
+    #   - api_url: "https://hooks.slack.com/services/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"
+    #     channel: '#kubernetes_sc_prod'
+    #     send_resolved: true
+    #     icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+    #     title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
+    #     text: |
+    #       *Cluster:* `Kubernetes-SC-PROD`
+    #       *Summary:* `{{ .CommonLabels.alertname }}`
+    #       *Description:* `{{ .CommonAnnotations.description }}`
+    #     color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+    - name: minio-services
+      slack_configs:
+      - channel: '#local_disk_critical'
+        icon_emoji: ":minio-ico:"
+        username: "MinIO🔹Backup Cluster"
+        color: '{{ template "sre.slack.color" . }}'
+        fallback: '{{ template "sre.slack.fallback" . }}'
+        send_resolved: true
+        title: '{{ template "sre.slack.title" . }}'
+        text: '{{ template "sre.slack.body" . }}'
+
+node-exporter:
+  extraVolumes:
+  - hostPath:
+      path: /var/lib
+      type: ""
+    name: mnt
+    
+  extraVolumeMounts:
+  - mountPath: /host/root/var/lib
+    mountPropagation: HostToContainer
+    name: mnt
+    readOnly: true
+
+  extraArgs:
+    path.rootfs: "/host/root"
+    collector.filesystem.mount-points-exclude: "^/(dev|proc|sys|var/lib/docker/.+)($|/)"
+    collector.filesystem.fs-types-exclude: "^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs|squashfs|nsfs|tmpfs)$"

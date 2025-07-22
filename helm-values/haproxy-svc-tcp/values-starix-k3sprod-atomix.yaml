@@ -1,0 +1,294 @@
+clusterDomain: "starix.k3sprod"
+
+# setting HA for service
+replicaCount: 3
+podAntiAffinityPreset: hard
+resources:
+  requests:
+    memory: 2Gi
+  limits:
+    memory: 2Gi
+priorityClassName: "critical-service"
+nodeSelector:
+  node-role.kubernetes.io/control-plane: "true"
+
+
+service:
+  type: LoadBalancer
+  loadBalancerIP: "10.143.58.203"
+  ports:
+#NAP
+  - name: redis-nap-m
+    protocol: TCP
+    port: 16777
+    targetPort: redis-nap-m
+
+  # - name: redis-nap-r
+  #   protocol: TCP
+  #   port: 16879
+  #   targetPort: redis-nap-r
+#Alpha Cache
+  - name: redis-alpha-m
+    protocol: TCP
+    port: 16380
+    targetPort: redis-alpha-m
+
+  # - name: redis-alpha-r
+  #   protocol: TCP
+  #   port: 16880
+  #   targetPort: redis-alpha-r
+
+#Alpha State
+  - name: redis-alpha-st-m
+    protocol: TCP
+    port: 16383
+    targetPort: redis-alphast-m
+
+  # - name: redis-alpha-st-r
+  #   protocol: TCP
+  #   port: 16883
+  #   targetPort: redis-alphast-r
+
+
+
+#FPS
+  - name: redis-fps-m
+    protocol: TCP
+    port: 16381
+    targetPort: redis-fps-m
+
+#   - name: redis-fps-r
+#     protocol: TCP
+#     port: 16881
+#     targetPort: redis-fps-r
+
+#Oddfeed
+  - name: redis-oddfeed-m
+    protocol: TCP
+    port: 16480
+    targetPort: redis-oddfeed-m
+
+  - name: rabbitmq
+    protocol: TCP
+    port: 5672
+    targetPort: rabbitmq
+
+  - name: rabbitmq-admin
+    protocol: TCP
+    port: 15672
+    targetPort: rabbitmq-admin
+  
+  #NAP-Session-State
+  - name: session-state
+    protocol: TCP
+    port: 42424
+    targetPort: session-state
+
+  - name: http
+    port: 8080
+    targetPort: http
+
+
+containerPorts:
+#NAP
+- name: redis-nap-m
+  containerPort: 16777
+
+#ALPHA
+- name: redis-alpha-m
+  containerPort: 16380
+
+#FPS
+- name: redis-fps-m
+  containerPort: 16381
+
+#Oddfeed
+- name: redis-oddfeed-m
+  containerPort: 16480
+
+#ALPHA-STATE
+- name: redis-alphast-m
+  containerPort: 16383
+
+- name: rabbitmq
+  containerPort: 5672
+
+- name: rabbitmq-admin
+  containerPort: 15672
+
+- name: session-state
+  containerPort: 42424
+
+- name: http
+  containerPort: 8080
+
+configuration: |
+  global
+    log stdout format raw local0
+    maxconn 10240
+
+  defaults
+    log global
+    timeout client 360s
+    timeout connect 360s
+    timeout server 360s
+
+  resolvers k8s
+    nameserver dns1 kube-dns.kube-system:53
+    resolve_retries 3
+    timeout resolve 1s
+    timeout retry 1s
+    hold valid 10s
+    hold obsolete 30s
+
+  frontend fe_main
+    bind :8080
+    mode http
+    stats enable
+    stats uri /stats
+    stats refresh 300s
+    stats show-legends
+    stats show-node
+    stats auth nexcel:NexOps!QAZ
+    default_backend default_backend_nodes
+
+  backend default_backend_nodes
+    mode http
+    http-request return status 503 content-type "text/plain"  lf-string "503 Service Unavailable ! Pls contact NexOps if you think this is a mistake... K3s PROD"
+
+  frontend redis_nap_master_fe
+    bind :16777
+    default_backend redis_nap_master_be
+
+  backend redis_nap_master_be
+    option tcp-check
+    tcp-check send AUTH\ foo1@bared\r\n
+    tcp-check expect string +OK
+    tcp-check send PING\r\n
+    tcp-check expect string PONG
+    tcp-check send info\ replication\r\n
+    tcp-check expect string role:master
+    tcp-check send QUIT\r\n
+    tcp-check expect string +OK
+    server redis-0 redis-omniflow-cache-omfl-k3sprod-node-0.redis-omniflow-cache-omfl-k3sprod-headless.tf-omfl-redis-omniflow-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-1 redis-omniflow-cache-omfl-k3sprod-node-1.redis-omniflow-cache-omfl-k3sprod-headless.tf-omfl-redis-omniflow-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-2 redis-omniflow-cache-omfl-k3sprod-node-2.redis-omniflow-cache-omfl-k3sprod-headless.tf-omfl-redis-omniflow-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+
+
+
+  # ALPHA Cache Redis Master
+  frontend redis_alpha_master_fe
+    bind :16380
+    default_backend redis_alpha_master_be
+
+  backend redis_alpha_master_be
+    option tcp-check
+    tcp-check send AUTH\ foo1@bared\r\n
+    tcp-check expect string +OK
+    tcp-check send PING\r\n
+    tcp-check expect string PONG
+    tcp-check send info\ replication\r\n
+    tcp-check expect string role:master
+    tcp-check send QUIT\r\n
+    tcp-check expect string +OK
+    server redis-0 redis-alpha-cache-pier-k3sprod-node-0.redis-alpha-cache-pier-k3sprod-headless.tf-pier-redis-alpha-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-1 redis-alpha-cache-pier-k3sprod-node-1.redis-alpha-cache-pier-k3sprod-headless.tf-pier-redis-alpha-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-2 redis-alpha-cache-pier-k3sprod-node-2.redis-alpha-cache-pier-k3sprod-headless.tf-pier-redis-alpha-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+
+
+
+  # ALPHA-STATE Redis Master
+  frontend redis_alpha_state_master_fe
+    bind :16383
+    default_backend redis_alpha_state_master_be
+
+  backend redis_alpha_state_master_be
+    option tcp-check
+    tcp-check send AUTH\ foo1@bared\r\n
+    tcp-check expect string +OK
+    tcp-check send PING\r\n
+    tcp-check expect string PONG
+    tcp-check send info\ replication\r\n
+    tcp-check expect string role:master
+    tcp-check send QUIT\r\n
+    tcp-check expect string +OK
+    server redis-0 redis-alpha-state-pier-k3sprod-node-0.redis-alpha-state-pier-k3sprod-headless.tf-pier-redis-alpha-state.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-1 redis-alpha-state-pier-k3sprod-node-1.redis-alpha-state-pier-k3sprod-headless.tf-pier-redis-alpha-state.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-2 redis-alpha-state-pier-k3sprod-node-2.redis-alpha-state-pier-k3sprod-headless.tf-pier-redis-alpha-state.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+
+
+  # FPS Redis Master
+  frontend redis_fps_master_fe
+    bind :16381
+    default_backend redis_fps_master_be
+
+  backend redis_fps_master_be
+    option tcp-check
+    tcp-check send AUTH\ foo1@bared\r\n
+    tcp-check expect string +OK
+    tcp-check send PING\r\n
+    tcp-check expect string PONG
+    tcp-check send info\ replication\r\n
+    tcp-check expect string role:master
+    tcp-check send QUIT\r\n
+    tcp-check expect string +OK
+    server redis-0 redis-fps-cache-was-k3sprod-node-0.redis-fps-cache-was-k3sprod-headless.tf-was-redis-fps-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-1 redis-fps-cache-was-k3sprod-node-1.redis-fps-cache-was-k3sprod-headless.tf-was-redis-fps-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-2 redis-fps-cache-was-k3sprod-node-2.redis-fps-cache-was-k3sprod-headless.tf-was-redis-fps-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+
+
+  # Oddfeed Redis Master
+  frontend redis_oddfeed_master_fe
+    bind :16480
+    default_backend redis_oddfeed_master_be
+
+  backend redis_oddfeed_master_be
+    option tcp-check
+    tcp-check send AUTH\ foo1@bared\r\n
+    tcp-check expect string +OK
+    tcp-check send PING\r\n
+    tcp-check expect string PONG
+    tcp-check send info\ replication\r\n
+    tcp-check expect string role:master
+    tcp-check send QUIT\r\n
+    tcp-check expect string +OK
+    server redis-0 redis-oddfeed-cache-suba-k3sprod-node-0.redis-oddfeed-cache-suba-k3sprod-headless.tf-suba-redis-oddfeed-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-1 redis-oddfeed-cache-suba-k3sprod-node-1.redis-oddfeed-cache-suba-k3sprod-headless.tf-suba-redis-oddfeed-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-2 redis-oddfeed-cache-suba-k3sprod-node-2.redis-oddfeed-cache-suba-k3sprod-headless.tf-suba-redis-oddfeed-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+
+  # RabbitMQ
+  frontend rabbitmq_fe
+    bind :5672
+    default_backend rabbitmq_be
+
+  backend rabbitmq_be
+    mode tcp
+    server rabbitmq rabbitmq-cluster.rabbitmq-nap-alpha.svc.starix.k3sprod:5672 check inter 1s resolvers k8s init-addr none
+
+  # RabbitMQ Management
+  frontend rabbitmq_admin_fe
+    bind :15672
+    default_backend rabbitmq_admin_be
+
+  backend rabbitmq_admin_be
+    option forwardfor
+    option http-server-close
+    option httpchk HEAD /
+    http-check expect status 200
+    server rabbitmq rabbitmq-cluster.rabbitmq-nap-alpha.svc.starix.k3sprod:15672 check inter 1s resolvers k8s init-addr none
+ 
+  #NAP-Session-State
+  frontend nap_session_state_fe
+    bind :42424
+    option tcplog
+    mode tcp
+    default_backend nap_asp_state_be
+
+  backend nap_asp_state_be
+    mode tcp
+    option tcplog
+    option tcp-check
+    default-server inter 2s fall 5 rise 5
+    server state_58_137_42424 10.148.58.137:42424 check
+    server state_58_138_42424 10.148.58.138:42424 check backup
+

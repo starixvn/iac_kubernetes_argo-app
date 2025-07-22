@@ -1,0 +1,40 @@
+global:
+  storageClass: longhorn
+  storageSize: 15Gi
+
+rabbitCluster:
+  user: admin
+  password: rabbitadmin!@
+  resources:
+    maxMemory: 3Gi
+
+  service:
+    amqp:
+      nodePort: 30572
+    manager:
+      nodePort: 31572
+
+  nodeSelector:
+    rabbit: "yes"
+  tolerations:
+    - key: rabbit-deployapi
+      operator: "Equal"
+      value: "yes"
+      effect: "NoSchedule"
+
+clusterOperator:
+  nodeSelector:
+    rabbit: "yes"
+  tolerations:
+    - key: rabbit-deployapi
+      operator: "Equal"
+      value: "yes"
+      effect: "NoSchedule"
+
+msgTopologyOperator:
+  nodeSelector:
+    rabbit: "yes"
+  tolerations:
+    - key: rabbit-deployapi
+      operator: "Equal"
+      value: "yes"

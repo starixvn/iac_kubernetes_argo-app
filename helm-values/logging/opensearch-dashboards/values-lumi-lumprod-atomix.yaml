@@ -1,0 +1,26 @@
+---
+image:
+  repository: "hub.lumigame.com/base/opensearchproject/opensearch-dashboards"
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "512M"
+  limits:
+    cpu: "500m"
+    memory: "2Gi"
+
+# service:
+#   type: NodePort
+#   nodePort: "31601"
+
+ingress:
+  enabled: true
+  ingressClassName: "haproxy"
+  hosts:
+  - host: logs.lumigame.com
+    paths:
+      - path: /
+        backend:
+          serviceName: ""
+          servicePort: ""

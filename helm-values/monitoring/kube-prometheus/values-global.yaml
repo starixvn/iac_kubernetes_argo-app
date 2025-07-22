@@ -1,0 +1,590 @@
+prometheus:
+  additionalPrometheusRules:
+    - name: kubernetes.rules
+      groups:
+        - name: kubernetes.rules
+          rules:
+            - alert: Kubernetes Node Not Ready
+              expr: kube_node_status_condition{condition="Ready", status="false"} == 1
+              for: 5m
+              labels:
+                severity: critical
+              annotations:
+                summary: "Node Not Ready"
+                description: "Node {{ $labels.node }} is not ready."
+
+            - alert: Kubernetes High Node CPU Usage > 80%
+              expr: (100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 80
+              for: 5m
+              labels:
+                severity: warning
+              annotations:
+                summary: "High CPU Usage on Node > 80%"
+                description: 'Node {{ $labels.instance }} is using more than {{ printf "%.0f" $value }}% CPU.'
+
+            - alert: Kubernetes High Node CPU Usage 100%
+              expr: (100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 99
+              for: 5m
+              labels:
+                severity: critical
+              annotations:
+                summary: "High CPU Usage on Node 100%"
+                description: 'Node {{ $labels.instance }} is using more than {{ printf "%.0f" $value }}% CPU.'
+
+            - alert: Kubernetes High Node Memory Usage > 80%
+              expr: (100 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100) >= 80
+              for: 5m
+              labels:
+                severity: warning
+              annotations:
+                summary: "High Memory Usage on Node > 80%"
+                description: 'Node {{ $labels.instance }} is using more than {{ printf "%.0f" $value }}% of its memory.'
+
+            - alert: Kubernetes High Node Memory Usage 100%
+              expr: (100 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100) > 99
+              for: 5m
+              labels:
+                severity: critical
+              annotations:
+                summary: "High Memory Usage on Node 100%"
+                description: 'Node {{ $labels.instance }} is using more than {{ printf "%.0f" $value }}% of its memory.'
+
+            - alert: Kubernetes Node Disk Usage High > 80%
+              expr: (node_filesystem_size_bytes{fstype!~"tmpfs|overlay"} - node_filesystem_free_bytes{fstype!~"tmpfs|overlay"}) / node_filesystem_size_bytes{fstype!~"tmpfs|overlay"} * 100 > 80
+              for: 5m
+              labels:
+                severity: warning
+              annotations:
+                summary: "High Node Disk Usage"
+                description: 'Node {{ $labels.instance }} has more than {{ printf "%.0f" $value }}% disk usage.'
+
+            - alert: Kubernetes Node Disk Usage High > 90%
+              expr: (node_filesystem_size_bytes{fstype!~"tmpfs|overlay"} - node_filesystem_free_bytes{fstype!~"tmpfs|overlay"}) / node_filesystem_size_bytes{fstype!~"tmpfs|overlay"} * 100 > 90
+              for: 5m
+              labels:
+                severity: critical
+              annotations:
+                summary: "High Node Disk Usage"
+                description: 'Node {{ $labels.instance }} has more than {{ printf "%.0f" $value }}% disk usage.'
+
+            - alert: Kubernetes Node Disk Pressure
+              expr: kube_node_status_condition{condition="DiskPressure", status="true"} == 1
+              for: 5m
+              labels:
+                severity: critical
+              annotations:
+                summary: "Node Disk Pressure"
+                description: "Node {{ $labels.node }} is under disk pressure."
+  
+            - alert: Kubernetes Pod Not Running
+              expr: kube_pod_status_phase{phase!~"Running|Succeeded"} == 1
+              for: 5m
+              labels:
+                severity: warning
+              annotations:
+                summary: "Pod Not Running"
+                description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is not running."
+
+            # - alert: Kubernetes Pod Restart Detected
+            #   expr: increase(kube_pod_container_status_restarts_total[1m]) > 0
+            #   for: 0m
+            #   labels:
+            #     severity: warning
+            #   annotations:
+            #     summary: "Pod {{ $labels.pod }} restarted"
+            #     description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} just restarted!"
+
+            - alert: Kubernetes Service Restart
+              expr: time() - kube_pod_created < 300
+              for: 1m
+              labels:
+                severity: warning
+              annotations:
+                summary: "Service {{ $labels.deployment }} restart in namespace {{ $labels.namespace }}"
+                description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} was created recently, indicating a service Restart."
+
+            - alert: Kubernetes High Pod Restart Count
+              expr: increase(kube_pod_container_status_restarts_total{namespace!~"kube-system|monitoring"}[10m]) > 3
+              for: 2m
+              labels:
+                severity: warning
+              annotations:
+                summary: "High pod restart count"
+                description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} restarted more than 3 times in the last 10 minutes."
+
+            - alert: Kubernetes API Server Down
+              expr: up{job="apiserver"} == 0
+              for: 1m
+              labels:
+                severity: critical
+              annotations:
+                summary: "API Server Down"
+                description: "The Kubernetes API server is down."
+
+            - alert: Kubernetes Cluster Pod Usage Above 80%
+              expr: |
+                (sum(kube_pod_info{node=~".*"}) / sum(kube_node_status_allocatable{resource="pods", node=~".*"})) * 100 > 80
+              for: 5m
+              labels:
+                severity: warning
+              annotations:
+                summary: "Pod usage exceeds 80% of total allocatable pods in the cluster"
+                description: 'Pod usage is currently {{ printf "%.0f" $value }}% of the total cluster pod capacity.'
+
+            - alert: Kubernetes Node transmit bandwidth is high (>90%)
+              expr: ((rate(node_network_transmit_bytes_total{device!~"lo|veth.*|docker.*|cbr.*"}[5m]) / on(instance, device) node_network_speed_bytes) * 100)  > 90
+              for: 5m
+              labels:
+                severity: critical
+              annotations:
+                summary: Kubernetes - Node unusual network throughput out (instance {{ $labels.instance }})
+                description: "Node {{ $labels.instance }} interface {{ $labels.device }} transmit bandwidth is high (>90%)\n  Current: {{ $value | humanizePercentage }}\n  Interface: {{ $labels.device }}"
+            # Node receive bandwidth is high (>90%)
+            - alert: Kubernetes Node receive bandwidth is high (>90%)
+              expr: ((rate(node_network_receive_bytes_total{device!~"lo|veth.*|docker.*|cbr.*"}[5m]) / on(instance, device) node_network_speed_bytes) * 100) > 90
+              for: 5m
+              labels:
+                severity: critical
+              annotations:
+                summary: Kubernetes - Node unusual network throughput in (instance {{ $labels.instance }})
+                description: "Node receive bandwidth is high (>90%).\n  VALUE = {{ $value }}%"
+            #HAProxy High HTTP 5xx Error Rate
+            - alert: Kubernetes High HTTP 5xx Error Rate
+              expr: |
+                (
+                  sum(rate(haproxy_frontend_http_responses_total{code=~"5.."}[5m])) by (frontend)
+                  /
+                  sum(rate(haproxy_frontend_http_responses_total[5m])) by (frontend)
+                ) * 100 > 1
+              for: 15m
+              labels:
+                severity: warning
+              annotations:
+                summary: "Kubernetes - High 5xx error rate on HAProxy frontend {{$labels.frontend}}"
+                description: |
+                  'The HAProxy frontend '{{$labels.frontend}}' is experiencing a high rate of 5xx errors on more than 1% of requests.
+                  The current error rate is {{ printf "%.2f" $value}}% and has been sustained for over 15 minutes.'
+
+            #HAProxy Critical HTTP 5xx Error Rate
+            - alert: Kubernetes Critical HTTP 5xx Error Rate
+              expr: |
+                (
+                  sum(rate(haproxy_frontend_http_responses_total{code=~"5.."}[5m])) by (frontend)
+                  /
+                  sum(rate(haproxy_frontend_http_responses_total[5m])) by (frontend)
+                ) * 100 > 5
+              for: 15m
+              labels:
+                severity: critical
+              annotations:
+                summary: "Kubernetes - High 5xx error rate on HAProxy frontend {{$labels.frontend}}"
+                description: |
+                  'The HAProxy frontend '{{$labels.frontend}}' is experiencing a high rate of 5xx errors on more than 5% of requests.
+                  The current error rate is {{ printf "%.2f" $value}}% and has been sustained for over 15 minutes.'
+            #Disk latency is growing (write operations > 100ms)
+            - alert: Kubernetes Disk latency is growing (write operations > 100ms)
+              expr: (rate(node_disk_write_time_seconds_total[1m]) / rate(node_disk_writes_completed_total[1m]) > 0.1 and rate(node_disk_writes_completed_total[1m]) > 0)
+              for: 5m
+              labels:
+                severity: critical
+              annotations:
+                summary: Kubernetes - Host unusual disk write latency (instance {{$labels.instance}})
+                description: 'Disk latency is growing (write operations > 100ms) on node {{ $labels.instance }}'
+            
+            - alert: Kubernetes Pod missing CPU/Memory limits
+              expr: |
+                (
+                kube_pod_container_resource_limits{resource="cpu"} == 0
+                or absent(kube_pod_container_resource_limits{resource="cpu"})
+                )
+                or
+                (
+                kube_pod_container_resource_limits{resource="memory"} == 0
+                or absent(kube_pod_container_resource_limits{resource="memory"})
+                )
+              for: 5m
+              labels:
+                severity: warning
+              annotations:
+                summary: "Kubernetes - Pod {{$labels.pod}} is missing resource limits"
+                description: 'Container {{$labels.container}} in pod {{$labels.pod}} (namespace: {{$labels.namespace}}) is missing {{$labels.resource}} limits.'
+
+            # # Container memory usage exceeds 75% of the resource limit
+            # # - alert: Kubernetes Container memory usage exceeds 75% of the resource limit
+            # #   expr: |
+            # #     (
+            # #       sum(container_memory_working_set_bytes{name!="", container!="POD"}) BY (namespace, pod, container, instance)
+            # #       /
+            # #       sum(container_spec_memory_limit_bytes{container!="POD"} > 0) BY (namespace, pod, container, instance)
+            # #       * 100
+            # #     ) > 70
+            # #   for: 10m
+            # #   labels:
+            # #     severity: warning
+            # #     component: kubernetes
+            # #   annotations:
+            # #     description: 'Container {{ $labels.container }} in pod {{ $labels.pod }} (namespace: {{ $labels.namespace }}) on node {{ $labels.instance }} is above 75% threshold'
+            # #     summary: "Kubernetes - High memory usage in Kubernetes container (Warning)"
+
+            # Container memory usage exceeds 90% of the resource limit 
+            - alert: Kubernetes Container memory usage exceeds 90% of the resource limit 
+              expr: |
+                (
+                  sum(container_memory_working_set_bytes{name!="", container!="POD"}) BY (namespace, pod, container, instance)
+                  /
+                  sum(container_spec_memory_limit_bytes{container!="POD"} > 0) BY (namespace, pod, container, instance)
+                  * 100
+                ) > 90
+              for: 5m
+              labels:
+                severity: critical
+                component: kubernetes
+              annotations:
+                description: 'Container {{ $labels.container }} in pod {{ $labels.pod }} (namespace: {{ $labels.namespace }}) on node {{ $labels.instance }} is above 90% threshold'
+                summary: "Kubernetes - Critical memory usage in Kubernetes container"
+
+            # #Container CPU usage exceeds 75% of the resource limit 
+            # # - alert: Kubernetes Container CPU usage exceeds 75% of the resource limit 
+            # #   expr: |
+            # #     (
+            # #     sum(rate(container_cpu_usage_seconds_total{container!="POD",container!=""}[5m])) BY (namespace, pod, container, instance)
+            # #     /
+            # #     sum(container_spec_cpu_quota{container!="POD",container!=""} / container_spec_cpu_period{container!="POD",container!=""}) BY (namespace, pod, container, instance)
+            # #     * 100
+            # #     ) > 75
+            # #   for: 10m
+            # #   labels:
+            # #     severity: warning
+            # #   annotations:
+            # #     summary: "Kubernetes - Container {{$labels.container}} in pod {{$labels.pod}} has high CPU usage"
+            # #     description: 'Container {{$labels.container}} in pod {{$labels.pod}} (namespace: {{$labels.namespace}}) on {{$labels.instance}} has been using {{$value | humanize}}% of its CPU limit for more than 10 minutes.'
+            # Container CPU usage exceeds 90% of the resource limit 
+            - alert: Kubernetes Container CPU usage exceeds 90% of the resource limit 
+              expr: |
+                (
+                sum(rate(container_cpu_usage_seconds_total{container!="POD",container!=""}[5m])) BY (namespace, pod, container, instance)
+                /
+                sum(container_spec_cpu_quota{container!="POD",container!=""} / container_spec_cpu_period{container!="POD",container!=""}) BY (namespace, pod, container, instance)
+                * 100
+                ) > 90
+              for: 5m
+              labels:
+                severity: critical
+              annotations:
+                summary: "Kubernetes - Container {{$labels.container}} in pod {{$labels.pod}} has high CPU usage"
+                description: 'Container {{$labels.container}} in pod {{$labels.pod}} (namespace: {{$labels.namespace}}) on {{$labels.instance}} has been using {{$value | humanize}}% of its CPU limit for more than 5 minutes.'
+            # Warning alert - 60% threshold
+            - alert: Kubernetes Disk is too busy (IO wait > 60%)
+              expr: |
+                (rate(node_disk_io_time_seconds_total{device!~"dm-.*|loop.*|ram.*"}[5m])) > 0.60
+              for: 5m
+              labels:
+                severity: warning
+                component: system
+              annotations:
+                summary: "Kubernetes - Host {{$labels.instance}} has high disk I/O wait time"
+                description: "Disk {{$labels.device}} on {{$labels.instance}} has been busy for 60% of time for more than 5 minutes.\n  VALUE = {{ $value }}"
+
+            # Critical alert - 85% threshold
+            - alert: Kubernetes Disk is too busy (IO wait > 85%)
+              expr: |
+                (rate(node_disk_io_time_seconds_total{device!~"dm-.*|loop.*|ram.*"}[5m])) > 0.85
+              for: 5m
+              labels:
+                severity: critical
+                component: system
+              annotations:
+                summary: "Kubernetes - Host {{ $labels.instance }} has critical disk I/O wait time"
+                description: "Disk {{ $labels.device }} on {{ $labels.instance }} has been busy for 85% of time for more than 5 minutes.\n  VALUE = {{ $value }}"
+
+    - name: longhorn.rules
+      groups:
+        - name: longhorn.rules
+          rules:
+            - alert: LonghornVolumeActualSpaceUsedWarning
+              expr: ((longhorn_volume_actual_size_bytes / longhorn_volume_capacity_bytes) * 100 > 90) or absent(longhorn_volume_actual_size_bytes)
+              for: 5m
+              labels:
+                severity: warning
+                service: Longhorn
+              annotations:
+                title: "Longhorn: Volume Actual Space Used Warning"
+                summary: The actual used space of Longhorn volume is over 90% of the capacity.
+                description: The actual space used by Longhorn volume {{$labels.volume}} on {{$labels.node}} is at {{$value | printf "%.2f"}}% capacity for more than 5 minutes.
+                template: "automate"
+
+            - alert: LonghornVolumeStatusCritical
+              expr: longhorn_volume_robustness == 3
+              for: 5m
+              labels:
+                severity: critical
+                service: Longhorn
+                issue: Longhorn volume {{$labels.volume}} is Fault.
+              annotations:
+                title: "Longhorn: Volume Status Critical"
+                summary: Longhorn volume {{$labels.volume}} is Fault
+                description: Longhorn volume {{$labels.volume}} on {{$labels.node}} is Fault for more than 2 minutes.
+                template: "automate"
+
+            - alert: LonghornVolumeStatusWarning
+              expr: longhorn_volume_robustness == 2
+              for: 5m
+              labels:
+                severity: warning
+                service: Longhorn
+                issue: Longhorn volume {{$labels.volume}} is Degraded.
+              annotations:
+                title: "Longhorn: Volume Status Warning"
+                summary: Longhorn volume {{$labels.volume}} is Degraded
+                description: Longhorn volume {{$labels.volume}} on {{$labels.node}} is Degraded for more than 5 minutes.
+                template: "automate"
+
+            - alert: LonghornNodeStorageWarning
+              expr: (longhorn_node_storage_usage_bytes / longhorn_node_storage_capacity_bytes) * 100 > 80
+              for: 5m
+              labels:
+                severity: warning
+                service: Longhorn
+                issue: The used storage of node {{$labels.node}} is high.
+              annotations:
+                title: "Longhorn: Node Storage Warning"
+                summary: The used storage of node is over 80% of the capacity.
+                description: The used storage of node {{$labels.node}} is at {{$value | printf "%.2f"}}% capacity for more than 5 minutes.
+                template: "automate"
+
+            - alert: LonghornDiskStorageWarning
+              expr: (longhorn_disk_usage_bytes / longhorn_disk_capacity_bytes) * 100 > 80
+              for: 5m
+              labels:
+                severity: warning
+                service: Longhorn
+                issue: The used storage of disk {{$labels.disk}} on node {{$labels.node}} is high.
+              annotations:
+                title: "Longhorn: Disk Storage Warning"
+                summary: The used storage of disk is over 80% of the capacity.
+                description: The used storage of disk {{$labels.disk}} on node {{$labels.node}} is at {{$value | printf "%.2f"}}% capacity for more than 5 minutes.
+                template: "automate"
+
+            - alert: LonghornNodeDown
+              expr: (avg(longhorn_node_count_total) or on() vector(0)) - (count(longhorn_node_status{condition="ready"} == 1) or on() vector(0)) > 0
+              for: 5m
+              labels:
+                severity: critical
+                service: Longhorn
+                issue: There are {{$value}} Longhorn nodes are offline
+              annotations:
+                title: "Longhorn: Node Down"
+                summary: Longhorn nodes is offline
+                description: There are {{$value}} Longhorn nodes which have been offline for more than 5 minutes.
+                template: "automate"
+
+            - alert: LonghornInstanceManagerCPUUsageWarning
+              expr: (longhorn_instance_manager_cpu_usage_millicpu/longhorn_instance_manager_cpu_requests_millicpu) * 100 > 300
+              for: 5m
+              labels:
+                severity: warning
+                service: Longhorn
+                issue: Longhorn instance manager {{$labels.instance_manager}} on {{$labels.node}} consumes 3 times the CPU request.
+              annotations:
+                title: "Longhorn: Instance Manager CPU Usage Warning"
+                summary: Longhorn instance manager {{$labels.instance_manager}} on {{$labels.node}} has CPU Usage / CPU request is over 300%.
+                description: Longhorn instance manager {{$labels.instance_manager}} on {{$labels.node}} has CPU Usage / CPU request is {{$value | printf "%.2f"}}% for more than 5 minutes.
+                template: "automate"
+
+            - alert: LonghornNodeCPUUsageWarning
+              expr: (longhorn_node_cpu_usage_millicpu / longhorn_node_cpu_capacity_millicpu) * 100 > 90
+              for: 5m
+              labels:
+                severity: warning
+                service: Longhorn
+                issue: Longhorn node {{$labels.node}} experiences high CPU pressure.
+              annotations:
+                title: "Longhorn: Node CPU Usage Warning"
+                summary: Longhorn node {{$labels.node}} experiences high CPU pressure for more than 5m.
+                description: Longhorn node {{$labels.node}} has CPU Usage / CPU capacity is {{$value | printf "%.2f"}}% for more than 5 minutes.
+                template: "automate"
+
+    - name: velero.rules
+      groups:
+        - name: velero.rules
+          rules:
+            - alert: VeleroBackupPartialFailures
+              annotations:
+                message: Velero backup {{ $labels.schedule }} has {{ $value | humanizePercentage }} partialy failed backups.
+              expr: |-
+                velero_backup_partial_failure_total{schedule!=""} / velero_backup_attempt_total{schedule!=""} > 0.25
+              for: 15m
+              labels:
+                severity: warning
+            - alert: VeleroBackupFailures
+              annotations:
+                message: Velero backup {{ $labels.schedule }} has {{ $value | humanizePercentage }} failed backups.
+              expr: |-
+                velero_backup_failure_total{schedule!=""} / velero_backup_attempt_total{schedule!=""} > 0.25
+              for: 15m
+              labels:
+                severity: warning
+
+    - name: runners.metrics
+      groups:
+        - name: runners.metrics
+          rules:
+            - expr: sum(gitlab_runner_jobs{job=~".*gitlab-runner.*"}) OR clamp_max(absent(notExists{job=~".*gitlab-runner.*"}),0)
+              record: gitlab_runner_jobs_build_total
+            - expr: gitlab_runner_jobs_build_total/sum(gitlab_runner_concurrent{job=~".*gitlab-runner.*"})
+              record: gitlab_runner_build_total:concurrent_saturation
+            - expr: gitlab_runner_jobs/ on(namespace, pod) gitlab_runner_concurrent
+              record: gitlab_runner_jobs:concurrent_saturation
+
+    - name: opensearch.rules
+      groups:
+      - name: opensearch.rules
+        rules:
+        # Opensearch disk out of space 
+        - alert: OpensearchDiskOutOfSpace
+          expr: opensearch_fs_total_available_bytes / opensearch_fs_total_total_bytes * 100 < 10
+          for: 0m
+          labels:
+            severity: CRITICAL
+            service: OpenSearch
+          annotations:
+            investigate_link: "https://ops-fps.starixplay.com"
+            title: "Opensearch: Disk running out of space"
+            summary: Opensearch disk out of space (component {{ $labels.job }})
+            description: "The disk usage is over 90%"
+          
+        #  Opensearch Node Offline
+        - alert: OpensearchNodeOffline
+          expr: max_over_time(opensearch_cluster_nodes_number[5m]) < max_over_time(opensearch_cluster_nodes_number[1d:5m])
+          for: 0m
+          labels:
+            severity: CRITICAL
+            service: OpenSearch
+          annotations:
+            title: "Opensearch: Nodes go Offline"
+            summary: Opensearch node goes offline (component {{ $labels.job }})
+            description: "Some node go offline!"
+
+        # Opensearch Cluster Red 
+        - alert: OpensearchClusterRed
+          expr: opensearch_cluster_status == 2
+          for: 0m
+          labels:
+            severity: CRITICAL
+            service: OpenSearch
+          annotations:
+            title: "Opensearch: Cluster in Red Health"
+            summary: Opensearch Cluster Red (component {{ $labels.job }})
+            description: "Opensearch Cluster Red status"
+
+        # Opensearch Cluster Yellow 
+        - alert: OpensearchClusterYellow
+          expr: opensearch_cluster_status == 1
+          for: 0m
+          labels:
+            severity: WARNING
+            service: OpenSearch
+          annotations:
+            title: "Opensearch: Cluster in Yellow Health"
+            summary: Opensearch Cluster Yellow (component {{ $labels.job }})
+            description: "Elastic Cluster Yellow status"
+
+        #  Opensearch no new documents 
+        - alert: OpensearchNoNewDocuments
+          expr: increase(opensearch_indices_indexing_index_count{job=~".*-hot"}[10m]) < 1
+          for: 0m
+          labels:
+            severity: WARNING
+            service: OpenSearch
+          annotations:
+            title: "Opensearch: No new Docs been written"
+            summary: Opensearch no new documents (component {{ $labels.job }})
+            description: "No new documents for 10 min!"
+
+    - name: tcp.rules
+      groups:
+        - name: tcp.rules
+          rules:
+            - alert: TCPEndpointStatus
+              expr: probe_success{job="probe/monitoring/tcp-probe"} == 0 
+              for: 30s
+              labels:
+                severity: critical
+              annotations:
+                problem: 'Connect failed (TCP unreachable)'
+    
+    - name: haproxyingress.rules
+      groups:
+        - name: haproxyingress.rules
+          rules:
+            - alert: Kubernetes HAProxy Ingress High Total Connections
+              expr: sum(haproxy_frontend_current_sessions{namespace="haproxy-ingress"}) > 10000
+              for: 1m
+              labels:
+                severity: warning
+              annotations:
+                summary: "HAProxy Ingress total concurrent connections too high"
+                value: '{{ $value }}'
+                description: "HAProxy Ingress has over {{ $value }} concurrent connections."
+
+alertmanager:
+  config:
+    global:
+      resolve_timeout: 15m
+      slack_api_url: https://hooks.slack.com/services/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
+    templates:
+    - /etc/alertmanager/config/*.tmpl
+      
+  templateFiles:
+    sre-template.tmpl: |-
+      {{ define "sre.slack.title" -}}
+        {{- if eq .Status "firing" -}}
+          {{- if eq (.CommonLabels.severity | toUpper) "CRITICAL" -}}
+            :pepe-rage: [{{ .CommonLabels.severity | toUpper }}] {{ .CommonAnnotations.summary }}
+          {{- else if eq (toUpper .CommonLabels.severity) "WARNING" -}}
+            :meow-stare: [{{ .CommonLabels.severity | toUpper }}] {{ .CommonAnnotations.summary }}
+          {{- else -}} 
+            :meow-disputed: [{{ .CommonLabels.severity | toUpper }}] {{ .CommonAnnotations.summary }}
+          {{- end -}}
+        {{- else -}}
+          :pepe-saber: [{{ .CommonLabels.severity | toUpper }} | {{ .Status | toUpper }}] {{ .CommonAnnotations.summary }}
+        {{- end -}}
+      {{- end }}
+
+      {{ define "sre.slack.body" -}}
+        *Description:* {{ .CommonAnnotations.description }}
+
+        *Details:*
+        {{- range $key, $value := .CommonLabels -}}
+          {{- if or 
+            (eq $key "cluster")
+            (eq $key "job")
+            (eq $key "pod")
+            (eq $key "pvc")
+          }}
+           • *{{ $key | title }}:* `{{ $value }}`
+          {{- end -}}
+        {{- end -}}
+      {{- end }}
+
+      {{ define "sre.slack.fallback" }}
+        {{ template "sre.slack.title" . }}
+      {{ end }}
+
+      {{ define "sre.slack.color" -}}
+        {{- if eq .Status "firing" -}}
+          {{- if eq (.CommonLabels.severity | toUpper) "CRITICAL" -}}
+            #FF5733
+          {{- else if eq (.CommonLabels.severity | toUpper) "WARNING" -}}
+            #FFA500
+          {{- else -}}
+            #4350E0
+          {{- end -}}
+        {{- else -}}
+          #32CD32
+        {{- end -}}
+      {{- end }}
+
+      {{ define "sre.slack.titlelink" -}}
+        {{ range .Alerts }}{{ .Annotations.DashboardURL }}{{ end }} 
+      {{- end }}

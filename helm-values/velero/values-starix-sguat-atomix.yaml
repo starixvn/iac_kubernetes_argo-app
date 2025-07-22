@@ -1,0 +1,61 @@
+image:
+  repository: lumhub.sc-t1prod.gamora.prod/aws/base/velero
+  tag: v1.14.1
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+  prometheusRule:
+    autodetect: true
+    enabled: true
+
+kubectl:
+  image:
+    repository:  lumhub.sc-t1prod.gamora.prod/aws/base/kubectl
+    tag: "1.16.15"
+
+# AWS backend plugin configuration
+initContainers:
+  - name: velero-plugin-for-aws
+    image:  lumhub.sc-t1prod.gamora.prod/aws/base/velero/velero-plugin-for-aws:v1.10.0
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
+
+# Minio storage configuration
+configuration:
+  backupStorageLocation:
+    - provider: aws
+      bucket: data-backup-testlab-termite
+      config:
+        region: ap-northeast-1
+        # s3ForcePathStyle: true
+  # extraEnvVars:
+  #   HTTP_PROXY: "lisasqd.nebula.prod:8801"
+  #   HTTPS_PROXY: "lisasqd.nebula.prod:8801"
+  #   NO_PROXY: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+  volumeSnapshotLocation:
+    - provider: aws
+      config:
+        region: ap-northeast-1
+credentials:
+  existingSecret: velero-secret
+  # iam velero-access-s3
+
+
+
+schedules:
+  web:
+    disabled: false
+    labels:
+      env: sguat
+      org: lumi
+    schedule: "0 19 * * *"
+    useOwnerReferencesInBackup: false
+    paused: false
+    template:
+      ttl: "168h"
+      excludedNamespaces:
+      - "monitoring"

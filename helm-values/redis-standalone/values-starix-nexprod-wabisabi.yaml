@@ -1,0 +1,37 @@
+clusterDomain: starix.nexprod
+
+
+global:
+  storageClass: "longhorn"
+  imageRegistry: "hub.nexdev.net"
+  security:
+    allowInsecureImages: true
+
+
+image:
+  repository: base/bitnami/redis
+  tag: 8.0.0-debian-12-r0
+
+
+architecture: standalone
+
+
+auth:
+  password: "foo1@bared"
+
+volumePermissions:
+  enabled: true
+  image:
+    repository: base/os-shell
+    tag: 12-debian-12-r16
+
+master:
+  resources:
+    requests: 
+      memory: 1Gi
+    limits:
+      memory: 1Gi
+  service:
+    type: NodePort
+    nodePorts:
+      redis: "31684"

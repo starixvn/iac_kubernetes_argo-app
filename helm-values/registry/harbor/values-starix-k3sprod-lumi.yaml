@@ -1,0 +1,102 @@
+expose:
+  tls:
+    enabled: false
+  ingress:
+    className: "haproxy"
+    hosts:
+      core: lumhub.ops-klprod.gamora.prod
+externalURL: https://lumhub.ops-klprod.gamora.prod
+
+persistence:
+  persistentVolumeClaim:
+    registry:
+      storageClass: "longhorn-effort-2rep"
+      size: 40Gi
+    jobservice:
+      jobLog:
+        storageClass: "longhorn-effort-2rep"
+        size: 5Gi
+    database:
+      storageClass: "longhorn-effort-2rep"
+      size: 10Gi
+    redis:
+      storageClass: "longhorn-effort-2rep"
+      size: 10Gi
+
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true  
+
+proxy:
+  httpProxy: "http://iusqd.gamora.prod:8801"
+  httpsProxy: "http://iusqd.gamora.prod:8801"
+  noProxy: "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+  components:
+    - core
+    - jobservice
+    - trivy
+
+
+
+cache:
+  enabled: true
+  expireHours: 24
+
+
+portal:
+  nodeSelector:
+    harbor-workload: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: cattle.io/os
+    value: harbor-workload
+core:
+  nodeSelector:
+    harbor-workload: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: cattle.io/os
+    value: harbor-workload
+jobservice:
+  nodeSelector:
+    harbor-workload: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: cattle.io/os
+    value: harbor-workload
+registry:
+  nodeSelector:
+    harbor-workload: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: cattle.io/os
+    value: harbor-workload
+trivy:
+  enabled: false
+
+database:
+  internal:
+    nodeSelector:
+      harbor-workload: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: cattle.io/os
+      value: harbor-workload
+redis:
+  internal:
+    nodeSelector:
+      harbor-workload: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: cattle.io/os
+      value: harbor-workload
+exporter:
+  nodeSelector:
+    harbor-workload: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: cattle.io/os
+    value: harbor-workload
+

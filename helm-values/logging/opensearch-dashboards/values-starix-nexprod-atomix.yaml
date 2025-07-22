@@ -1,0 +1,27 @@
+---
+image:
+  repository: "hub.nexdev.net/base/opensearchproject/opensearch-dashboards"
+  tag: "2.19.2"
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "512M"
+  limits:
+    cpu: "500m"
+    memory: "2Gi"
+
+# service:
+#   type: NodePort
+#   nodePort: "31601"
+
+ingress:
+  enabled: true
+  ingressClassName: "haproxy"
+  hosts:
+  - host: logs.nexdev.net
+    paths:
+      - path: /
+        backend:
+          serviceName: ""
+          servicePort: ""

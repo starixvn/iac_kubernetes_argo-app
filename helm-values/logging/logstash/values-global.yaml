@@ -1,0 +1,5 @@
+---
+logstashPattern:
+  pattern.conf: |
+    HAPROXYGW %{IP:client_ip}:%{INT:client_port} \[%{HAPROXYDATE:accept_date}\] %{NOTSPACE:frontend_name} %{NOTSPACE:backend_name}/%{NOTSPACE:server_name} %{INT:time_queue}/%{INT:time_backend_connect}/%{NOTSPACE:time_duration} %{NOTSPACE:bytes_read} %{NOTSPACE:termination_state} %{INT:actconn}/%{INT:feconn}/%{INT:beconn}/%{INT:srvconn}/%{NOTSPACE:retries} %{INT:srv_queue}/%{INT:backend_queue}
+    HTTP_CAPTURED_HEADER %{DATA:request_host}\|%{DATA:user-agent}(?:\|%{DATA:request_referer})?(?:\|%{IP:TrueClientIP})?

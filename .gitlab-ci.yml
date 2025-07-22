@@ -1,0 +1,14 @@
+---
+include:
+  - project: 'iac/core-ci'
+    file: '/templates/workflows/dynamic.yml'
+    ref: v2.0.0
+  - project: 'iac/core-ci'
+    file: '/templates/workflows/tag-deploy.yml'
+    ref: v2.0.0
+
+variables:
+  VAULT_JWT_BACKEND: "jwt-gitlab"
+  TF_VAR_vault_role: "kubernetes-argo-app"
+  AUTO_APPPROVE: false
+  DEBUG: 0

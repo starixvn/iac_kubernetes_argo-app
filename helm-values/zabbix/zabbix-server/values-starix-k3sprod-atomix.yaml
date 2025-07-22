@@ -1,0 +1,118 @@
+zabbixImageTag: ubuntu-7.2.9
+
+zabbixServer:
+  enabled: true
+  replicaCount: 1
+  hostIP: 0.0.0.0
+  resources: {}
+
+  image:
+    repository: nexhub.ops-klprod.gamora.prod/kbt/base/zabbix/zabbix-server-pgsql
+    tag: ubuntu-7.2.9-klp
+    pullPolicy: IfNotPresent
+  nodeSelector:
+    zabbix-server: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: st-sentry-ovs
+    value: "yes" 
+  haNodesAutoClean:
+    enabled: true
+    image:
+      repository: nexhub.ops-klprod.gamora.prod/kbt/base/zabbix/postgres
+      tag: 16
+      pullPolicy: IfNotPresent
+    schedule: "0 1 * * *"
+    concurrencyPolicy: "Replace"
+    deleteOlderThanSeconds: 3600
+    resources: {}
+
+  service:
+    type: NodePort
+    port: 10051
+    nodePort: 31052
+    annotations: {}
+  extraEnv:
+    - name: "ZBX_STARTPOLLERS"
+      value: "200"
+    - name: "ZBX_STARTPOLLERSUNREACHABLE"
+      value: "200"
+    - name: "ZBX_CACHESIZE"
+      value: "8G"
+    - name: "ZBX_TRENDCACHESIZE"
+      value: "512M"
+    - name: "ZBX_VALUECACHESIZE"
+      value: "1G"
+    - name: "ZBX_STARTPROXYPOLLERS"
+      value: "200"
+    - name: "ZBX_HOUSEKEEPINGFREQUENCY"
+      value: "1"
+    - name: "ZBX_MAXHOUSEKEEPERDELETE"
+      value: "5000"
+    - name: "ZBX_HISTORYINDEXCACHESIZE"
+      value: "32M"
+
+postgresql:
+  enabled: true
+  image:
+    repository: nexhub.ops-klprod.gamora.prod/kbt/base/zabbix/postgres
+    tag: 16
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+  resources: {}
+  persistence:
+    enabled: true
+    existingClaimName: false
+    storageSize: 30Gi
+    claim_access_mode: ReadWriteOnce
+    storageClass: "local-path"
+  nodeSelector:
+    zabbix-server: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: st-sentry-ovs
+    value: "yes" 
+  service:
+    type: ClusterIP
+    clusterIP:
+    port: 5432
+    annotations: {}
+  extraRuntimeParameters:
+    max_connections: 1000
+  extraEnv: []
+
+zabbixWeb:
+  enabled: true
+  replicaCount: 1
+  podAntiAffinity: true
+  resources: {}
+  image:
+    repository: nexhub.ops-klprod.gamora.prod/kbt/base/zabbix/zabbix-web-nginx-pgsql
+    tag: ubuntu-7.2.9
+    pullPolicy: IfNotPresent
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30081
+  nodeSelector:
+    zabbix-server: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: st-sentry-ovs
+    value: "yes" 
+
+ingress:
+  enabled: true
+  ingressClassName: "haproxy"
+  hosts:
+    - host: vn-zabbix-klp.starixplay.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  pathType: Prefix
+nodeSelector:
+  zabbix-server: "yes"
+tolerations:
+- effect: NoSchedule
+  key: st-sentry-ovs
+  value: "yes" 

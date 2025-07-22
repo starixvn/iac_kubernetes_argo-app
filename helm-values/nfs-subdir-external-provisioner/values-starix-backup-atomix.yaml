@@ -1,0 +1,14 @@
+replicaCount: 3
+
+image:
+  repository: registry.k8s.io/sig-storage/nfs-subdir-external-provisioner
+  tag: v4.0.2
+  pullPolicy: IfNotPresent
+
+nfs:
+  server: ds925p.nexdev.net
+  path: /volume1/nxdk001
+  mountOptions:
+  volumeName: nfs-subdir-external-provisioner-root
+  # Reclaim policy for the main nfs volume
+  reclaimPolicy: Retain

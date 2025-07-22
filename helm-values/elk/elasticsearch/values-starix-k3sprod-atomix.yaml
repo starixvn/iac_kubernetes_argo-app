@@ -1,0 +1,48 @@
+image: nexhub.ops-klprod.gamora.prod/kbt/base/elasticsearch/elasticsearch
+imageTag: "8.5.1"
+resources:
+  requests:
+    cpu: "1000m"
+    memory: "500Mi"
+  limits:
+    cpu: "1000m"
+    memory: "2Gi"
+
+# ingress:
+#   enabled: true
+#   className: "haproxy"
+#   pathtype: ImplementationSpecific
+#   hosts:
+#     - host: "es.nebula.prod"
+#       paths:
+#         - path: "/"
+
+service:
+  type: NodePort
+  # nodePort: "30927"
+
+volumeClaimTemplate:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 20Gi
+
+# networkPolicy:
+#   http:
+#     enabled: true
+#   transport:
+#     enabled: true
+
+protocol: http
+antiAffinity: "soft"
+esConfig:
+  elasticsearch.yml: |
+    http.host: 0.0.0.0
+    xpack.security.enabled: false
+    xpack.security.http.ssl:
+      enabled: false
+
+
+replicas: 3
+minimumMasterNodes: 2
+createCert: false

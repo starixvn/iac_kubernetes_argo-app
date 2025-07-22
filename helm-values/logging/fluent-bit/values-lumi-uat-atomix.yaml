@@ -1,0 +1,120 @@
+image:
+  repository: nexhub.ops-klprod.gamora.prod/kbt/base/fluent/fluent-bit
+
+# nodeSelector:
+#   node-role.kubernetes.io/control-plane: ""
+#   node-role.kubernetes.io/master: ""
+
+tolerations:
+- operator: Exists
+
+luaScripts:
+  strip_ansi_color_code: |
+    function strip_ansi_color_code(tag, timestamp, record)
+      if type(record["log"]) == "string" then 
+        record["log"] = record["log"]:gsub('[\27\155][][()#;?%d]*[A-PRZcf-ntqry=><~]', '') 
+        return 2, 0, record 
+      end 
+      return 0, 0, 0
+    end
+
+
+config:
+  service: |
+    [SERVICE]
+      Daemon Off
+      Flush {{ .Values.flush }}
+      Log_Level {{ .Values.logLevel }}
+      Parsers_File /fluent-bit/etc/parsers.conf
+      Parsers_File /fluent-bit/etc/conf/custom_parsers.conf
+      HTTP_Server On
+      HTTP_Listen 0.0.0.0
+      HTTP_Port {{ .Values.metricsPort }}
+      Health_Check On
+  inputs: |
+    [INPUT]
+      Name tail
+      Path /var/log/containers/calico*.log,/var/log/containers/dns*.log,/var/log/containers/kube*.log,/var/log/containers/nodelocaldns*.log
+      multiline.parser docker, cri
+      Tag kube.kubesystem
+      Mem_Buf_Limit 64MB
+      Skip_Long_Lines On
+
+    [INPUT]
+      Name systemd
+      Tag host.kubesystem
+      Systemd_Filter _SYSTEMD_UNIT=containerd.service
+      Systemd_Filter _SYSTEMD_UNIT=etcd.service
+      Systemd_Filter _SYSTEMD_UNIT=kubelet.service
+      Read_From_Tail On
+      Strip_Underscores On
+
+    [INPUT]
+      Name systemd
+      Tag host.all
+      Read_From_Tail On
+      Strip_Underscores On
+      
+  filters: |
+    [FILTER]
+      Name modify
+      Match *
+      Add env scuat
+      Add cluster_type k8s
+
+    [FILTER]
+      Name kubernetes
+      Match kube.*
+      Merge_Log On
+      Keep_Log Off
+      K8S-Logging.Parser On
+      K8S-Logging.Exclude On
+
+  outputs: |
+    [OUTPUT]
+      Name opensearch
+      Match host.kubesystem
+      Host opsi.ops-klprod.gamora.prod
+      Port 443
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-kubesystem-systemd
+      Replace_Dots On
+
+    [OUTPUT]
+      Name opensearch
+      Match host.all
+      Host opsi.ops-klprod.gamora.prod
+      Port 443
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-system-journal-uat
+      Replace_Dots On
+
+    [OUTPUT]
+      Name opensearch
+      Match kube.kubesystem
+      Host opsi.ops-klprod.gamora.prod
+      Port 443
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-kubesystem-container-log
+      Replace_Dots On
+
+
+  customParsers: |
+    [PARSER]
+      Name docker_no_time
+      Format json
+      Time_Keep Off
+      Time_Key time
+      Time_Format %Y-%m-%dT%H:%M:%S.%L

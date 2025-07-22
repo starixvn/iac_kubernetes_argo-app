@@ -1,0 +1,135 @@
+---
+clusterDomain: starix.k3suat
+
+global:
+  imageRegistry: "nexhub.ops-klprod.gamora.prod/kbt/base"
+
+operator:
+  enabled: true
+
+prometheus:
+  service:
+    type: NodePort
+    ports:
+      http: 9090
+    nodePorts:
+      http: "30062"
+
+  retention: 7d
+  retentionSize: "90GiB"
+
+  persistence:
+    enabled: true
+    storageClass: "longhorn"
+    size: 25Gi
+
+  ## @param prometheus.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if prometheus.resources is set (prometheus.resources is recommended for production).
+  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ##
+  resources:
+    requests:
+      memory: "4096Mi"
+    limits:
+      memory: "8192Mi"
+
+  additionalScrapeConfigs:
+    enabled: true
+    type: internal
+    internal:
+      jobList: []
+
+
+  #additionalPrometheusRules:
+
+node-exporter:
+  extraVolumes:
+  - hostPath:
+      path: /var/lib
+      type: ""
+    name: mnt
+    
+  extraVolumeMounts:
+  - mountPath: /host/root/var/lib
+    mountPropagation: HostToContainer
+    name: mnt
+    readOnly: true
+
+  extraArgs:
+    path.rootfs: "/host/root"
+    collector.filesystem.mount-points-exclude: "^/(dev|proc|sys|var/lib/docker/.+)($|/)"
+    collector.filesystem.fs-types-exclude: "^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs|squashfs|nsfs|tmpfs)$"
+
+
+alertmanager:
+  resourcesPreset: "none"
+  enabled: true
+
+  config:
+    global:
+      resolve_timeout: 15m
+      http_config:
+        proxy_url: "http://iusqd.gamora.prod:8801"
+
+    route:
+      receiver: 'default-receiver'
+      routes:
+      - receiver: 'null'
+        match_re:
+          pod: "backup-.*|c-.*|.*-cleaner-.*|.*snapshot-.*|.*-cleanup-.*|.*-cron-.*|.*-update-.*|.*consumer.*"
+      - receiver: 'alert-nx-atomix-uat'
+        match_re:
+          alertname: "Kubernetes.*"
+      - receiver: "velero_backups"
+        match_re:
+          alertname: "Velero.*"
+      - receiver: 'longhorn_alerts'
+        match:
+          service: "Longhorn"
+        group_by: ['alertname', 'job', 'pvc']
+      group_by: ['alertname','job','pod', 'description']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 9999h
+
+    receivers:
+    - name: 'null'
+    - name: 'longhorn_alerts'
+      slack_configs:
+        - api_url: "https://hooks.slack.com/services/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"
+          channel: '#longhorn_alerts'
+          send_resolved: true
+          icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+          title: '{{ if eq .Status "firing" }}🔥PROBLEM🔥 {{ else }}✅RESOLVED✅ {{ end }}'
+          text: |
+            *Cluster:* `Kubernetes-DevOps-KLUAT`
+            *Severity:* `{{ .CommonLabels.severity }}`{{ if .CommonLabels.pvc }}
+            *PVC:* `{{ .CommonLabels.pvc }}`{{ end }}{{ if .CommonLabels.pvc_namespace }}
+            *Namespace:* `{{ .CommonLabels.pvc_namespace }}`{{ end }}{{ if .CommonAnnotations.description }}
+            *Description:* `{{ .CommonAnnotations.description }}`{{ end }}
+
+    - name: 'alert-nx-atomix-uat'
+      slack_configs:
+        - api_url: "https://hooks.slack.com/services/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"
+          channel: '#alert-nx-atomix-uat'
+          send_resolved: true
+          icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+          title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
+          text: |
+            *Cluster:* `Kubernetes-DevOps-KLUAT`
+            *Summary:* `{{ .CommonLabels.alertname }}`
+            *Description:* `{{ .CommonAnnotations.description }}`
+          color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+
+    - name: "velero_backups"
+      slack_configs:
+        - api_url: "https://hooks.slack.com/services/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"
+          channel: "#velero_backups"
+          send_resolved: true
+          icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+          title: '{{ if eq .Status "firing" }}🔥 PROBLEM 🔥 {{ .CommonLabels.alertname }}{{ else }}✅ RESOLVED ✅ {{ .CommonLabels.alertname }}{{ end }}'
+          text: |
+            *Cluster:* `Kubernetes-DevOps-KLUAT`
+            ❗ *{{ .CommonLabels.severity }}*
+            📝 *{{ .CommonAnnotations.message }}*
+
+    - name: default-receiver

@@ -1,0 +1,83 @@
+replicas: 3
+ingress:
+  enabled: true
+  ingressClassName: haproxy
+  hosts:
+    - vn-grafana-klprod.byb6181.com
+    - grafana-klp.starixplay.com
+    - grafanasc-klp.starixplay.com
+
+
+image:
+  registry: nexhub.ops-klprod.gamora.prod
+  repository: kbt/base/grafana/grafana
+  tag: 11.3.0
+
+
+resources:
+  limits:
+    memory: 4Gi
+  requests:
+    cpu: 100m
+    memory: 500Mi
+
+
+grafana.ini:
+  database:
+    host: "starix-mysql-graf-cluster-mysql-master"
+    name: "grafana-starix"
+    password: "sJ6E%cPeKzWQ"
+    type: "mysql"
+    user: "grafana-starix"
+
+# config to use plain text password
+assertNoLeakedSecrets: false
+
+
+# init user
+adminUser: admin
+adminPassword: RHk^QbNE0C5Q
+
+
+env:
+  HTTP_PROXY: "iusqd.gamora.prod:8801"
+  HTTPS_PROXY: "iusqd.gamora.prod:8801"
+  NO_PROXY: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.gamora.prod,.svc,.starix.k3sprod"
+  GF_SERVER_ROOT_URL: "https://grafana-klp.starixplay.com/"
+  GF_INSTALL_PLUGINS: "alexanderzobnin-zabbix-app,redis-datasource"
+
+
+### Mysql for Grafana
+extraObjects:
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: starix-mysql-graf-cluster-secret
+  type: Opaque
+  data:
+    ROOT_PASSWORD: "ZklAYWRES20xTXl0QVNnWko="
+    USER: "Z3JhZmFuYS1zdGFyaXg="
+    PASSWORD: "c0o2RSVjUGVLeldR"
+    DATABASE: "Z3JhZmFuYS1zdGFyaXg="
+
+- apiVersion: mysql.presslabs.org/v1alpha1
+  kind: MysqlCluster
+  metadata:
+    name: starix-mysql-graf-cluster
+  spec:
+    replicas: 3
+    secretName: starix-mysql-graf-cluster-secret
+    volumeSpec:
+      persistentVolumeClaim:
+        storageClassName: "longhorn-effort-2rep"
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 20Gi
+    podSpec:
+      resources:
+        requests:
+          memory: 1Gi
+          cpu:    200m
+        limits:
+          memory: 4Gi           

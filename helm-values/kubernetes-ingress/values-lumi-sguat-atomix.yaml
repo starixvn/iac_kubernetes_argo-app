@@ -1,0 +1,191 @@
+---
+controller:
+  kind: Deployment
+  replicaCount: 2
+  config:
+    # ssl-certificate: "haproxy-ingress/gamora-prod-cert"
+    scale-server-slots: "7"
+    stats-config-snippet: |
+      stats auth lumi:lum!onRock
+      stats refresh 300s
+      stats show-legends
+      stats show-node
+      stats show-modules
+    frontend-config-snippet: |
+      capture request header Host len 30
+      capture request header User-Agent len 200
+      capture request header Referer len 800
+      capture request header X-Forwarded-For len 20
+    backend-config-snippet: |
+      option forwardfor if-none
+    
+  service:
+    type: LoadBalancer
+    # externalTrafficPolicy: "Local"
+    ipFamilyPolicy: SingleStack
+    ipFamilies: [IPv4]
+    enablePorts:
+      quic: false
+
+    nodePorts:
+      http: 31080
+      https: 31443
+      stat: 31024
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags: Dept=VNTeam,Team=Lumi,ManageBy=vnArgoCD,map-migrated=migQK0IMQ5LFK,Environment=SGUAT,Name=lumi-sguat-eks-lb-1
+      service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+      service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+      service.beta.kubernetes.io/aws-load-balancer-name: lumi-sguat-eks-lb-1
+      service.beta.kubernetes.io/aws-load-balancer-subnets: subnet-0a4e02d5e2193e3cf,subnet-0108d53b24f4083e4,subnet-0b6ab739f6da6a762
+      service.beta.kubernetes.io/aws-load-balancer-type: nlb
+
+  extraArgs:
+    - --disable-ipv6
+
+  # logging:
+  #   level: info
+  #   traffic:
+  #     address: "address:rsyslog-service.logging"
+  #     port: "514"
+  #     format: "rfc3164"
+  #     facility: "local1"
+
+  logging:
+    level: info
+    traffic:
+      address: "stdout"
+      format: "raw"
+      facility: "daemon"
+
+  serviceMonitor:
+    enabled: true
+    extraLabels: {}
+    endpoints:
+      - port: stat
+        path: /metrics
+        scheme: http
+        interval: 30s
+
+  ingressClassResource:
+    name: haproxy
+    default: true
+  
+  ingressClass: haproxy
+
+  nodeSelector:
+    haproxy: "yes"
+  #   node-role.kubernetes.io/master: ""
+  #   node-role.kubernetes.io/control-plane: ""
+
+  tolerations:
+  - effect: NoSchedule
+    key: cattle.io/os
+    value: ingress
+
+
+  resources:
+    limits:
+      memory: 3Gi
+    requests:
+      cpu: 250m
+      memory: 400Mi
+
+defaultBackend:
+  image: "hub.lumigame.com/base/nexops-tools/default-backend-ingress"
+
+extraResources:
+##############################
+## WILDCARD SSL LOADER
+##############################
+# - |
+#   apiVersion: networking.k8s.io/v1
+#   kind: Ingress
+#   metadata:
+#     name: dummy-cert-loader
+#     namespace: {{ include "kubernetes-ingress.namespace" . }}
+#   spec:
+#     ingressClassName: {{ .Values.controller.ingressClassResource.name }}
+#     tls:
+#     - hosts:
+#       - "*.lumigame.com"
+#       secretName: lumigame-cert
+#     rules:
+#     - host: "*.lumi.local" 
+
+##############################
+## INGRESS STAT SITE
+##############################
+- |
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: stat-{{ .Release.Name }}
+    namespace: {{ include "kubernetes-ingress.namespace" . }}
+    annotations:
+      haproxy.org/ssl-redirect: "true"
+  spec:
+    ingressClassName: {{ .Values.controller.ingressClassResource.name }}
+    rules:
+    - host: ing-stat-eks-new.sgamesuat.com
+      http:
+        paths:
+        - backend:
+            service:
+              name: {{ include "kubernetes-ingress.fullname" . }}
+              port:
+                number: 1024
+          path: /
+          pathType: Prefix         
+
+##############################
+## DEFAULT BACKEND CONF
+##############################
+- |
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: be-default-{{ .Release.Name }}
+    namespace: {{ include "kubernetes-ingress.namespace" . }}
+  spec:
+    ingressClassName: {{ .Values.controller.ingressClassResource.name }}
+    defaultBackend:
+      service:
+        name: be-default-{{ .Release.Name }}
+        port:
+          number: 80
+- |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: be-default-{{ .Release.Name }}
+    namespace: {{ include "kubernetes-ingress.namespace" . }}
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: nexops
+    template:
+      metadata:
+        labels:
+          app: nexops
+      spec:
+        containers:
+        - name: nexops
+          image: {{ .Values.defaultBackend.image }}
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8080
+- |
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: be-default-{{ .Release.Name }}
+    namespace: {{ include "kubernetes-ingress.namespace" . }}
+  spec:
+    ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+      name: http
+    selector:
+      app: nexops

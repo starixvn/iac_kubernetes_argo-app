@@ -1,0 +1,43 @@
+---
+image:
+  repository: "hub.lumigame.com/base/opensearchproject/opensearch"
+  
+singleNode: true
+
+extraEnvs:
+- name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+  value: Y8cY3sn7hCwSmJLff2U7fkNG
+
+opensearchJavaOpts: "-Xmx6G -Xms6G -Dhttp.proxyHost=10.70.70.136 -Dhttp.proxyPort=3128 -Dhttps.proxyHost=10.70.70.136 -Dhttps.proxyPort=3128"
+
+persistence:
+  storageClass: longhorn
+  size: 70Gi
+
+ingress:
+  ingressClassName: haproxy
+  enabled: true
+  hosts:
+  - opsi.lumigame.com
+  annotations:
+    haproxy.org/server-ssl: 'true'
+
+resources:
+  requests:
+    cpu: "2"
+    memory: "5Gi"
+
+plugins:
+  enabled: true
+  installList:
+  - https://s3-api.starixsoft.com/awx-install/prometheus-exporter-2.19.2.zip
+
+serviceMonitor:
+  enabled: true
+  scheme: https
+  internal: 30s
+  tlsConfig:
+    insecureSkipVerify: true
+  basicAuth:
+    enabled: true
+    existingSecret: opensearch-cluster-master-service-monitor-credentials
