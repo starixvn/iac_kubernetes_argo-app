@@ -1,0 +1,19 @@
+image:
+  repository: "nexhub.ops-klprod.gamora.prod/kbt/base/nats-nui/nui"
+
+replicaCount: 1
+
+clusterDomain: starix.k3suat
+
+ingress:
+  enabled: true
+  className: "haproxy"
+  annotations:
+    haproxy.org/auth-type: basic-auth
+    haproxy.org/auth-secret: tf-lui-nats/nui-haproxy-credentials
+  hosts:
+    - host: nui-sc.starixuat.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+

@@ -1,0 +1,19 @@
+image:
+  repository: "lumhub.ops-sit.nebula.sit/kbt/base/nats-nui/nui"
+
+replicaCount: 1
+
+clusterDomain: starix.k3ssit
+
+ingress:
+  enabled: true
+  className: "haproxy"
+  annotations:
+    haproxy.org/auth-type: basic-auth
+    haproxy.org/auth-secret: tf-lui-nats/nui-haproxy-credentials
+  hosts:
+    - host: nui-sc.playonesit.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
