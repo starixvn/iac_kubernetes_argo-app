@@ -1,0 +1,42 @@
+image:
+  repository: hub.lumigame.com/base/tolgee
+  pullPolicy: IfNotPresent
+  tag: v3.11.6
+
+ingress:
+  enabled: true
+  className: "haproxy"
+  annotations: {}
+  hosts:
+    - host: tolgee.lumigame.com
+      paths:
+        - path: /
+          pathType: Prefix
+
+service:
+  type: NodePort
+  port: 8080
+
+postgresql:
+  enabled: true
+  image:
+    repository: bitnami/postgresql
+    tag: 13.5.0
+  architecture: "standalone"
+  auth:
+    postgresPassword: "postgres"
+    database: "postgres"
+    username: "postgres"
+    password: "postgres"
+  primary:
+    persistence:
+      enabled: true
+      type: pvc
+      size: 2Gi
+      storageClass: longhorn
+
+tolgee:
+  persistence:
+    enabled: true
+    storageClass: longhorn
+    size: 1Gi

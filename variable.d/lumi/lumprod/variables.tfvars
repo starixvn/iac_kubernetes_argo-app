@@ -33,6 +33,15 @@ argo_applications_by_team = {
         helm_path     = "logging/opensearch-dashboards"
         chart_version = "2.30.0"
       }
+      #- Tolgee -#
+      tolgee = {
+        namespace     = "tolgee-sc"
+        helm_path     = "tolgee"
+        chart_version = "3.120.0"
+        value_files = [
+          "values-lumi-lumprod-atomix.yaml"
+        ]
+      }
 
     }
   }
