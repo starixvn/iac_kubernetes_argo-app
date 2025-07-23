@@ -1,4 +1,4 @@
-#####
+####
 cluster_org = "lumi"
 cluster_env = "prod"
 
@@ -38,7 +38,7 @@ argo_applications_by_team = {
         helm_path     = "velero"
         chart_version = "1.14.1"
         skip_crds     = false
-        value_files = ["values-lumi-prod-atomix.yaml"]
+        value_files   = ["values-lumi-prod-atomix.yaml"]
         #trigger
       }
     }
