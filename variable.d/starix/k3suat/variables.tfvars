@@ -119,6 +119,13 @@ argo_applications_by_team = {
   lui = {
     team_name = "lumi"
     applications = {
+      ops-ingress = {
+        helm_path     = "kubernetes-ingress"
+        chart_version = "1.43.0"
+        auto_sync     = false
+        skip_crds     = true
+        value_files   = ["values-starix-k3suat-lumi-ops-ingress.yaml"]
+      }
       sentry = {
         helm_path     = "sentry-selfhost"
         chart_version = "26.6.0"
@@ -132,6 +139,15 @@ argo_applications_by_team = {
         auto_sync     = false
         value_files   = ["values-starix-k3suat-lumi-ovs.yaml"]
         #####
+      }
+      nats = {
+        helm_path     = "nats"
+        chart_version = "1.2.10"
+      }
+      nats-nui = {
+        namespace     = "tf-lui-nats"
+        helm_path     = "nats/nats-nui"
+        chart_version = "0.1.3"
       }
     }
   }

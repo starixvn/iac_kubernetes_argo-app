@@ -62,6 +62,11 @@ argo_applications_by_team = {
         helm_path     = "nats"
         chart_version = "1.2.10"
       }
+      nats-nui = {
+        namespace     = "tf-lui-nats"
+        helm_path     = "nats/nats-nui"
+        chart_version = "0.1.3"
+      }
     }
   }
 }
