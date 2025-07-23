@@ -20,8 +20,8 @@ service:
 postgresql:
   enabled: true
   image:
-    repository: postgres
-    tag: 13.5
+    repository: bitnami/postgresql
+    tag: 13.5.0
   architecture: "standalone"
   auth:
     postgresPassword: "postgres"
