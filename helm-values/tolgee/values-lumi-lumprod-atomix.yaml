@@ -20,7 +20,7 @@ service:
 postgresql:
   enabled: true
   image:
-    repository: hub.lumigame.com/base/postgres
+    repository: postgres
     tag: 13.5
   architecture: "standalone"
   auth:
