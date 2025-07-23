@@ -1,7 +1,7 @@
 image:
   repository: hub.lumigame.com/base/tolgee
   pullPolicy: IfNotPresent
-  tag: v3.11.6
+  tag: latest
 
 ingress:
   enabled: true
