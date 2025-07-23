@@ -21,7 +21,7 @@ variable "helm_source_repo" {
 
 variable "helm_value_repo" {
   type    = string
-  default = "git@gitlab.nexdev.net:iac/kubernetes.git"
+  default = "git@gitlab.nexdev.net:iac/kubernetes/argo-app.git"
 }
 
 variable "kube_cluster_api" {

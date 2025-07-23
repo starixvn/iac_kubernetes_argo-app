@@ -1,4 +1,4 @@
-######
+#####
 cluster_org = "starix"
 cluster_env = "nexprod"
 
@@ -116,7 +116,7 @@ argo_repositories = {
     repo_cred = "git_credential_nexdev"
   }
   git_helm_value = {
-    repo_url  = "git@gitlab.nexdev.net:iac/kubernetes.git"
+    repo_url  = "git@gitlab.nexdev.net:iac/kubernetes/argo-app.git"
     repo_cred = "git_credential_nexdev"
   }
 }
