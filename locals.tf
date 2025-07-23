@@ -11,8 +11,8 @@ locals {
         helm_path  = "${app_details.helm_path}/${app_details.chart_version}"
         value_path = "Kubernetes/argo-app/helm-values/${app_details.helm_path}"
         value_files = length(lookup(app_details, "value_files", [])) > 0 ? [
-          for file in app_details.value_files : "$values/Kubernetes/argo-app/helm-values/${app_details.helm_path}/${file}"
-        ] : ["$values/Kubernetes/argo-app/helm-values/${app_details.helm_path}/values-${var.cluster_org}-${var.cluster_env}-${team_details.team_name}.yaml"]
+          for file in app_details.value_files : "$values/helm-values/${app_details.helm_path}/${file}"
+        ] : ["$values/helm-values/${app_details.helm_path}/values-${var.cluster_org}-${var.cluster_env}-${team_details.team_name}.yaml"]
         skip_crds = lookup(app_details, "skip_crds", false)
         auto_sync = lookup(app_details, "auto_sync", true)
       }
