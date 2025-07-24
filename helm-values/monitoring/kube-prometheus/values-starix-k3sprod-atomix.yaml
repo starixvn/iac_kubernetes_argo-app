@@ -199,6 +199,7 @@ blackboxExporter:
       dns_lookup:
         prober: dns
         dns:
+          query_name: ""
           query_type: A
           valid_rcodes:
             - NOERROR
