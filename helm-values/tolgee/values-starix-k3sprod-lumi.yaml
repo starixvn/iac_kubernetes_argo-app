@@ -8,7 +8,7 @@ ingress:
   className: "haproxy"
   annotations: {}
   hosts:
-    - host: tolgee-sc.sabagame.com
+    - host: tolgee.sabagame.com
       paths:
         - path: /
           pathType: Prefix
