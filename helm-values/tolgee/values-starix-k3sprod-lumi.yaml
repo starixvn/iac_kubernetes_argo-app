@@ -29,6 +29,10 @@ postgresql:
     username: "postgres"
     password: "postgres"
   primary:
+    service:
+      type: NodePort
+      nodePorts:
+        postgresql: 32432
     persistence:
       enabled: true
       type: pvc
