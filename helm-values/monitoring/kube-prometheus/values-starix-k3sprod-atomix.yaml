@@ -198,11 +198,13 @@ blackboxExporter:
           preferred_ip_protocol: "ip4"
       dns_lookup:
         prober: dns
+        timeout: 5s
         dns:
-          query_name: "iusqd.gamora.prod"
+          query_name: iusqd.gamora.prod
           query_type: A
           valid_rcodes:
             - NOERROR
+          transport_protocol: "udp"
           preferred_ip_protocol: "ip4"
 
       # icmp_connect:
