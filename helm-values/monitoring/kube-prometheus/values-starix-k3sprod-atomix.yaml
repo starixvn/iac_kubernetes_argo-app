@@ -199,7 +199,7 @@ blackboxExporter:
       dns_lookup:
         prober: dns
         dns:
-          query_name: ""
+          query_name: "iusqd.gamora.prod"
           query_type: A
           valid_rcodes:
             - NOERROR
