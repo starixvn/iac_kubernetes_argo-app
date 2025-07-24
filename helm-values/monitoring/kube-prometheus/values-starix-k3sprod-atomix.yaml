@@ -196,6 +196,14 @@ blackboxExporter:
         prober: tcp
         tcp:
           preferred_ip_protocol: "ip4"
+      dns_lookup:
+        prober: dns
+        dns:
+          query_type: A
+          valid_rcodes:
+            - NOERROR
+          preferred_ip_protocol: "ip4"
+
       # icmp_connect:
       #   prober: icmp
       #   timeout: 5s
@@ -235,6 +243,22 @@ extraDeploy:
         - jaeger-collector-sc.ops-klprod.gamora.prod:32317 #otlp-grpc
         - jaeger-collector-sc.ops-klprod.gamora.prod:32318 #otlp-http
         - vn-sc-nats-prod.gamora.prod:80 #NATS
+
+  ### DNS Monitor
+  kind: Probe
+  apiVersion: monitoring.coreos.com/v1
+  metadata:
+    name: dns-probe
+    namespace: monitoring
+  spec:
+    interval: 5s
+    module: dns_lookup
+    prober:
+      url: prometheus-atx-k3sprod-kub-blackbox-exporter.monitoring.svc.starix.k3sprod:19115
+    targets:
+      staticConfig:
+        static:
+        - iusqd.gamora.prod
 
 # - |
 #   ### ICMP
