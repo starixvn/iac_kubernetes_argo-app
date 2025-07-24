@@ -75,10 +75,7 @@ alertmanager:
       routes:
       - receiver: 'null'
         match_re:
-          pod: "backup-.*|c-.*|.*snapshot-.*|.*clean.*|.*-cron-.*|.*-update-.*|.*consumer.*|trim.*"
-      - receiver: 'null'
-        match_re:
-          description: ".*blackbox.*"
+          pod: "backup-.*|c-.*|.*snapshot-.*|.*clean.*|.*-cron-.*|.*-update-.*|.*consumer.*|trim.*|.*blackbox.*"
       - receiver: "null"
         match_re:
           instance: "10.148.58.121.*|10.148.58.122.*|10.148.58.123.*|10.148.58.132.*|10.148.58.133.*|10.148.58.134.*"
