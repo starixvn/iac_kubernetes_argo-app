@@ -260,6 +260,7 @@ extraDeploy:
       staticConfig:
         static:
         - iusqd.gamora.prod
+        - dennis.gamora.prod
 
 # - |
 #   ### ICMP
