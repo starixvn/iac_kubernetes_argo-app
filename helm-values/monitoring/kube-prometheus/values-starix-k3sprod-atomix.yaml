@@ -200,7 +200,7 @@ blackboxExporter:
         prober: dns
         timeout: 5s
         dns:
-          query_name: iusqd.gamora.prod
+          query_name: ""
           query_type: A
           valid_rcodes:
             - NOERROR
