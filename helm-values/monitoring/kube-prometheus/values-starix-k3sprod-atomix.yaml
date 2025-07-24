@@ -82,7 +82,7 @@ alertmanager:
           alertname: ".*[Mm]emory.*"
       - receiver: "null"
         match_re:
-          alertname: ".*memory usage exceeds 90%.*"
+          alertname: ".*memory usage exceeds 90%.*|.*blackbox.*"
           pod: "sentry-lui-k3sprod-kafka-controller-1|.*logstash.*"
       - receiver: 'nexpe-services-alert'
         match_re:
@@ -200,7 +200,6 @@ blackboxExporter:
         prober: dns
         timeout: 5s
         dns:
-          query_name: ""
           query_type: A
           valid_rcodes:
             - NOERROR
