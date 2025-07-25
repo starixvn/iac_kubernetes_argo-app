@@ -136,7 +136,13 @@ driver:
         registry: hub.nexdev.net
         repository: base/falcosecurity/falco-driver-loader
         tag: "0.41.3"
-      env: []
+      env:
+      - name: HTTP_PROXY
+        value: "http://proxysqd.nexdev.net:3128"
+      - name: HTTPS_PROXY
+        value: "http://proxysqd.nexdev.net:3128"
+      - name: NO_PROXY
+        value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"        
       args: []
       resources: {}
       securityContext: {}
@@ -186,7 +192,14 @@ collectors:
 # ############################
 
 extra:
-  env: []
+  env:
+  - name: HTTP_PROXY
+    value: "http://proxysqd.nexdev.net:3128"
+  - name: HTTPS_PROXY
+    value: "http://proxysqd.nexdev.net:3128"
+  - name: NO_PROXY
+    value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+    
   args: []
   initContainers: []
 
