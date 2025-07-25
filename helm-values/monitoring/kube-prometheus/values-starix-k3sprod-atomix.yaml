@@ -44,6 +44,7 @@ prometheus:
           static_configs:
             - targets:
                 - '127.0.0.53'
+                - 'iusqd.gamora.prod'
           relabel_configs:
             - source_labels: [__address__]
               target_label: __param_target
@@ -266,7 +267,7 @@ extraDeploy:
   kind: Probe
   apiVersion: monitoring.coreos.com/v1
   metadata:
-    name: dns-probe-iusqd
+    name: dns-probe
     namespace: monitoring
     labels:
       prometheus: main
