@@ -216,7 +216,7 @@ blackboxExporter:
             - NOERROR
           preferred_ip_protocol: "ip4"
           resolvers:
-            - 127.0.0.53
+            - "127.0.0.53"
 
       # icmp_connect:
       #   prober: icmp

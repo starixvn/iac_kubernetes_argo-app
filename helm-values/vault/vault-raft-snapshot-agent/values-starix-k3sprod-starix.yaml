@@ -1,4 +1,7 @@
 ---
+image:
+  repository: nexhub.ops-klprod.gamora.prod/kbt/base/nexops-tools/vault-snapshot
+
 cronjob:
   schedule: "15 17 * * *"
   env:
@@ -17,7 +20,7 @@ cronjob:
   - name: VAULT_ROLE
     value: vault-snapshot
   - name: VAULT_ADDR
-    value: http://vault-starix-k3sprod-active:8200
+    value: http://vault-stx-k3sprod-active:8200
   - name: AWS_SECRET_ACCESS_KEY
     valueFrom:
       secretKeyRef:
@@ -29,11 +32,11 @@ cronjob:
         key: AWS_ACCESS_KEY_ID
         name: vault-snapshot-credentials
   - name: http_proxy
-    value: lisasqd.nebula.prod:8801
+    value: iusqd.gamora.prod:8801
   - name: https_proxy
-    value: lisasqd.nebula.prod:8801
+    value: iusqd.gamora.prod:8801
   - name: no_proxy
-    value: vault-starix-k3sprod-active:8200
+    value: vault-stx-k3sprod-active:8200
 
   - name: ALERT_GROUP_ID
     value: B08GPPK88MS:T08ACMHMMFS:C08L88CP98S
