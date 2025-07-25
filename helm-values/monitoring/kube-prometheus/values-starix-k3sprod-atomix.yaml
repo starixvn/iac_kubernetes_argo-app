@@ -217,7 +217,7 @@ blackboxExporter:
           query_name: "iusqd.gamora.prod"
           query_type: "A"
           validate_answer_rrs:
-            fail_if_not_matches_regexp: ["10\.148\.78\.100"]
+            fail_if_not_matches_regexp: ["10\\.148\\.78\\.100"]
 
       # icmp_connect:
       #   prober: icmp
