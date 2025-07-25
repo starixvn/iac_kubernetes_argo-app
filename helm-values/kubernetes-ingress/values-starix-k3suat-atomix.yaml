@@ -10,6 +10,7 @@ controller:
       stats show-node
       stats show-modules
     frontend-config-snippet: |
+      http-request return status 200 content-type "text/plain" string "Healthy!" if { path -i /healthc }
       capture request header Host len 46
       capture request header User-Agent len 200
       capture request header Referer len 800
