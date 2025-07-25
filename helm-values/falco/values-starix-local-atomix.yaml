@@ -203,11 +203,11 @@ certs:
     crt: ""
 
 # -- Third party rules enabled for Falco. More info on the dedicated section in README.md file.
-customRules:
-  {}
+customRules: []
   # Example:
   # rules-traefik.yaml: |-
   #   [ rule body ]
+
 
 ########################
 # Falco integrations   #
@@ -374,7 +374,7 @@ falco:
   priority: debug
 
   # [Stable] `json_output`
-  json_output: false
+  json_output: true
 
   # [Stable] `json_include_output_property`
   json_include_output_property: true
@@ -383,7 +383,7 @@ falco:
   json_include_tags_property: true
 
   # [Incubating] `json_include_message_property`
-  json_include_message_property: false
+  json_include_message_property: true
 
   # [Incubating] `json_include_output_fields_property`
   json_include_output_fields_property: true
@@ -418,7 +418,7 @@ falco:
   #
   # -- Send logs to an HTTP endpoint or webhook.
   http_output:
-    enabled: false
+    enabled: true
     url: ""
     user_agent: "falcosecurity/falco"
     # -- Tell Falco to not verify the remote server.

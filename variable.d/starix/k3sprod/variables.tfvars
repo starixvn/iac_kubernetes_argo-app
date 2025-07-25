@@ -112,6 +112,7 @@ argo_applications_by_team = {
         namespace     = "rabbitmq-nap-alpha"
         helm_path     = "rabbitmq-cluster-operator"
         chart_version = "4.3.15"
+        auto_sync     = false
         value_files = [
           "values-starix-k3sprod.yaml"
         ]
@@ -191,6 +192,7 @@ argo_applications_by_team = {
         namespace     = "rabbitmq-fps"
         helm_path     = "rabbitmq-cluster-operator"
         chart_version = "4.3.15"
+        auto_sync     = false
         skip_crds     = true
         value_files = [
           "values-fps-k3sprod.yaml"
@@ -288,6 +290,11 @@ argo_applications_by_team = {
         helm_path     = "vault"
         chart_version = "0.28.1"
         auto_sync     = false
+      }
+      vault-snap-agent = {
+        namespace     = "tf-stx-vault"
+        helm_path     = "vault/vault-raft-snapshot-agent"
+        chart_version = "0.1.0"
       }
       sentry-ovs = {
         namespace     = "sentry-st-ovs"
