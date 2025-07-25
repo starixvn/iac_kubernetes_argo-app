@@ -191,7 +191,6 @@ alertmanager:
 
 blackboxExporter:
   image:
-    registry: docker.io
     repository: quay.io/prometheus/blackbox-exporter
     tag: v0.25.0
 
