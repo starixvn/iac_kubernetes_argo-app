@@ -43,22 +43,14 @@ prometheus:
             module: [dns_lookup]
           static_configs:
             - targets:
-                - 'iusqd.gamora.prod:10.148.78.100'
+                - '10.148.78.100'
           relabel_configs:
-            - source_labels: [__address__]
-              regex: (.*):.*$
-              replacement: $1
-              target_label: domain
-            - source_labels: [__address__]
-              regex: .*:(.*)$
-              replacement: $1
-              target_label: instance
-            - source_labels: [domain]
-              target_label: __param_module
-            - source_labels: [instance]
-              target_label: __param_target
-            - target_label: __address__
-              replacement: prometheus-atx-k3sprod-kub-blackbox-exporter.monitoring.svc.starix.k3sprod:19115
+             - source_labels: [__address__]
+               target_label: __param_target
+             - source_labels: [__param_target]
+               target_label: instance
+             - target_label: __address__
+               replacement: prometheus-atx-k3sprod-kub-blackbox-exporter.monitoring.svc.starix.k3sprod:19115
 
 
   #additionalPrometheusRules:
@@ -226,7 +218,7 @@ blackboxExporter:
           query_type: "A"
           valid_rcodes:
             - NOERROR
-          preferred_ip_protocol: "ip4"
+          fail_if_nxdomain: true 
 
       # icmp_connect:
       #   prober: icmp
@@ -269,24 +261,24 @@ extraDeploy:
         - jaeger-collector-sc.ops-klprod.gamora.prod:32317 #otlp-grpc
         - jaeger-collector-sc.ops-klprod.gamora.prod:32318 #otlp-http
         - vn-sc-nats-prod.gamora.prod:80 #NATS
-- |
-  ### DNS Monitor
-  kind: Probe
-  apiVersion: monitoring.coreos.com/v1
-  metadata:
-    name: dns-probe
-    namespace: monitoring
-    labels:
-      prometheus: main
-  spec:
-    interval: 30s
-    module: dns_lookup
-    prober:
-      url: prometheus-atx-k3sprod-kub-blackbox-exporter.monitoring.svc.starix.k3sprod:19115
-    targets:
-      staticConfig:
-        static:
-        - iusqd.gamora.prod
+# - |
+#   ### DNS Monitor
+#   kind: Probe
+#   apiVersion: monitoring.coreos.com/v1
+#   metadata:
+#     name: dns-probe
+#     namespace: monitoring
+#     labels:
+#       prometheus: main
+#   spec:
+#     interval: 30s
+#     module: dns_lookup
+#     prober:
+#       url: prometheus-atx-k3sprod-kub-blackbox-exporter.monitoring.svc.starix.k3sprod:19115
+#     targets:
+#       staticConfig:
+#         static:
+#         - iusqd.gamora.prod
 
 # - |
 #   ### ICMP
