@@ -218,9 +218,6 @@ blackboxExporter:
           query_type: "A"
           valid_rcodes:
             - NOERROR
-          validate_answer_rrs:
-            fail_if_none_matches_regexp:
-              - ".*\\.gamora\\.prod$
           preferred_ip_protocol: "ip4"
 
       # icmp_connect:
