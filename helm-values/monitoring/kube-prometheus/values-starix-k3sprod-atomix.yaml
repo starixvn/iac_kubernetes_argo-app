@@ -191,7 +191,7 @@ alertmanager:
 
 blackboxExporter:
   image:
-    repository: quay.io/prometheus/blackbox-exporter
+    repository: prom/blackbox-exporter
     tag: v0.25.0
 
   configuration: |
