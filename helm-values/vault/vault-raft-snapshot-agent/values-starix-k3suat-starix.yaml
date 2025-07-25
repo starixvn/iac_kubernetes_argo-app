@@ -1,0 +1,42 @@
+---
+image:
+  repository: nexhub.ops-klprod.gamora.prod/kbt/base/nexops-tools/vault-snapshot
+
+cronjob:
+  schedule: "15 17 * * *"
+  env:
+  - name: TZ
+    value: Asia/Bangkok
+  - name: S3_POLICY_ID
+    value: cugoos7cc6pnc15q5dg0
+  - name: retainDay
+    value: "7"
+  - name: S3_HOST
+    value: https://s3-api.starixsoft.com:9000
+  - name: S3_BUCKET
+    value: vault-backup
+  - name: S3_PATH
+    value: vault-backup/starix/prod/
+  - name: VAULT_ROLE
+    value: vault-snapshot
+  - name: VAULT_ADDR
+    value: http://vault-stx-k3suat-active:8200
+  - name: AWS_SECRET_ACCESS_KEY
+    valueFrom:
+      secretKeyRef:
+        key: AWS_SECRET_ACCESS_KEY
+        name: vault-snapshot-credentials
+  - name: AWS_ACCESS_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        key: AWS_ACCESS_KEY_ID
+        name: vault-snapshot-credentials
+  - name: http_proxy
+    value: iusqd.gamora.prod:8801
+  - name: https_proxy
+    value: iusqd.gamora.prod:8801
+  - name: no_proxy
+    value: vault-stx-k3suat-active:8200
+
+  - name: ALERT_GROUP_ID
+    value: B08GPPK88MS:T08ACMHMMFS:C08L88CP98S
