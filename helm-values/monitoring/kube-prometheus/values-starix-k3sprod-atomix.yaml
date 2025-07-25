@@ -43,7 +43,7 @@ prometheus:
             module: [dns_lookup]
           static_configs:
             - targets:
-                - 'iusqd.gamora.prod:127.0.0.53'
+                - 'iusqd.gamora.prod:10.148.78.100'
           relabel_configs:
             - source_labels: [__address__]
               regex: (.*):.*$
