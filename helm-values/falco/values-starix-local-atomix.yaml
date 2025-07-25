@@ -1,0 +1,474 @@
+
+###############################
+# General deployment settings #
+###############################
+
+image:
+  pullPolicy: IfNotPresent
+  registry: hub.nexdev.net
+  repository: base/falcosecurity/falco
+  tag: "0.41.3"
+
+
+podAnnotations: {}
+
+serviceAccount:
+  imagePullSecrets: []
+  create: true
+  annotations: {}
+  name: ""
+
+rbac:
+  create: true
+
+podLabels: {}
+podPriorityClassName: 
+podSecurityContext: {}
+containerSecurityContext: {}
+
+scc:
+  create: true
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 1024Mi
+
+nodeSelector: {}
+affinity: {}
+tolerations:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/control-plane
+
+healthChecks:
+  livenessProbe:
+    initialDelaySeconds: 60
+    timeoutSeconds: 5
+    periodSeconds: 15
+  readinessProbe:
+    initialDelaySeconds: 30
+    timeoutSeconds: 5
+    periodSeconds: 15
+
+tty: true
+
+#########################
+# Scenario requirements #
+#########################
+controller:
+  kind: daemonset
+  annotations: {}
+  labels: {}
+  daemonset:
+    updateStrategy:
+      type: RollingUpdate
+  deployment:
+    replicas: 1
+
+services:
+  - name: k8saudit-webhook
+    type: NodePort
+    ports:
+      - port: 9765
+        nodePort: 30007
+        protocol: TCP
+
+
+metrics:
+  enabled: false
+  interval: 1h
+  outputRule: false
+  rulesCountersEnabled: true
+  resourceUtilizationEnabled: true
+  stateCountersEnabled: true
+  kernelEventCountersEnabled: true
+  libbpfStatsEnabled: true
+  convertMemoryToMB: true
+  includeEmptyValues: false
+  kernelEventCountersPerCPUEnabled: false
+  service:
+    create: true
+    type: ClusterIP
+    labels: {}
+    annotations: {}
+    ports:
+      metrics:
+        port: 8765
+        targetPort: 8765
+        protocol: "TCP"
+
+mounts:
+  volumes: []
+  volumeMounts: []
+
+driver:
+  enabled: true
+  kind: auto
+  kmod:
+    bufSizePreset: 4
+    dropFailedExit: false
+  ebpf:
+    path: "${HOME}/.falco/falco-bpf.o"
+    hostNetwork: false
+    leastPrivileged: false
+    bufSizePreset: 4
+    dropFailedExit: false
+  modernEbpf:
+    leastPrivileged: false
+    bufSizePreset: 4
+    dropFailedExit: false
+    cpusForEachBuffer: 2
+  gvisor:
+    runsc:
+      path: /home/containerd/usr/local/sbin
+      root: /run/containerd/runsc
+      config: /run/containerd/runsc/config.toml
+  loader:
+    enabled: true
+    initContainer:
+      image:
+        pullPolicy: IfNotPresent
+        registry: hub.nexdev.net
+        repository: base/falcosecurity/falco-driver-loader
+        tag: "0.41.3"
+      env: []
+      args: []
+      resources: {}
+      securityContext: {}
+
+collectors:
+  enabled: true
+  docker:
+    enabled: true
+    socket: /var/run/docker.sock
+  containerd:
+    enabled: true
+    socket: /run/containerd/containerd.sock
+  crio:
+    enabled: true
+    socket: /run/crio/crio.sock
+  containerEngine:
+    enabled: false
+    pluginRef: "ghcr.io/falcosecurity/plugins/plugin/container:0.3.1"
+    labelMaxLen: 100
+    withSize: false
+    hooks: ["create"]
+    engines:
+      docker:
+        enabled: true
+        sockets: ["/var/run/docker.sock"]
+      podman:
+        enabled: true
+        sockets: ["/run/podman/podman.sock"]
+      containerd:
+        enabled: true
+        sockets: ["/run/containerd/containerd.sock"]
+      cri:
+        enabled: true
+        sockets: ["/run/crio/crio.sock"]
+      lxc:
+        enabled: true
+      libvirt_lxc:
+        enabled: true
+      bpm:
+        enabled: true
+  kubernetes:
+    enabled: false
+    pluginRef: "ghcr.io/falcosecurity/plugins/plugin/k8smeta:0.3.0"
+
+# ###########################
+# # Extras and customization #
+# ############################
+
+extra:
+  env: []
+  args: []
+  initContainers: []
+
+certs:
+  existingSecret: ""
+  server:
+    key: ""
+    crt: ""
+  ca:
+    crt: ""
+  existingClientSecret: ""
+  client:
+    key: ""
+    crt: ""
+
+# -- Third party rules enabled for Falco. More info on the dedicated section in README.md file.
+customRules:
+  {}
+  # Example:
+  # rules-traefik.yaml: |-
+  #   [ rule body ]
+
+########################
+# Falco integrations   #
+########################
+
+# -- For configuration values, see https://github.com/falcosecurity/charts/blob/master/charts/falcosidekick/values.yaml
+falcosidekick:
+  # -- Enable falcosidekick deployment.
+  enabled: true
+  # -- Enable usage of full FQDN of falcosidekick service (useful when a Proxy is used).
+  fullfqdn: false
+  # -- Listen port. Default value: 2801
+  listenPort: ""
+
+# -- Enable the response actions using Falco Talon.
+responseActions:
+  enabled: false
+
+# -- For configuration values, see https://github.com/falcosecurity/charts/blob/master/charts/falco-talon/values.yaml
+# -- It must be used in conjunction with the response_actions.enabled option.
+falco-talon: {}
+
+
+####################
+# falcoctl config  #
+####################
+falcoctl:
+  image:
+    # -- The image pull policy.
+    pullPolicy: IfNotPresent
+    # -- The image registry to pull from.
+    registry: hub.nexdev.net
+    # -- The image repository to pull from.
+    repository: base/falcosecurity/falcoctl
+    # -- The image tag to pull.
+    tag: "0.11.2"
+  artifact:
+    install:
+      enabled: true
+      env: []
+      args: ["--log-format=json"]
+      resources: {}
+      securityContext: {}
+      mounts:
+        volumeMounts: []
+    follow:
+      enabled: true
+      env: []
+      args: ["--log-format=json"]
+      resources: {}
+      securityContext: {}
+      mounts:
+        volumeMounts: []
+  config:
+    indexes:
+      - name: falcosecurity
+        url: https://falcosecurity.github.io/falcoctl/index.yaml
+    artifact:
+      allowedTypes:
+        - rulesfile
+        - plugin
+      install:
+        resolveDeps: true
+        refs:
+          - falco-rules:4
+          - k8saudit-rules:0.11
+          - k8saudit:0.11
+        rulesfilesDir: /rulesfiles
+        pluginsDir: /plugins
+      follow:
+        refs:
+          - falco-rules:4
+          - k8saudit-rules:0.11
+          - k8saudit:0.11
+        every: 6h
+        falcoversions: http://localhost:8765/versions
+        rulesfilesDir: /rulesfiles
+        pluginsDir: /plugins
+serviceMonitor:
+  create: false
+  path: /metrics
+  labels: {}
+  selector: {}
+  interval: 15s
+  scheme: http
+  tlsConfig:
+    {}
+  scrapeTimeout: 10s
+  endpointPort: "metrics"
+
+# -- grafana contains the configuration related to grafana.
+grafana:
+  # -- dashboards contains configuration for grafana dashboards.
+  dashboards:
+    # -- enabled specifies whether the dashboards should be deployed.
+    enabled: false
+    # --configmaps to be deployed that contain a grafana dashboard.
+    configMaps:
+      # -- falco contains the configuration for falco's dashboard.
+      falco:
+        # -- name specifies the name for the configmap.
+        name: falco-grafana-dashboard
+        # -- namespace specifies the namespace for the configmap.
+        namespace: ""
+        # -- folder where the dashboard is stored by grafana.
+        folder: ""
+
+
+######################
+# falco.yaml config  #
+######################
+falco:
+  #####################
+  # Falco rules files #
+  #####################
+
+  rules_files:
+    - /etc/falco/k8s_audit_rules.yaml
+    - /etc/falco/falco_rules.yaml
+    # - /etc/falco/falco_rules.local.yaml
+    - /etc/falco/rules.d
+  rule_matching: first
+
+  outputs_queue:
+    capacity: 0
+
+  #################
+  # Falco plugins #
+  #################
+
+  # [Stable] `load_plugins` and `plugins`
+  load_plugins: [k8saudit, json]
+  plugins:
+    - name: k8saudit
+      library_path: libk8saudit.so
+      init_config:
+      open_params: "http://:9765/k8s-audit"
+    - name: cloudtrail
+      library_path: libcloudtrail.so
+    - name: json
+      library_path: libjson.so
+      init_config: ""
+
+
+  ######################
+  # Falco config files #
+  ######################
+
+  # [Stable] `config_files`
+
+  config_files:
+    - /etc/falco/config.d
+  watch_config_files: true
+
+  ##########################
+  # Falco outputs settings #
+  ##########################
+
+  # [Stable] `time_format_iso_8601`
+  time_format_iso_8601: false
+
+  # [Stable] `priority`
+  # levels: "emergency", "alert", "critical", "error", "warning", "notice", "info", "debug"
+  priority: debug
+
+  # [Stable] `json_output`
+  json_output: false
+
+  # [Stable] `json_include_output_property`
+  json_include_output_property: true
+
+  # [Stable] `json_include_tags_property`
+  json_include_tags_property: true
+
+  # [Incubating] `json_include_message_property`
+  json_include_message_property: false
+
+  # [Incubating] `json_include_output_fields_property`
+  json_include_output_fields_property: true
+
+  # [Stable] `buffered_outputs`
+  buffered_outputs: false
+
+  # [Sandbox] `append_output`
+  append_output:
+    - suggested_output: true
+
+  ##########################
+  # Falco outputs channels #
+  ##########################
+
+  # [Stable] `stdout_output`
+  stdout_output:
+    enabled: true
+
+  # [Stable] `syslog_output`
+  #
+  # -- Send logs to syslog.
+  syslog_output:
+    enabled: true
+
+  file_output:
+    enabled: false
+    keep_alive: false
+    filename: ./events.txt
+
+  # [Stable] `http_output`
+  #
+  # -- Send logs to an HTTP endpoint or webhook.
+  http_output:
+    enabled: false
+    url: ""
+    user_agent: "falcosecurity/falco"
+    # -- Tell Falco to not verify the remote server.
+    insecure: false
+    # -- Path to the CA certificate that can verify the remote server.
+    ca_cert: ""
+    # -- Path to a specific file that will be used as the CA certificate store.
+    ca_bundle: ""
+    # -- Path to a folder that will be used as the CA certificate store. CA certificate need to be
+    # stored as indivitual PEM files in this directory.
+    ca_path: "/etc/falco/certs/"
+    # -- Tell Falco to use mTLS
+    mtls: false
+    # -- Path to the client cert.
+    client_cert: "/etc/falco/certs/client/client.crt"
+    # -- Path to the client key.
+    client_key: "/etc/falco/certs/client/client.key"
+    # -- Whether to echo server answers to stdout
+    echo: false
+    # -- compress_uploads whether to compress data sent to http endpoint.
+    compress_uploads: false
+    # -- keep_alive whether to keep alive the connection.
+    keep_alive: false
+    # Maximum consecutive timeouts of libcurl to ignore
+    max_consecutive_timeouts: 5
+
+  # the SIGUSR1 signal.
+  program_output:
+    enabled: false
+    keep_alive: false
+    program: "jq '{text: .output}' | curl -d @- -X POST https://hooks.slack.com/services/XXX"
+
+  grpc_output:
+    enabled: false
+
+  ##########################
+  # Falco exposed services #
+  ##########################
+
+  grpc:
+    enabled: false
+    bind_address: "unix:///run/falco/falco.sock"
+    threadiness: 0
+
+  # [Stable] `webserver`
+  webserver:
+    enabled: true
+    threadiness: 0
+    listen_port: 8765
+    k8s_healthz_endpoint: /healthz
+    prometheus_metrics_enabled: false
+    ssl_enabled: false
+    ssl_certificate: /etc/falco/falco.pem
