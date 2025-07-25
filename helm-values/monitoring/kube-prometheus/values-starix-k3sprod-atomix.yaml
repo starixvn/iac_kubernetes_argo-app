@@ -196,7 +196,7 @@ blackboxExporter:
         prober: tcp
         tcp:
           preferred_ip_protocol: "ip4"
-      ns_lookup:
+      ns_lookup_iusqd:
         prober: dns
         timeout: 5s
         dns:
@@ -252,20 +252,19 @@ extraDeploy:
   kind: Probe
   apiVersion: monitoring.coreos.com/v1
   metadata:
-    name: dns-probe
+    name: dns-probe-iusqd
     namespace: monitoring
     labels:
       prometheus: main
   spec:
-    interval: 5s
-    module: ns_lookup
+    interval: 30s
+    module: ns_lookup_iusqd
     prober:
       url: prometheus-atx-k3sprod-kub-blackbox-exporter.monitoring.svc.starix.k3sprod:19115
     targets:
       staticConfig:
         static:
         - iusqd.gamora.prod
-        - dennis.gamora.prod
 
 # - |
 #   ### ICMP
