@@ -216,10 +216,75 @@ certs:
     crt: ""
 
 # -- Third party rules enabled for Falco. More info on the dedicated section in README.md file.
-customRules: []
+customRules:
   # Example:
   # rules-traefik.yaml: |-
   #   [ rule body ]
+  rules-custom.yaml: |-
+    - macro: ssh_port
+      condition: (fd.sport=22)
+
+    - macro: bpf_profiled_procs
+      condition: (never_true)
+
+    - macro: allowed_ssh_hosts
+      condition: (never_true)    
+
+    - macro: inbound_outbound
+      condition: >
+        ((((evt.type in (accept,accept4,listen,connect) and evt.dir=<)) and
+        (fd.typechar = 4 or fd.typechar = 6)) and
+        (fd.ip != "0.0.0.0" and fd.net != "127.0.0.0/8") and
+        (evt.rawres >= 0 or evt.res = EINPROGRESS))
+
+    - macro: consider_all_chmods
+      condition: (evt.type = chmod or evt.type = fchmod or evt.type = fchmodat)
+
+    - macro: exe_running_docker_save
+      condition: >
+        (proc.name = docker and proc.args contains save)
+
+    - list: user_known_chmod_applications
+      items: [hyperkube, kubelet, k3s-agent, systemd, dbus-daemon]
+
+    - macro: user_known_set_setuid_or_setgid_bit_conditions
+      condition: (never_true)
+
+    - macro: spawned_process
+      condition: (evt.type = execve and evt.dir = <)
+
+
+    - rule: Creating a root like user
+      desc: using the command useradd or adduser with the flag -o -u0 it is possible to create a user with the same root userID and get user access to the machine with the new user
+      condition: spawned_process and proc.exe in (useradd,adduser) and proc.args contains -o and proc.args contains -u and proc.args contains 0  
+      output: "Created user with the same root userID. (user=%user.name userID=%user.uid %container.info parent=%proc.pname cmdline=%proc.cmdline)"
+      priority: WARNING
+      tags: [users,host]
+  
+    - rule: Set world-writable Access
+      desc: >
+        When writable access to anyone is set for file and folder,
+        This means that anyone in the system can edit those, even if owned by root. This might cause privilege escalation in case the files are run by root via crontab or manually.
+        Detect writable access to anyone set via chmod
+      condition: >
+        consider_all_chmods and chmod and (evt.arg.mode contains "S_IWOTH")
+        and not proc.name in (user_known_chmod_applications)
+        and not exe_running_docker_save
+      output: >
+        Writable access to anyone is set via chmod (fd=%evt.arg.fd filename=%evt.arg.filename mode=%evt.arg.mode user=%user.name user_loginuid=%user.loginuid process=%proc.name
+        command=%proc.cmdline container_id=%container.id container_name=%container.name image=%container.image.repository:%container.image.tag)
+      priority: NOTICE
+      tags: [process, host]    
+
+
+    - rule: Disallowed SSH Connection
+      desc: |- 
+        Detect any new SSH connection on port 22 to a host other than those in an allowed list of hosts. This rule absolutely requires profiling your environment beforehand. Network-based rules are extremely crucial in any security program, as they can often provide the only definitive evidence. However, effectively operationalizing them can be challenging due to the potential for noise.
+      condition: inbound_outbound and ssh_port and not allowed_ssh_hosts
+      output: |-
+        Disallowed SSH Connection (connection=%fd.name lport=%fd.lport rport=%fd.rport fd_type=%fd.type fd_proto=%fd.l4proto evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
+      priority: NOTICE
+      tags: ["maturity_deprecated", "host", "container", "network", "mitre_lateral_movement", "T1021.004"]
 
 
 ########################
