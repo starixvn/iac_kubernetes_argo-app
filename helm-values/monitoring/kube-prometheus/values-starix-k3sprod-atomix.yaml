@@ -222,7 +222,7 @@ extraDeploy:
     name: tcp-probe
     namespace: monitoring
     labels:
-      release: prometheus
+      prometheus: main
   spec:
     interval: 5s
     module: tcp_connect
@@ -248,7 +248,7 @@ extraDeploy:
         - jaeger-collector-sc.ops-klprod.gamora.prod:32317 #otlp-grpc
         - jaeger-collector-sc.ops-klprod.gamora.prod:32318 #otlp-http
         - vn-sc-nats-prod.gamora.prod:80 #NATS
-
+- |
   ### DNS Monitor
   kind: Probe
   apiVersion: monitoring.coreos.com/v1
@@ -256,7 +256,7 @@ extraDeploy:
     name: dns-probe
     namespace: monitoring
     labels:
-      release: prometheus
+      prometheus: main
   spec:
     interval: 5s
     module: dns_lookup
