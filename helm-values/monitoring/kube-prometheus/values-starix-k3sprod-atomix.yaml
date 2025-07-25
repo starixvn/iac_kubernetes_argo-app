@@ -196,15 +196,13 @@ blackboxExporter:
         prober: tcp
         tcp:
           preferred_ip_protocol: "ip4"
-      dns_lookup:
+      ns_lookup:
         prober: dns
         timeout: 5s
         dns:
-          query_name: "iusqd.gamora.prod"
           query_type: "A"
           valid_rcodes:
             - NOERROR
-          transport_protocol: "udp"
           preferred_ip_protocol: "ip4"
 
       # icmp_connect:
@@ -259,7 +257,7 @@ extraDeploy:
       prometheus: main
   spec:
     interval: 5s
-    module: dns_lookup
+    module: ns_lookup
     prober:
       url: prometheus-atx-k3sprod-kub-blackbox-exporter.monitoring.svc.starix.k3sprod:19115
     targets:
