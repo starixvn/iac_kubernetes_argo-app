@@ -112,6 +112,7 @@ argo_applications_by_team = {
         namespace     = "rabbitmq-nap-alpha"
         helm_path     = "rabbitmq-cluster-operator"
         chart_version = "4.3.15"
+        auto_sync     = false
         value_files = [
           "values-starix-k3sprod.yaml"
         ]
@@ -191,6 +192,7 @@ argo_applications_by_team = {
         namespace     = "rabbitmq-fps"
         helm_path     = "rabbitmq-cluster-operator"
         chart_version = "4.3.15"
+        auto_sync     = false
         skip_crds     = true
         value_files = [
           "values-fps-k3sprod.yaml"
