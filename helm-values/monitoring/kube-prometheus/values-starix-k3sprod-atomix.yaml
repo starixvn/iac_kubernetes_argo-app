@@ -218,6 +218,7 @@ blackboxExporter:
           query_type: "A"
           valid_rcodes:
             - NOERROR
+          fail_if_nxdomain: true
 
       # icmp_connect:
       #   prober: icmp
