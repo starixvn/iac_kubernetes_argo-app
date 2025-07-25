@@ -254,7 +254,7 @@ falcoctl:
       mounts:
         volumeMounts: []
     follow:
-      enabled: true
+      enabled: false
       env: []
       args: ["--log-format=json"]
       resources: {}
