@@ -38,7 +38,7 @@ prometheus:
     internal:
       jobList: 
         - job_name: 'blackbox-dns'
-          metrics_path: /probe
+          metrics_path: /probe/monitoring/dns-probe
           params:
             module: [dns_lookup]
           static_configs:
