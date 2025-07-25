@@ -160,6 +160,11 @@ argo_applications_by_team = {
         chart_version = "0.28.1"
         auto_sync     = false
       }
+      vault-snap-agent = {
+        namespace     = "tf-stx-vault"
+        helm_path     = "vault/vault-raft-snapshot-agent"
+        chart_version = "0.1.0"
+      }
       sentry-ovs = {
         namespace     = "sentry-st-ovs"
         helm_path     = "sentry-selfhost"
