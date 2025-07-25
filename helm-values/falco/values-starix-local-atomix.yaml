@@ -253,22 +253,6 @@ customRules:
     - macro: spawned_process
       condition: (evt.type = execve and evt.dir = <)
 
-    - rule: Set Setuid or Setgid bit
-      desc: >
-        When the setuid or setgid bits are set for an application,
-        this means that the application will run with the privileges of the owning user or group respectively.
-        Detect setuid or setgid bits set via chmod
-      condition: >
-        consider_all_chmods and chmod and (evt.arg.mode contains "S_ISUID" or evt.arg.mode contains "S_ISGID")
-        and not proc.name in (user_known_chmod_applications)
-        and not exe_running_docker_save
-        and not user_known_set_setuid_or_setgid_bit_conditions
-      output: >
-        Setuid or setgid bit is set via chmod (fd=%evt.arg.fd filename=%evt.arg.filename mode=%evt.arg.mode user=%user.name user_loginuid=%user.loginuid process=%proc.name
-        command=%proc.cmdline container_id=%container.id container_name=%container.name image=%container.image.repository:%container.image.tag)
-      priority: NOTICE
-      tags: [process, mitre_persistence]
-
     - rule: Creating a root like user
       desc: using the command useradd or adduser with the flag -o -u0 it is possible to create a user with the same root userID and get user access to the machine with the new user
       condition: spawned_process and proc.exe in (useradd,adduser) and proc.args contains -o and proc.args contains -u and proc.args contains 0  
