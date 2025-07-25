@@ -107,6 +107,18 @@ argo_projects = {
       }
     ]
   }
+
+  tf-starix-local = {
+    src_repo = ["*"]
+    destinations = [
+      {
+        name      = "starix-local"
+        server    = "https://10.17.200.90:6443"
+        namespace = "*"
+      }
+    ]
+  }
+
 }
 
 # REQUIRED VARIABLE SET [git_helm_source,git_helm_value]
