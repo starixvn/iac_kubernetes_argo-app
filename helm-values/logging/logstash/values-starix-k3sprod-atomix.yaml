@@ -499,18 +499,14 @@ logstashPipeline:
       if [type] == "http-app" {
         if "pioneers" in [tags] {
           if [Properties][Category] == "Ext-API" {
-            if [Properties][Environment] == "KLPROD" {
-              if [Properties][Application] == "Ext.ApiGateways" {
-                opensearch {
-                  hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
-                  user => "logstash"
-                  password => "logstash"
-                  ssl => true
-                  ssl_certificate_verification => false
-                  index => "logstash-alpha-apiext-klprod"
-                  action => "create"
-                }
-              }
+            opensearch {
+              hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
+              user => "logstash"
+              password => "logstash"
+              ssl => true
+              ssl_certificate_verification => false
+              index => "logstash-alpha-apiext-klprod"
+              action => "create"
             }
           }
           else if "rome" in [message] or [backend_name] =~ /rome_.*/ {
