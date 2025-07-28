@@ -513,7 +513,7 @@ logstashPipeline:
               }
             }
           }
-          if "rome" in [message] or [backend_name] =~ /rome_.*/ {
+          else if "rome" in [message] or [backend_name] =~ /rome_.*/ {
             opensearch {
               hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
               user => "logstash"
@@ -524,6 +524,18 @@ logstashPipeline:
               action => "create"
             }
           }
+          else {
+            opensearch {
+              hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
+              user => "logstash"
+              password => "logstash"
+              ssl => true
+              ssl_certificate_verification => false
+              index => "logstash-pioneers-klprod-default"
+              action => "create"
+            }
+          }
+        }
         }
         else if "subarashi" in [tags] {
           if [Properties][Application] == "Deposit API Gateway" {
@@ -547,17 +559,6 @@ logstashPipeline:
               index => "logstash-subarashi-klprod-default"
               action => "create"
             }
-          }
-        }
-        else {
-          opensearch {
-            hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
-            user => "logstash"
-            password => "logstash"
-            ssl => true
-            ssl_certificate_verification => false
-            index => "logstash-unknown"
-            action => "create"
           }
         }
       }
