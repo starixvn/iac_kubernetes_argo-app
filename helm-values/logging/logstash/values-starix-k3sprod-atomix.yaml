@@ -242,43 +242,56 @@ logstashPipeline:
 
   debug_filter.conf: |
     filter {
-      if [type] == "debug" {
-        grok {
-          match => {
-            "message" => [
-              "%{HAPROXYHTTPBASE}",
-              "%{HAPROXYHTTP}",
-              "%{HAPROXYTCP}",
-              "%{HAPROXYGW}"
-            ]
-          }
+      json {
+        source => "message"
+      }
+      mutate {
+        rename => {
+          "[type]" => "[event_type]"
+          "[response][data][error]" => "[response_error]"
         }
-        if ![accept_date] {
-          grok { match => ["message", "%{HAPROXYDATE:accept_date}"] }
-        }
-        if [captured_request_headers] {
-          grok { match => {
-              "captured_request_headers" => [ "%{HTTP_CAPTURED_HEADER}" ]
-            }
-          }
-        }
-        mutate {
-          remove_field => ["captured_response_cookie","haproxy_time","haproxy_month","haproxy_hour","srvconn","backend_queue","retries","termination_state"]
-          remove_field => ["haproxy_monthday","time_backend_connect","pid","srv_queue","beat","beconn","client_port","haproxy_milliseconds","@version"]
-          remove_field => ["haproxy_minute","offset","haproxy_second","actconn","source","program","haproxy_year","feconn","http_version"]
-          remove_field => ["prospector","time_duration","time_queue","syslog_timestamp","captured_request_cookie","timestamp8601"]
-          convert => {
-            "http_status_code" => "integer"
-            "time_backend_response" => "integer"
-          }
-        }
-        date {
-          match => ["accept_date", "dd/MMM/yyyy:HH:mm:ss.SSS"]
-          timezone => "Asia/Taipei"
-        }
-        geoip {source => "TrueClientIP"}
+        remove_field => ["[event][original]","[response][data]"]
+        add_field => {"type" => "vault"}
       }
     }
+    # filter {
+    #   if [type] == "debug" {
+    #     grok {
+    #       match => {
+    #         "message" => [
+    #           "%{HAPROXYHTTPBASE}",
+    #           "%{HAPROXYHTTP}",
+    #           "%{HAPROXYTCP}",
+    #           "%{HAPROXYGW}"
+    #         ]
+    #       }
+    #     }
+    #     if ![accept_date] {
+    #       grok { match => ["message", "%{HAPROXYDATE:accept_date}"] }
+    #     }
+    #     if [captured_request_headers] {
+    #       grok { match => {
+    #           "captured_request_headers" => [ "%{HTTP_CAPTURED_HEADER}" ]
+    #         }
+    #       }
+    #     }
+    #     mutate {
+    #       remove_field => ["captured_response_cookie","haproxy_time","haproxy_month","haproxy_hour","srvconn","backend_queue","retries","termination_state"]
+    #       remove_field => ["haproxy_monthday","time_backend_connect","pid","srv_queue","beat","beconn","client_port","haproxy_milliseconds","@version"]
+    #       remove_field => ["haproxy_minute","offset","haproxy_second","actconn","source","program","haproxy_year","feconn","http_version"]
+    #       remove_field => ["prospector","time_duration","time_queue","syslog_timestamp","captured_request_cookie","timestamp8601"]
+    #       convert => {
+    #         "http_status_code" => "integer"
+    #         "time_backend_response" => "integer"
+    #       }
+    #     }
+    #     date {
+    #       match => ["accept_date", "dd/MMM/yyyy:HH:mm:ss.SSS"]
+    #       timezone => "Asia/Taipei"
+    #     }
+    #     geoip {source => "TrueClientIP"}
+    #   }
+    # }
 
   http_app_pioneers.conf: |
     filter {
