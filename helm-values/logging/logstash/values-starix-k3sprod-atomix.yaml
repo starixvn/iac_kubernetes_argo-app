@@ -536,7 +536,6 @@ logstashPipeline:
             }
           }
         }
-        }
         else if "subarashi" in [tags] {
           if [Properties][Application] == "Deposit API Gateway" {
             opensearch {
