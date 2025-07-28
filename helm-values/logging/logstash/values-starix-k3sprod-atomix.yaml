@@ -300,35 +300,35 @@ logstashPipeline:
       if [type] == "http-app" and
          "pioneers" in [tags] {
         ### Alphalog PIONEERS
-        if [Properties][Category] == "Alpha-API" or 
-           [Properties][Category] == "Ext-API" {
-          if [Properties][RequestPath] == "/health" or 
-             [Properties][RequestPath] == "/" { drop {} }
-          if ! [Properties][RequestPath] { drop {} }
-          # if ! [Properties][StatusCode]
-          #   {
-          #     drop {}
-          #   }
-          mutate {
-            remove_field => ["[headers][request_path]", "[headers][http_host]", "[headers][content_type]", "[headers][content_length]", "host"]
-          }
-        }
-        if [Properties][Team] == "Pioneers" {
-          mutate {
-            remove_field => ["[Renderings]", "[Properties][HttpLog]", "MessageTemplate", "[Properties][Elapsed]", "[Properties][SourceContext]"]
-          }
-          if [Properties][RequestPath] == "/" { drop {} }
-          if [Properties][Application] == "Deposit.ApiGateways" {
-            mutate {
-              add_tag => ["deposit-apigw"]
-            }
-          }
-          if [Properties][Application] == "Licensee.AdminSetting.API" {
-            mutate {
-              add_tag => ["licensee-adminsetting"]
-            }
-          }           
-        }
+        # if [Properties][Category] == "Alpha-API" or 
+        #    [Properties][Category] == "Ext-API" {
+        #   if [Properties][RequestPath] == "/health" or 
+        #      [Properties][RequestPath] == "/" { drop {} }
+        #   if ! [Properties][RequestPath] { drop {} }
+        #   # if ! [Properties][StatusCode]
+        #   #   {
+        #   #     drop {}
+        #   #   }
+        #   mutate {
+        #     remove_field => ["[headers][request_path]", "[headers][http_host]", "[headers][content_type]", "[headers][content_length]", "host"]
+        #   }
+        # }
+        # if [Properties][Team] == "Pioneers" {
+        #   mutate {
+        #     remove_field => ["[Renderings]", "[Properties][HttpLog]", "MessageTemplate", "[Properties][Elapsed]", "[Properties][SourceContext]"]
+        #   }
+        #   if [Properties][RequestPath] == "/" { drop {} }
+        #   if [Properties][Application] == "Deposit.ApiGateways" {
+        #     mutate {
+        #       add_tag => ["deposit-apigw"]
+        #     }
+        #   }
+        #   if [Properties][Application] == "Licensee.AdminSetting.API" {
+        #     mutate {
+        #       add_tag => ["licensee-adminsetting"]
+        #     }
+        #   }
+        # }
       }
     }
 
