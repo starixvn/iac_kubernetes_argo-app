@@ -242,16 +242,17 @@ logstashPipeline:
 
   debug_filter.conf: |
     filter {
-      json {
-        source => "message"
-      }
-      mutate {
-        rename => {
-          "[type]" => "[event_type]"
-          "[response][data][error]" => "[response_error]"
+      if [type] == "debug" {
+        json {
+          source => "message"
         }
-        remove_field => ["[event][original]","[response][data]"]
-        add_field => {"type" => "vault"}
+        mutate {
+          rename => {
+            "[type]" => "[event_type]"
+            "[response][data][error]" => "[response_error]"
+          }
+          remove_field => ["[event][original]","[response][data]"]
+        }
       }
     }
     # filter {
