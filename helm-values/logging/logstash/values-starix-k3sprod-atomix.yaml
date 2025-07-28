@@ -525,7 +525,7 @@ logstashPipeline:
             }
           }
         }
-        if "subarashi" in [tags] {
+        else if "subarashi" in [tags] {
           if [Properties][Application] == "Deposit API Gateway" {
             opensearch {
               hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
@@ -547,6 +547,17 @@ logstashPipeline:
               index => "logstash-subarashi-klprod-default"
               action => "create"
             }
+          }
+        }
+        else {
+          opensearch {
+            hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
+            user => "logstash"
+            password => "logstash"
+            ssl => true
+            ssl_certificate_verification => false
+            index => "logstash-unknown"
+            action => "create"
           }
         }
       }
