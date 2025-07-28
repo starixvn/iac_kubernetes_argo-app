@@ -25,7 +25,7 @@ logstashPipeline:
         tags => ["prod", "st"]
       }
 
-      syslog {
+      tcp {
         port => 5077
         type => "debug"
         tags => ["prod"]
