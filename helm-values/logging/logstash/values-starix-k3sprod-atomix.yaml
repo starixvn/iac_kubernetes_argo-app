@@ -252,6 +252,7 @@ logstashPipeline:
             "[response][data][error]" => "[response_error]"
           }
           remove_field => ["[event][original]","[response][data]"]
+          add_field => {"type" => "debug"}
         }
       }
     }
