@@ -180,6 +180,7 @@ roles:
   - cluster_monitor
   indexPermissions:
   - indexPatterns:
+    - "logstash-alpha-apiext-klprod"
     - "logstash-haproxy-swarm-starix-klprod"
     - "logstash-haproxy-swarm-starix-alphaklprod"
     - "logstash-haproxy-swarm-starix-*prod"
