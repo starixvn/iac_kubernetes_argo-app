@@ -135,6 +135,10 @@ alertmanager:
     - name: default-receiver
 
 blackboxExporter:
+  podDnsPolicy: None
+  podDnsConfig:
+    nameservers:
+      - 10.144.50.5
   configuration: |
     modules:
       dns_iusqd:
