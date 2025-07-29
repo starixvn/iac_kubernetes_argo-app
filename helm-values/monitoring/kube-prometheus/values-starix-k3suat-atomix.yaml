@@ -138,7 +138,7 @@ blackboxExporter:
   extraVolumes:
     - name: host-resolv
       hostPath:
-        path: /etc/resolv.conf
+        path: /run/systemd/resolve/resolv.conf
         type: File
 
   extraVolumeMounts:
@@ -152,7 +152,7 @@ blackboxExporter:
         prober: dns
         timeout: 5s
         dns:
-          query_name: "iusqd.gamora.prod"
+          query_name: "vault-stx.ops-klprod.gamora.prod"
           query_type: "A"
           valid_rcodes:
             - NOERROR
@@ -176,4 +176,4 @@ extraDeploy:
     targets:
       staticConfig:
         static:
-        - iusqd.gamora.prod
+        - vault-stx.ops-klprod.gamora.prod
