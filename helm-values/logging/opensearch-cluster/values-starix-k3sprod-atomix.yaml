@@ -165,6 +165,7 @@ roles:
   indexPermissions:
   - indexPatterns:
     - "*subarashi*"
+    - "logstash-haproxy-swarm-starix-klprod"
     allowedActions:
     - index
     - read
