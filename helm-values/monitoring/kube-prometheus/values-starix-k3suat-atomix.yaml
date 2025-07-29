@@ -135,10 +135,17 @@ alertmanager:
     - name: default-receiver
 
 blackboxExporter:
-  podDnsPolicy: None
-  podDnsConfig:
-    nameservers:
-      - 127.0.0.53
+  extraVolumes:
+    - name: host-resolv
+      hostPath:
+        path: /run/systemd/resolve/resolv.conf
+        type: File
+
+  extraVolumeMounts:
+    - name: host-resolv
+      mountPath: /etc/resolv.conf
+      readOnly: true
+
   configuration: |
     modules:
       dns_iusqd:
