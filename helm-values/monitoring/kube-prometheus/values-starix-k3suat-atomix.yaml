@@ -134,36 +134,37 @@ alertmanager:
 
     - name: default-receiver
 
-# blackboxExporter:
-#   configuration: |
-#     modules:
-#       dns_iusqd:
-#         prober: dns
-#         timeout: 5s
-#         dns:
-#           query_name: "iusqd.gamora.prod"
-#           query_type: "A"
-#           valid_rcodes:
-#             - NOERROR
-#           preferred_ip_protocol: "ip4"
-#           resolvers:
-#             - "127.0.0.53"
+blackboxExporter:
+  configuration: |
+    modules:
+      dns_iusqd:
+        prober: dns
+        timeout: 5s
+        dns:
+          query_name: "iusqd.gamora.prod"
+          query_type: "A"
+          valid_rcodes:
+            - NOERROR
+          preferred_ip_protocol: "ip4"
+          resolvers:
+            - "127.0.0.53"
 
-# extraDeploy:
-# - |
-#   ### DNS Monitor
-#   kind: Probe
-#   metadata:
-#     name: dns-probe
-#     namespace: monitoring
-#     labels:
-#       prometheus: main
-#   spec:
-#     interval: 30s
-#     module: dns_iusqd
-#     prober:
-#       url: prometheus-atx-k3suat-kube-blackbox-exporter.monitoring.svc.starix.k3suat:19115
-#     targets:
-#       staticConfig:
-#         static:
-#         - iusqd.gamora.prod
+extraDeploy:
+- |
+  ### DNS Monitor
+  kind: Probe
+  apiVersion: monitoring.coreos.com/v1
+  metadata:
+    name: dns-probe
+    namespace: monitoring
+    labels:
+      prometheus: main
+  spec:
+    interval: 30s
+    module: dns_iusqd
+    prober:
+      url: prometheus-atx-k3suat-kube-blackbox-exporter.monitoring.svc.starix.k3suat:19115
+    targets:
+      staticConfig:
+        static:
+        - iusqd.gamora.prod
