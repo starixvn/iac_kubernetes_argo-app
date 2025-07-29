@@ -138,7 +138,7 @@ blackboxExporter:
   podDnsPolicy: None
   podDnsConfig:
     nameservers:
-      - 10.144.50.5
+      - 127.0.0.53
   configuration: |
     modules:
       dns_iusqd:
