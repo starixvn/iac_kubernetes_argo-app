@@ -133,3 +133,35 @@ alertmanager:
             📝 *{{ .CommonAnnotations.message }}*
 
     - name: default-receiver
+
+blackboxExporter:
+  configuration: |
+    modules:
+      dns_lookup:
+        prober: dns
+        timeout: 5s
+        dns:
+          query_name: "iusqd.gamora.prod"
+          query_type: "A"
+          validate_answer_rrs:
+            fail_if_not_matches_regexp: ["10\\.148\\.78\\.100"]
+
+extraDeploy:
+- |
+  ### DNS Monitor
+  kind: Probe
+  apiVersion: monitoring.coreos.com/v1
+  metadata:
+    name: dns-probe
+    namespace: monitoring
+    labels:
+      prometheus: main
+  spec:
+    interval: 30s
+    module: dns_lookup
+    prober:
+      url: prometheus-atx-k3suat-kub-blackbox-exporter.monitoring.svc.starix.k3suat:19115
+    targets:
+      staticConfig:
+        static:
+        - iusqd.gamora.prod
