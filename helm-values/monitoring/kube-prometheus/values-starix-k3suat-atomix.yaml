@@ -139,7 +139,7 @@ blackboxExporter:
         prober: dns
         dns:
           query_name: "iusqd.gamora.prod"  # Replace with your domain
-          query_type: "AAAA"           # Can be A, AAAA, MX, etc.
+          query_type: "MX"           # Can be A, AAAA, MX, etc.
           valid_rcodes:
             - NOERROR
           preferred_ip_protocol: "ip4"
