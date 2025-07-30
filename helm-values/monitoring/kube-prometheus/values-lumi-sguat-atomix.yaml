@@ -49,7 +49,7 @@ prometheus:
       key: ""
     internal:
       jobList: []
-  ##
+  ###
   additionalScrapeConfigsExternal:
     enabled: false
     name: ""
