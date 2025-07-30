@@ -38,27 +38,25 @@ prometheus:
     internal:
       jobList: []
 
-
   #additionalPrometheusRules:
 
 node-exporter:
   extraVolumes:
-  - hostPath:
-      path: /var/lib
-      type: ""
-    name: mnt
-    
+    - hostPath:
+        path: /var/lib
+        type: ""
+      name: mnt
+
   extraVolumeMounts:
-  - mountPath: /host/root/var/lib
-    mountPropagation: HostToContainer
-    name: mnt
-    readOnly: true
+    - mountPath: /host/root/var/lib
+      mountPropagation: HostToContainer
+      name: mnt
+      readOnly: true
 
   extraArgs:
     path.rootfs: "/host/root"
     collector.filesystem.mount-points-exclude: "^/(dev|proc|sys|var/lib/docker/.+)($|/)"
     collector.filesystem.fs-types-exclude: "^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs|squashfs|nsfs|tmpfs)$"
-
 
 alertmanager:
   resourcesPreset: "none"
@@ -71,97 +69,98 @@ alertmanager:
         proxy_url: "http://iusqd.gamora.prod:8801"
 
     route:
-      receiver: 'default-receiver'
+      receiver: "default-receiver"
       routes:
-      - receiver: 'null'
-        match_re:
-          pod: "backup-.*|c-.*|.*-cleaner-.*|.*snapshot-.*|.*-cleanup-.*|.*-cron-.*|.*-update-.*|.*consumer.*"
-      - receiver: 'alert-nx-atomix-uat'
-        match_re:
-          alertname: "Kubernetes.*"
-      - receiver: "velero_backups"
-        match_re:
-          alertname: "Velero.*"
-      - receiver: 'longhorn_alerts'
-        match:
-          service: "Longhorn"
-        group_by: ['alertname', 'job', 'pvc']
-      group_by: ['alertname','job','pod', 'description']
+        - receiver: "null"
+          match_re:
+            pod: "backup-.*|c-.*|.*-cleaner-.*|.*snapshot-.*|.*-cleanup-.*|.*-cron-.*|.*-update-.*|.*consumer.*"
+        - receiver: "alert-nx-atomix-uat"
+          match_re:
+            alertname: "Kubernetes.*"
+        - receiver: "velero_backups"
+          match_re:
+            alertname: "Velero.*"
+        - receiver: "longhorn_alerts"
+          match:
+            service: "Longhorn"
+          group_by: ["alertname", "job", "pvc"]
+      group_by: ["alertname", "job", "pod", "description"]
       group_wait: 30s
       group_interval: 5m
       repeat_interval: 9999h
 
     receivers:
-    - name: 'null'
-    - name: 'longhorn_alerts'
-      slack_configs:
-        - api_url: "https://hooks.slack.com/services/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"
-          channel: '#longhorn_alerts'
-          send_resolved: true
-          icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
-          title: '{{ if eq .Status "firing" }}🔥PROBLEM🔥 {{ else }}✅RESOLVED✅ {{ end }}'
-          text: |
-            *Cluster:* `Kubernetes-DevOps-KLUAT`
-            *Severity:* `{{ .CommonLabels.severity }}`{{ if .CommonLabels.pvc }}
-            *PVC:* `{{ .CommonLabels.pvc }}`{{ end }}{{ if .CommonLabels.pvc_namespace }}
-            *Namespace:* `{{ .CommonLabels.pvc_namespace }}`{{ end }}{{ if .CommonAnnotations.description }}
-            *Description:* `{{ .CommonAnnotations.description }}`{{ end }}
+      - name: "null"
+      - name: "longhorn_alerts"
+        slack_configs:
+          - api_url: "https://hooks.slack.com/services/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"
+            channel: "#longhorn_alerts"
+            send_resolved: true
+            icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+            title: '{{ if eq .Status "firing" }}🔥PROBLEM🔥 {{ else }}✅RESOLVED✅ {{ end }}'
+            text: |
+              *Cluster:* `Kubernetes-DevOps-KLUAT`
+              *Severity:* `{{ .CommonLabels.severity }}`{{ if .CommonLabels.pvc }}
+              *PVC:* `{{ .CommonLabels.pvc }}`{{ end }}{{ if .CommonLabels.pvc_namespace }}
+              *Namespace:* `{{ .CommonLabels.pvc_namespace }}`{{ end }}{{ if .CommonAnnotations.description }}
+              *Description:* `{{ .CommonAnnotations.description }}`{{ end }}
 
-    - name: 'alert-nx-atomix-uat'
-      slack_configs:
-        - api_url: "https://hooks.slack.com/services/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"
-          channel: '#alert-nx-atomix-uat'
-          send_resolved: true
-          icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
-          title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
-          text: |
-            *Cluster:* `Kubernetes-DevOps-KLUAT`
-            *Summary:* `{{ .CommonLabels.alertname }}`
-            *Description:* `{{ .CommonAnnotations.description }}`
-          color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+      - name: "alert-nx-atomix-uat"
+        slack_configs:
+          - api_url: "https://hooks.slack.com/services/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"
+            channel: "#alert-nx-atomix-uat"
+            send_resolved: true
+            icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+            title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
+            text: |
+              *Cluster:* `Kubernetes-DevOps-KLUAT`
+              *Summary:* `{{ .CommonLabels.alertname }}`
+              *Description:* `{{ .CommonAnnotations.description }}`
+            color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
 
-    - name: "velero_backups"
-      slack_configs:
-        - api_url: "https://hooks.slack.com/services/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"
-          channel: "#velero_backups"
-          send_resolved: true
-          icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
-          title: '{{ if eq .Status "firing" }}🔥 PROBLEM 🔥 {{ .CommonLabels.alertname }}{{ else }}✅ RESOLVED ✅ {{ .CommonLabels.alertname }}{{ end }}'
-          text: |
-            *Cluster:* `Kubernetes-DevOps-KLUAT`
-            ❗ *{{ .CommonLabels.severity }}*
-            📝 *{{ .CommonAnnotations.message }}*
+      - name: "velero_backups"
+        slack_configs:
+          - api_url: "https://hooks.slack.com/services/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"
+            channel: "#velero_backups"
+            send_resolved: true
+            icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+            title: '{{ if eq .Status "firing" }}🔥 PROBLEM 🔥 {{ .CommonLabels.alertname }}{{ else }}✅ RESOLVED ✅ {{ .CommonLabels.alertname }}{{ end }}'
+            text: |
+              *Cluster:* `Kubernetes-DevOps-KLUAT`
+              ❗ *{{ .CommonLabels.severity }}*
+              📝 *{{ .CommonAnnotations.message }}*
 
-    - name: default-receiver
+      - name: default-receiver
 
 blackboxExporter:
   configuration: |
     modules:
-      dns_iusqd:
+      dns_probe:
         prober: dns
         dns:
-          query_name: "iusqd.gamora.prod"
-          query_type: "A"
+          query_name: "iusqd.gamora.prod"  # Replace with your domain
+          query_type: "AAAA"           # Can be A, AAAA, MX, etc.
           valid_rcodes:
             - NOERROR
           preferred_ip_protocol: "ip4"
 
 extraDeploy:
-- |
-  ### DNS Monitor
-  kind: Probe
-  apiVersion: monitoring.coreos.com/v1
-  metadata:
-    name: dns-probe
-    namespace: monitoring
-    labels:
-      prometheus: main
-  spec:
-    interval: 30s
-    module: dns_iusqd
-    prober:
-      url: prometheus-atx-k3suat-kube-blackbox-exporter.monitoring.svc.starix.k3suat:19115
-    targets:
-      staticConfig:
-        static:
-        - iusqd.gamora.prod
+  - |
+    ### DNS Monitor
+    kind: Probe
+    apiVersion: monitoring.coreos.com/v1
+    metadata:
+      name: dns-probe
+      namespace: monitoring
+      labels:
+        prometheus: main
+    spec:
+      interval: 30s
+      module: dns_probe
+      prober:
+        url: prometheus-atx-k3suat-kube-blackbox-exporter.monitoring.svc.starix.k3suat:19115
+      targets:
+        staticConfig:
+          static:
+          - iusqd.gamora.prod    # Replace with your domain
+          - example.org    # Add more domains as needed
