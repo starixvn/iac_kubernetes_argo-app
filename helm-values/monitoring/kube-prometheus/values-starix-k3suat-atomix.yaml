@@ -148,12 +148,12 @@ blackboxExporter:
       dns_probe:
         prober: dns
         dns:
-          query_name: "iusqd.gamora.prod"  # Replace with your domain
-          query_type: "A"           # Can be A, AAAA, MX, etc.
+          query_name: "iusqd.gamora.prod"
+          query_type: "A"
           valid_rcodes:
             - NOERROR
           preferred_ip_protocol: "ip4"
-          dns_server: "10.144.50.5"
+          source_ip_address: "10.144.50.5"  # Changed from dns_server to source_ip_address
 
 extraDeploy:
   - |
