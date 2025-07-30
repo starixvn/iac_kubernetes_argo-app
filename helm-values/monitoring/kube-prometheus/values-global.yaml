@@ -489,7 +489,7 @@ prometheus:
             summary: Opensearch Cluster Yellow (component {{ $labels.job }})
             description: "Elastic Cluster Yellow status"
 
-        #  Opensearch no new documents 
+        # Opensearch no new documents 
         - alert: OpensearchNoNewDocuments
           expr: increase(opensearch_indices_indexing_index_count{job=~".*-hot"}[10m]) < 1
           for: 0m
@@ -500,6 +500,19 @@ prometheus:
             title: "Opensearch: No new Docs been written"
             summary: Opensearch no new documents (component {{ $labels.job }})
             description: "No new documents for 10 min!"
+
+        # Opensearch Heap Usage Too High 
+        - alert: OpensearchHeapUsageTooHigh
+          expr: (avg_over_time(opensearch_jvm_mem_heap_used_bytes[15m]) / opensearch_jvm_mem_heap_max_bytes) * 100 > 90
+          for: 2m
+          labels:
+            severity: critical
+            service: OpenSearch
+          annotations:
+            title: "Opensearch: Heap Usage Too High"
+            summary: Opensearch Heap Usage Too High (node {{ $labels.node }})
+            description: "The heap usage is over 90%"
+
 
     - name: tcp.rules
       groups:
