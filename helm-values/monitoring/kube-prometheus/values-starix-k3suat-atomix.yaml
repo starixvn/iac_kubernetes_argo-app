@@ -135,24 +135,12 @@ alertmanager:
     - name: default-receiver
 
 blackboxExporter:
-  extraVolumes:
-    - name: host-resolv
-      hostPath:
-        path: /run/systemd/resolve/resolv.conf
-        type: File
-
-  extraVolumeMounts:
-    - name: host-resolv
-      mountPath: /etc/resolv.conf
-      readOnly: true
-
   configuration: |
     modules:
       dns_iusqd:
         prober: dns
-        timeout: 5s
         dns:
-          query_name: "vault-stx.ops-klprod.gamora.prod"
+          query_name: "iusqd.gamora.prod"
           query_type: "A"
           valid_rcodes:
             - NOERROR
@@ -176,4 +164,4 @@ extraDeploy:
     targets:
       staticConfig:
         static:
-        - vault-stx.ops-klprod.gamora.prod
+        - iusqd.gamora.prod
