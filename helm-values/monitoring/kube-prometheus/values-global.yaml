@@ -510,8 +510,8 @@ prometheus:
             service: OpenSearch
           annotations:
             title: "Opensearch: Heap Usage Too High"
-            summary: Opensearch Heap Usage Too High (node {{ $labels.node }})
-            description: "The heap usage is over 90%"
+            summary: "Opensearch Heap Usage Too High (node {{ $labels.node }})"
+            description: "The heap usage is over 90% ~ {{ $value | printf \"%.2f\" }}"
 
 
     - name: tcp.rules
