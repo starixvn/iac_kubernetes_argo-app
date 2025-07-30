@@ -149,11 +149,11 @@ blackboxExporter:
         prober: dns
         dns:
           query_name: "iusqd.gamora.prod"  # Replace with your domain
-          query_type: "MX"           # Can be A, AAAA, MX, etc.
+          query_type: "A"           # Can be A, AAAA, MX, etc.
           valid_rcodes:
             - NOERROR
           preferred_ip_protocol: "ip4"
-          dns_server: "10.144.50.5"
+          #dns_server: "10.144.50.5"
 
 extraDeploy:
   - |
