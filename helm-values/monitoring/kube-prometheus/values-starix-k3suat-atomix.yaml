@@ -173,5 +173,5 @@ extraDeploy:
       targets:
         staticConfig:
           static:
-          - iusqd.gamora.prod:10.148.78.100    # Replace with your domain
+          - iusqd.gamora.prod:10.144.50.5    # Replace with your domain
           - example.org    # Add more domains as needed
