@@ -137,7 +137,7 @@ blackboxExporter:
   hostNetwork: true
   dnsConfig:
     nameservers:
-      - 10.144.50.5
+      - 127.0.0.53
     searches:
       - ingwaz99.cba
     options:
