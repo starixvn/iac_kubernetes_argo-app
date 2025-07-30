@@ -139,7 +139,7 @@ blackboxExporter:
     nameservers:
       - 10.144.50.5
     searches:
-      - ingwaz99.cba
+      - gamora.prod
     options:
       - name: ndots
         value: "5"
@@ -153,7 +153,7 @@ blackboxExporter:
           valid_rcodes:
             - NOERROR
           preferred_ip_protocol: "ip4"
-          #dns_server: "10.144.50.5"
+          dns_server: "10.144.50.5"
 
 extraDeploy:
   - |
@@ -173,5 +173,5 @@ extraDeploy:
       targets:
         staticConfig:
           static:
-          - iusqd.gamora.prod:10.144.50.5    # Replace with your domain
+          - iusqd.gamora.prod    # Replace with your domain
           - example.org    # Add more domains as needed
