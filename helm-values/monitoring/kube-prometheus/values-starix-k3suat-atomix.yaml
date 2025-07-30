@@ -137,7 +137,7 @@ blackboxExporter:
   hostNetwork: true
   dnsConfig:
     nameservers:
-      - 127.0.0.53
+      - 10.144.50.5
     searches:
       - ingwaz99.cba
     options:
@@ -173,5 +173,5 @@ extraDeploy:
       targets:
         staticConfig:
           static:
-          - iusqd.gamora.prod    # Replace with your domain
+          - iusqd.gamora.prod:10.148.78.100    # Replace with your domain
           - example.org    # Add more domains as needed
