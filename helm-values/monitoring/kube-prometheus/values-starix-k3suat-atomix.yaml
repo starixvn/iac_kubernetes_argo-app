@@ -133,6 +133,16 @@ alertmanager:
       - name: default-receiver
 
 blackboxExporter:
+  dnsPolicy: "ClusterFirstWithHostNet"
+  hostNetwork: true
+  dnsConfig:
+    nameservers:
+      - 10.144.50.5
+    searches:
+      - ingwaz99.cba
+    options:
+      - name: ndots
+        value: "5"
   configuration: |
     modules:
       dns_probe:
@@ -143,6 +153,7 @@ blackboxExporter:
           valid_rcodes:
             - NOERROR
           preferred_ip_protocol: "ip4"
+          dns_server: "10.144.50.5"
 
 extraDeploy:
   - |
