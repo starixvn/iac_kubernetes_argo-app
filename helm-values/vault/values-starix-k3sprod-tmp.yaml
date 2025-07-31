@@ -10,7 +10,7 @@ server:
   ingress:
     activeService: false
     ingressClassName: "haproxy"
-    enabled: true
+    enabled: false
     hosts: 
     - host: "vault-s.starixplay.com"
       paths: []

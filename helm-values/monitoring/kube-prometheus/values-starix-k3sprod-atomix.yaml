@@ -108,7 +108,7 @@ alertmanager:
         match:
           service: "Longhorn"
         group_by: ['alertname', 'job', 'pvc']
-      - receiver: "velero_backups"
+      - receiver: "alert-velero-backups"
         match_re:
           alertname: "Velero.*"
       - receiver: dev-services
@@ -166,10 +166,10 @@ alertmanager:
             *Description:* `{{ .CommonAnnotations.description }}`
           color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
     
-    - name: "velero_backups"
+    - name: "alert-velero-backups"
       slack_configs:
         - api_url: "https://hooks.slack.com/services/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"
-          channel: "#velero_backups"
+          channel: "#alert-velero-backups"
           send_resolved: true
           icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
           title: '{{ if eq .Status "firing" }}🔥 PROBLEM 🔥 {{ .CommonLabels.alertname }}{{ else }}✅ RESOLVED ✅ {{ .CommonLabels.alertname }}{{ end }}'
@@ -210,20 +210,6 @@ blackboxExporter:
         prober: tcp
         tcp:
           preferred_ip_protocol: "ip4"
-      dns_lookup:
-        prober: dns
-        timeout: 5s
-        dns:
-          query_name: "iusqd.gamora.prod"
-          query_type: "A"
-          validate_answer_rrs:
-            fail_if_not_matches_regexp: ["10\\.148\\.78\\.100"]
-
-      # icmp_connect:
-      #   prober: icmp
-      #   timeout: 5s
-      #   icmp:
-      #     preferred_ip_protocol: "ip4"
 
 extraDeploy:
 - |
@@ -260,58 +246,3 @@ extraDeploy:
         - jaeger-collector-sc.ops-klprod.gamora.prod:32317 #otlp-grpc
         - jaeger-collector-sc.ops-klprod.gamora.prod:32318 #otlp-http
         - vn-sc-nats-prod.gamora.prod:80 #NATS
-- |
-  ### DNS Monitor
-  kind: Probe
-  apiVersion: monitoring.coreos.com/v1
-  metadata:
-    name: dns-probe
-    namespace: monitoring
-    labels:
-      prometheus: main
-  spec:
-    interval: 30s
-    module: dns_lookup
-    prober:
-      url: prometheus-atx-k3sprod-kub-blackbox-exporter.monitoring.svc.starix.k3sprod:19115
-    targets:
-      staticConfig:
-        static:
-        - iusqd.gamora.prod
-
-# - |
-#   ### ICMP
-#   kind: Probe
-#   apiVersion: monitoring.coreos.com/v1
-#   metadata:
-#     name: icmp-probe
-#     namespace: monitoring
-#   spec:
-#     interval: 5s
-#     module: icmp_connect
-#     prober:
-#       url: prometheus-atx-k3sprod-kub-blackbox-exporter.monitoring.svc.starix.k3sprod:19115
-#     targets:
-#       staticConfig:
-#         static:
-#         - gitlab.starixsoft.com
-#         - 202.78.231.43
-
-# - |
-#   ### monitor via proxy lisaqd
-#   kind: Probe
-#   apiVersion: monitoring.coreos.com/v1
-#   metadata:
-#     name: lisaqd-probe
-#     namespace: monitoring
-#   spec:
-#     interval: 60s
-#     module: http_2xx_with_lisaqd
-#     prober:
-#       url: prometheus-atx-k3sprod-kub-blackbox-exporter.monitoring.svc.starix.k3sprod
-#     targets:
-#       staticConfig:
-#         static:
-#         - https://hub.nexdev.net
-#         - https://hub.lumigame.com
-#         - https://gitlab.starixsoft.com

@@ -63,36 +63,29 @@ alertmanager:
   config:
     global:
       resolve_timeout: 15m
-      http_config:
-        proxy_url: "http://lisasqd.nebula.prod:8801"
+      # http_config:
+      #   proxy_url: "http://lisasqd.nebula.prod:8801"
 
     route:
       receiver: 'default-receiver'
       routes:
       - receiver: 'null'
         match_re:
-          namespace: "zabbix-proxy-devops|zabbix-server-devops|nexpe"
-      - receiver: 'null'
-        match_re:
           pod: "backup-.*|c-.*|.*-cleaner-.*|.*snapshot-.*|.*-cleanup-.*|.*-cron-.*|.*-update-.*"
       - receiver: 'nexpe-services-alert'
         match_re:
           namespace: "nexpe|gosql|tw|nexops"
-      - receiver: 'kubernetes_devops_prod'
+      - receiver: 'alert-nx-atomix-uat'
         match_re:
-          service: "prometheus-starix-k3sprod-kube-state-metrics|prometheus-starix-k3sprod-node-exporter"
+          alertname: "Kubernetes.*"
       - receiver: 'longhorn_alerts'
         match:
           service: "Longhorn"
-      - receiver: "velero_alerts"
+        group_by: ['alertname', 'job', 'pvc']
+      - receiver: "alert-velero-backups"
         match_re:
           alertname: "Velero.*"
-        group_by: ['alertname', 'job', 'pvc']
-      - receiver: dev-services
-        match:
-          service: "OpenSearch"
-        group_by: ['alertname', 'job']
-      group_by: ['alertname','job','pod', 'description']
+      group_by: ['alertname', 'cluster', 'namespace', 'pod', 'description']
       group_wait: 30s
       group_interval: 5m
       repeat_interval: 9999h
@@ -113,10 +106,10 @@ alertmanager:
             *Namespace:* `{{ .CommonLabels.pvc_namespace }}`{{ end }}{{ if .CommonAnnotations.description }}
             *Description:* `{{ .CommonAnnotations.description }}`{{ end }}
 
-    - name: 'kubernetes_devops_prod'
+    - name: 'alert-nx-atomix-uat'
       slack_configs:
-        - api_url: "https://hooks.slack.com/services/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"
-          channel: '#kubernetes_devops_prod'
+        - api_url: "https://hooks.slack.com/services/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"
+          channel: '#alert-nx-atomix-uat'
           send_resolved: true
           icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
           title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
@@ -139,10 +132,10 @@ alertmanager:
             *Description:* `{{ .CommonAnnotations.description }}`
           color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
     
-    - name: "velero_alerts"
+    - name: "alert-velero-backups"
       slack_configs:
-        - api_url: "https://hooks.slack.com/services/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"
-          channel: "#alerts-test"
+        - api_url: "https://hooks.slack.com/services/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"
+          channel: "#alert-velero-backups"
           send_resolved: true
           icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
           title: '{{ if eq .Status "firing" }}🔥 PROBLEM 🔥 {{ .CommonLabels.alertname }}{{ else }}✅ RESOLVED ✅ {{ .CommonLabels.alertname }}{{ end }}'
@@ -151,29 +144,5 @@ alertmanager:
             ❗ *{{ .CommonLabels.severity }}*
             📝 *{{ .CommonAnnotations.message }}*
 
-    - name: dev-services
-      slack_configs:
-      - channel: '#dev-services'
-        color: '{{ template "sre.slack.color" . }}'
-        fallback: '{{ template "sre.slack.fallback" . }}'
-        icon_emoji: ":opensearch-ico:"
-        send_resolved: true
-        username: "FPS OpenSearch - PROD"
-        title: '{{ template "sre.slack.title" . }}'
-        text: '{{ template "sre.slack.body" . }}'
-
     - name: default-receiver
 
-blackboxExporter:
-  configuration: |
-    modules:
-      http_2xx_with_lisaqd:
-        prober: http
-        http:
-          proxy_url: "http://lisasqd.nebula.prod:8801"
-          skip_resolve_phase_with_proxy: true
-      http_2xx_with_lisaqd_dev:
-        prober: http
-        http:
-          proxy_url: "http://lisasqd.nebula.prod:8801"
-          skip_resolve_phase_with_proxy: true

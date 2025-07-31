@@ -307,15 +307,6 @@ argo_applications_by_team = {
 
     }
   }
-  tmp = {
-    team_name = "tmp"
-    applications = {
-      vault = {
-        helm_path     = "vault"
-        chart_version = "0.28.1"
-      }
-    }
-  }
 }
 
 

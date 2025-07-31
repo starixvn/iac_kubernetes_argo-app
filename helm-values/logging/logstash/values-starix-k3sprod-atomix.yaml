@@ -25,7 +25,7 @@ logstashPipeline:
         tags => ["prod", "st"]
       }
 
-      syslog {
+      tcp {
         port => 5077
         type => "debug"
         tags => ["prod"]
@@ -243,77 +243,87 @@ logstashPipeline:
   debug_filter.conf: |
     filter {
       if [type] == "debug" {
-        grok {
-          match => {
-            "message" => [
-              "%{HAPROXYHTTPBASE}",
-              "%{HAPROXYHTTP}",
-              "%{HAPROXYTCP}",
-              "%{HAPROXYGW}"
-            ]
-          }
-        }
-        if ![accept_date] {
-          grok { match => ["message", "%{HAPROXYDATE:accept_date}"] }
-        }
-        if [captured_request_headers] {
-          grok { match => {
-              "captured_request_headers" => [ "%{HTTP_CAPTURED_HEADER}" ]
-            }
-          }
+        json {
+          source => "message"
         }
         mutate {
-          remove_field => ["captured_response_cookie","haproxy_time","haproxy_month","haproxy_hour","srvconn","backend_queue","retries","termination_state"]
-          remove_field => ["haproxy_monthday","time_backend_connect","pid","srv_queue","beat","beconn","client_port","haproxy_milliseconds","@version"]
-          remove_field => ["haproxy_minute","offset","haproxy_second","actconn","source","program","haproxy_year","feconn","http_version"]
-          remove_field => ["prospector","time_duration","time_queue","syslog_timestamp","captured_request_cookie","timestamp8601"]
-          convert => {
-            "http_status_code" => "integer"
-            "time_backend_response" => "integer"
+          rename => {
+            "[type]" => "[event_type]"
+            "[response][data][error]" => "[response_error]"
           }
+          remove_field => ["[event][original]","[response][data]"]
+          add_field => {"type" => "debug"}
         }
-        date {
-          match => ["accept_date", "dd/MMM/yyyy:HH:mm:ss.SSS"]
-          timezone => "Asia/Taipei"
-        }
-        geoip {source => "TrueClientIP"}
       }
     }
+    # filter {
+    #   if [type] == "debug" {
+    #     grok {
+    #       match => {
+    #         "message" => [
+    #           "%{HAPROXYHTTPBASE}",
+    #           "%{HAPROXYHTTP}",
+    #           "%{HAPROXYTCP}",
+    #           "%{HAPROXYGW}"
+    #         ]
+    #       }
+    #     }
+    #     if ![accept_date] {
+    #       grok { match => ["message", "%{HAPROXYDATE:accept_date}"] }
+    #     }
+    #     if [captured_request_headers] {
+    #       grok { match => {
+    #           "captured_request_headers" => [ "%{HTTP_CAPTURED_HEADER}" ]
+    #         }
+    #       }
+    #     }
+    #     mutate {
+    #       remove_field => ["captured_response_cookie","haproxy_time","haproxy_month","haproxy_hour","srvconn","backend_queue","retries","termination_state"]
+    #       remove_field => ["haproxy_monthday","time_backend_connect","pid","srv_queue","beat","beconn","client_port","haproxy_milliseconds","@version"]
+    #       remove_field => ["haproxy_minute","offset","haproxy_second","actconn","source","program","haproxy_year","feconn","http_version"]
+    #       remove_field => ["prospector","time_duration","time_queue","syslog_timestamp","captured_request_cookie","timestamp8601"]
+    #       convert => {
+    #         "http_status_code" => "integer"
+    #         "time_backend_response" => "integer"
+    #       }
+    #     }
+    #     date {
+    #       match => ["accept_date", "dd/MMM/yyyy:HH:mm:ss.SSS"]
+    #       timezone => "Asia/Taipei"
+    #     }
+    #     geoip {source => "TrueClientIP"}
+    #   }
+    # }
 
   http_app_pioneers.conf: |
     filter {
       if [type] == "http-app" and
          "pioneers" in [tags] {
         ### Alphalog PIONEERS
-        if [Properties][Category] == "Alpha-API" or 
-           [Properties][Category] == "Ext-API" {
-          if [Properties][RequestPath] == "/health" or 
-             [Properties][RequestPath] == "/" { drop {} }
-          if ! [Properties][RequestPath] { drop {} }
-          # if ! [Properties][StatusCode]
-          #   {
-          #     drop {}
-          #   }
+        if [Properties][Category] in ["Alpha-API", "Ext-API"] {
+          if [Properties][RequestPath] in ["/health", "/"] { drop {} }
+          if ![Properties][RequestPath] { drop {} }
+          # if ! [Properties][StatusCode] { drop {} }
           mutate {
             remove_field => ["[headers][request_path]", "[headers][http_host]", "[headers][content_type]", "[headers][content_length]", "host"]
           }
         }
-        if [Properties][Team] == "Pioneers" {
-          mutate {
-            remove_field => ["[Renderings]", "[Properties][HttpLog]", "MessageTemplate", "[Properties][Elapsed]", "[Properties][SourceContext]"]
-          }
-          if [Properties][RequestPath] == "/" { drop {} }
-          if [Properties][Application] == "Deposit.ApiGateways" {
-            mutate {
-              add_tag => ["deposit-apigw"]
-            }
-          }
-          if [Properties][Application] == "Licensee.AdminSetting.API" {
-            mutate {
-              add_tag => ["licensee-adminsetting"]
-            }
-          }           
-        }
+        # if [Properties][Team] == "Pioneers" {
+        #   mutate {
+        #     remove_field => ["[Renderings]", "[Properties][HttpLog]", "MessageTemplate", "[Properties][Elapsed]", "[Properties][SourceContext]"]
+        #   }
+        #   if [Properties][RequestPath] == "/" { drop {} }
+        #   if [Properties][Application] == "Deposit.ApiGateways" {
+        #     mutate {
+        #       add_tag => ["deposit-apigw"]
+        #     }
+        #   }
+        #   if [Properties][Application] == "Licensee.AdminSetting.API" {
+        #     mutate {
+        #       add_tag => ["licensee-adminsetting"]
+        #     }
+        #   }
+        # }
       }
     }
 
@@ -484,21 +494,17 @@ logstashPipeline:
       if [type] == "http-app" {
         if "pioneers" in [tags] {
           if [Properties][Category] == "Ext-API" {
-            if [Properties][Environment] == "KLPROD" {
-              if [Properties][Application] == "Ext.ApiGateways" {
-                opensearch {
-                  hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
-                  user => "logstash"
-                  password => "logstash"
-                  ssl => true
-                  ssl_certificate_verification => false
-                  index => "logstash-alpha-apiext-klprod"
-                  action => "create"
-                }
-              }
+            opensearch {
+              hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
+              user => "logstash"
+              password => "logstash"
+              ssl => true
+              ssl_certificate_verification => false
+              index => "logstash-alpha-apiext-klprod"
+              action => "create"
             }
           }
-          if "rome" in [message] or [backend_name] =~ /rome_.*/ {
+          else if "rome" in [message] or [backend_name] =~ /rome_.*/ {
             opensearch {
               hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
               user => "logstash"
@@ -509,8 +515,19 @@ logstashPipeline:
               action => "create"
             }
           }
+          else {
+            opensearch {
+              hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
+              user => "logstash"
+              password => "logstash"
+              ssl => true
+              ssl_certificate_verification => false
+              index => "logstash-pioneers-klprod-default"
+              action => "create"
+            }
+          }
         }
-        if "subarashi" in [tags] {
+        else if "subarashi" in [tags] {
           if [Properties][Application] == "Deposit API Gateway" {
             opensearch {
               hosts => ["https://opsearch-atx-k3sprod.logging:9200"]

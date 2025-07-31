@@ -78,7 +78,7 @@ alertmanager:
       - receiver: 'alert-nx-atomix'
         match_re:
           alertname: "Kubernetes.*"
-      - receiver: 'velero_alerts'
+      - receiver: 'alert-velero-backups'
         match_re:
           alertname: "Velero.*"
       group_by: ['alertname', 'cluster', 'namespace', 'pod', 'description']
@@ -113,10 +113,10 @@ alertmanager:
               *Description:* `{{ .CommonAnnotations.description }}`
             color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
 
-      - name: "velero_alerts"
+      - name: "alert-velero-backups"
         slack_configs:
           - api_url: "https://hooks.slack.com/services/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"
-            channel: "#velero_alerts"
+            channel: "#alert-velero-backups"
             send_resolved: true
             icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
             title: '{{ if eq .Status "firing" }}🔥 PROBLEM 🔥 {{ .CommonLabels.alertname }}{{ else }}✅ RESOLVED ✅ {{ .CommonLabels.alertname }}{{ end }}'

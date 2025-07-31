@@ -208,24 +208,6 @@ prometheus:
               annotations:
                 summary: "Kubernetes - Pod {{$labels.pod}} is missing resource limits"
                 description: 'Container {{$labels.container}} in pod {{$labels.pod}} (namespace: {{$labels.namespace}}) is missing {{$labels.resource}} limits.'
-
-            # # Container memory usage exceeds 75% of the resource limit
-            # # - alert: Kubernetes Container memory usage exceeds 75% of the resource limit
-            # #   expr: |
-            # #     (
-            # #       sum(container_memory_working_set_bytes{name!="", container!="POD"}) BY (namespace, pod, container, instance)
-            # #       /
-            # #       sum(container_spec_memory_limit_bytes{container!="POD"} > 0) BY (namespace, pod, container, instance)
-            # #       * 100
-            # #     ) > 70
-            # #   for: 10m
-            # #   labels:
-            # #     severity: warning
-            # #     component: kubernetes
-            # #   annotations:
-            # #     description: 'Container {{ $labels.container }} in pod {{ $labels.pod }} (namespace: {{ $labels.namespace }}) on node {{ $labels.instance }} is above 75% threshold'
-            # #     summary: "Kubernetes - High memory usage in Kubernetes container (Warning)"
-
             # Container memory usage exceeds 90% of the resource limit 
             - alert: Kubernetes Container memory usage exceeds 90% of the resource limit 
               expr: |
@@ -242,22 +224,6 @@ prometheus:
               annotations:
                 description: 'Container {{ $labels.container }} in pod {{ $labels.pod }} (namespace: {{ $labels.namespace }}) on node {{ $labels.instance }} is above 90% threshold'
                 summary: "Kubernetes - Critical memory usage in Kubernetes container"
-
-            # #Container CPU usage exceeds 75% of the resource limit 
-            # # - alert: Kubernetes Container CPU usage exceeds 75% of the resource limit 
-            # #   expr: |
-            # #     (
-            # #     sum(rate(container_cpu_usage_seconds_total{container!="POD",container!=""}[5m])) BY (namespace, pod, container, instance)
-            # #     /
-            # #     sum(container_spec_cpu_quota{container!="POD",container!=""} / container_spec_cpu_period{container!="POD",container!=""}) BY (namespace, pod, container, instance)
-            # #     * 100
-            # #     ) > 75
-            # #   for: 10m
-            # #   labels:
-            # #     severity: warning
-            # #   annotations:
-            # #     summary: "Kubernetes - Container {{$labels.container}} in pod {{$labels.pod}} has high CPU usage"
-            # #     description: 'Container {{$labels.container}} in pod {{$labels.pod}} (namespace: {{$labels.namespace}}) on {{$labels.instance}} has been using {{$value | humanize}}% of its CPU limit for more than 10 minutes.'
             # Container CPU usage exceeds 90% of the resource limit 
             - alert: Kubernetes Container CPU usage exceeds 90% of the resource limit 
               expr: |
@@ -284,7 +250,6 @@ prometheus:
               annotations:
                 summary: "Kubernetes - Host {{$labels.instance}} has high disk I/O wait time"
                 description: "Disk {{$labels.device}} on {{$labels.instance}} has been busy for 60% of time for more than 5 minutes.\n  VALUE = {{ $value }}"
-
             # Critical alert - 85% threshold
             - alert: Kubernetes Disk is too busy (IO wait > 85%)
               expr: |
@@ -489,7 +454,7 @@ prometheus:
             summary: Opensearch Cluster Yellow (component {{ $labels.job }})
             description: "Elastic Cluster Yellow status"
 
-        #  Opensearch no new documents 
+        # Opensearch no new documents 
         - alert: OpensearchNoNewDocuments
           expr: increase(opensearch_indices_indexing_index_count{job=~".*-hot"}[10m]) < 1
           for: 0m
@@ -500,6 +465,19 @@ prometheus:
             title: "Opensearch: No new Docs been written"
             summary: Opensearch no new documents (component {{ $labels.job }})
             description: "No new documents for 10 min!"
+
+        # Opensearch Heap Usage Too High 
+        - alert: OpensearchHeapUsageTooHigh
+          expr: (avg_over_time(opensearch_jvm_mem_heap_used_bytes[15m]) / opensearch_jvm_mem_heap_max_bytes) * 100 > 90
+          for: 2m
+          labels:
+            severity: critical
+            service: OpenSearch
+          annotations:
+            title: "Opensearch: Heap Usage Too High"
+            summary: "Opensearch Heap Usage Too High (node {{ $labels.node }})"
+            description: "The heap usage is over 90% ~ {{ $value | printf \"%.2f\" }}"
+
 
     - name: tcp.rules
       groups:
