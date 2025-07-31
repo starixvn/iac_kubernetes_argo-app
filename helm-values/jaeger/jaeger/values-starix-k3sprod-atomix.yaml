@@ -137,7 +137,7 @@ esIndexCleaner:
   cmdlineParams: {}
   extraEnv:
     []
-  schedule: "0 */4 * * *"
+  schedule: "0 */1 * * *"
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
   concurrencyPolicy: Forbid
