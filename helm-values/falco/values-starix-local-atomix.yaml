@@ -221,6 +221,10 @@ customRules:
   # rules-traefik.yaml: |-
   #   [ rule body ]
   rules-custom.yaml: |-
+    - macro: user_known_read_sensitive_files_activities
+      condition: >
+        (proc.name=wazuh-syscheckd)
+
     - macro: ssh_port
       condition: (fd.sport=22)
 
@@ -229,13 +233,6 @@ customRules:
 
     - macro: allowed_ssh_hosts
       condition: (never_true)    
-
-    - macro: inbound_outbound
-      condition: >
-        ((((evt.type in (accept,accept4,listen,connect) and evt.dir=<)) and
-        (fd.typechar = 4 or fd.typechar = 6)) and
-        (fd.ip != "0.0.0.0" and fd.net != "127.0.0.0/8") and
-        (evt.rawres >= 0 or evt.res = EINPROGRESS))
 
     - macro: consider_all_chmods
       condition: (evt.type = chmod or evt.type = fchmod or evt.type = fchmodat)
@@ -259,7 +256,13 @@ customRules:
       output: "Created user with the same root userID. (user=%user.name userID=%user.uid %container.info parent=%proc.pname cmdline=%proc.cmdline)"
       priority: WARNING
       tags: [users,host]
-  
+
+    - macro: inbound_outbound
+      condition: >
+        ((((evt.type in (accept,accept4,listen,connect) and evt.dir=<)) and
+        (fd.typechar = 4 or fd.typechar = 6)) and
+        (fd.ip != "0.0.0.0" and fd.net != "127.0.0.0/8") and
+        (evt.rawres >= 0 or evt.res = EINPROGRESS))  
 
     - rule: Disallowed SSH Connection
       desc: |- 
