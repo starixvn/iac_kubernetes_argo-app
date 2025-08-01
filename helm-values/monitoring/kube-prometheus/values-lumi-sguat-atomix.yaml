@@ -96,7 +96,7 @@ alertmanager:
       - receiver: 'null'
         match_re:
           namespace: "l1|l2|gn|hd|sk|sp|tg|mg|cattle-system"
-      - receiver: 'eks_sc_uat'
+      - receiver: 'alert-nx-atomix-uat'
         match_re:
           alertname: "Kubernetes.*"
       - receiver: "alert-velero-backups"
