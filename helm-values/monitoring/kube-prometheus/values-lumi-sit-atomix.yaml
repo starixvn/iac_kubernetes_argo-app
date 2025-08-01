@@ -14,6 +14,12 @@ prometheus:
       http: 9090
     nodePorts:
       http: "30062"
+  ingress:
+    enabled: true
+    ingressClassName: "haproxy"
+    pathType: ImplementationSpecific
+    hostname: prometheus-sc.playonesit.com
+    path: /
 
   retention: 3d
   retentionSize: "18GB"
