@@ -36,6 +36,7 @@ prometheus:
   resources:
     requests:
       cpu: 10m
+      memory: 128Mi
     limits:
       memory: 4Gi
 
@@ -50,12 +51,29 @@ prometheus:
     internal:
       jobList: []
   ###
-  additionalScrapeConfigsExternal:
-    enabled: false
-    name: ""
-    key: ""
-  
-  #additionalPrometheusRules: []
+  additionalScrapeConfigs:
+    enabled: true
+    type: internal
+    internal:
+      jobList: []
+
+node-exporter:
+  extraVolumes:
+  - hostPath:
+      path: /var/lib
+      type: ""
+    name: mnt
+
+  extraVolumeMounts:
+  - mountPath: /host/root/var/lib
+    mountPropagation: HostToContainer
+    name: mnt
+    readOnly: true
+
+  extraArgs:
+    path.rootfs: "/host/root"
+    collector.filesystem.mount-points-exclude: "^/(dev|proc|sys|var/lib/docker/.+)($|/)"
+    collector.filesystem.fs-types-exclude: "^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs|squashfs|nsfs|tmpfs)$"
 
 kube-state-metrics:
   resourcesPreset: "none"
@@ -79,7 +97,7 @@ alertmanager:
       - receiver: 'null'
         match_re:
           namespace: "l1|l2|gn|hd|sk|sp|tg|mg|cattle-system"
-      - receiver: 'eks_sc_uat'
+      - receiver: 'alert-nx-atomix-uat'
         match_re:
           alertname: "Kubernetes.*"
       - receiver: "alert-velero-backups"
