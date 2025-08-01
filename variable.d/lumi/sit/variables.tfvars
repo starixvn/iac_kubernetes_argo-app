@@ -16,6 +16,7 @@ argo_applications_by_team = {
         auto_sync     = false
         skip_crds     = true
       }
+      # Prometheus
       prometheus = {
         namespace     = "monitoring"
         helm_path     = "monitoring/kube-prometheus"

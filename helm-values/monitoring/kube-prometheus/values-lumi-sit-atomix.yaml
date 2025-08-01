@@ -25,7 +25,12 @@ prometheus:
   ## @param prometheus.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if prometheus.resources is set (prometheus.resources is recommended for situction).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resourcesPreset: "large"
+  #resourcesPreset: "large"
+  resources:
+    requests:
+      cpu: 10m
+    limits:
+      memory: 4Gi
 
   additionalScrapeConfigs:
     enabled: true
@@ -50,7 +55,6 @@ node-exporter:
     path.rootfs: "/host/root"
     collector.filesystem.mount-points-exclude: "^/(dev|proc|sys|var/lib/docker/.+)($|/)"
     collector.filesystem.fs-types-exclude: "^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs|squashfs|nsfs|tmpfs)$"
-  #additionalPrometheusRules: []
 
 # kube-state-metrics:
 #   resourcesPreset: "none"
