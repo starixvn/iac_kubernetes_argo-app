@@ -38,8 +38,6 @@ variable "kube_cluster_api" {
       backup  = "https://10.10.50.136:6443"
       testlab = "https://kubernetes.default.svc"
       kc      = "https://10.70.70.220:6443"
-      sgprod  = "https://F74006CA89D990C1B0BAF42607B51B47.gr7.ap-southeast-1.eks.amazonaws.com"
-
 
     }
     lumi = {
@@ -48,8 +46,6 @@ variable "kube_cluster_api" {
       sit     = "https://sc-sit-apiserver.playonesit.com:16444"
       uat     = "https://sc-api-kluat.starixplay.com:16443"
       prod    = "https://sc-api-klprod.starixplay.com:16443"
-      eksuat  = "https://9BC49F9AC7F6B376024A540ABC94CEE6.gr7.ap-northeast-1.eks.amazonaws.com"
-      eksprod = "https://40BDDB6295C73364C0CAC899C976A812.gr7.ap-northeast-1.eks.amazonaws.com"
       sgprod  = "https://F74006CA89D990C1B0BAF42607B51B47.gr7.ap-southeast-1.eks.amazonaws.com"
       sguat   = "https://E6191EEBBB4840436E79DD857495912F.yl4.ap-southeast-1.eks.amazonaws.com"
     }
