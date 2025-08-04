@@ -36,9 +36,9 @@ prometheus:
   resources:
     requests:
       cpu: 10m
-      #memory: 128Mi
+      memory: 2Gi
     limits:
-      memory: 6Gi
+      memory: 4Gi
 
   additionalScrapeConfigs:
     enabled: false
