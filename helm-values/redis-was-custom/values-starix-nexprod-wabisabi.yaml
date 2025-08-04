@@ -43,8 +43,8 @@ master:
       memory: 1Gi
     limits:
       memory: 2Gi
-  # service:
-  #   type: NodePort
+  service:
+    type: NodePort
   #   nodePorts:
   #     redis: "31684"
 
@@ -68,3 +68,5 @@ replica:
       memory: "1024Mi"
     limits:
       memory: "2048Mi"
+  service:
+    type: NodePort
