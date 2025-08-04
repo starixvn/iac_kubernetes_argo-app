@@ -57,6 +57,7 @@ argo_applications_by_team = {
         helm_path     = "redis-was-custom"
         chart_version = "18.17.0"
         value_files   = ["values-starix-nexprod-wabisabi.yaml"]
+        # trigger
       }
     }
   }
