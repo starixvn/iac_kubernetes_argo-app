@@ -1,0 +1,70 @@
+clusterDomain: starix.nexprod
+useHostnames: false
+
+
+global:
+  storageClass: "longhorn"
+  imageRegistry: "hub.nexdev.net"
+  security:
+    allowInsecureImages: true
+
+
+image:
+  repository: base/bitnami/redis-stack-server
+  tag: 7.4.0-v6-was
+
+
+
+metrics:
+  image:
+    repository: base/redis-exporter
+    tag: 1.58.0-debian-12-r3
+  enabled: true
+  serviceMonitor:
+    enabled: true
+  podMonitor:
+    enabled: true
+
+
+auth:
+  password: "foo1@bared"
+
+volumePermissions:
+  enabled: true
+  image:
+    repository: base/os-shell
+    tag: 12-debian-12-r16
+
+master:
+  persistence:
+    size: 10Gi
+  resources:
+    requests: 
+      memory: 1Gi
+    limits:
+      memory: 2Gi
+  # service:
+  #   type: NodePort
+  #   nodePorts:
+  #     redis: "31684"
+
+
+sentinel:
+  enabled: true
+  image:
+    registry: 
+    repository: base/redis-sentinel
+    tag: 7.2.4-debian-12-r7
+  persistence:
+    size: 1Gi    
+
+replica:
+  replicaCount: 3
+  persistence:
+    size: 10Gi
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "1024Mi"
+    limits:
+      memory: "2048Mi"

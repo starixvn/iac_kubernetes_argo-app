@@ -47,9 +47,15 @@ argo_applications_by_team = {
           "values-starix-nexprod-atomix.yaml",
         ]
       }
-      redis-standalone = {
-        helm_path     = "redis-standalone"
-        chart_version = "21.0.0"
+      # redis-standalone = {
+      #   helm_path     = "redis-standalone"
+      #   chart_version = "18.17.0"
+      #   value_files   = ["values-starix-nexprod-wabisabi.yaml"]
+      # }
+
+      redis-was-custom = {
+        helm_path     = "redis-was-custom"
+        chart_version = "18.17.0"
         value_files   = ["values-starix-nexprod-wabisabi.yaml"]
       }
     }
