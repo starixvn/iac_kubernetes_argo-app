@@ -26,8 +26,8 @@ metrics:
     enabled: true
 
 
-auth:
-  password: "foo1@bared"
+# auth:
+#   password: "foo1@bared"
 
 volumePermissions:
   enabled: true
