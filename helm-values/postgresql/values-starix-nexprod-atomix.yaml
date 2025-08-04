@@ -1,0 +1,26 @@
+global:
+  defaultStorageClass: "longhorn-effort"
+clusterDomain: starix.nexprod
+
+image:
+  registry: hub.nexdev.net
+  repository: base/postgres
+  tag: 15.0.0-debian-11-r7
+
+
+
+primary:
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 2048Mi
+  persistence:
+    enabled: true
+    size: 30Gi
+  # podSecurityContext:
+  #   enabled: false
+  # containerSecurityContext:
+  #   enabled: true
+  #   runAsUser: 0
+  #   runAsNonRoot: false
