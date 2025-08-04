@@ -4,7 +4,7 @@ clusterDomain: starix.nexprod
 
 image:
   registry: hub.nexdev.net
-  repository: base/postgres
+  repository: base/bitnami/postgresql
   tag: 15.0.0-debian-11-r7
 
 
@@ -18,6 +18,13 @@ primary:
   persistence:
     enabled: true
     size: 30Gi
+  nodeSelector:
+    sonar: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: cicd-tools
+    value: "yes"
+
   # podSecurityContext:
   #   enabled: false
   # containerSecurityContext:
