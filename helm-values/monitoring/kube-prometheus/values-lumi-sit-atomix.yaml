@@ -34,9 +34,11 @@ prometheus:
   #resourcesPreset: "large"
   resources:
     requests:
-      cpu: 10m
+      cpu: 500m
+      memory: 1Gi
     limits:
-      memory: 4Gi
+      cpu: 1
+      memory: 8Gi
 
   additionalScrapeConfigs:
     enabled: true
@@ -62,10 +64,10 @@ node-exporter:
     collector.filesystem.mount-points-exclude: "^/(dev|proc|sys|var/lib/docker/.+)($|/)"
     collector.filesystem.fs-types-exclude: "^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs|squashfs|nsfs|tmpfs)$"
 
-# kube-state-metrics:
-#   resourcesPreset: "none"
-  # nodeSelector:
-  #   nexops-tools: "yes"
+kube-state-metrics:
+  resourcesPreset: "none"
+  nodeSelector:
+    nexops-mon: "yes"
 
 alertmanager:
   resourcesPreset: "none"
