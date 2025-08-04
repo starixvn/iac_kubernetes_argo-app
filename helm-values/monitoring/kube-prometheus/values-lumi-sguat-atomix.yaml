@@ -33,12 +33,14 @@ prometheus:
   ## @param prometheus.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if prometheus.resources is set (prometheus.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
-  resources:
-    requests:
-      cpu: 10m
-      memory: 2Gi
-    limits:
-      memory: 4Gi
+  resourcesPreset: "xlarge"
+
+  # resources:
+  #   requests:
+  #     cpu: 10m
+  #     memory: 2Gi
+  #   limits:
+  #     memory: 4Gi
 
   additionalScrapeConfigs:
     enabled: false
