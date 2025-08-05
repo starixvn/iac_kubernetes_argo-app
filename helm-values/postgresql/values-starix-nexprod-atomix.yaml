@@ -5,7 +5,7 @@ clusterDomain: starix.nexprod
 image:
   registry: hub.nexdev.net
   repository: base/bitnami/postgresql
-  tag: 15.0.0-debian-11-r7
+  tag: 15.3.0-debian-11-r85
 
 
 
