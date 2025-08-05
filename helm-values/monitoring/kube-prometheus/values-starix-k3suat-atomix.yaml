@@ -74,6 +74,9 @@ alertmanager:
         - receiver: "null"
           match_re:
             pod: "backup-.*|c-.*|.*-cleaner-.*|.*snapshot-.*|.*-cleanup-.*|.*-cron-.*|.*-update-.*|.*consumer.*"
+        - receiver: 'alert-nx-atomix'
+          match_re:
+            alertname: "Kubernetes Cluster Pod Usage Above 80%"
         - receiver: "alert-nx-atomix-uat"
           match_re:
             alertname: "Kubernetes.*"
@@ -109,6 +112,19 @@ alertmanager:
         slack_configs:
           - api_url: "https://hooks.slack.com/services/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"
             channel: "#alert-nx-atomix-uat"
+            send_resolved: true
+            icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+            title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
+            text: |
+              *Cluster:* `Kubernetes-DevOps-KLUAT`
+              *Summary:* `{{ .CommonLabels.alertname }}`
+              *Description:* `{{ .CommonAnnotations.description }}`
+            color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+      
+      - name: 'alert-nx-atomix'
+        slack_configs:
+          - api_url: "https://hooks.slack.com/services/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"
+            channel: '#alert-nx-atomix'
             send_resolved: true
             icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
             title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
