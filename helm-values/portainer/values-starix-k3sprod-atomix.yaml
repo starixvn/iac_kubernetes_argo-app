@@ -47,10 +47,10 @@ ingress:
   ingressClassName: "haproxy"
   annotations: {}
   hosts:
-    - host: "vn-portainer-klprod.byb6181.com"
-      paths:
-      - path: "/"
-        pathType: "Prefix"
+    # - host: "vn-portainer-klprod.byb6181.com"
+    #   paths:
+    #   - path: "/"
+    #     pathType: "Prefix"
     - host: "portainer-klp.starixplay.com"
       paths:
       - path: "/"
