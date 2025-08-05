@@ -18,7 +18,7 @@ argo_applications_by_team = {
         value_files = [
           "values-lumi-sguat-atomix.yaml"
         ]
-        ### trigger
+        ## trigger
       }
 
       prometheus = {
