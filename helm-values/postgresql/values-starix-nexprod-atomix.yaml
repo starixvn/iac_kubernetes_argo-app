@@ -31,6 +31,12 @@ primary:
     host all all localhost trust
     host all all all md5
 
+  service:
+    type: NodePort
+    ports:
+      postgresql: 5432
+    nodePorts:
+      postgresql: "305432"
 
   # podSecurityContext:
   #   enabled: false
