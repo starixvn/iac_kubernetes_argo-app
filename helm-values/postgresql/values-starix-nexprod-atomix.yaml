@@ -36,7 +36,7 @@ primary:
     ports:
       postgresql: 5432
     nodePorts:
-      postgresql: "305432"
+      postgresql: "30432"
 
   # podSecurityContext:
   #   enabled: false
