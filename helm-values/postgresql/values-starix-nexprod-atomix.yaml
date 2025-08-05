@@ -26,6 +26,12 @@ primary:
     key: cicd-tools
     value: "yes"
 
+  pgHbaConfiguration: |-
+    local all all trust
+    host all all localhost trust
+    host all all all md5
+
+
   # podSecurityContext:
   #   enabled: false
   # containerSecurityContext:
