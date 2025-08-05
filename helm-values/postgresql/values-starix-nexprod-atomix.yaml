@@ -18,6 +18,7 @@ primary:
   persistence:
     enabled: true
     size: 30Gi
+    storageClass: "longhorn-effort"
   nodeSelector:
     sonar: "yes"
   tolerations:

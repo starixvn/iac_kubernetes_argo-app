@@ -64,7 +64,7 @@ argo_applications_by_team = {
         helm_path     = "postgresql"
         chart_version = "12.8.1"
         value_files   = ["values-starix-nexprod-atomix.yaml"]
-
+        # trigger
       }
     }
   }
