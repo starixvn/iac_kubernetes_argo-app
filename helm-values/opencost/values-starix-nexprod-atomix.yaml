@@ -283,7 +283,7 @@ opencost:
         #      - chart-example.local
   customPricing:
     # -- Enables custom pricing configuration
-    enabled: false
+    enabled: true
     # -- Customize the configmap name used for custom pricing
     configmapName: custom-pricing-model
     # -- Path for the pricing configuration.
