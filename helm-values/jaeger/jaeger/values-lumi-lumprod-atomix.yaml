@@ -9,10 +9,10 @@ storage:
     nodesWanOnly: false
     extraEnv:
      - name: ES_SERVER_URLS
-       value: http://10.10.50.121
+       value: 10.10.50.121
     cmdlineParams:
       {
-        es.server-urls: http://10.10.50.121
+        es.server-urls: 10.10.50.121
       }
     tls:
       enabled: false
