@@ -222,7 +222,7 @@ customRules:
   #   [ rule body ]
   rules-custom.yaml: |-
     - macro: user_known_read_sensitive_files_activities 
-      condition: (proc.name=wazuh-syscheckd or proc.pname=wazuh-modulesd)
+      condition: (proc.pname=wazuh-modulesd)
 
     - macro: ssh_port
       condition: (fd.sport=22)
