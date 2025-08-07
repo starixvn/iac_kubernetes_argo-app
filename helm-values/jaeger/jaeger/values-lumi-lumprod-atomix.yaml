@@ -7,13 +7,13 @@ storage:
     anonymous: true
     usePassword: false
     nodesWanOnly: false
-    extraEnv:
-     - name: ES_SERVER_URLS
-       value: 10.10.50.121
-    cmdlineParams:
-      {
-        es.server-urls: 10.10.50.121
-      }
+    # extraEnv:
+    #  - name: ES_SERVER_URLS
+    #    value: http://10.10.50.121
+    # cmdlineParams:
+    #   {
+    #     es.server-urls: http://10.10.50.121
+    #   }
     tls:
       enabled: false
       secretName: es-tls-secret
