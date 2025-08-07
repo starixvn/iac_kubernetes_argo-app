@@ -221,9 +221,9 @@ customRules:
   # rules-traefik.yaml: |-
   #   [ rule body ]
   rules-custom.yaml: |-
-    - macro: user_known_read_sensitive_files_activities
-      condition: >
-        (proc.name=wazuh-syscheckd)
+    - macro: user_known_read_sensitive_files_activities 
+       condition: > 
+         (proc.name=wazuh-syscheckd or parent=wazuh-modulesd)
 
     - macro: ssh_port
       condition: (fd.sport=22)
@@ -280,7 +280,9 @@ customRules:
       items: [nc, ncat, curl, wget]
 
     - rule: Shell launched in container
-      desc: Detect when an interactive shell is launched in a container
+      desc: Detect when an interactive shell is launched in a container    - macro: user_known_read_sensitive_files_activities 
+       condition: > 
+         (proc.name=wazuh-syscheckd or parent=wazuh-modulesd)
       condition: container_exec and proc.name in (sh, bash, zsh)
       output: Shell command %proc.cmdline executed by user %user.name inside container=%container.id
       priority: WARNING
