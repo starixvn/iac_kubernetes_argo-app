@@ -249,7 +249,7 @@ customRules:
       condition: (never_true)
 
     - macro: spawned_process
-      condition: (evt.type = execve and evt.dir = "<")
+      condition: (evt.type = execve and evt.dir = <)
 
     - rule: Creating a root like user
       desc: using the command useradd or adduser with the flag -o -u0 it is possible to create a user with the same root userID and get user access to the machine with the new user
@@ -260,7 +260,7 @@ customRules:
 
     - macro: inbound_outbound
       condition: >
-        (((evt.type in (accept,accept4,listen,connect) and evt.dir="<") and
+        (((evt.type in (accept,accept4,listen,connect) and evt.dir=<) and
         (fd.typechar = 4 or fd.typechar = 6)) and
         (fd.ip != "0.0.0.0" and fd.net != "127.0.0.0/8") and
         (evt.rawres >= 0 or evt.res = EINPROGRESS))
