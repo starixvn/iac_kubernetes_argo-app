@@ -221,7 +221,7 @@ customRules:
   # rules-traefik.yaml: |-
   #   [ rule body ]
   rules-custom.yaml: |-
-    - macro: user_known_read_sensitive_files_activities 
+    - macro: user_known_read_sensitive_files_activities
       condition: (proc.name=wazuh-syscheckd)
       
     - macro: ssh_port
