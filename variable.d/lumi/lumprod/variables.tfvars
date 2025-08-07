@@ -33,6 +33,25 @@ argo_applications_by_team = {
         helm_path     = "logging/opensearch-dashboards"
         chart_version = "2.30.0"
       }
+
+      #- Jaeger -#
+      jaeger = {
+        namespace     = "jaeger-sc"
+        helm_path     = "jaeger/jaeger"
+        chart_version = "1.53.0"
+        value_files = [
+          "values-lumi-lumprod-atomix.yaml"
+        ]
+      }
+      jaeger-elasticsearch = {
+        namespace     = "jaeger-sc"
+        helm_path     = "jaeger/elasticsearch"
+        chart_version = "8.14.3"
+        value_files = [
+          "values-lumi-lumprod-atomix.yaml"
+        ]
+      }
+
       #- Tolgee -#
       tolgee = {
         namespace     = "tolgee-sc"
