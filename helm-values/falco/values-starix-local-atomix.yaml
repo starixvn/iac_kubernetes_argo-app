@@ -277,15 +277,15 @@ customRules:
     - macro: container_exec
       condition: evt.type = execve and container.id != host
 
-    - list: known_safe_ci
-      items: ["ci-runner-image", "trusted-image"]
+    - list: allowed_outbound_destinations
+      items: ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
 
-    - rule: Detect new executable file in container
-      desc: Alert when a new executable is written inside a running container
-      condition: evt.type in (open, creat) and evt.is_open_exec=true and container and not container.image.repository in (known_safe_ci)
-      output: Executable file %evt.arg.filename written in container=%container.id
-      priority: ERROR
-      tags: [drift, container, runtime-security]
+    - rule: Suspicious outbound network
+      desc: Detect outbound connections to unknown destinations from containers
+      condition: evt.type = connect and fd.sip != 127.0.0.1 and container.id != host and not fd.snet in (allowed_outbound_destinations)
+      output: Connection attempt to %fd.sip:%fd.sport from process=%proc.name
+      priority: WARNING
+      tags: [network, container, threat-detection]
 
 
 ########################
