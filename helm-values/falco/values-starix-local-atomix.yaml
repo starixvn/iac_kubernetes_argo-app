@@ -287,15 +287,6 @@ customRules:
       priority: ERROR
       tags: [drift, container, runtime-security]
 
-    - list: allowed_outbound_destinations
-      items: ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
-
-    - rule: Suspicious outbound network
-      desc: Detect outbound connections to unknown destinations from containers
-      condition: evt.type = connect and fd.sip != 127.0.0.1 and container.id != host and not fd.snet in (allowed_outbound_destinations)
-      output: Connection attempt to %fd.sip:%fd.sport from process=%proc.name
-      priority: WARNING
-      tags: [network, container, threat-detection]
 
 ########################
 # Falco integrations   #
