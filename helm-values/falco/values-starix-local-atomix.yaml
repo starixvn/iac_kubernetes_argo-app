@@ -223,8 +223,7 @@ customRules:
   rules-custom.yaml: |-
     - macro: user_known_read_sensitive_files_activities
       condition: >
-        (proc.name=wazuh-syscheckd or parent=wazuh-modulesd or parent=wazuh-agentd or
-         proc.name=ossec-syscheckd or proc.name=filebeat or proc.name=fluentd)
+        (proc.name=wazuh-syscheckd or parent=wazuh-modulesd)
 
     - macro: ssh_port
       condition: (fd.sport=22)
