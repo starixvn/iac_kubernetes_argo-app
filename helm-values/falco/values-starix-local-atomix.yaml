@@ -222,8 +222,8 @@ customRules:
   #   [ rule body ]
   rules-custom.yaml: |-
     - macro: user_known_read_sensitive_files_activities 
-      condition: (proc.name=wazuh-syscheckd)
- 
+      condition: (proc.name=wazuh-syscheckd or proc.pname=wazuh-modulesd)
+
     - macro: ssh_port
       condition: (fd.sport=22)
 
@@ -279,7 +279,7 @@ customRules:
       items: [nc, ncat, curl, wget]
 
     - rule: Shell launched in container
-      desc: Detect when an interactive shell is launched in a container    - macro: user_known_read_sensitive_files_activities 
+      desc: Detect when an interactive shell is launched in a container
        condition: > 
          (proc.name=wazuh-syscheckd or parent=wazuh-modulesd)
       condition: container_exec and proc.name in (sh, bash, zsh)
