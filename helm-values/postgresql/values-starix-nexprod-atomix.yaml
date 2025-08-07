@@ -14,7 +14,7 @@ primary:
     requests:
       memory: 512Mi
     limits:
-      memory: 2048Mi
+      memory: 4096Mi
   persistence:
     enabled: true
     size: 30Gi
