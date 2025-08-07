@@ -223,7 +223,7 @@ customRules:
   rules-custom.yaml: |-
     - macro: user_known_read_sensitive_files_activities
       condition: >
-        (proc.name=wazuh-syscheckd)
+        (proc.name=wazuh-syscheckd or parent=wazuh-modulesd or parent=wazuh-agentd)
 
     - macro: ssh_port
       condition: (fd.sport=22)
@@ -273,7 +273,40 @@ customRules:
       priority: WARNING
       tags: ["maturity_deprecated", "host", "container", "network", "mitre_lateral_movement", "T1021.004"]
 
+    - macro: container_exec
+      condition: evt.type = execve and container.id != host
+    
+    - list: suspicious_binaries
+      items: [nc, ncat, curl, wget]        
 
+    - rule: Shell launched in container
+      desc: Detect when an interactive shell is launched in a container
+      condition: container_exec and proc.name in (sh, bash, zsh)
+      output: Shell command %proc.cmdline executed by user %user.name inside container=%container.id
+      priority: WARNING
+      tags: [container, shell, security, runtime-detection]    
+
+    - name: known_safe_ci
+      fields: [container.image.repository]
+      comps: [in]
+      values: [["ci-runner-image", "trusted-image"]]    
+
+    - rule: Detect new executable file in container
+      desc: Alert when a new executable is written inside a running container
+      condition: evt.type in (open, creat) and evt.is_open_exec=true and container
+      output: Executable file %evt.arg.filename written in container=%container.id
+      priority: ERROR
+      tags: [drift, container, runtime-security]    
+
+    - rule: Suspicious outbound network
+      desc: Detect outbound connections to unknown destinations from containers
+      condition: evt.type = connect and fd.sip != 127.0.0.1 and container.id != host
+      output: Connection attempt to %fd.sip:%fd.sport from process=%proc.name
+      priority: WARNING
+      tags: [network, container, threat-detection]
+
+    
+    
 ########################
 # Falco integrations   #
 ########################
