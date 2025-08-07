@@ -238,7 +238,7 @@ opencost:
       # -- Annotations for persistent volume
       annotations: {}
       # -- Access mode for persistent volume
-      #accessMode: ""
+      accessMode: "ReadWriteOnce"
       # -- Storage class for persistent volume
       storageClass: "longhorn"
       # -- Size for persistent volume
