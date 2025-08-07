@@ -274,9 +274,6 @@ customRules:
       priority: WARNING
       tags: ["maturity_deprecated", "host", "container", "network", "mitre_lateral_movement", "T1021.004"]
 
-    - macro: container_exec
-      condition: evt.type = execve and container.id != host
-
     - list: allowed_outbound_destinations
       items: ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
 
