@@ -100,7 +100,7 @@ service:
   # --  Kubernetes Service type
   type: NodePort
   # -- NodePort if service type is NodePort
-  nodePort: 30081
+  nodePort: 30888
   # -- extra ports.  Useful for sidecar pods such as oauth-proxy
   extraPorts: []
     # - name: oauth-proxy
