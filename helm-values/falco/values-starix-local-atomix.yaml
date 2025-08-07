@@ -233,7 +233,7 @@ customRules:
       condition: (never_true)
 
     - macro: allowed_ssh_hosts
-      condition: (never_true)    
+      condition: (never_true)
 
     - macro: consider_all_chmods
       condition: (evt.type = chmod or evt.type = fchmod or evt.type = fchmodat)
@@ -249,24 +249,24 @@ customRules:
       condition: (never_true)
 
     - macro: spawned_process
-      condition: (evt.type = execve and evt.dir = <)
+      condition: (evt.type = execve and evt.dir = "<")
 
     - rule: Creating a root like user
       desc: using the command useradd or adduser with the flag -o -u0 it is possible to create a user with the same root userID and get user access to the machine with the new user
-      condition: spawned_process and proc.exe in (useradd,adduser) and proc.args contains -o and proc.args contains -u and proc.args contains 0  
+      condition: spawned_process and proc.exe in (useradd,adduser) and proc.args contains -o and proc.args contains -u and proc.args contains 0
       output: "Created user with the same root userID. (user=%user.name userID=%user.uid %container.info parent=%proc.pname cmdline=%proc.cmdline)"
       priority: WARNING
       tags: [users,host]
 
     - macro: inbound_outbound
       condition: >
-        ((((evt.type in (accept,accept4,listen,connect) and evt.dir=<)) and
+        (((evt.type in (accept,accept4,listen,connect) and evt.dir="<") and
         (fd.typechar = 4 or fd.typechar = 6)) and
         (fd.ip != "0.0.0.0" and fd.net != "127.0.0.0/8") and
-        (evt.rawres >= 0 or evt.res = EINPROGRESS))  
+        (evt.rawres >= 0 or evt.res = EINPROGRESS))
 
     - rule: Disallowed SSH Connection
-      desc: |- 
+      desc: |-
         Detect any new SSH connection on port 22 to a host other than those in an allowed list of hosts. This rule absolutely requires profiling your environment beforehand. Network-based rules are extremely crucial in any security program, as they can often provide the only definitive evidence. However, effectively operationalizing them can be challenging due to the potential for noise.
       condition: inbound_outbound and ssh_port and not allowed_ssh_hosts
       output: |-
@@ -276,37 +276,36 @@ customRules:
 
     - macro: container_exec
       condition: evt.type = execve and container.id != host
-    
+
     - list: suspicious_binaries
-      items: [nc, ncat, curl, wget]        
+      items: [nc, ncat, curl, wget]
 
     - rule: Shell launched in container
       desc: Detect when an interactive shell is launched in a container
       condition: container_exec and proc.name in (sh, bash, zsh)
       output: Shell command %proc.cmdline executed by user %user.name inside container=%container.id
       priority: WARNING
-      tags: [container, shell, security, runtime-detection]    
+      tags: [container, shell, security, runtime-detection]
 
     - list: known_safe_ci
-      items: ["ci-runner-image", "trusted-image"] 
+      items: ["ci-runner-image", "trusted-image"]
 
     - rule: Detect new executable file in container
       desc: Alert when a new executable is written inside a running container
       condition: evt.type in (open, creat) and evt.is_open_exec=true and container and not container.image.repository in (known_safe_ci)
       output: Executable file %evt.arg.filename written in container=%container.id
       priority: ERROR
-      tags: [drift, container, runtime-security]    
+      tags: [drift, container, runtime-security]
 
     - list: allowed_outbound_destinations
       items: ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
-    
+
     - rule: Suspicious outbound network
       desc: Detect outbound connections to unknown destinations from containers
       condition: evt.type = connect and fd.sip != 127.0.0.1 and container.id != host and not fd.snet in (allowed_outbound_destinations)
       output: Connection attempt to %fd.sip:%fd.sport from process=%proc.name
       priority: WARNING
       tags: [network, container, threat-detection]
-
 
     
 ########################
