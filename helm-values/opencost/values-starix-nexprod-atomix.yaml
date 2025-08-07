@@ -304,6 +304,7 @@ opencost:
       zoneNetworkEgress: 0.01
       regionNetworkEgress: 0.01
       internetNetworkEgress: 0.12
+      loadBalancer: 0.025
 
   dataRetention:
     dailyResolutionDays: 15
