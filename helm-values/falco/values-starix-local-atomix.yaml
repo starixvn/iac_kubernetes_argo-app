@@ -80,7 +80,7 @@ services:
 
 
 metrics:
-  enabled: enable
+  enabled: true
   interval: 1h
   outputRule: false
   rulesCountersEnabled: true
