@@ -226,49 +226,48 @@ customRules:
       
     - macro: ssh_port
       condition: (fd.sport=22)
-
+  
     - macro: bpf_profiled_procs
       condition: (never_true)
-
+  
     - macro: allowed_ssh_hosts
       condition: (never_true)
-
+  
     - macro: consider_all_chmods
       condition: (evt.type = chmod or evt.type = fchmod or evt.type = fchmodat)
-
+  
     - macro: exe_running_docker_save
-      condition: >
-        (proc.name = docker and proc.args contains save)
-
+      condition: (proc.name = docker and proc.args contains save)
+  
     - list: user_known_chmod_applications
       items: [hyperkube, kubelet, k3s-agent, systemd, dbus-daemon]
-
+  
     - macro: user_known_set_setuid_or_setgid_bit_conditions
       condition: (never_true)
-
+  
     - macro: spawned_process
       condition: (evt.type = execve and evt.dir = <)
-
+  
     - rule: Creating a root like user
       desc: using the command useradd or adduser with the flag -o -u0 it is possible to create a user with the same root userID and get user access to the machine with the new user
       condition: spawned_process and proc.exe in (useradd,adduser) and proc.args contains -o and proc.args contains -u and proc.args contains 0
       output: "Created user with the same root userID. (user=%user.name userID=%user.uid %container.info parent=%proc.pname cmdline=%proc.cmdline)"
       priority: WARNING
       tags: [users,host]
-
+  
     - macro: inbound_outbound
       condition: >
         (((evt.type in (accept,accept4,listen,connect) and evt.dir=<) and
         (fd.typechar = 4 or fd.typechar = 6)) and
         (fd.ip != "0.0.0.0" and fd.net != "127.0.0.0/8") and
         (evt.rawres >= 0 or evt.res = EINPROGRESS))
-
+  
     - macro: container_exec
       condition: evt.type = execve and container.id != host
-
+  
     - list: suspicious_binaries
       items: ["nc", "ncat", "curl", "wget"]
-
+  
     - rule: Shell launched in container
       desc: Detect when an interactive shell is launched in a container
       condition: >
@@ -277,10 +276,10 @@ customRules:
       output: Shell command %proc.cmdline executed by user %user.name inside container=%container.id
       priority: WARNING
       tags: ["container", "shell", "security", "runtime-detection"]
-
+  
     - macro: contains_private_credentials
       condition: (ka.req.configmap.obj contains "password" or ka.req.configmap.obj contains "secret" or ka.req.configmap.obj contains "key" or ka.req.configmap.obj contains "token" or ka.req.configmap.obj contains "credential" or ka.req.configmap.obj contains "aws_access_key" or ka.req.configmap.obj contains "aws_secret_key" or ka.req.configmap.obj contains "private_key" or ka.req.configmap.obj contains "cert" or ka.req.configmap.obj contains "certificate")    
-
+  
     - rule: Create/Modify Configmap With Private Credentials
       desc: >
         Detect creating/modifying a configmap containing a private credential (aws key, password, etc.) in starix-local environment
@@ -296,7 +295,7 @@ customRules:
             - ["logging", "opensearch-config"]
             - ["monitoring", "grafana-config"]
             - ["falco", "falco-config"]
-      output: |
+      output: |-
         SECURITY ALERT: ConfigMap with private credentials modified
         (user=%ka.user.name verb=%ka.verb configmap=%ka.req.configmap.name 
          namespace=%ka.target.namespace source_ip=%ka.source.ip 
