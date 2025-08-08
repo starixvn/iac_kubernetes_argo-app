@@ -428,7 +428,7 @@ logstashPipeline:
         }
 
         else if "fps" in [tags] {
-          if "MBTransaction07 " in [Tags] {
+          if "MBTransaction07" in [Tags] {
             opensearch {
               hosts => ["https://opensearch-cluster-master.logging:9200"]
               user => "logstash"
