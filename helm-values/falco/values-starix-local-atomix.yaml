@@ -286,7 +286,31 @@ customRules:
       output: Shell command %proc.cmdline executed by user %user.name inside container=%container.id
       priority: WARNING
       tags: ["container", "shell", "security", "runtime-detection"]
-
+    
+    - rule: Create/Modify Configmap With Private Credentials
+      desc: >
+        Detect creating/modifying a configmap containing a private credential (aws key, password, etc.) in starix-local environment
+      condition: kevt and configmap and kmodify and contains_private_credentials
+      exceptions:
+        - name: allowed_credential_configmaps
+          fields: [ka.target.namespace, ka.req.configmap.name]
+          comps: [in, in]
+          values:
+            - ["kube-system", "aws-auth"]
+            - ["kube-system", "cluster-info"]
+            - ["logging", "logstash-config"]
+            - ["logging", "opensearch-config"]
+            - ["monitoring", "grafana-config"]
+            - ["falco", "falco-config"]
+            # Chỉ thêm các ConfigMap thực sự cần thiết
+      output: |
+        SECURITY ALERT: ConfigMap with private credentials modified
+        (user=%ka.user.name verb=%ka.verb configmap=%ka.req.configmap.name 
+         namespace=%ka.target.namespace source_ip=%ka.source.ip 
+         user_agent=%ka.user_agent config_data=%ka.req.configmap.obj)
+      priority: WARNING
+      source: k8s_audit
+      tags: [k8s, configmap, credentials, security, compliance]
 
 ########################
 # Falco integrations   #
