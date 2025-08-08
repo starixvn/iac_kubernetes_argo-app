@@ -1,0 +1,43 @@
+global:
+  defaultStorageClass: "longhorn-effort"
+clusterDomain: lumi.lumprod
+
+image:
+  registry: hub.nexdev.net
+  repository: base/bitnami/postgresql
+  tag: 15.3.0-debian-11-r85
+
+
+
+primary:
+  resources:
+    requests:
+      memory: 2048Mi
+    limits:
+      memory: 4096Mi
+  persistence:
+    enabled: true
+    size: 30Gi
+    storageClass: "longhorn-effort"
+  nodeSelector:
+    sonar: "yes"
+
+
+  pgHbaConfiguration: |-
+    local all all trust
+    host all all localhost trust
+    host all all all md5
+
+  service:
+    type: NodePort
+    ports:
+      postgresql: 5432
+    nodePorts:
+      postgresql: "30432"
+
+  # podSecurityContext:
+  #   enabled: false
+  # containerSecurityContext:
+  #   enabled: true
+  #   runAsUser: 0
+  #   runAsNonRoot: false
