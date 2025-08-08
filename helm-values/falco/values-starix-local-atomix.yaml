@@ -9,7 +9,6 @@ image:
   repository: base/falcosecurity/falco
   tag: "0.41.3"
 
-
 podAnnotations: {}
 
 serviceAccount:
