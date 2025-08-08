@@ -13,10 +13,10 @@ service:
     transport: "30930"
 
 ingress:
-  enabled: false
+  enabled: true
   pathType: ImplementationSpecific
   apiVersion: ""
-  hostname: jaeger-elasticsearch-sc.ops-klprod.gamora.prod
+  hostname: jaeger-elasticsearch.lumigame.com
   path: /
   ingressClassName: "haproxy"
 

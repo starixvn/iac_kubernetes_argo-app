@@ -34,7 +34,7 @@ argo_applications_by_team = {
         chart_version = "2.30.0"
       }
 
-      #- Jaeger -#
+      #- Jaeger -##
       jaeger = {
         namespace     = "jaeger-sc"
         helm_path     = "jaeger/jaeger"

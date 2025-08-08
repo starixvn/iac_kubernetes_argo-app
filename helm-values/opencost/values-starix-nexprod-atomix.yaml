@@ -283,7 +283,7 @@ opencost:
         #      - chart-example.local
   customPricing:
     # -- Enables custom pricing configuration
-    enabled: false
+    enabled: true
     # -- Customize the configmap name used for custom pricing
     configmapName: custom-pricing-model
     # -- Path for the pricing configuration.
@@ -296,14 +296,9 @@ opencost:
     costModel:
       description: Modified pricing configuration.
       CPU: 1.25
-      spotCPU: 0.006655
       RAM: 0.50
-      spotRAM: 0.000892
-      GPU: 0.95
       storage: 0.25
-      zoneNetworkEgress: 0.01
-      regionNetworkEgress: 0.01
-      internetNetworkEgress: 0.12
+      loadBalancer: 0.025
 
   dataRetention:
     dailyResolutionDays: 15
