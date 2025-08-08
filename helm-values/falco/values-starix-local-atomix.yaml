@@ -287,6 +287,9 @@ customRules:
       priority: WARNING
       tags: ["container", "shell", "security", "runtime-detection"]
     
+    - macro: contains_private_credentials
+      condition: (ka.req.configmap.obj contains "password" or ka.req.configmap.obj contains "secret" or ka.req.configmap.obj contains "key" or ka.req.configmap.obj contains "token" or ka.req.configmap.obj contains "credential" or ka.req.configmap.obj contains "aws_access_key" or ka.req.configmap.obj contains "aws_secret_key" or ka.req.configmap.obj contains "private_key" or ka.req.configmap.obj contains "cert" or ka.req.configmap.obj contains "certificate")    
+
     - rule: Create/Modify Configmap With Private Credentials
       desc: >
         Detect creating/modifying a configmap containing a private credential (aws key, password, etc.) in starix-local environment
@@ -302,7 +305,6 @@ customRules:
             - ["logging", "opensearch-config"]
             - ["monitoring", "grafana-config"]
             - ["falco", "falco-config"]
-            # Chỉ thêm các ConfigMap thực sự cần thiết
       output: |
         SECURITY ALERT: ConfigMap with private credentials modified
         (user=%ka.user.name verb=%ka.verb configmap=%ka.req.configmap.name 
