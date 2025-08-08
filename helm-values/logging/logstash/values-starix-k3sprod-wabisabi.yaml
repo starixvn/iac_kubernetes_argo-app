@@ -41,7 +41,18 @@ logstashPipeline:
   dev_output.conf: |
     output {
       if [type] == "dev-logs" {
-        if "Transaction07" in [Tags] {
+        if "MBTransaction07 " in [Tags] {
+          opensearch {
+            hosts => ["https://opsearch-was-k3sprod:9200"]
+            user => "logstash"
+            password => "logstash"
+            ssl => true
+            ssl_certificate_verification => false
+            index => "logstash-wabisabi-mobile-app-login-trans7"
+            action => "create"
+          }
+        }
+        else if "Transaction07" in [Tags] {
           opensearch {
             hosts => ["https://opsearch-was-k3sprod:9200"]
             user => "logstash"
