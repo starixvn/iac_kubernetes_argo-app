@@ -111,7 +111,7 @@ query:
     targetPort: 16686 
     nodePort: 31686
   ingress:
-    enabled: false
+    enabled: true
     ingressClassName: haproxy
     annotations: {}
     hosts:
