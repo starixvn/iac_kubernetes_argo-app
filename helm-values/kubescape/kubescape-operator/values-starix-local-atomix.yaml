@@ -1,6 +1,6 @@
 clusterName: "starix.local"
 
-ksNamespace: tf-atx-kubescape
+ksNamespace: kubescape
 ksLabel: kubescape
 
 # excludeNamespaces: "kubescape,kube-system,kube-public,kube-node-lease,kubeconfig,gmp-system,gmp-public"
