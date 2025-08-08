@@ -41,7 +41,7 @@ logstashPipeline:
   dev_output.conf: |
     output {
       if [type] == "dev-logs" {
-        if "MBTransaction07 " in [Tags] {
+        if "MBTransaction07" in [Tags] {
           opensearch {
             hosts => ["https://opsearch-was-k3sprod:9200"]
             user => "logstash"
