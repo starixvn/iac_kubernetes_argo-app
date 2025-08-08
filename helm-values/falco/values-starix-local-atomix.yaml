@@ -272,6 +272,21 @@ customRules:
       priority: WARNING
       tags: ["maturity_deprecated", "host", "container", "network", "mitre_lateral_movement", "T1021.004"]
 
+    - macro: container_exec
+      condition: evt.type = execve and container.id != host
+
+    - list: suspicious_binaries
+      items: ["nc", "ncat", "curl", "wget"]
+
+    - rule: Shell launched in container
+      desc: Detect when an interactive shell is launched in a container
+      condition: >
+        container_exec and proc.name in (sh, bash, zsh)
+        and not (proc.name="wazuh-syscheckd" or proc.pname="wazuh-modulesd")
+      output: Shell command %proc.cmdline executed by user %user.name inside container=%container.id
+      priority: WARNING
+      tags: ["container", "shell", "security", "runtime-detection"]
+
 
 ########################
 # Falco integrations   #
