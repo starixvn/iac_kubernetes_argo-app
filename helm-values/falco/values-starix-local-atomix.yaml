@@ -80,7 +80,7 @@ services:
 
 
 metrics:
-  enabled: false
+  enabled: enable
   interval: 1h
   outputRule: false
   rulesCountersEnabled: true
@@ -265,12 +265,12 @@ customRules:
 
     - rule: Disallowed SSH Connection
       desc: |-
-        Detect any new SSH connection on port 22 to a host other than those in an allowed list of hosts. This rule absolutely requires profiling your environment beforehand. Network-based rules are extremely crucial in any security program, as they can often provide the only definitive evidence. However, effectively operationalizing them can be challenging due to the potential for noise.
-      condition: inbound_outbound and ssh_port and not allowed_ssh_hosts
+        Detect any new SSH connection on port 22 to a host (node) other than those in an allowed list of hosts. This rule monitors SSH access to Kubernetes nodes only, not containers.
+      condition: inbound_outbound and ssh_port and not allowed_ssh_hosts and container.id = host
       output: |-
-        Disallowed SSH Connection (connection=%fd.name lport=%fd.lport rport=%fd.rport fd_type=%fd.type fd_proto=%fd.l4proto evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
+        Disallowed SSH Connection to Node (connection=%fd.name lport=%fd.lport rport=%fd.rport fd_type=%fd.type fd_proto=%fd.l4proto evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty node=%ka.target.name)
       priority: WARNING
-      tags: ["maturity_deprecated", "host", "container", "network", "mitre_lateral_movement", "T1021.004"]
+      tags: ["host", "network", "ssh", "node_access", "mitre_lateral_movement", "T1021.004"]
 
     - macro: container_exec
       condition: evt.type = execve and container.id != host
@@ -473,7 +473,7 @@ falco:
 
   # [Stable] `priority`
   # levels: "emergency", "alert", "critical", "error", "warning", "notice", "info", "debug"
-  priority: debug
+  priority: warning
 
   # [Stable] `json_output`
   json_output: true
