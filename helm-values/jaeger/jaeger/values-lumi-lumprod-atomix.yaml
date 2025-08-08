@@ -9,10 +9,10 @@ storage:
     nodesWanOnly: false
     extraEnv:
      - name: ES_SERVER_URLS
-       value: http://10.10.50.121
+       value: http://jaeger-elasticsearch.lumigame.com
     cmdlineParams:
       {
-        es.server-urls: http://10.10.50.121
+        es.server-urls: http://jaeger-elasticsearch.lumigame.com
       }
     tls:
       enabled: false

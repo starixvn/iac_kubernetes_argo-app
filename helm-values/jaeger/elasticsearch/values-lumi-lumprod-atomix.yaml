@@ -16,7 +16,7 @@ ingress:
   enabled: false
   pathType: ImplementationSpecific
   apiVersion: ""
-  hostname: jaeger-elasticsearch-sc.ops-klprod.gamora.prod
+  hostname: jaeger-elasticsearch.lumigame.com
   path: /
   ingressClassName: "haproxy"
 
