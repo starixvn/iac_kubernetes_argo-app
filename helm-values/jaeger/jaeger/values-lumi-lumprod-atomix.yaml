@@ -83,10 +83,10 @@ collector:
         port: 4318
         nodePort: 32318
   ingress:
-    enabled: false
+    enabled: true
     ingressClassName: "haproxy"
     hosts:
-       - host: jaeger-collector-sc.ops-klprod.gamora.prod
+       - host: jaeger-collector.lumigame.com
          servicePort: 4317
     pathType:
 
@@ -115,7 +115,7 @@ query:
     ingressClassName: haproxy
     annotations: {}
     hosts:
-      - vn-sc-jaeger-klp.starixplay.com
+      - jaeger.lumigame.com
     pathType:
     health:
       exposed: true
