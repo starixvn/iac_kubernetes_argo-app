@@ -72,7 +72,7 @@ alertmanager:
       - receiver: 'alert-nx-atomix'
         match_re:
           alertname: "Kubernetes Cluster Pod Usage Above 80%"
-      - receiver: 'alerts-nx-atomix-uat'
+      - receiver: 'alert-nx-atomix-uat'
         match_re:
           alertname: "Kubernetes.*"
       - receiver: "alert-velero-backups"
