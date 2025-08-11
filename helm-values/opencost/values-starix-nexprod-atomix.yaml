@@ -73,10 +73,10 @@ opencost:
     apiPort: 9003
     cloudProviderApiKey: ""
     defaultClusterId: 'default-cluster'
-    extraEnv:
-      KUBERNETES_SERVICE_HOST: "kubernetes.default.svc"
-      KUBERNETES_SERVICE_PORT: "443"
-    command: ["/bin/sh", "-c", "sleep 30 && /usr/local/bin/opencost"]
+    # extraEnv:
+    #   KUBERNETES_SERVICE_HOST: "kubernetes.default.svc"
+    #   KUBERNETES_SERVICE_PORT: "443"
+    # command: ["/bin/sh", "-c", "sleep 30 && /usr/local/bin/opencost"]
     image:
       registry: ghcr.io
       repository: opencost/opencost
