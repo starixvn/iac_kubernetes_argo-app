@@ -1,24 +1,59 @@
 clusterName: "starix.nexprod"
 loglevel: info
 
+rbac:
+  create: true
+  rules:
+    - apiGroups: ["", "apps", "batch"]
+      resources: ["namespaces", "pods", "nodes", "services", "deployments", "replicasets", "daemonsets", "jobs", "persistentvolumes", "persistentvolumeclaims"]
+      verbs: ["get", "list", "watch"]
+    - apiGroups: ["metrics.k8s.io"]
+      resources: ["*"]
+      verbs: ["get", "list", "watch"]
+    - apiGroups: ["policy"]
+      resources: ["podsecuritypolicies"]
+      verbs: ["use"]
+
+
 networkPolicies:
   enabled: true
   prometheus:
     namespace: monitoring
     port: 9090
-  extraEgress: []
+  extraEgress:
+    - to:
+      - ipBlock:
+          cidr: 10.43.0.0/16
+      ports:
+      - port: 443
+        protocol: TCP
+      - port: 6443
+        protocol: TCP
+    - to:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: kube-system
+      ports:
+      - port: 53
+        protocol: UDP
 
 podSecurityContext:
   fsGroup: 2000
   runAsNonRoot: true
   runAsUser: 1000
 
+serviceAccount:
+  create: true
+  name: "opencost"
+  automountServiceAccountToken: true
+  annotations:
+    kubernetes.io/enforce-mountable-secrets: "true"
+
 service:
   enabled: true
   annotations: {}
   labels: {}
-  type: NodePort
-  nodePort: 30888
+  type: ClusterIP
   extraPorts: []
     # - name: oauth-proxy
     #   port: 8081
@@ -35,6 +70,11 @@ opencost:
     apiPort: 9003
     cloudProviderApiKey: ""
     defaultClusterId: 'default-cluster'
+    extraEnv:
+      KUBERNETES_SERVICE_HOST: "kubernetes.default.svc"
+      KUBERNETES_SERVICE_PORT: "443"
+    command: ["/bin/sh", "-c"]
+    args: ["sleep 30 && /opencost/bin/opencost"]
     image:
       registry: ghcr.io
       repository: opencost/opencost
