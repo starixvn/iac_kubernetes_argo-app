@@ -18,15 +18,15 @@ capabilities:
   relevancy: disable
 
   # ====== Runtime related capabilities ======
-  runtimeObservability: disable
-  networkPolicyService: disable
-  networkEventsStreaming: disable
+  runtimeObservability: enable
+  networkPolicyService: enable
+  networkEventsStreaming: enable
   runtimeDetection: enable
   malwareDetection: disable
-  nodeProfileService: disable
-  admissionController: disable
-  httpDetection: disable
-  seccompProfileService: disable
+  nodeProfileService: enable
+  admissionController: enable
+  httpDetection: enable
+  seccompProfileService: enable
   manageWorkloads: disable
   syncSBOM: disable
 
