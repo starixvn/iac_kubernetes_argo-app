@@ -297,7 +297,7 @@ opencost:
       CPU: "1.25"
       RAM: "0.50"
       storage: "0.25"
-      loadBalancer: "0.025"
+      LoadBalancerCost: "0.025"
 
   dataRetention:
     dailyResolutionDays: 15
