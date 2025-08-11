@@ -518,8 +518,7 @@ opencost:
       hosts:
         - host: opencost.nexdev.net
           paths:
-            - path: /
-              pathType: Prefix
+            - /
       # -- Redirect ingress to an extraPort defined on the service such as oauth-proxy
       servicePort: http-ui
       # servicePort: oauth-proxy
