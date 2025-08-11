@@ -54,7 +54,7 @@ filestore:
       size: 20Gi
 
 
-relay:
+# relay:
   # env:
   # - name: HTTP_PROXY
   #   value: "http://iusqd.gamora.prod:8801"
