@@ -4,7 +4,7 @@ ksNamespace: kubescape
 ksLabel: kubescape
 
 # excludeNamespaces: "kubescape,kube-system,kube-public,kube-node-lease,kubeconfig,gmp-system,gmp-public"
-includeNamespaces: "hrm"
+includeNamespaces: "12b,aff,ai,alpha,alphaplus-789y,alphaplus-ibc,alphaplus-mbc,fanex,fps,hrm,la,lap,licensee,nap,nap-mail,shared,telegrambot,tw"
 
 
 capabilities:
