@@ -52,7 +52,7 @@ serviceAccount:
 # NetworkPolicies for ingress
 networkPolicies:
   # -- Specifies whether networkpolicies should be created
-  enabled: false
+  enabled: true
 
   # -- Internal Prometheus settings related to NetworkPolicies
   prometheus:
