@@ -337,8 +337,7 @@ opencost:
       emitKsmV1Metrics: ~
       # -- (bool) Enable only emission of KSM v1 metrics that do not exist in KSM 2 by default
       emitKsmV1MetricsOnly: ~
-
-metrics:
+      
       serviceMonitor:
         # -- Create ServiceMonitor resource for scraping metrics using PrometheusOperator
         enabled: true
