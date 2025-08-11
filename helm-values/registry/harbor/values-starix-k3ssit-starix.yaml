@@ -35,58 +35,58 @@ cache:
   expireHours: 12
 
 
-# portal:
-#   nodeSelector:
-#     harbor-workload: "yes"
-#   tolerations:
-#   - effect: NoSchedule
-#     key: cattle.io/os
-#     value: harbor-workload
-# core:
-#   nodeSelector:
-#     harbor-workload: "yes"
-#   tolerations:
-#   - effect: NoSchedule
-#     key: cattle.io/os
-#     value: harbor-workload
-# jobservice:
-#   nodeSelector:
-#     harbor-workload: "yes"
-#   tolerations:
-#   - effect: NoSchedule
-#     key: cattle.io/os
-#     value: harbor-workload
-# registry:
-#   nodeSelector:
-#     harbor-workload: "yes"
-#   tolerations:
-#   - effect: NoSchedule
-#     key: cattle.io/os
-#     value: harbor-workload
+portal:
+  nodeSelector:
+    harbor-workload: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: cattle.io/os
+    value: harbor-workload
+core:
+  nodeSelector:
+    harbor-workload: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: cattle.io/os
+    value: harbor-workload
+jobservice:
+  nodeSelector:
+    harbor-workload: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: cattle.io/os
+    value: harbor-workload
+registry:
+  nodeSelector:
+    harbor-workload: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: cattle.io/os
+    value: harbor-workload
 trivy:
   enabled: false
 
-# database:
-#   internal:
-#     nodeSelector:
-#       harbor-workload: "yes"
-#     tolerations:
-#     - effect: NoSchedule
-#       key: cattle.io/os
-#       value: harbor-workload
-# redis:
-#   internal:
-#     nodeSelector:
-#       harbor-workload: "yes"
-#     tolerations:
-#     - effect: NoSchedule
-#       key: cattle.io/os
-#       value: harbor-workload
-# exporter:
-#   nodeSelector:
-#     harbor-workload: "yes"
-#   tolerations:
-#   - effect: NoSchedule
-#     key: cattle.io/os
-#     value: harbor-workload
+database:
+  internal:
+    nodeSelector:
+      harbor-workload: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: cattle.io/os
+      value: harbor-workload
+redis:
+  internal:
+    nodeSelector:
+      harbor-workload: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: cattle.io/os
+      value: harbor-workload
+exporter:
+  nodeSelector:
+    harbor-workload: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: cattle.io/os
+    value: harbor-workload
 
