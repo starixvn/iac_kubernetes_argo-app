@@ -67,6 +67,15 @@ argo_applications_by_team = {
         helm_path     = "nats/nats-nui"
         chart_version = "0.1.3"
       }
+
+      sentry = {
+        helm_path     = "sentry-selfhost"
+        chart_version = "26.6.0"
+        auto_sync     = false
+        value_files   = ["values-starix-k3ssit-lumi.yaml"]
+        #trigger
+      }
+
     }
   }
 }
