@@ -1,0 +1,464 @@
+ipv6: false
+
+global:
+  nodeSelector:
+    sc-sentry: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: sc-sentry
+    value: "yes"
+
+user:
+  create: true
+  email: admin@sentry.local
+  password: "?nxhrJ3kfAsK"
+
+config:
+  relay: |
+    cache:
+      envelope_buffer_size: 500000
+
+images:
+  sentry:
+    repository: nexhub.ops-sit.nebula.sit/sit/base/getsentry/sentry
+    tag: 24.9.0
+  snuba:
+    repository: nexhub.ops-sit.nebula.sit/sit/base/getsentry/snuba
+    tag: 24.9.0
+  relay:
+    repository: nexhub.ops-sit.nebula.sit/sit/base/getsentry/relay
+    tag: 24.9.0
+  symbolicator:
+    repository: nexhub.ops-sit.nebula.sit/sit/base/getsentry/symbolicator
+    tag: 24.9.0
+  vroom:
+    repository: nexhub.ops-sit.nebula.sit/sit/base/getsentry/vroom
+    tag: 24.9.0  
+
+
+auth:
+  register: false
+
+ingress:
+  hostname: "sentry.sgamesit.com"
+  additionalHostNames:
+  - "sentrysc.ops-sit.nebula.sit"
+  ingressClassName: "haproxy"
+
+
+filestore:
+  filesystem:
+    persistence:
+      enabled: true
+      storageClass: "local-path"
+      size: 20Gi
+
+
+relay:
+  # env:
+  # - name: HTTP_PROXY
+  #   value: "http://iusqd.gamora.prod:8801"
+  # - name: HTTPS_PROXY
+  #   value: "http://iusqd.gamora.prod:8801"
+  # - name: NO_PROXY
+  #   value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,sgamesuat.com,sentry-lui-k3suat-web,.starix.k3ssit,.gamora.prod,.starixplay.com"
+
+hooks:
+  activeDeadlineSeconds: 2000
+  dbCheck:
+    image:
+      repository: nexhub.ops-sit.nebula.sit/sit/base/subfuzion/netcat
+      tag: latest
+
+symbolicator:
+  enabled: true
+
+nginx:
+  clusterDomain: starix.k3ssit
+  image:
+    registry: nexhub.ops-sit.nebula.sit
+    repository: sit/base/bitnami/nginx
+    tag: 1.27.0-debian-12-r1
+  nodeSelector:
+    sc-sentry: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: sc-sentry
+    value: "yes"
+
+clickhouse:
+  clusterDomain: starix.k3ssit
+  nodeSelector:
+    sc-sentry: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: sc-sentry
+    value: "yes"
+  clickhouse:
+    image: "nexhub.ops-sit.nebula.sit/sit/base/clickhouse/clickhouse-server"
+    persistentVolumeClaim:
+      dataPersistentVolume:
+        storageClassName: "local-path"
+        storage: "30Gi"
+
+zookeeper:
+  clusterDomain: starix.k3ssit
+  autopurge:
+    snapRetainCount: 3
+    purgeInterval: 1
+  image:
+    registry: nexhub.ops-sit.nebula.sit
+    repository: sit/base/bitnami/zookeeper
+    tag: 3.8.2-debian-11-r27
+  persistence:
+    enabled: true
+    size: 20Gi
+    storageClass: "local-path"
+  nodeSelector:
+    sc-sentry: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: sc-sentry
+    value: "yes"
+
+kafka:
+  image:
+    registry: nexhub.ops-sit.nebula.sit
+    repository: sit/base/bitnami/kafka
+    tag: 3.7.0-debian-12-r7
+  global:
+    storageClass: "local-path"
+  controller:
+    # heapOpts: -Xmx4g -Xms2g
+    replicaCount: 3
+    persistence:
+      enabled: true
+      size: 30Gi
+      storageClass: "local-path"
+    resourcesPreset: "2xlarge"
+  # broker: 
+  #   heapOpts: -Xmx4g -Xms2g
+    nodeSelector:
+      sc-sentry: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: sc-sentry
+      value: "yes"
+  clusterDomain: starix.k3ssit
+
+redis:
+  clusterDomain: starix.k3ssit
+  image:
+    registry: nexhub.ops-sit.nebula.sit
+    repository: sit/base/bitnami/redis
+    tag: 7.0.11-debian-11-r12
+  master:
+    persistence:
+      enabled: true
+      storageClass: "local-path"
+      size: 10Gi
+    nodeSelector:
+      sc-sentry: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: sc-sentry
+      value: "yes"
+  replica:
+    persistence:
+      enabled: true
+      storageClass: "local-path"
+      size: 10Gi
+    nodeSelector:
+      sc-sentry: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: sc-sentry
+      value: "yes"
+
+postgresql:
+  clusterDomain: starix.k3ssit
+  image:
+    registry: nexhub.ops-sit.nebula.sit
+    repository: sit/base/bitnami/postgresql
+    tag: 15.3.0-debian-11-r0   
+  global:
+    postgresql:
+      username: "postgres"
+      password: "passwdpostgres"
+      database: "sentry"
+  auth:
+    database: sentry
+    enablePostgresUser: true
+    existingSecret: ""
+    password: "passwdpostgres"
+    postgresPassword: "passwdpostgres"
+    replicationPassword: "passwdpostgres"
+    replicationUsername: repl_user
+    secretKeys:
+      adminPasswordKey: postgres-password
+      replicationPasswordKey: replication-password
+      userPasswordKey: password
+    usePasswordFiles: false
+    username: "postgres"
+  primary:
+    persistence:
+      enabled: true
+      storageClass: "local-path"
+      size: "20Gi"
+    extendedConfiguration: |
+      max_connections = 1000
+    nodeSelector:
+      sc-sentry: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: sc-sentry
+      operator: Equal
+      value: "yes"
+
+rabbitmq:
+  image:
+    registry: nexhub.ops-sit.nebula.sit
+    repository: sit/base/bitnami/rabbitmq
+    tag: 3.11.18-debian-11-r0
+  clusterDomain: starix.k3ssit
+  ulimitNofiles: "none"
+  persistence:
+    storageClass: "local-path"
+    size: "10Gi"
+  nodeSelector:
+    sc-sentry: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: sc-sentry
+    value: "yes"
+
+memcached:
+  image:
+    registry: nexhub.ops-sit.nebula.sit
+    repository: sit/base/bitnami/memcached
+    tag: 1.6.29-debian-12-r0
+  clusterDomain: starix.k3ssit
+
+sentry:
+  web:
+    strategyType: Recreate
+    # env:
+    # - name: HTTP_PROXY
+    #   value: "http://iusqd.gamora.prod:8801"
+    # - name: HTTPS_PROXY
+    #   value: "http://iusqd.gamora.prod:8801"
+    # - name: NO_PROXY
+    #   value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.,sgamesuat.com,sentry-lui-k3suat-web,.starix.k3ssit,.gamora.prod,.starixplay.com"
+
+  worker:
+    enabled: true
+    replicas: 3
+    concurrency: 10
+    # env:
+    # - name: HTTP_PROXY
+    #   value: "http://iusqd.gamora.prod:8801"
+    # - name: HTTPS_PROXY
+    #   value: "http://iusqd.gamora.prod:8801"
+    # - name: NO_PROXY
+    #   value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,sgamesuat.com,sentry-lui-k3suat-web,.starix.k3ssit,.gamora.prod,.starixplay.com"
+
+  workerEvents:
+    enabled: true
+
+  workerTransactions:
+    enabled: true
+
+  ingestConsumerAttachments:
+    enabled: true
+    replicas: 1
+    concurrency: 4      
+
+  ingestConsumerEvents:
+    enabled: true
+    replicas: 1
+    concurrency: 4
+
+  ingestConsumerTransactions:
+    enabled: true
+    replicas: 1
+
+  ingestReplayRecordings:
+    enabled: true
+    replicas: 1    
+
+  ingestProfiles:
+    enabled: true
+    replicas: 1
+
+  ingestOccurrences:
+    enabled: true
+    replicas: 1
+
+  ingestMonitors:
+    enabled: true
+    replicas: 1
+
+  billingMetricsConsumer:
+    enabled: true
+    replicas: 1
+
+  genericMetricsConsumer:
+    enabled: true
+    replicas: 1
+
+  metricsConsumer:
+    enabled: true
+    replicas: 1
+
+  cron:
+    enabled: true
+    replicas: 1
+
+  subscriptionConsumerEvents:
+    enabled: true
+    replicas: 1
+
+  subscriptionConsumerSessions:
+    enabled: true
+    replicas: 1
+
+  subscriptionConsumerTransactions:
+    enabled: true
+    replicas: 1
+
+  postProcessForwardErrors:
+    enabled: true
+    replicas: 1
+
+  postProcessForwardTransactions:
+    enabled: true
+    replicas: 1
+
+  postProcessForwardIssuePlatform:
+    enabled: true
+    replicas: 1
+
+  subscriptionConsumerGenericMetrics:
+    enabled: true
+    replicas: 1
+
+  subscriptionConsumerMetrics:
+    enabled: true
+    replicas: 1
+
+  cleanup:
+    days: 3
+
+
+
+snuba:
+  api:
+    enabled: true
+    replicas: 1
+
+  consumer:
+    replicas: 1
+    enabled: true
+    autoOffsetReset: "latest"
+
+  outcomesConsumer:
+    enabled: true
+    replicas: 1
+    autoOffsetReset: "latest"
+
+  outcomesBillingConsumer:
+    enabled: true
+    replicas: 1
+    autoOffsetReset: "latest"
+
+  replacer:
+    enabled: true
+    replicas: 1
+    autoOffsetReset: "latest"
+
+  metricsConsumer:
+    enabled: true
+    replicas: 1
+    autoOffsetReset: "latest"
+  
+  subscriptionConsumerEvents:
+    enabled: true
+    replicas: 1
+    autoOffsetReset: "latest"
+
+  genericMetricsCountersConsumer:
+    enabled: true
+    replicas: 1
+    autoOffsetReset: "latest"  
+
+  genericMetricsDistributionConsumer:
+    enabled: true
+    replicas: 1
+    autoOffsetReset: "latest"
+
+  genericMetricsSetsConsumer:
+    enabled: true
+    replicas: 1
+    autoOffsetReset: "latest"
+
+  subscriptionConsumerMetrics:
+    enabled: true
+    replicas: 1
+    autoOffsetReset: "latest"
+
+  subscriptionConsumerTransactions:
+    enabled: true
+    replicas: 1
+    autoOffsetReset: "latest"
+
+  subscriptionConsumerSessions:
+    enabled: true
+    replicas: 1
+    autoOffsetReset: "latest"
+
+  replaysConsumer:
+    enabled: true
+    replicas: 1
+    autoOffsetReset: "latest"
+
+  sessionsConsumer:
+    enabled: true
+    replicas: 1
+    autoOffsetReset: "latest"
+
+  transactionsConsumer:
+    enabled: true
+    replicas: 1
+    autoOffsetReset: "latest"
+
+  profilingProfilesConsumer:
+    enabled: true
+    replicas: 1
+    autoOffsetReset: "latest"
+
+  profilingFunctionsConsumer:
+    enabled: true
+    replicas: 1
+    autoOffsetReset: "latest"
+
+  issueOccurrenceConsumer:
+    enabled: true
+    replicas: 1
+    autoOffsetReset: "latest"
+
+  spansConsumer:
+    enabled: true
+    replicas: 1
+    autoOffsetReset: "latest"
+
+  groupAttributesConsumer:
+    enabled: true
+    replicas: 1
+    autoOffsetReset: "latest"
+
+  # dbInitJob:
+  # migrateJob:
+
+  clickhouse:
+    maxConnections: 100
+
