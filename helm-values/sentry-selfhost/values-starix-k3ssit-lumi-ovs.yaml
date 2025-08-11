@@ -1,0 +1,157 @@
+hooks:
+  activeDeadlineSeconds: 2000
+  dbInit:
+    enabled: false
+    resources:
+      limits:
+        memory: 3200Mi
+      requests:
+        memory: 300Mi 
+
+user:
+  create: true
+  email: admin@sentry.local
+  password: "?nxhrJ3kfAsK"
+
+
+
+image:
+  repository: nexhub.ops-sit.nebula.sit/sit/base/sentry
+  tag: "9.1.2"
+
+
+web:
+  # env:
+  # - name: HTTP_PROXY
+  #   value: "http://iusqd.gamora.prod:8801"
+  # - name: HTTPS_PROXY
+  #   value: "http://iusqd.gamora.prod:8801"
+  # - name: NO_PROXY
+  #   value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.starix.k3ssit,.byb6181.com,.gamora.prod"
+  nodeSelector:
+    sc-sentry-ovs: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: sc-sentry-ovs
+    value: "yes"
+
+cron:
+  nodeSelector:
+    sc-sentry-ovs: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: sc-sentry-ovs
+    value: "yes"  
+
+worker:
+  replicacount: 1
+  # env:
+  # - name: HTTP_PROXY
+  #   value: "http://iusqd.gamora.prod:8801"
+  # - name: HTTPS_PROXY
+  #   value: "http://iusqd.gamora.prod:8801"
+  # - name: NO_PROXY
+  #   value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.starix.k3ssit,.byb6181.com,.gamora.prod"
+  nodeSelector:
+    sc-sentry-ovs: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: sc-sentry-ovs
+    value: "yes" 
+
+
+service:
+  name: sentry
+  type: ClusterIP
+
+
+filestore:
+  backend: filesystem
+  filesystem:
+    path: /var/lib/sentry/files
+    persistence:
+      enabled: true
+      storageClass: "local-path"
+      accessMode: ReadWriteOnce
+      size: 10Gi
+      persistentWorkers: true
+
+
+
+ingress:
+  enabled: true
+  hostnames:
+    - "sentrysc-ovs.ops-sit.nebula.sit"
+    - "sentrysc-ovs.playonesit.com"
+  ingressClassName: "haproxy"
+
+
+postgresql:
+  clusterDomain: starix.k3ssit
+  image:
+    registry: nexhub.ops-sit.nebula.sit
+    repository: sit/base/bitnami/postgresql
+    tag: 11.5.0-debian-9-r60
+  volumePermissions:
+    image:
+      registry: nexhub.ops-sit.nebula.sit
+      repository: sit/base/bitnami/minideb
+      tag: stretch
+  nameOverride: sentry-postgresql
+  postgresqlConfiguration:
+    maxConnections: "1000"
+    listen_addresses: "'*'"
+  postgresqlDatabase: sentry
+  postgresqlUsername: postgres
+  existingSecret: sentry-postgresql-secret
+  existingSecretKey: postgresql-password
+  persistence:
+    enabled: true
+    storageClass: "local-path"
+  master:
+    nodeSelector:
+      sc-sentry-ovs: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: sc-sentry-ovs
+      value: "yes" 
+    
+
+
+
+redis:
+  cluster:
+    enabled: true
+    slaveCount: 1
+  image: 
+    registry: nexhub.ops-sit.nebula.sit
+    repository: sit/base/bitnami/redis
+    tag: 5.0.5-debian-9-r141
+  clusterDomain: starix.k3ssit
+  enabled: true
+  nameOverride: sentry-redis
+  password: redissentry
+  master:
+    persistence:
+      enabled: true
+      storageClass: "local-path"
+    nodeSelector:
+      sc-sentry-ovs: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: sc-sentry-ovs
+      value: "yes"
+  slave:
+    persistence:
+      enabled: true
+      storageClass: "local-path"
+    nodeSelector:
+      sc-sentry-ovs: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: sc-sentry-ovs
+      value: "yes"  
+      # If change pvc size redis.master.persistence.size: 20Gi
+
+
+
