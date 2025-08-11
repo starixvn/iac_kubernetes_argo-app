@@ -1,8 +1,8 @@
-nameOverride: "opencost"
+nameOverride: ""
 # -- Overwrite all resources name created by the chart
-fullnameOverride: "opencost"
+fullnameOverride: ""
 # -- Override the deployment namespace
-namespaceOverride: "opencost"
+namespaceOverride: ""
 # -- Override the default name of cluster - Can be found in /etc/kubernetes/admin.conf: clusters -> cluster -> name
 clusterName: "starix.nexprod"
 
@@ -337,7 +337,7 @@ opencost:
       emitKsmV1Metrics: ~
       # -- (bool) Enable only emission of KSM v1 metrics that do not exist in KSM 2 by default
       emitKsmV1MetricsOnly: ~
-      
+
       serviceMonitor:
         # -- Create ServiceMonitor resource for scraping metrics using PrometheusOperator
         enabled: true
