@@ -294,10 +294,10 @@ opencost:
     # -- More information about these values here: https://www.opencost.io/docs/configuration/on-prem#custom-pricing-using-the-opencost-helm-chart
     costModel:
       description: Modified pricing configuration.
-      CPU: "1.25"
-      RAM: "0.50"
-      storage: "0.25"
-      LoadBalancerCost: "0.025"
+      CPU: 1.25
+      RAM: 0.50
+      storage: 0.25
+      LoadBalancerCost: 0.025
 
   dataRetention:
     dailyResolutionDays: 15
