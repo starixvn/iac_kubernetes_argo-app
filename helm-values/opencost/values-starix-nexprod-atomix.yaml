@@ -36,6 +36,11 @@ opencost:
     cloudProviderApiKey: ""
     defaultClusterId: 'default-cluster'
     image:
+      registry: ghcr.io
+      repository: opencost/opencost
+      tag: "1.115.0@sha256:fb6468a1ef45dbd4a9e521122c8d306f882bb33d1657d28d21aeaef79412e9e1"
+      pullPolicy: IfNotPresent
+      fullImageName: null
     replicas: 1
     resources:
       requests:
