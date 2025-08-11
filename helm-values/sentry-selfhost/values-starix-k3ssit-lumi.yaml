@@ -40,7 +40,7 @@ auth:
   register: false
 
 ingress:
-  hostname: "sentry.sgamesit.com"
+  hostname: "sentrysc.playonesit.com"
   additionalHostNames:
   - "sentrysc.ops-sit.nebula.sit"
   ingressClassName: "haproxy"
