@@ -64,7 +64,7 @@ argo_applications_by_team = {
         helm_path     = "opencost"
         chart_version = "1.115.0"
         value_files   = ["values-starix-nexprod-atomix.yaml"]
-        # trigger
+        ### trigger
       }
 
       postgresql-sonar = {

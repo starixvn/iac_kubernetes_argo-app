@@ -226,58 +226,48 @@ customRules:
       
     - macro: ssh_port
       condition: (fd.sport=22)
-
+  
     - macro: bpf_profiled_procs
       condition: (never_true)
-
+  
     - macro: allowed_ssh_hosts
       condition: (never_true)
-
+  
     - macro: consider_all_chmods
       condition: (evt.type = chmod or evt.type = fchmod or evt.type = fchmodat)
-
+  
     - macro: exe_running_docker_save
-      condition: >
-        (proc.name = docker and proc.args contains save)
-
+      condition: (proc.name = docker and proc.args contains save)
+  
     - list: user_known_chmod_applications
       items: [hyperkube, kubelet, k3s-agent, systemd, dbus-daemon]
-
+  
     - macro: user_known_set_setuid_or_setgid_bit_conditions
       condition: (never_true)
-
+  
     - macro: spawned_process
       condition: (evt.type = execve and evt.dir = <)
-
+  
     - rule: Creating a root like user
       desc: using the command useradd or adduser with the flag -o -u0 it is possible to create a user with the same root userID and get user access to the machine with the new user
       condition: spawned_process and proc.exe in (useradd,adduser) and proc.args contains -o and proc.args contains -u and proc.args contains 0
       output: "Created user with the same root userID. (user=%user.name userID=%user.uid %container.info parent=%proc.pname cmdline=%proc.cmdline)"
       priority: WARNING
       tags: [users,host]
-
+  
     - macro: inbound_outbound
       condition: >
         (((evt.type in (accept,accept4,listen,connect) and evt.dir=<) and
         (fd.typechar = 4 or fd.typechar = 6)) and
         (fd.ip != "0.0.0.0" and fd.net != "127.0.0.0/8") and
         (evt.rawres >= 0 or evt.res = EINPROGRESS))
-
-    - rule: Disallowed SSH Connection
-      desc: |-
-        Detect any new SSH connection on port 22 to a host other than those in an allowed list of hosts. This rule absolutely requires profiling your environment beforehand. Network-based rules are extremely crucial in any security program, as they can often provide the only definitive evidence. However, effectively operationalizing them can be challenging due to the potential for noise.
-      condition: inbound_outbound and ssh_port and not allowed_ssh_hosts
-      output: |-
-        Disallowed SSH Connection (connection=%fd.name lport=%fd.lport rport=%fd.rport fd_type=%fd.type fd_proto=%fd.l4proto evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
-      priority: WARNING
-      tags: ["maturity_deprecated", "host", "container", "network", "mitre_lateral_movement", "T1021.004"]
-
+  
     - macro: container_exec
       condition: evt.type = execve and container.id != host
-
+  
     - list: suspicious_binaries
       items: ["nc", "ncat", "curl", "wget"]
-
+  
     - rule: Shell launched in container
       desc: Detect when an interactive shell is launched in a container
       condition: >
@@ -286,18 +276,6 @@ customRules:
       output: Shell command %proc.cmdline executed by user %user.name inside container=%container.id
       priority: WARNING
       tags: ["container", "shell", "security", "runtime-detection"]
-    
-    - rule: Create/Modify Configmap With Private Credentials
-      desc: >
-        Detect creating/modifying a configmap containing a private credential (aws key, password, etc.)
-      condition: kevt and configmap and kmodify and contains_private_credentials
-      exceptions:
-        - name: configmaps
-          fields: [ka.target.namespace, ka.req.configmap.name]
-      output: K8s configmap with private credential (user=%ka.user.name verb=%ka.verb configmap=%ka.req.configmap.name config=%ka.req.configmap.obj)
-      priority: WARNING
-      source: k8s_audit
-      tags: [k8s]
 
 ########################
 # Falco integrations   #
@@ -473,7 +451,7 @@ falco:
 
   # [Stable] `priority`
   # levels: "emergency", "alert", "critical", "error", "warning", "notice", "info", "debug"
-  priority: debug
+  priority: warning
 
   # [Stable] `json_output`
   json_output: true
