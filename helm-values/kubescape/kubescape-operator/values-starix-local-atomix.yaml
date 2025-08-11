@@ -51,7 +51,7 @@ serviceScanConfig:
 alertCRD:
   installDefault: true
   scopeClustered: true
-  scopeNamespaced: false
+  scopeNamespaced: true
 
 persistence:
   storageClass: "longhorn"
