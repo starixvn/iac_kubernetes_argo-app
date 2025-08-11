@@ -1,8 +1,8 @@
-nameOverride: ""
+nameOverride: "opencost"
 # -- Overwrite all resources name created by the chart
-fullnameOverride: ""
+fullnameOverride: "opencost"
 # -- Override the deployment namespace
-namespaceOverride: ""
+namespaceOverride: "opencost"
 # -- Override the default name of cluster - Can be found in /etc/kubernetes/admin.conf: clusters -> cluster -> name
 clusterName: "starix.nexprod"
 
@@ -52,17 +52,17 @@ serviceAccount:
 # NetworkPolicies for ingress
 networkPolicies:
   # -- Specifies whether networkpolicies should be created
-  enabled: false
+  enabled: true
 
   # -- Internal Prometheus settings related to NetworkPolicies
   prometheus:
     # -- Namespace where internal Prometheus is installed
-    namespace: prometheus-system
+    namespace: monitoring
     # -- Pod port of in-cluster Prometheus
     port: 9090
     # -- Labels applied to the Prometheus server pod(s)
     labels:
-      app.kubernetes.io/name: prometheus
+      app: prometheus
 
   # -- Extra egress rule
   extraEgress: []
@@ -87,8 +87,10 @@ priorityClassName: ~
 podAutomountServiceAccountToken: true
 
 # -- Holds pod-level security attributes and common container settings
-podSecurityContext: {}
-  # fsGroup: 2000
+podSecurityContext:
+  fsGroup: 2000
+  runAsNonRoot: true
+  runAsUser: 1000
 
 service:
   enabled: true
@@ -155,11 +157,12 @@ opencost:
     resources:
       # -- CPU/Memory resource requests
       requests:
-        cpu: '10m'
-        memory: '55Mi'
+        cpu: '50m'
+        memory: '128Mi'
       # -- CPU/Memory resource limits
       limits:
-        memory: '1Gi'
+        cpu: '200m'
+        memory: '512Mi'
     # Startup probe configuration
     startupProbe:
       # -- Whether probe is enabled
@@ -197,13 +200,13 @@ opencost:
       # -- Number of failures for probe to be considered failed
       failureThreshold: 3
     # -- The security options the container should be run with
-    securityContext: {}
-      # capabilities:
-      #   drop:
-      #   - ALL
-      # readOnlyRootFilesystem: true
-      # runAsNonRoot: true
-      # runAsUser: 1000
+    securityContext:
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 1000
 
     # Path of CSV file
     csv_path: ""
@@ -293,10 +296,15 @@ opencost:
     provider: custom
     # -- More information about these values here: https://www.opencost.io/docs/configuration/on-prem#custom-pricing-using-the-opencost-helm-chart
     costModel:
-      description: Modified pricing configuration.
-      CPU: "1.25"
-      RAM: "0.50"
-      storage: "0.25"
+      description: "Custom pricing configuration for starix.nexprod environment"
+      CPU: "0.06"
+      spotCPU: "0.006"
+      RAM: "0.01"
+      spotRAM: "0.001"
+      storage: "0.04"
+      zoneNetworkEgress: "0.01"
+      regionNetworkEgress: "0.01"
+      internetNetworkEgress: "0.12"
       LoadBalancerCost: "0.025"
 
   dataRetention:
@@ -330,9 +338,10 @@ opencost:
       # -- (bool) Enable only emission of KSM v1 metrics that do not exist in KSM 2 by default
       emitKsmV1MetricsOnly: ~
 
-    serviceMonitor:
-      # -- Create ServiceMonitor resource for scraping metrics using PrometheusOperator
-      enabled: false
+metrics:
+      serviceMonitor:
+        # -- Create ServiceMonitor resource for scraping metrics using PrometheusOperator
+        enabled: true
       # -- Additional labels to add to the ServiceMonitor
       additionalLabels: {}
       # -- Specify if the ServiceMonitor will be deployed into a different namespace (blank deploys into same namespace as chart)
@@ -441,11 +450,12 @@ opencost:
     resources:
       # -- CPU/Memory resource requests
       requests:
-        cpu: '10m'
-        memory: '55Mi'
+        cpu: '50m'
+        memory: '128Mi'
       # -- CPU/Memory resource limits
       limits:
-        memory: '1Gi'
+        cpu: '200m'
+        memory: '512Mi'
     # used in the default.nginx.conf if you want to switch for using with Docker
     # apiServer: 0.0.0.0
     uiPort: 9090
@@ -476,13 +486,13 @@ opencost:
       # -- Number of failures for probe to be considered failed
       failureThreshold: 3
     # -- The security options the container should be run with
-    securityContext: {}
-      # capabilities:
-      #   drop:
-      #   - ALL
-      # readOnlyRootFilesystem: true
-      # runAsNonRoot: true
-      # runAsUser: 1000
+    securityContext:
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 1000
 
     # -- A list of environment variables to be added to the pod
     extraEnv: []
@@ -509,7 +519,8 @@ opencost:
       hosts:
         - host: opencost.nexdev.net
           paths:
-            - /
+            - path: /
+              pathType: Prefix
       # -- Redirect ingress to an extraPort defined on the service such as oauth-proxy
       servicePort: http-ui
       # servicePort: oauth-proxy
