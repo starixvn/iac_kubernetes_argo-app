@@ -21,7 +21,7 @@ capabilities:
   runtimeObservability: disable
   networkPolicyService: disable
   networkEventsStreaming: disable
-  runtimeDetection: disable
+  runtimeDetection: enable
   malwareDetection: disable
   nodeProfileService: disable
   admissionController: disable
@@ -47,6 +47,11 @@ capabilities:
 serviceScanConfig:
   enabled: false
   interval: 1h
+
+alertCRD:
+  installDefault: true
+  scopeClustered: true
+  scopeNamespaced: false
 
 persistence:
   storageClass: "longhorn"
@@ -138,7 +143,7 @@ nodeAgent:
 
   config:
     maxLearningPeriod: 24h # duration string
-    learningPeriod: 2m # duration string
+    learningPeriod: 10m # duration string
     updatePeriod: 10m # duration string
     nodeProfileInterval: 10m # duration string
     networkStreamingInterval: 2m # duration string
@@ -147,9 +152,9 @@ nodeAgent:
       url: http://synchronizer:8089/apis/v1/kubescape.io
       maxAlertsPerMinute: 1000
       method: POST
-    alertManagerExporterUrls: []
+    # alertManagerExporterUrls: [prometheus-starix-local-ku-alertmanager.monitoring:9093]
     stdoutExporter: true
-    syslogExporterURL: ""
+    syslogExporterURL: 10.18.200.193:30078
     skipKernelVersionCheck: false
     malwareScanAllFiles: false
     hostMalwareSensor: disable
