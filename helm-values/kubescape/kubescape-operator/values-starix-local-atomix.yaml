@@ -82,9 +82,9 @@ kubescape:
   downloadArtifacts: false
   skipUpdateCheck: true
 
-  # serviceMonitor:
-  #   enabled: true
-  #   namespace: monitoring
+  serviceMonitor:
+    enabled: true
+    namespace: monitoring
 
 operator:
   name: operator
