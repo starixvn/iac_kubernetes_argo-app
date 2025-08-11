@@ -114,6 +114,20 @@ service:
 # Create cluster role policies
 rbac:
   enabled: true
+  rules:
+    - apiGroups: ["", "apps", "batch"]
+      resources: ["namespaces", "pods", "nodes", "services", "deployments", "replicasets", "daemonsets", "jobs", "persistentvolumes", "persistentvolumeclaims", "replicationcontrollers", "statefulsets"]
+      verbs: ["get", "list", "watch"]
+    - apiGroups: ["policy"]
+      resources: ["poddisruptionbudgets"]
+      verbs: ["get", "list", "watch"]
+    - apiGroups: ["metrics.k8s.io"]
+      resources: ["*"]
+      verbs: ["get", "list", "watch"]
+    - apiGroups: ["policy"]
+      resources: ["podsecuritypolicies"]
+      verbs: ["use"]
+
 
 # PodDisruptionBudget for high availability
 pdb:
