@@ -222,7 +222,7 @@ customRules:
   #   [ rule body ]
   rules-custom.yaml: |-
     - macro: user_known_read_sensitive_files_activities 
-      condition: (proc.name=wazuh-syscheckd)
+      condition: (proc.name="wazuh-syscheckd" or proc.pname="wazuh-modulesd")
       
     - macro: ssh_port
       condition: (fd.sport=22)
@@ -272,10 +272,37 @@ customRules:
       desc: Detect when an interactive shell is launched in a container
       condition: >
         container_exec and proc.name in (sh, bash, zsh)
-        and not (proc.name="wazuh-syscheckd" or proc.pname="wazuh-modulesd")
+        and not user_known_read_sensitive_files_activities
       output: Shell command %proc.cmdline executed by user %user.name inside container=%container.id
       priority: WARNING
       tags: ["container", "shell", "security", "runtime-detection"]
+
+    - macro: contains_private_credentials
+      condition: (ka.req.configmap.obj contains "password" or ka.req.configmap.obj contains "secret" or ka.req.configmap.obj contains "key" or ka.req.configmap.obj contains "token" or ka.req.configmap.obj contains "credential" or ka.req.configmap.obj contains "aws_access_key" or ka.req.configmap.obj contains "aws_secret_key" or ka.req.configmap.obj contains "private_key" or ka.req.configmap.obj contains "cert" or ka.req.configmap.obj contains "certificate")    
+
+    - rule: Create/Modify Configmap With Private Credentials
+      desc: >
+        Detect creating/modifying a configmap containing a private credential (aws key, password, etc.) in starix-local environment
+      condition: kevt and configmap and kmodify and contains_private_credentials
+      exceptions:
+        - name: allowed_credential_configmaps
+          fields: [ka.target.namespace, ka.req.configmap.name]
+          comps: [in, in]
+          values:
+            - ["kube-system", "aws-auth"]
+            - ["kube-system", "cluster-info"]
+            - ["logging", "logstash-config"]
+            - ["logging", "opensearch-config"]
+            - ["monitoring", "grafana-config"]
+            - ["falco", "falco-config"]
+      output: |
+        SECURITY ALERT: ConfigMap with private credentials modified
+        (user=%ka.user.name verb=%ka.verb configmap=%ka.req.configmap.name 
+         namespace=%ka.target.namespace source_ip=%ka.source.ip 
+         user_agent=%ka.user_agent config_data=%ka.req.configmap.obj)
+      priority: WARNING
+      source: k8s_audit
+      tags: [k8s, configmap, credentials, security, compliance]
 
 ########################
 # Falco integrations   #
