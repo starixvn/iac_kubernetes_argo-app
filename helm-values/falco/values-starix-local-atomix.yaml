@@ -286,19 +286,13 @@ customRules:
       priority: NOTICE
 
     - rule: Detect SSH Connection To Node
-      desc: Detect inbound SSH connection to node (port 22, exclude container)
-      condition: (evt.type = accept or evt.type = connect) and fd.sport=22 and fd.l4proto = tcp and not container
-      output: "SSH connection detected (user=%user.name server_ip=%fd.sip server_port=%fd.sport client_ip=%fd.cip command=%proc.cmdline process=%proc.name)"
+      desc: Detect inbound SSH connection to node
+      condition: evt.type=accept and fd.sport=22 and fd.l4proto=tcp and not container
+      output: >
+        SSH connection detected (login_uid=%proc.loginuid audit_uid=%proc.auid
+        process=%proc.name cmdline=%proc.cmdline client_ip=%fd.cip)
       priority: WARNING
       tags: [network, ssh, security]
-
-    - rule: Detect Interactive SSH Session
-      desc: Detect actual user starting an interactive shell over SSH
-      condition: >
-        spawned_process and proc.name in (bash, sh, zsh) and proc.pname=sshd
-      output: >
-        SSH session started by user=%user.name from=%fd.sip
-      priority: NOTICE
 
 ########################
 # Falco integrations   #
