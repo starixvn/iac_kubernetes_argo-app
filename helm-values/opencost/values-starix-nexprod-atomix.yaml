@@ -191,7 +191,7 @@ opencost:
       enabled: true
       url: "http://10.18.200.193:30062/"
     internal:
-      enabled: true
+      enabled: false
       serviceName: prometheus-starix-nexprod-prometheus
       namespaceName: monitoring
       port: 9090
