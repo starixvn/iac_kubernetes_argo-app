@@ -62,7 +62,7 @@ opencost:
     enabled: false
     apiPort: 9003
     cloudProviderApiKey: ""
-    defaultClusterId: 'default-cluster'
+    defaultClusterId: "st-nexprod"
     image:
       registry: ghcr.io
       repository: opencost/opencost
