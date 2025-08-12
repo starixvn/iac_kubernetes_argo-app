@@ -288,7 +288,7 @@ customRules:
     - rule: Detect SSH Connection To Node
       desc: Detect inbound SSH connection to node (port 22, exclude container)
       condition: (evt.type = accept or evt.type = connect) and fd.sport=22 and fd.l4proto = tcp and not container
-      output: "SSH connection detected (source_ip=%fd.sip dest_ip=%fd.dip source_port=%fd.sport dest_port=%fd.dport login_user=%proc.loginuid)"
+      output: "SSH connection detected (user=%user.name server_ip=%fd.sip server_port=%fd.sport client_ip=%fd.cip)"
       priority: WARNING
       tags: [network, ssh, security]
 
