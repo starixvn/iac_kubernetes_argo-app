@@ -59,7 +59,6 @@ service:
 opencost:
   cloudIntegrationSecret: ""
   exporter:
-    enabled: true
     apiPort: 9003
     cloudProviderApiKey: false
     defaultClusterId: "starix.nexprod"
@@ -69,6 +68,9 @@ opencost:
       tag: "1.115.0@sha256:fb6468a1ef45dbd4a9e521122c8d306f882bb33d1657d28d21aeaef79412e9e1"
       pullPolicy: IfNotPresent
       fullImageName: null
+    extraEnv:
+      KUBECOST_SCRAPE_INTERVAL: 1m
+      PROM_CLUSTER_ID_LABEL: cluster
     extraArgs: []
     command: []
     replicas: 1
