@@ -1,7 +1,7 @@
 nameOverride: ""
 fullnameOverride: ""
 namespaceOverride: ""
-clusterName: "st-nexprod"
+clusterName: "default"
 
 loglevel: info
 
@@ -62,7 +62,7 @@ opencost:
     enabled: false
     apiPort: 9003
     cloudProviderApiKey: ""
-    defaultClusterId: "st-nexprod"
+    defaultClusterId: "default"
     image:
       registry: ghcr.io
       repository: opencost/opencost
