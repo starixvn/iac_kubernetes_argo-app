@@ -27,6 +27,7 @@ service:
   annotations: {}
   labels: {}
   type: ClusterIP
+  port: 9003
   # -- NodePort if service type is NodePort
   #nodePort: 30888
   extraPorts: []
@@ -39,25 +40,26 @@ service:
   # -- LoadBalancer Source IP CIDR if service type is LoadBalancer and cloud provider supports this
   loadBalancerSourceRanges: []
 
-rbac:
-  enabled: true
-  rules:
-    - apiGroups: ["", "apps", "batch"]
-      resources: ["namespaces", "pods", "nodes", "services", "deployments", "replicasets", "daemonsets", "jobs", "persistentvolumes", "persistentvolumeclaims", "replicationcontrollers", "statefulsets"]
-      verbs: ["get", "list", "watch"]
-    - apiGroups: ["policy"]
-      resources: ["poddisruptionbudgets"]
-      verbs: ["get", "list", "watch"]
-    - apiGroups: ["metrics.k8s.io"]
-      resources: ["*"]
-      verbs: ["get", "list", "watch"]
-    - apiGroups: ["policy"]
-      resources: ["podsecuritypolicies"]
-      verbs: ["use"]
+# rbac:
+#   enabled: true
+#   rules:
+#     - apiGroups: ["", "apps", "batch"]
+#       resources: ["namespaces", "pods", "nodes", "services", "deployments", "replicasets", "daemonsets", "jobs", "persistentvolumes", "persistentvolumeclaims", "replicationcontrollers", "statefulsets"]
+#       verbs: ["get", "list", "watch"]
+#     - apiGroups: ["policy"]
+#       resources: ["poddisruptionbudgets"]
+#       verbs: ["get", "list", "watch"]
+#     - apiGroups: ["metrics.k8s.io"]
+#       resources: ["*"]
+#       verbs: ["get", "list", "watch"]
+#     - apiGroups: ["policy"]
+#       resources: ["podsecuritypolicies"]
+#       verbs: ["use"]
 
 opencost:
   cloudIntegrationSecret: ""
   exporter:
+    enabled: true
     apiPort: 9003
     cloudProviderApiKey: ""
     defaultClusterId: 'default-cluster'
@@ -175,12 +177,9 @@ opencost:
       tlsConfig: {}
 
     config:
-      #enabled: false
+      enabled: false
       configmapName: custom-metrics
-      disabledMetrics:
-        - "cloud"         # Disable cloud metrics
-        - "loadbalancer"  # Disable LB metrics unless needed
-        - "persistentvolume"  # Disable if not using dynamic provisioning
+      disabledMetrics: []
 
   prometheus:
     secret_name: ~
@@ -193,8 +192,8 @@ opencost:
     bearer_token_key: DB_BEARER_TOKEN
     kubeRBACProxy: false
     external:
-      enabled: false
-      url: "https://prometheus.example.com/prometheus"
+      enabled: true
+      url: "http://10.18.200.193:30062/"
     internal:
       enabled: true
       serviceName: prometheus-starix-nexprod-prometheus
