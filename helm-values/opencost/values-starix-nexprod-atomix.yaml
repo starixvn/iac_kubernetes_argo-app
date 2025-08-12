@@ -62,7 +62,7 @@ opencost:
     enabled: false
     apiPort: 9003
     cloudProviderApiKey: ""
-    #defaultClusterId: ""
+    defaultClusterId: "onprem-nexprod"
     image:
       registry: ghcr.io
       repository: opencost/opencost
