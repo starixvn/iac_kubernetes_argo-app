@@ -67,7 +67,10 @@ opencost:
       tag: "1.115.0@sha256:fb6468a1ef45dbd4a9e521122c8d306f882bb33d1657d28d21aeaef79412e9e1"
       pullPolicy: IfNotPresent
       fullImageName: null
-    extraArgs: []
+    extraArgs: 
+      - --cloud-provider=custom  # Explicitly set to custom for on-prem
+      - --disable-cloud-costs=true  # Disable cloud-specific cost calculations
+      - --disable-loadbalancer-costs=true  # Unless you have LB cost data
     command: []
     replicas: 1
     resources:
@@ -171,9 +174,12 @@ opencost:
       tlsConfig: {}
 
     config:
-      enabled: false
+      #enabled: false
       configmapName: custom-metrics
-      disabledMetrics: []
+      disabledMetrics:
+        - "cloud"         # Disable cloud metrics
+        - "loadbalancer"  # Disable LB metrics unless needed
+        - "persistentvolume"  # Disable if not using dynamic provisioning
 
   prometheus:
     secret_name: ~
