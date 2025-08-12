@@ -285,14 +285,28 @@ customRules:
       output: Cat command run inside container by %user.name (container=%container.id)
       priority: NOTICE
 
-    - rule: SSH Interactive Shell Started On Host
-      desc: Detect when sshd spawns an interactive shell (real user session)
-      condition: spawned_process and proc.name in (bash,sh,zsh) and proc.pname = sshd and not container
-      output: >
-        SSH interactive shell started (login_name=%user.loginname login_uid=%user.loginuid user=%user.name
-        parent=%proc.pname proc=%proc.name cmdline=%proc.cmdline)
+    - rule: Inbound SSH Connection
+      desc: >
+        Detect inbound SSH (TCP/22) connections on the host via the accept syscall.
+        Logs the client and server IP/port and the process command line for analysis.
+        (Excludes events in containers.)
+      condition: >
+        evt.type in (accept,accept4) and fd.lport = 22 and fd.l4proto = tcp and evt.dir = < and not container
+      output: "Inbound SSH connection accepted: client=%fd.cip:%fd.cport, server=%fd.sip:%fd.sport, lport=%fd.lport, rport=%fd.rport, proto=%fd.l4proto, cmd=%proc.cmdline"
+      priority: NOTICE
+      tags: [host, network, mitre_lateral_movement]
+
+    - rule: SSH Interactive Shell Spawn
+      desc: >
+        Detect when sshd spawns an interactive shell (bash/sh/zsh) on the host.
+        (Triggered on execve of a shell with parent sshd, proc.tty != 0, excluding containers.)
+        Attempts to identify the user from sshd’s command line if audit info is missing.
+      condition: >
+        spawned_process and proc.pname = sshd and proc.name in (bash,sh,zsh) 
+        and proc.tty != 0 and not container
+      output: "SSH shell spawned: parent_proc=%proc.pname parent_cmdline=\"%proc.pcmdline\" shell=%proc.name cmd=%proc.cmdline"
       priority: WARNING
-      tags: [network, ssh, security]
+      tags: [host, process, mitre_execution]
 
 ########################
 # Falco integrations   #
