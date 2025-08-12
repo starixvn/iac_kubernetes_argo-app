@@ -294,6 +294,15 @@ customRules:
       source: k8s_audit
       tags: [k8s]
 
+    - rule: Disallowed K8s User
+      desc: Detect any k8s operation by users outside of an allowed set of users.
+      condition: kevt and non_system_user and not ka.user.name in (allowed_k8s_users)
+      output: K8s Operation performed by user not in allowed list of users 
+      (user=%ka.user.name target=%ka.target.name/%ka.target.resource verb=%ka.verb uri=%ka.uri resp=%ka.response.code)
+      priority: WARNING
+      source: k8s_audit
+      tags: [k8s]
+
 ########################
 # Falco integrations   #
 ########################
