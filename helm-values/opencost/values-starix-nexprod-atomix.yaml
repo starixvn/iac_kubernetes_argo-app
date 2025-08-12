@@ -1,8 +1,46 @@
+nameOverride: ""
+fullnameOverride: ""
+namespaceOverride: ""
 clusterName: "starix.nexprod"
+
 loglevel: info
 
-rbac:
+imagePullSecrets: []
+
+serviceAccount:
   create: true
+  annotations: {}
+  automountServiceAccountToken: true
+
+networkPolicies:
+  enabled: true
+  prometheus:
+    namespace: monitoring
+    port: 9090
+    labels:
+      app.kubernetes.io/name: prometheus
+
+  extraEgress: []
+
+service:
+  enabled: true
+  annotations: {}
+  labels: {}
+  type: ClusterIP
+  # -- NodePort if service type is NodePort
+  #nodePort: 30888
+  extraPorts: []
+    # - name: oauth-proxy
+    #   port: 8081
+    #   targetPort: 8081
+    # - name: oauth-metrics
+    #   port: 8082
+    #   targetPort: 8082
+  # -- LoadBalancer Source IP CIDR if service type is LoadBalancer and cloud provider supports this
+  loadBalancerSourceRanges: []
+
+rbac:
+  enabled: true
   rules:
     - apiGroups: ["", "apps", "batch"]
       resources: ["namespaces", "pods", "nodes", "services", "deployments", "replicasets", "daemonsets", "jobs", "persistentvolumes", "persistentvolumeclaims", "replicationcontrollers", "statefulsets"]
@@ -17,80 +55,27 @@ rbac:
       resources: ["podsecuritypolicies"]
       verbs: ["use"]
 
-
-networkPolicies:
-  enabled: true
-  prometheus:
-    namespace: monitoring
-    port: 9090
-  extraEgress:
-    - to:
-      - ipBlock:
-          cidr: 10.43.0.0/16
-      ports:
-      - port: 443
-        protocol: TCP
-      - port: 6443
-        protocol: TCP
-    - to:
-      - namespaceSelector:
-          matchLabels:
-            kubernetes.io/metadata.name: kube-system
-      ports:
-      - port: 53
-        protocol: UDP
-
-podSecurityContext:
-  fsGroup: 2000
-  runAsNonRoot: true
-  runAsUser: 1000
-
-serviceAccount:
-  create: true
-  name: "opencost"
-  automountServiceAccountToken: true
-  annotations:
-    kubernetes.io/enforce-mountable-secrets: "true"
-
-service:
-  enabled: true
-  annotations: {}
-  labels: {}
-  type: ClusterIP
-  extraPorts: []
-    # - name: oauth-proxy
-    #   port: 8081
-    #   targetPort: 8081
-    # - name: oauth-metrics
-    #   port: 8082
-    #   targetPort: 8082
-  # -- LoadBalancer Source IP CIDR if service type is LoadBalancer and cloud provider supports this
-  loadBalancerSourceRanges: []
-
 opencost:
   cloudIntegrationSecret: ""
   exporter:
     apiPort: 9003
     cloudProviderApiKey: ""
     defaultClusterId: 'default-cluster'
-    extraEnv:
-      KUBERNETES_SERVICE_HOST: "kubernetes.default.svc"
-      KUBERNETES_SERVICE_PORT: "443"
-    # command: ["/bin/sh", "-c", "sleep 30 && /usr/local/bin/opencost"]
     image:
       registry: ghcr.io
       repository: opencost/opencost
       tag: "1.115.0@sha256:fb6468a1ef45dbd4a9e521122c8d306f882bb33d1657d28d21aeaef79412e9e1"
       pullPolicy: IfNotPresent
       fullImageName: null
+    extraArgs: []
+    command: []
     replicas: 1
     resources:
       requests:
-        cpu: '50m'
-        memory: '128Mi'
+        cpu: '10m'
+        memory: '55Mi'
       limits:
-        cpu: '200m'
-        memory: '512Mi'
+        memory: '1Gi'
     startupProbe:
       enabled: true
       path: /healthz
@@ -109,18 +94,12 @@ opencost:
       initialDelaySeconds: 10
       periodSeconds: 10
       failureThreshold: 3
-    securityContext:
-      capabilities:
-        drop:
-        - ALL
-      readOnlyRootFilesystem: true
-      runAsNonRoot: true
-      runAsUser: 1000
+    securityContext: {}
+
     csv_path: ""
 
     prometheusDataSource:
       queryResolutionSeconds: 300
-
     collectorDataSource:
       enabled: false
       scrapeInterval: 30s
@@ -137,27 +116,64 @@ opencost:
       storageClass: "longhorn"
       size: "1Gi"
 
+    apiIngress:
+      enabled: false
+      ingressClassName: ""
+      annotations: {}
+      hosts:
+        - host: example.local
+          paths:
+            - path: /
+              pathType: Prefix
+      servicePort: http
+      tls: []
+
   customPricing:
     enabled: true
     configmapName: custom-pricing-model
     configPath: /tmp/custom-config
     createConfigmap: true
     provider: custom
-    # -- More information about these values here: https://www.opencost.io/docs/configuration/on-prem#custom-pricing-using-the-opencost-helm-chart
     costModel:
       description: "Custom pricing configuration for starix.nexprod environment"
-      CPU: "0.06"
-      spotCPU: "0.006"
-      RAM: "0.01"
-      spotRAM: "0.001"
-      storage: "0.04"
-      zoneNetworkEgress: "0.01"
-      regionNetworkEgress: "0.01"
-      internetNetworkEgress: "0.12"
-      LoadBalancerCost: "0.025"
+      CPU: 0.06
+      spotCPU: 0.006
+      RAM: 0.01
+      spotRAM: 0.001
+      storage: 0.04
+      zoneNetworkEgress: 0.01
+      regionNetworkEgress: 0.01
+      internetNetworkEgress: 0.12
+      LoadBalancerCost: 0.025
 
   dataRetention:
     dailyResolutionDays: 15
+
+
+  metrics:
+    kubeStateMetrics:
+      emitPodAnnotations: ~
+      emitNamespaceAnnotations: ~
+      emitKsmV1Metrics: ~
+      emitKsmV1MetricsOnly: ~
+
+    serviceMonitor:
+      enabled: true
+      additionalLabels: {}
+      namespace: "monitoring"
+      scrapeInterval: 30s
+      scrapeTimeout: 10s
+      honorLabels: true
+      relabelings: []
+      metricRelabelings: []
+      extraEndpoints: []
+      scheme: http
+      tlsConfig: {}
+
+    config:
+      enabled: false
+      configmapName: custom-metrics
+      disabledMetrics: []
 
   prometheus:
     secret_name: ~
@@ -189,11 +205,10 @@ opencost:
       fullImageName: null
     resources:
       requests:
-        cpu: '50m'
-        memory: '128Mi'
+        cpu: '10m'
+        memory: '55Mi'
       limits:
-        cpu: '200m'
-        memory: '512Mi'
+        memory: '1Gi'
     uiPort: 9090
     useIPv6: true
     livenessProbe:
@@ -208,13 +223,13 @@ opencost:
       initialDelaySeconds: 30
       periodSeconds: 10
       failureThreshold: 3
-    securityContext:
-      capabilities:
-        drop:
-        - ALL
-      readOnlyRootFilesystem: true
-      runAsNonRoot: true
-      runAsUser: 1000
+    securityContext: {}
+
+    extraEnv: []
+
+    extraVolumeMounts: []
+
+    useDefaultFqdn: false
 
     ingress:
       enabled: true
@@ -225,4 +240,11 @@ opencost:
           paths:
             - /
       servicePort: http-ui
+      tls: []
+    route:
+      enabled: false
+      annotations: {}
+      host: example.local
+      path:
+      targetPort: http-ui
       tls: []
