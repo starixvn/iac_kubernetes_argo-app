@@ -1,7 +1,7 @@
 nameOverride: ""
 fullnameOverride: ""
 namespaceOverride: ""
-clusterName: ""
+#clusterName: ""
 
 loglevel: info
 
@@ -62,7 +62,7 @@ opencost:
     enabled: false
     apiPort: 9003
     cloudProviderApiKey: ""
-    defaultClusterId: ""
+    #defaultClusterId: ""
     image:
       registry: ghcr.io
       repository: opencost/opencost
