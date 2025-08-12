@@ -262,21 +262,6 @@ customRules:
         (fd.ip != "0.0.0.0" and fd.net != "127.0.0.0/8") and
         (evt.rawres >= 0 or evt.res = EINPROGRESS))
   
-    - macro: container_exec
-      condition: evt.type = execve and container.id != host
-  
-    - list: suspicious_binaries
-      items: ["nc", "ncat", "curl", "wget"]
-  
-    - rule: Shell launched in container
-      desc: Detect when an interactive shell is launched in a container
-      condition: >
-        container_exec and proc.name in (sh, bash, zsh)
-        and not user_known_read_sensitive_files_activities
-      output: Shell command %proc.cmdline executed by user %user.name inside container=%container.id
-      priority: WARNING
-      tags: ["container", "shell", "security", "runtime-detection"]
-
     - macro: contains_private_credentials
       condition: >
         (ka.req.configmap.obj contains "aws_access_key_id" or
@@ -293,6 +278,19 @@ customRules:
       priority: WARNING
       source: k8s_audit
       tags: [k8s]
+
+    - rule: Program Execution in Container
+      desc: Alert if 'cat' is executed in a container
+      condition: evt.type = execve and container.id != host and proc.name = cat
+      output: Cat command run inside container by %user.name (container=%container.id)
+      priority: NOTICE
+
+    - rule: Detect SSH Client Execution
+      desc: Detect execution of SSH client
+      condition: proc.name = "ssh"
+      output: "SSH client executed (user=%user.name command=%proc.cmdline)"
+      priority: WARNING
+      tags: [process, ssh, security]
 
 ########################
 # Falco integrations   #
