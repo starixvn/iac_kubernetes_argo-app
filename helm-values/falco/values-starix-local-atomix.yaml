@@ -285,12 +285,12 @@ customRules:
       output: Cat command run inside container by %user.name (container=%container.id)
       priority: NOTICE
 
-    - rule: Detect SSH Client Execution
-      desc: Detect execution of SSH client
-      condition: proc.name = "ssh"
-      output: "SSH client executed (user=%user.name command=%proc.cmdline)"
+    - rule: Detect SSH Connection To Node
+      desc: Detect inbound SSH connection to node (port 22, exclude container)
+      condition: (evt.type = accept or evt.type = connect) and fd.sport=22 and fd.l4proto = tcp and not container
+      output: "SSH connection detected on node (user=%user.name command=%proc.cmdline ip=%fd.sip port=%fd.sport)"
       priority: WARNING
-      tags: [process, ssh, security]
+      tags: [network, ssh, security]
 
 ########################
 # Falco integrations   #
