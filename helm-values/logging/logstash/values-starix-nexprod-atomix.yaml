@@ -45,7 +45,7 @@ logstashPipeline:
         tags => ["local"]
       }
 
-      udp {
+      syslog {
         port => 5078
         type => "debug-gitlab"
         tags => ["local"]
