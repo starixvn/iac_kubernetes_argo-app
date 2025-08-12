@@ -68,9 +68,10 @@ opencost:
       pullPolicy: IfNotPresent
       fullImageName: null
     extraArgs: 
-      - "cloud-provider=custom"
+      - "kubecost-cloud-provider=custom"  # Correct flag name
+      - "product-analytics=false"
       - "disable-cloud-costs=true"
-      - "disable-loadbalancer-costs=true"
+      - "disable-lb-controller=true"
     # Make sure this is set
     cloudProviderApiKey: ""  # Explicitly empty for on-prem
 
