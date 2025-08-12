@@ -1,3 +1,6 @@
+nameOverride: ""
+fullnameOverride: ""
+namespaceOverride: ""
 clusterName: "starix.nexprod"
 
 loglevel: info
