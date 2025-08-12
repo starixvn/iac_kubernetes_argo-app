@@ -68,16 +68,12 @@ opencost:
       pullPolicy: IfNotPresent
       fullImageName: null
     extraArgs: 
-      - --cloud-provider=custom
-      - --disable-cloud-costs=true
-      - --disable-loadbalancer-costs=true
-      - --kubelogin-version=v1.25.0
-      - --storage-classes-ignore=local  # If using local storage
-      - --default-model-node-cost=0.50  # Default hourly node cost
-
+      - "--cloud-provider=custom"
+      - "--disable-cloud-costs=true"
+      - "--disable-loadbalancer-costs=true"
     # Make sure this is set
     cloudProviderApiKey: ""  # Explicitly empty for on-prem
-    
+
     command: []
     replicas: 1
     resources:
