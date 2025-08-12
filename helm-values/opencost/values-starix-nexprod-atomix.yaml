@@ -97,9 +97,9 @@ service:
   # --  Labels to add to the service account
   labels: {}
   # --  Kubernetes Service type
-  type: NodePort
+  type: ClusterIP
   # -- NodePort if service type is NodePort
-  nodePort: 30888
+  #nodePort: 30888
   # -- extra ports.  Useful for sidecar pods such as oauth-proxy
   extraPorts: []
     # - name: oauth-proxy
