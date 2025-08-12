@@ -133,15 +133,15 @@ opencost:
     provider: custom
     costModel:
       description: "Custom pricing configuration for starix.nexprod environment"
-      CPU: "0.06"
-      spotCPU: "0.006"
-      RAM: "0.01"
-      spotRAM: "0.001"
-      storage: "0.04"
-      zoneNetworkEgress: "0.01"
-      regionNetworkEgress: "0.01"
-      internetNetworkEgress: "0.12"
-      LoadBalancerCost: "0.025"
+      CPU: 0.06
+      spotCPU: 0.006
+      RAM: 0.01
+      spotRAM: 0.001
+      storage: 0.04
+      zoneNetworkEgress: 0.01
+      regionNetworkEgress: 0.01
+      internetNetworkEgress: 0.12
+      LoadBalancerCost: 0.025
 
   dataRetention:
     dailyResolutionDays: 15
