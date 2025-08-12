@@ -14,7 +14,7 @@ capabilities:
   
   # ====== Image vulnerabilities scanning related capabilities ======
   nodeSbomGeneration: disable
-  vulnerabilityScan: enable
+  vulnerabilityScan: disable
   relevancy: disable
 
   # ====== Runtime related capabilities ======
