@@ -1,4 +1,3 @@
-# -- Overwrite the default name of the chart
 nameOverride: ""
 # -- Overwrite all resources name created by the chart
 fullnameOverride: ""
@@ -53,12 +52,12 @@ serviceAccount:
 # NetworkPolicies for ingress
 networkPolicies:
   # -- Specifies whether networkpolicies should be created
-  enabled: false
+  enabled: true
 
   # -- Internal Prometheus settings related to NetworkPolicies
   prometheus:
     # -- Namespace where internal Prometheus is installed
-    namespace: prometheus-system
+    namespace: monitoring
     # -- Pod port of in-cluster Prometheus
     port: 9090
     # -- Labels applied to the Prometheus server pod(s)
@@ -98,9 +97,9 @@ service:
   # --  Labels to add to the service account
   labels: {}
   # --  Kubernetes Service type
-  type: NodePort
+  type: ClusterIP
   # -- NodePort if service type is NodePort
-  nodePort: 30888
+  #nodePort: 30888
   # -- extra ports.  Useful for sidecar pods such as oauth-proxy
   extraPorts: []
     # - name: oauth-proxy
@@ -115,6 +114,20 @@ service:
 # Create cluster role policies
 rbac:
   enabled: true
+  rules:
+    - apiGroups: ["", "apps", "batch"]
+      resources: ["namespaces", "pods", "nodes", "services", "deployments", "replicasets", "daemonsets", "jobs", "persistentvolumes", "persistentvolumeclaims", "replicationcontrollers", "statefulsets"]
+      verbs: ["get", "list", "watch"]
+    - apiGroups: ["policy"]
+      resources: ["poddisruptionbudgets"]
+      verbs: ["get", "list", "watch"]
+    - apiGroups: ["metrics.k8s.io"]
+      resources: ["*"]
+      verbs: ["get", "list", "watch"]
+    - apiGroups: ["policy"]
+      resources: ["podsecuritypolicies"]
+      verbs: ["use"]
+
 
 # PodDisruptionBudget for high availability
 pdb:
@@ -294,11 +307,17 @@ opencost:
     provider: custom
     # -- More information about these values here: https://www.opencost.io/docs/configuration/on-prem#custom-pricing-using-the-opencost-helm-chart
     costModel:
-      description: Modified pricing configuration.
-      CPU: 1.25
-      RAM: 0.50
-      storage: 0.25
-      loadBalancer: 0.025
+      description: "Custom pricing configuration for starix.nexprod environment"
+      CPU: "0.06"
+      spotCPU: "0.006"
+      RAM: "0.01"
+      spotRAM: "0.001"
+      storage: "0.04"
+      zoneNetworkEgress: "0.01"
+      regionNetworkEgress: "0.01"
+      internetNetworkEgress: "0.12"
+      LoadBalancerCost: "0.025"
+
 
   dataRetention:
     dailyResolutionDays: 15
@@ -609,3 +628,4 @@ opencost:
       enablePromAccess: false
 # -- A list of volumes to be added to the pod
 extraVolumes: []
+

@@ -16,6 +16,11 @@ argo_applications_by_team = {
         auto_sync     = true
         value_files   = ["values-starix-local-atomix.yaml"]
       }
+      kubescape-op = {
+        namespace     = "kubescape"
+        helm_path     = "kubescape/kubescape-operator"
+        chart_version = "1.29.0"
+      }
     }
   }
 }

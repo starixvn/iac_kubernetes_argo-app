@@ -66,9 +66,9 @@ alertmanager:
     route:
       receiver: default-receiver
       routes:
-      # - receiver: 'null'
-      #   match_re:
-      #     namespace: "cattle-system"
+      - receiver: 'null'
+        match_re:
+          pod: ".*website1.*"
       - receiver: 'alert-nx-pentagon'
         match_re:
           namespace: "l1|l2|gn|hd|sk|sp|tg|mg"
@@ -84,7 +84,7 @@ alertmanager:
       repeat_interval: 12h
 
     receivers:
-      #- name: 'null'
+      - name: 'null'
       - name: 'alert-nx-atomix'
         slack_configs:
           - api_url: "https://hooks.slack.com/services/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"
