@@ -59,7 +59,7 @@ service:
 opencost:
   cloudIntegrationSecret: ""
   exporter:
-    enabled: true
+    enabled: false
     apiPort: 9003
     cloudProviderApiKey: ""
     defaultClusterId: 'default-cluster'
@@ -142,9 +142,9 @@ opencost:
       RAM: 0.005
       storage: 0.04
       LoadBalancerCost: 0.0
-      # LBIngressDataCost: "0.01"
-      # FirstFiveForwardingRulesCost: "0.0"
-      # AdditionalForwardingRuleCost: "0.0"
+      LBIngressDataCost: "0.01"
+      FirstFiveForwardingRulesCost: "0.0"
+      AdditionalForwardingRuleCost: "0.0"
 
   dataRetention:
     dailyResolutionDays: 15
