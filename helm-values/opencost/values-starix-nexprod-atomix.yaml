@@ -68,9 +68,9 @@ opencost:
       pullPolicy: IfNotPresent
       fullImageName: null
     extraArgs: 
-      - "--cloud-provider=custom"
-      - "--disable-cloud-costs=true"
-      - "--disable-loadbalancer-costs=true"
+      - "cloud-provider=custom"
+      - "disable-cloud-costs=true"
+      - "disable-loadbalancer-costs=true"
     # Make sure this is set
     cloudProviderApiKey: ""  # Explicitly empty for on-prem
 
