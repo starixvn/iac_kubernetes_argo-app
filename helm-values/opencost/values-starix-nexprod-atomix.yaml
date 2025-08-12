@@ -1,7 +1,7 @@
 nameOverride: ""
 fullnameOverride: ""
 namespaceOverride: ""
-#clusterName: ""
+clusterName: "starix.nexprod"
 
 loglevel: info
 
@@ -62,7 +62,7 @@ opencost:
     enabled: true
     apiPort: 9003
     cloudProviderApiKey: false
-    defaultClusterId: ""
+    defaultClusterId: "starix.nexprod"
     image:
       registry: ghcr.io
       repository: opencost/opencost
