@@ -68,7 +68,7 @@ opencost:
       pullPolicy: IfNotPresent
       fullImageName: null
     extraArgs: 
-      - "--cloud-provider=custom"
+      #- "--cloud-provider=custom"
       - "--disable-cloud-costs=true"
       - "--disable-loadbalancer-costs=true"
     # Make sure this is set
