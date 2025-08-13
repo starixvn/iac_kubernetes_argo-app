@@ -11,7 +11,7 @@ serviceAccount:
   create: false
   annotations: {}
   automountServiceAccountToken: true
-  name: opencost-atx-local
+  #name: opencost-atx-local
 
 networkPolicies:
   enabled: true
