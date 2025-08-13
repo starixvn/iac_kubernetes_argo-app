@@ -120,8 +120,8 @@ opencost:
     provider: custom
     costModel:
       description: "Custom pricing configuration for lumi.local environment"
-      region: "on-prem"
-      zone: "default-zone"
+      # region: "on-prem"
+      # zone: "default-zone"
       CPU: 0.008333      # USD / vCPU / h
       RAM: 0.002778      # USD / GB RAM / h
       storage: 0.019444  # USD / GB disk / h
