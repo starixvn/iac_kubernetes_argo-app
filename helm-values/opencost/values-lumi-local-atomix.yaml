@@ -8,10 +8,10 @@ loglevel: info
 imagePullSecrets: []
 
 serviceAccount:
-  create: false
+  create: true
   annotations: {}
   automountServiceAccountToken: true
-  #name: opencost-atx-local
+  name: opencost-atx-local
 
 networkPolicies:
   enabled: true
