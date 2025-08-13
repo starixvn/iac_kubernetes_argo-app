@@ -23,12 +23,12 @@ argo_applications_by_team = {
       falco = {
         helm_path     = "falco"
         chart_version = "6.0.2"
-        auto_sync     = true
         value_files   = ["values-starix-local-atomix.yaml"]
       }
       kubescape-op = {
         namespace     = "kubescape"
         helm_path     = "kubescape/kubescape-operator"
+        auto_sync     = false
         chart_version = "1.29.0"
       }
     }
