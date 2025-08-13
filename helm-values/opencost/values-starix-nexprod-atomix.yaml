@@ -1,6 +1,6 @@
-nameOverride: ""
-fullnameOverride: ""
-namespaceOverride: ""
+nameOverride: "opencost-atx-nexprod"
+fullnameOverride: "opencost-atx-nexprod"
+namespaceOverride: "tf-atx-opencost"
 clusterName: "starix.nexprod"
 
 loglevel: info
@@ -11,6 +11,7 @@ serviceAccount:
   create: true
   annotations: {}
   automountServiceAccountToken: true
+  name: opencost-atx-nexprod
 
 networkPolicies:
   enabled: true
@@ -31,6 +32,7 @@ service:
   # -- NodePort if service type is NodePort
   nodePort: 30093
   extraPorts: []
+  name: opencost-atx-nexprod
     # - name: oauth-proxy
     #   port: 8081
     #   targetPort: 8081
