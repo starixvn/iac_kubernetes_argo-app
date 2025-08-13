@@ -96,7 +96,7 @@ opencost:
       enabled: true
       mountPath: /mnt/export
       annotations: {}
-      accessMode: ""
+      accessMode: "ReadWriteOnce"
       storageClass: ""
       size: "1Gi"
 
