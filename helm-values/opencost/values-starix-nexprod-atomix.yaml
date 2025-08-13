@@ -71,6 +71,7 @@ opencost:
     extraEnv:
       KUBECOST_SCRAPE_INTERVAL: 1m
       PROM_CLUSTER_ID_LABEL: cluster
+      CLUSTER_ID: "my-k3s-cluster"
     extraArgs: []
     command: []
     replicas: 1
