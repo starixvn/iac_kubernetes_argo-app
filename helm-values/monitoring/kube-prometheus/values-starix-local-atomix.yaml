@@ -51,7 +51,7 @@ alertmanager:
         match:
           service: "OpenSearch"
         group_by: ['alertname', 'job']
-      - receiver: dev-services-notice-only
+      - receiver: kubescape-notify
         match:
           alertname: "KubescapeRuleViolated"
         group_by: ['namespace', 'container_name', 'rule_name']
@@ -88,7 +88,7 @@ alertmanager:
           title: '{{ template "sre.slack.title" . }}'
           text: '{{ template "sre.slack.body" . }}'
 
-    - name: dev-services-notice-only
+    - name: kubescape-notify
       slack_configs:
         - channel: "#dev-services"
           color: '{{ template "sre.slack.color" . }}'
@@ -96,7 +96,7 @@ alertmanager:
           icon_emoji: '{{ template "sre.slack.iconemoji" . }}'
           send_resolved: false
           username: '{{ template "sre.slack.username" . }} - NEXPROD'
-          title: '{{ template "sre.slack.title" . }}'
+          title: '{{ template "kubescape.slack.title" . }}'
           text: '{{ template "sre.slack.body" . }}'
 
     - name: default-receiver

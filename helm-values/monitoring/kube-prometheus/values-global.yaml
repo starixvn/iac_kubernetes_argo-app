@@ -514,6 +514,22 @@ alertmanager:
     - /etc/alertmanager/config/*.tmpl
       
   templateFiles:
+    # available severity None,Low,Medium,High,Critical,SystemIssue
+    kubescape-template.tmpl: |-
+      {{ define "kubescape.slack.title" -}}
+        {{- if eq .Status "firing" -}}
+          {{- if or (eq (.CommonLabels.severity | toUpper) "CRITICAL") (eq (.CommonLabels.severity | toUpper) "HIGH") -}}
+            :pepe-rage: [{{ .CommonLabels.severity | toUpper }}] {{ .CommonLabels.rule_name }} - {{ .CommonLabels.pod_name }}
+          {{- else if or (eq (toUpper .CommonLabels.severity) "MEDIUM") (eq (toUpper .CommonLabels.severity) "LOW") -}}
+            :meow-stare: [{{ .CommonLabels.severity | toUpper }}] {{ .CommonLabels.rule_name }} - {{ .CommonLabels.pod_name }}
+          {{- else -}} 
+            :meow-disputed: [{{ .CommonLabels.severity | toUpper }}] {{ .CommonLabels.rule_name }} - {{ .CommonLabels.pod_name }}
+          {{- end -}}
+        {{- else -}}
+          :pepe-saber: [{{ .CommonLabels.severity | toUpper }} | {{ .Status | toUpper }}] {{ .CommonLabels.rule_name }} - {{ .CommonLabels.pod_name }}
+        {{- end -}}
+      {{- end }}
+
     sre-template.tmpl: |-
       {{ define "sre.slack.title" -}}
         {{- if eq .Status "firing" -}}
