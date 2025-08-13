@@ -97,7 +97,7 @@ opencost:
       mountPath: /mnt/export
       annotations: {}
       accessMode: "ReadWriteOnce"
-      storageClass: ""
+      storageClass: "local-path"
       size: "1Gi"
 
     apiIngress:
