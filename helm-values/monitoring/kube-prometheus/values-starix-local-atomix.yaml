@@ -84,7 +84,7 @@ alertmanager:
           fallback: '{{ template "sre.slack.fallback" . }}'
           icon_emoji: '{{ template "sre.slack.iconemoji" . }}'
           send_resolved: true
-          username: '{{ template "sre.slack.username" . }} - NEXPROD'
+          username: '{{ template "sre.slack.username" . }} - ST_LOCAL'
           title: '{{ template "sre.slack.title" . }}'
           text: '{{ template "sre.slack.body" . }}'
 
@@ -95,7 +95,7 @@ alertmanager:
           fallback: '{{ template "sre.slack.fallback" . }}'
           icon_emoji: '{{ template "sre.slack.iconemoji" . }}'
           send_resolved: false
-          username: '{{ template "sre.slack.username" . }} - NEXPROD'
+          username: '{{ template "sre.slack.username" . }} - ST_LOCAL'
           title: '{{ template "kubescape.slack.title" . }}'
           text: '{{ template "sre.slack.body" . }}'
 
