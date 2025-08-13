@@ -1,0 +1,142 @@
+hooks:
+  activeDeadlineSeconds: 2000
+  dbInit:
+    enabled: false
+    resources:
+      limits:
+        memory: 3200Mi
+      requests:
+        memory: 300Mi 
+
+user:
+  create: true
+  email: admin@sentry.local
+  password: "?nxhrJ3kfAsK"
+
+
+
+image:
+  repository: hub.nexdev.net/base/sentry
+  tag: "9.1.2"
+
+
+web:
+  nodeSelector:
+    sc-sentry-ovs: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: sc-sentry-ovs
+    value: "yes"
+
+cron:
+  nodeSelector:
+    sc-sentry-ovs: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: sc-sentry-ovs
+    value: "yes"  
+
+worker:
+  replicacount: 1
+  nodeSelector:
+    sc-sentry-ovs: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: sc-sentry-ovs
+    value: "yes" 
+
+
+service:
+  name: sentry
+  type: ClusterIP
+
+
+filestore:
+  backend: filesystem
+  filesystem:
+    path: /var/lib/sentry/files
+    persistence:
+      enabled: true
+      storageClass: "local-path"
+      accessMode: ReadWriteOnce
+      size: 10Gi
+      persistentWorkers: true
+
+
+
+ingress:
+  enabled: true
+  hostnames:
+    - "sentry.lumigame.com"
+  ingressClassName: "haproxy"
+
+
+postgresql:
+  clusterDomain: lumi.lumprod
+  image:
+    registry: hub.nexdev.net
+    repository: base/bitnami/postgresql
+    tag: 11.5.0-debian-9-r60
+  volumePermissions:
+    image:
+      registry: hub.nexdev.net
+      repository: base/bitnami/minideb
+      tag: stretch
+  nameOverride: sentry-postgresql
+  postgresqlConfiguration:
+    maxConnections: "1000"
+    listen_addresses: "'*'"
+  postgresqlDatabase: sentry
+  postgresqlUsername: postgres
+  existingSecret: sentry-postgresql-secret
+  existingSecretKey: postgresql-password
+  persistence:
+    enabled: true
+    storageClass: "local-path"
+  master:
+    nodeSelector:
+      sc-sentry-ovs: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: sc-sentry-ovs
+      value: "yes" 
+    
+
+
+
+redis:
+  cluster:
+    enabled: true
+    slaveCount: 1
+  image: 
+    registry: hub.nexdev.net
+    repository: base/bitnami/redis
+    tag: 5.0.5-debian-9-r141
+  clusterDomain: lumi.lumprod
+  enabled: true
+  nameOverride: sentry-redis
+  password: redissentry
+  master:
+    persistence:
+      enabled: true
+      storageClass: "local-path"
+    nodeSelector:
+      sc-sentry-ovs: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: sc-sentry-ovs
+      value: "yes"
+  slave:
+    persistence:
+      enabled: true
+      storageClass: "local-path"
+    nodeSelector:
+      sc-sentry-ovs: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: sc-sentry-ovs
+      value: "yes"  
+      # If change pvc size redis.master.persistence.size: 20Gi
+
+
+
