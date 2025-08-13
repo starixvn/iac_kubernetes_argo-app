@@ -1,6 +1,6 @@
-nameOverride: "opencost-atx-nexprod"
-fullnameOverride: "opencost-atx-nexprod"
-namespaceOverride: "tf-atx-opencost"
+nameOverride: ""
+fullnameOverride: ""
+namespaceOverride: ""
 clusterName: "starix.nexprod"
 
 loglevel: info
@@ -44,19 +44,6 @@ service:
 
 rbac:
   enabled: true
-#   rules:
-#     - apiGroups: ["", "apps", "batch"]
-#       resources: ["namespaces", "pods", "nodes", "services", "deployments", "replicasets", "daemonsets", "jobs", "persistentvolumes", "persistentvolumeclaims", "replicationcontrollers", "statefulsets"]
-#       verbs: ["get", "list", "watch"]
-#     - apiGroups: ["policy"]
-#       resources: ["poddisruptionbudgets"]
-#       verbs: ["get", "list", "watch"]
-#     - apiGroups: ["metrics.k8s.io"]
-#       resources: ["*"]
-#       verbs: ["get", "list", "watch"]
-#     - apiGroups: ["policy"]
-#       resources: ["podsecuritypolicies"]
-#       verbs: ["use"]
 
 opencost:
   cloudIntegrationSecret: ""
@@ -201,7 +188,7 @@ opencost:
       scheme: http
 
   ui:
-    enabled: true
+    enabled: false
     image:
       registry: ghcr.io
       repository: opencost/opencost-ui
