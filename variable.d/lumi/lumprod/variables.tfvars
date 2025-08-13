@@ -93,6 +93,16 @@ argo_projects = {
       }
     ]
   }
+  tf-lumi-local = {
+    src_repo = ["*"]
+    destinations = [
+      {
+        name      = "lumi-local"
+        server    = "https://10.10.50.144:6443"
+        namespace = "*"
+      }
+    ]
+  }
   tf-lumi-sit = {
     src_repo = ["*"]
     destinations = [
