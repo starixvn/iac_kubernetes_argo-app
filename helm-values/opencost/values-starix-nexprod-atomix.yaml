@@ -1,7 +1,7 @@
 nameOverride: ""
 fullnameOverride: ""
 namespaceOverride: ""
-clusterName: "starix.nexprod"
+clusterName: "default"
 
 loglevel: info
 
@@ -40,8 +40,8 @@ service:
   # -- LoadBalancer Source IP CIDR if service type is LoadBalancer and cloud provider supports this
   loadBalancerSourceRanges: []
 
-# rbac:
-#   enabled: true
+rbac:
+  enabled: true
 #   rules:
 #     - apiGroups: ["", "apps", "batch"]
 #       resources: ["namespaces", "pods", "nodes", "services", "deployments", "replicasets", "daemonsets", "jobs", "persistentvolumes", "persistentvolumeclaims", "replicationcontrollers", "statefulsets"]
@@ -60,8 +60,8 @@ opencost:
   cloudIntegrationSecret: ""
   exporter:
     apiPort: 9003
-    cloudProviderApiKey: false
-    defaultClusterId: "starix.nexprod"
+    cloudProviderApiKey: ""
+    defaultClusterId: 'default-cluster'
     image:
       registry: ghcr.io
       repository: opencost/opencost
@@ -104,6 +104,7 @@ opencost:
 
     prometheusDataSource:
       queryResolutionSeconds: 300
+
     collectorDataSource:
       enabled: false
       scrapeInterval: 30s
@@ -153,7 +154,6 @@ opencost:
   dataRetention:
     dailyResolutionDays: 15
 
-
   metrics:
     kubeStateMetrics:
       emitPodAnnotations: ~
@@ -175,7 +175,7 @@ opencost:
       tlsConfig: {}
 
     config:
-      enabled: false
+      enabled: true
       configmapName: custom-metrics
       disabledMetrics: []
 
