@@ -97,8 +97,8 @@ opencost:
       enabled: true
       mountPath: /mnt/export
       annotations: {}
-      accessMode: "ReadWriteOnce"
-      storageClass: "longhorn"
+      accessMode: ""
+      storageClass: ""
       size: "1Gi"
 
     apiIngress:
