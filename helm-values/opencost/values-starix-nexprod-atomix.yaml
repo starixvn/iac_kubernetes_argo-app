@@ -27,19 +27,11 @@ service:
   enabled: true
   annotations: {}
   labels: {}
-  type: NodePort #ClusterIP
+  type: ClusterIP
   port: 9003
   # -- NodePort if service type is NodePort
-  nodePort: 30093
+  # nodePort: 30093
   extraPorts: []
-  name: opencost-atx-nexprod
-    # - name: oauth-proxy
-    #   port: 8081
-    #   targetPort: 8081
-    # - name: oauth-metrics
-    #   port: 8082
-    #   targetPort: 8082
-  # -- LoadBalancer Source IP CIDR if service type is LoadBalancer and cloud provider supports this
   loadBalancerSourceRanges: []
 
 rbac:
