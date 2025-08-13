@@ -1,7 +1,7 @@
 nameOverride: ""
 fullnameOverride: ""
 namespaceOverride: ""
-clusterName: "default"
+clusterName: "starix.nexprod"
 
 loglevel: info
 
@@ -26,10 +26,10 @@ service:
   enabled: true
   annotations: {}
   labels: {}
-  type: ClusterIP
+  type: NodePort #ClusterIP
   port: 9003
   # -- NodePort if service type is NodePort
-  #nodePort: 30888
+  nodePort: 30093
   extraPorts: []
     # - name: oauth-proxy
     #   port: 8081
@@ -61,7 +61,7 @@ opencost:
   exporter:
     apiPort: 9003
     cloudProviderApiKey: ""
-    defaultClusterId: 'default-cluster'
+    defaultClusterId: 'starix.nexprod'
     image:
       registry: ghcr.io
       repository: opencost/opencost
@@ -69,9 +69,7 @@ opencost:
       pullPolicy: IfNotPresent
       fullImageName: null
     extraEnv:
-      KUBECOST_SCRAPE_INTERVAL: 1m
-      PROM_CLUSTER_ID_LABEL: cluster
-      CLUSTER_ID: "my-k3s-cluster"
+      CLUSTER_ID: "starix.nexprod"
     extraArgs: []
     command: []
     replicas: 1
@@ -148,7 +146,7 @@ opencost:
       RAM: 0.005
       storage: 0.04
       LoadBalancerCost: 0.0
-      LBIngressDataCost: 0.01
+      LBIngressDataCost: 0.00
       FirstFiveForwardingRulesCost: 0.0
       AdditionalForwardingRuleCost: 0.0
 
@@ -191,10 +189,10 @@ opencost:
     bearer_token_key: DB_BEARER_TOKEN
     kubeRBACProxy: false
     external:
-      enabled: true
+      enabled: false
       url: "http://10.18.200.193:30062/"
     internal:
-      enabled: false
+      enabled: true
       serviceName: prometheus-starix-nexprod-prometheus
       namespaceName: monitoring
       port: 9090
