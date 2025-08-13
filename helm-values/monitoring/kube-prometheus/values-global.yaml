@@ -519,14 +519,14 @@ alertmanager:
       {{ define "kubescape.slack.title" -}}
         {{- if eq .Status "firing" -}}
           {{- if or (eq (.CommonLabels.severity | toUpper) "CRITICAL") (eq (.CommonLabels.severity | toUpper) "HIGH") -}}
-            :pepe-rage: [{{ .CommonLabels.severity | toUpper }}] {{ .CommonLabels.rule_name }} - {{ .CommonLabels.pod_name }}
+            :pepe-rage: [{{ .CommonLabels.severity | toUpper }}] {{ .CommonLabels.rule_name | title }} - {{ .CommonLabels.pod_name }}
           {{- else if or (eq (toUpper .CommonLabels.severity) "MEDIUM") (eq (toUpper .CommonLabels.severity) "LOW") -}}
-            :meow-stare: [{{ .CommonLabels.severity | toUpper }}] {{ .CommonLabels.rule_name }} - {{ .CommonLabels.pod_name }}
+            :meow-stare: [{{ .CommonLabels.severity | toUpper }}] {{ .CommonLabels.rule_name | title }} - {{ .CommonLabels.pod_name }}
           {{- else -}} 
-            :meow-disputed: [{{ .CommonLabels.severity | toUpper }}] {{ .CommonLabels.rule_name }} - {{ .CommonLabels.pod_name }}
+            :meow-disputed: [{{ .CommonLabels.severity | toUpper }}] {{ .CommonLabels.rule_name | title }} - {{ .CommonLabels.pod_name }}
           {{- end -}}
         {{- else -}}
-          :pepe-saber: [{{ .CommonLabels.severity | toUpper }} | {{ .Status | toUpper }}] {{ .CommonLabels.rule_name }} - {{ .CommonLabels.pod_name }}
+          :pepe-saber: [{{ .CommonLabels.severity | toUpper }} | {{ .Status | toUpper }}] {{ .CommonLabels.rule_name | title }} - {{ .CommonLabels.pod_name }}
         {{- end -}}
       {{- end }}
 
