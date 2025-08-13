@@ -1,0 +1,120 @@
+---
+clusterDomain: starix.local
+
+global:
+  imageRegistry: "hub.nexdev.net/base"
+
+operator:
+  enabled: true
+
+prometheus:
+  service:
+    type: NodePort
+    ports:
+      http: 9090
+    nodePorts:
+      http: "30062"
+
+  retention: 7d
+  retentionSize: "30GB"
+
+  persistence:
+    enabled: true
+    size: 20Gi
+
+  ## @param prometheus.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if prometheus.resources is set (prometheus.resources is recommended for production).
+  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ##
+  resourcesPreset: "none"
+  
+kube-state-metrics:
+  resourcesPreset: "none"
+
+alertmanager:
+  resourcesPreset: "none"
+  enabled: true
+  config:
+    global:
+      http_config:
+        proxy_url: "http://proxysqd.nexdev.net:3128"
+
+    route:
+      receiver: "default-receiver"
+      routes:
+        - receiver: "null"
+          match_re:
+            namespace: "hrm"
+        - receiver: "alerts-test"
+          match_re:
+            namespace: "monitoring"
+      group_by: ["alertname", "cluster", "namespace", "pod", "description", 'instance']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 9999h
+
+    receivers:
+      - name: "null"
+      - name: "alerts-test"
+        slack_configs:
+          - api_url: "https://hooks.slack.com/services/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"
+            channel: "#alerts-test"
+            send_resolved: true
+            icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+            title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
+            text: |
+              *Domain:* `{{ .CommonLabels.instance }}`
+              *Alert:* `{{ .CommonLabels.alertname }}`
+              *Status:* `{{ .Status | toUpper }}`
+              *Summary:* `{{ .CommonAnnotations.summary }}`
+              *Description:* `{{ .CommonAnnotations.description }}`
+            color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+
+      - name: default-receiver
+
+blackboxExporter:
+  configuration: |
+    modules:
+      dns_probe:
+        prober: dns
+        dns:
+          query_name: "gitlab.nexdev.net"
+          query_type: "A"
+          valid_rcodes:
+            - NOERROR
+          preferred_ip_protocol: "ip4"
+
+  extraDeploy:
+    - |
+      ### DNS Monitor
+      kind: Probe
+      apiVersion: monitoring.coreos.com/v1
+      metadata:
+        name: dns-probe
+        namespace: monitoring
+      spec:
+        interval: 30s
+        module: dns_probe
+        prober:
+          url: prometheus-starix-local-ku-blackbox-exporter.monitoring.svc.starix.local:19115
+        targets:
+          staticConfig:
+            static:
+            - gitlab.nexdev.net
+
+node-exporter:
+  extraVolumes:
+  - hostPath:
+      path: /var/lib
+      type: ""
+    name: mnt
+    
+  extraVolumeMounts:
+  - mountPath: /host/root/var/lib
+    mountPropagation: HostToContainer
+    name: mnt
+    readOnly: true
+
+  extraArgs:
+    path.rootfs: "/host/root"
+    collector.filesystem.mount-points-exclude: "^/(dev|proc|sys|var/lib/docker/.+)($|/)"
+    collector.filesystem.fs-types-exclude: "^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs|squashfs|nsfs|tmpfs)$"
