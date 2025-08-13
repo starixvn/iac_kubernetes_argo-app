@@ -26,6 +26,12 @@ argo_applications_by_team = {
           "values-lumi-uat-atomix.yaml",
         ]
       }
+      opencost = {
+        helm_path     = "opencost"
+        chart_version = "2.1.9"
+        value_files   = ["values-lumi-uat-atomix.yaml"]
+        ## trigger
+      }
       fluent-bit = {
         namespace     = "logging"
         helm_path     = "logging/fluent-bit"
