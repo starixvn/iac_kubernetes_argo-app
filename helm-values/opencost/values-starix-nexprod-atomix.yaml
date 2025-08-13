@@ -142,9 +142,9 @@ opencost:
       description: "Custom pricing configuration for starix.nexprod environment"
       region: "on-prem"
       zone: "default-zone"
-      CPU: 0.024
-      RAM: 0.005
-      storage: 0.04
+      CPU: 0.008333      # USD / vCPU / h
+      RAM: 0.002778      # USD / GB RAM / h
+      storage: 0.019444  # USD / GB disk / h
       LoadBalancerCost: 0.0
       LBIngressDataCost: 0.00
       FirstFiveForwardingRulesCost: 0.0
