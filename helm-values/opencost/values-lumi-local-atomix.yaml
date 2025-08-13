@@ -29,7 +29,6 @@ service:
   labels: {}
   type: ClusterIP
   port: 9003
-  # -- NodePort if service type is NodePort
   # nodePort: 30093
   extraPorts: []
   loadBalancerSourceRanges: []
