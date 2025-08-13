@@ -47,6 +47,14 @@ alertmanager:
       - receiver: "alerts-test"
         match_re:
           namespace: "monitoring"
+      - receiver: dev-services
+        match:
+          service: "OpenSearch"
+        group_by: ['alertname', 'job']
+      - receiver: dev-services-notice-only
+        match:
+          alertname: "KubescapeRuleViolated"
+        group_by: ['namespace', 'container_name', 'rule_name']
       group_by: ["alertname", "cluster", "namespace", "pod", "description", 'instance']
       group_wait: 30s
       group_interval: 5m
@@ -80,7 +88,7 @@ alertmanager:
           title: '{{ template "sre.slack.title" . }}'
           text: '{{ template "sre.slack.body" . }}'
 
-    - name: dev-service-notice-only
+    - name: dev-services-notice-only
       slack_configs:
         - channel: "#dev-services"
           color: '{{ template "sre.slack.color" . }}'
@@ -122,21 +130,3 @@ blackboxExporter:
           staticConfig:
             static:
             - gitlab.nexdev.net
-
-node-exporter:
-  extraVolumes:
-  - hostPath:
-      path: /var/lib
-      type: ""
-    name: mnt
-    
-  extraVolumeMounts:
-  - mountPath: /host/root/var/lib
-    mountPropagation: HostToContainer
-    name: mnt
-    readOnly: true
-
-  extraArgs:
-    path.rootfs: "/host/root"
-    collector.filesystem.mount-points-exclude: "^/(dev|proc|sys|var/lib/docker/.+)($|/)"
-    collector.filesystem.fs-types-exclude: "^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs|squashfs|nsfs|tmpfs)$"

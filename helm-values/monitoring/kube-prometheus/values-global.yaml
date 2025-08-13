@@ -541,6 +541,7 @@ alertmanager:
             (eq $key "job")
             (eq $key "pod")
             (eq $key "pvc")
+            (eq $key "rule_name")
             (eq $key "comm")
           }}
            • *{{ $key | title }}:* `{{ $value }}`
