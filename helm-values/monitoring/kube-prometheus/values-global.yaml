@@ -536,9 +536,12 @@ alertmanager:
         {{- range $key, $value := .CommonLabels -}}
           {{- if or 
             (eq $key "cluster")
+            (eq $key "namespace")
+            (eq $key "container_name")
             (eq $key "job")
             (eq $key "pod")
             (eq $key "pvc")
+            (eq $key "comm")
           }}
            • *{{ $key | title }}:* `{{ $value }}`
           {{- end -}}
@@ -565,4 +568,24 @@ alertmanager:
 
       {{ define "sre.slack.titlelink" -}}
         {{ range .Alerts }}{{ .Annotations.DashboardURL }}{{ end }} 
+      {{- end }}
+
+      {{ define "sre.slack.username" -}}
+        {{- if eq .CommonLabels.service "OpenSearch" -}}
+          OpenSearch
+        {{- else if eq .CommonLabels.alertname "KubescapeRuleViolated" -}}
+          KubeScape
+        {{- else -}}
+          PromAlert
+        {{- end -}}
+      {{- end }}
+
+      {{ define "sre.slack.iconemoji" -}}
+        {{- if eq .CommonLabels.service "OpenSearch" -}}
+          :opensearch-ico:
+        {{- else if eq .CommonLabels.alertname "KubescapeRuleViolated" -}}
+          :kubescape-ico:
+        {{- else -}}
+          :prometheus-ico:
+        {{- end -}}
       {{- end }}
