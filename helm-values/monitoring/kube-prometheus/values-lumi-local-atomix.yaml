@@ -3,6 +3,7 @@ clusterDomain: lumi.local
 
 global:
   imageRegistry: "hub.lumigame.com/base"
+  storageClass: ""
 
 operator:
   enabled: true
@@ -17,9 +18,13 @@ prometheus:
 
   retention: 7d
   retentionSize: "30GB"
+  
+  nodeSelector:
+    nexops-tools: "yes"
 
   persistence:
     enabled: true
+    storageClass: ""
     size: 30Gi
 
 
