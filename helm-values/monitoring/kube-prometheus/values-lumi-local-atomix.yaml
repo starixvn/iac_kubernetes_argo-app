@@ -35,21 +35,22 @@ prometheus:
 
 
 kubelet:
-  metricRelabelings:
-  - action: labeldrop
-    regex: id|container_id|image_id
-  - action: drop
-    regex: container_tasks_state
-    sourceLabels:
-    - __name__
-  - action: drop
-    regex: container_memory_failures_total
-    sourceLabels:
-    - __name__
-  - action: drop
-    regex: container_blkio_device_usage_total
-    sourceLabels:
-    - __name__
+  serviceMonitor:
+    metricRelabelings:
+    - action: labeldrop
+      regex: id|container_id|image_id
+    - action: drop
+      regex: container_tasks_state
+      sourceLabels:
+      - __name__
+    - action: drop
+      regex: container_memory_failures_total
+      sourceLabels:
+      - __name__
+    - action: drop
+      regex: container_blkio_device_usage_total
+      sourceLabels:
+      - __name__
 ## trigger
 
 
