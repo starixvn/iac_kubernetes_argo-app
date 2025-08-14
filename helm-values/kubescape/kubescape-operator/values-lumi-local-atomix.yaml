@@ -153,6 +153,14 @@ nodeAgent:
       ruleCooldownOnProfileFailure: true
       ruleCooldownMaxSize: 20000
 
+  resources:
+    requests:
+      cpu: 100m
+      memory: 180Mi
+    limits:
+      cpu: 1000m
+      memory: 1400Mi
+
 synchronizer:
   name: synchronizer
   image:
