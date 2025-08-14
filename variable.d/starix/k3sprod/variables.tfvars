@@ -31,7 +31,7 @@ argo_applications_by_team = {
         helm_path     = "opencost"
         chart_version = "2.1.9"
         value_files   = ["values-starix-k3sprod-atomix.yaml"]
-        ### trigger
+        ## trigger
       }
       portainer = {
         namespace     = "portainer"
