@@ -509,7 +509,10 @@ alertmanager:
   config:
     global:
       resolve_timeout: 15m
-      slack_api_url: https://hooks.slack.com/services/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
+      # slack_api_url: https://hooks.slack.com/services/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
+      slack_api_url: https://slack.com/api/chat.postMessage
+      http_config:
+        bearer_token_file: /etc/alertmanager/secrets/alertmanager-secrets/nexopscopbot_bearer_token
     templates:
     - /etc/alertmanager/config/*.tmpl
       
