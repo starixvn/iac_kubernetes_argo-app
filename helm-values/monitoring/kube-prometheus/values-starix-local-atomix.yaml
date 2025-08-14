@@ -121,9 +121,6 @@ alertmanager:
 
     - name: default-receiver
 
-  secrets:
-  - alertmanager-secrets
-
 node-exporter:
   extraVolumes:
   - hostPath:

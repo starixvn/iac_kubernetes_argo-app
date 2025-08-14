@@ -1,0 +1,105 @@
+---
+clusterDomain: lumi.local
+
+global:
+  imageRegistry: "hub.lumigame.com/base"
+
+operator:
+  enabled: true
+
+prometheus:
+  service:
+    type: NodePort
+    ports:
+      http: 9090
+    nodePorts:
+      http: "30062"
+
+  retention: 7d
+  retentionSize: "30GB"
+
+  persistence:
+    enabled: true
+    size: 30Gi
+
+
+  ## @param prometheus.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if prometheus.resources is set (prometheus.resources is recommended for production).
+  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ##
+  resourcesPreset: "none"
+
+kube-state-metrics:
+  resourcesPreset: "none"
+  nodeSelector:
+    nexops-tools: "yes"
+
+alertmanager:
+  resourcesPreset: "none"
+  enabled: true
+  config:
+    global:
+      resolve_timeout: 15m
+
+    route:
+      receiver: default-receiver
+      routes:
+      - receiver: 'null'
+        match_re:
+          namespace: "l1|l2|gn|hd|sk|sp|tg|mg"
+      - receiver: 'alert-nx-atomix'
+        match_re:
+          alertname: "Kubernetes Cluster Pod Usage Above 80%"
+      - receiver: 'kubernetes_sc_local'
+        match_re:
+          alertname: "Kubernetes.*"
+      - receiver: "velero_alerts"
+        match:
+          service: "Velero.*"
+      group_by: ['alertname', 'cluster', 'namespace', 'pod', 'description', 'instance']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 9999h
+
+    receivers:
+    - name: 'null'
+    - name: 'kubernetes_sc_local'
+      slack_configs:
+      - api_url: "https://hooks.slack.com/services/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"
+        channel: '#kubernetes_sc_local'
+        send_resolved: true
+        icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+        title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
+        text: |
+          *Cluster:* `Kubernetes-SC-Local`
+          *Summary:* `{{ .CommonLabels.alertname }}`
+          *Description:* `{{ .CommonAnnotations.description }}`
+        color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+
+    - name: 'alert-nx-atomix'
+      slack_configs:
+      - api_url: "https://hooks.slack.com/services/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"
+        channel: '#alert-nx-atomix'
+        send_resolved: true
+        icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+        title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
+        text: |
+          *Cluster:* `Kubernetes-SC-Local`
+          *Summary:* `{{ .CommonLabels.alertname }}`
+          *Description:* `{{ .CommonAnnotations.description }}`
+        color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+
+    - name: "velero_alerts"
+      slack_configs:
+      - api_url: "https://hooks.slack.com/services/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"
+        channel: "#velero_alerts"
+        send_resolved: true
+        icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+        title: '{{ if eq .Status "firing" }}🔥 PROBLEM 🔥 {{ .CommonLabels.alertname }}{{ else }}✅ RESOLVED ✅ {{ .CommonLabels.alertname }}{{ end }}'
+        text: |
+          *Cluster:* `Kubernetes-NexProd`
+          🚨 *{{ .CommonLabels.alertname }}* ({{ .Status | toUpper }})
+          🔁 Schedule: `{{ .CommonLabels.schedule }}`
+          ❗ Severity: `{{ .CommonLabels.severity }}`
+          📝 {{ .CommonAnnotations.description }}
+
+    - name: default-receiver

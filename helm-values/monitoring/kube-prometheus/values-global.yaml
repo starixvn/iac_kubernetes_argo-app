@@ -515,6 +515,9 @@ alertmanager:
         bearer_token_file: /etc/alertmanager/secrets/alertmanager-secrets/nexopscopbot_bearer_token
     templates:
     - /etc/alertmanager/config/*.tmpl
+
+  secrets:
+  - alertmanager-secrets
       
   templateFiles:
     # available severity None,Low,Medium,High,Critical,SystemIssue

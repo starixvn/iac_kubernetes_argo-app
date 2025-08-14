@@ -94,9 +94,6 @@ alertmanager:
         title: '{{ template "sre.slack.title" . }}'
         text: '{{ template "sre.slack.body" . }}'
 
-  secrets:
-  - alertmanager-secrets
-
 node-exporter:
   extraVolumes:
   - hostPath:

@@ -9,17 +9,16 @@ argo_applications_by_team = {
   atx = {
     team_name = "atomix"
     applications = {
-      ## Prometheus
-      # prometheus = {
-      #   namespace     = "monitoring"
-      #   helm_path     = "monitoring/kube-prometheus"
-      #   chart_version = "9.5.11"
-      #   skip_crds     = true
-      #   value_files = [
-      #     "values-global.yaml",
-      #     "values-lumi-sit-atomix.yaml",
-      #   ]
-      # }
+      prometheus = {
+        namespace     = "monitoring"
+        helm_path     = "monitoring/kube-prometheus"
+        chart_version = "9.5.11"
+        skip_crds     = true
+        value_files = [
+          "values-global.yaml",
+          "values-lumi-local-atomix.yaml",
+        ]
+      }
       opencost = {
         helm_path     = "opencost"
         chart_version = "2.1.9"
