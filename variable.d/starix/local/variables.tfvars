@@ -3,7 +3,6 @@ cluster_org = "starix"
 cluster_env = "local"
 
 default_project = "tf-starix-local"
-vault_addr      = "https://vault.nexdev.net"
 
 # ARGO APPLICATIONS
 argo_applications_by_team = {
