@@ -49,13 +49,13 @@ prometheus:
     - name: minio.rules
       rules:
       - alert: MinioDiskSpaceUsage
-        expr: (100 - round(minio_cluster_capacity_usable_free_bytes / minio_cluster_capacity_usable_total_bytes * 100, 0.01)) > 1
+        expr: (100 - round(minio_cluster_capacity_usable_free_bytes / minio_cluster_capacity_usable_total_bytes * 100, 0.01)) > 90
         for: 0m
         labels:
           severity: critical
           service: Minio
         annotations:
-          summary: Minio disk space usage Over 1%
+          summary: Minio disk space usage Over 90%
           description: "Minio available free space is low ~ {{ $value }}%"
 
 kube-state-metrics:
