@@ -11,7 +11,7 @@ serviceAccount:
   create: true
   annotations: {}
   automountServiceAccountToken: true
-  name: opencost-atx-uat
+  name: opencost-atx-k3suat
 
 networkPolicies:
   enabled: true
@@ -41,7 +41,7 @@ opencost:
   exporter:
     apiPort: 9003
     cloudProviderApiKey: ""
-    defaultClusterId: 'lumi.uat'
+    defaultClusterId: 'starix.k3suat'
     image:
       registry: nexhub.ops-klprod.gamora.prod/kbt/base
       repository: opencost
@@ -119,7 +119,7 @@ opencost:
     createConfigmap: true
     provider: custom
     costModel:
-      description: "Custom pricing configuration for lumi.uat environment"
+      description: "Custom pricing configuration for starix.k3suat environment"
       region: "on-prem"
       zone: "default-zone"
       CPU: 0.008333      # USD / vCPU / h

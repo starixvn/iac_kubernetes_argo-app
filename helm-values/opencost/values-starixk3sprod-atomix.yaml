@@ -1,0 +1,233 @@
+nameOverride: ""
+fullnameOverride: ""
+namespaceOverride: ""
+clusterName: "starix.k3sprod"
+
+loglevel: info
+
+imagePullSecrets: []
+
+serviceAccount:
+  create: true
+  annotations: {}
+  automountServiceAccountToken: true
+  name: opencost-atx-k3sprod
+
+networkPolicies:
+  enabled: true
+  prometheus:
+    namespace: monitoring
+    port: 9090
+    labels:
+      app.kubernetes.io/name: prometheus
+
+  extraEgress: []
+
+service:
+  enabled: true
+  annotations: {}
+  labels: {}
+  type: ClusterIP
+  port: 9003
+  # nodePort: 30093
+  extraPorts: []
+  loadBalancerSourceRanges: []
+
+rbac:
+  enabled: true
+
+opencost:
+  cloudIntegrationSecret: ""
+  exporter:
+    apiPort: 9003
+    cloudProviderApiKey: ""
+    defaultClusterId: 'starix.k3sprod'
+    image:
+      registry: nexhub.ops-klprod.gamora.prod/kbt/base
+      repository: opencost
+      tag: "1.115.0"
+      pullPolicy: IfNotPresent
+      fullImageName: null
+    extraEnv:
+      CLUSTER_ID: "starix.k3sprod"
+    extraArgs: []
+    command: []
+    replicas: 1
+    resources:
+      requests:
+        cpu: '10m'
+        memory: '55Mi'
+      limits:
+        memory: '1Gi'
+    startupProbe:
+      enabled: true
+      path: /healthz
+      initialDelaySeconds: 10
+      periodSeconds: 5
+      failureThreshold: 30
+    livenessProbe:
+      enabled: true
+      path: /healthz
+      initialDelaySeconds: 10
+      periodSeconds: 20
+      failureThreshold: 3
+    readinessProbe:
+      enabled: true
+      path: /healthz
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      failureThreshold: 3
+    securityContext: {}
+
+    csv_path: ""
+
+    prometheusDataSource:
+      queryResolutionSeconds: 300
+
+    collectorDataSource:
+      enabled: false
+      scrapeInterval: 30s
+      networkPort: 3001
+      retentionResolution10m: 36
+      retentionResolution1h: 49
+      retentionResolution1d: 15
+
+    persistence:
+      enabled: false
+      mountPath: /mnt/export
+      annotations: {}
+      accessMode: "ReadWriteOnce"
+      storageClass: "local-path"
+      size: "1Gi"
+
+    apiIngress:
+      enabled: false
+      ingressClassName: ""
+      annotations: {}
+      hosts:
+        - host: example.local
+          paths:
+            - path: /
+              pathType: Prefix
+      servicePort: http
+      tls: []
+
+  customPricing:
+    enabled: true
+    configmapName: custom-pricing-model
+    configPath: /tmp/custom-config
+    createConfigmap: true
+    provider: custom
+    costModel:
+      description: "Custom pricing configuration for starix.k3sprod environment"
+      region: "on-prem"
+      zone: "default-zone"
+      CPU: 0.008333      # USD / vCPU / h
+      RAM: 0.002778      # USD / GB RAM / h
+      storage: 0.019444  # USD / GB disk / h
+      LoadBalancerCost: 0.0
+      LBIngressDataCost: 0.00
+      FirstFiveForwardingRulesCost: 0.0
+      AdditionalForwardingRuleCost: 0.0
+
+  dataRetention:
+    dailyResolutionDays: 15
+
+  metrics:
+    kubeStateMetrics:
+      emitPodAnnotations: ~
+      emitNamespaceAnnotations: ~
+      emitKsmV1Metrics: ~
+      emitKsmV1MetricsOnly: ~
+
+    serviceMonitor:
+      enabled: true
+      additionalLabels: {}
+      namespace: "monitoring"
+      scrapeInterval: 30s
+      scrapeTimeout: 10s
+      honorLabels: true
+      relabelings: []
+      metricRelabelings: []
+      extraEndpoints: []
+      scheme: http
+      tlsConfig: {}
+
+    config:
+      enabled: true
+      configmapName: custom-metrics
+      disabledMetrics: []
+
+  prometheus:
+    secret_name: ~
+    existingSecretName: ~
+    username: ""
+    username_key: DB_BASIC_AUTH_USERNAME
+    password: ""
+    password_key: DB_BASIC_AUTH_PW
+    bearer_token: ""
+    bearer_token_key: DB_BEARER_TOKEN
+    kubeRBACProxy: false
+    external:
+      enabled: true
+      url: "http://10.143.58.202:30062/"
+    internal:
+      enabled: false
+      serviceName: prometheus-atx-k3sprod-kub-prometheus
+      namespaceName: monitoring
+      port: 9090
+      scheme: http
+
+  ui:
+    enabled: false
+    image:
+      registry: nexhub.ops-klprod.gamora.prod/kbt/base
+      repository: opencost/opencost-ui
+      tag: "1.115.0@sha256:d544b2f16b76540606acb3d25e029e368611feb2751b86cb5903b0212b75a71e"
+      pullPolicy: IfNotPresent
+      fullImageName: null
+    resources:
+      requests:
+        cpu: '10m'
+        memory: '55Mi'
+      limits:
+        memory: '1Gi'
+    uiPort: 9090
+    useIPv6: true
+    livenessProbe:
+      enabled: true
+      path: /healthz
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      failureThreshold: 3
+    readinessProbe:
+      enabled: true
+      path: /healthz
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      failureThreshold: 3
+    securityContext: {}
+
+    extraEnv: []
+
+    extraVolumeMounts: []
+
+    useDefaultFqdn: false
+
+    ingress:
+      enabled: false
+      ingressClassName: "haproxy"
+      annotations: {}
+      hosts:
+        - host: ""
+          paths:
+            - /
+      servicePort: http-ui
+      tls: []
+    route:
+      enabled: false
+      annotations: {}
+      host: example.local
+      path:
+      targetPort: http-ui
+      tls: []
