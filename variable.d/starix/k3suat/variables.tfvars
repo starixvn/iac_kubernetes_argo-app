@@ -27,6 +27,12 @@ argo_applications_by_team = {
           "values-starix-k3suat-atomix.yaml",
         ]
       }
+      opencost = {
+        helm_path     = "opencost"
+        chart_version = "2.1.9"
+        value_files   = ["values-starix-k3suat-atomix.yaml"]
+        ### trigger
+      }
 
       rabbitmq = {
         helm_path     = "rabbitmq-cluster-operator"
