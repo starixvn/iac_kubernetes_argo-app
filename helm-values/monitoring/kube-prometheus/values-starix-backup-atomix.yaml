@@ -102,7 +102,7 @@ alertmanager:
       slack_configs:
       # - channel: '#local_disk_critical'
       - channel: '#alert-josh-test'
-        api_url: "https://slack.com/api/chat.postMessage"
+        # api_url: "https://slack.com/api/chat.postMessage"
         icon_emoji: ":minio-ico:"
         username: "MinIO🔹Backup Cluster"
         color: '{{ template "sre.slack.color" . }}'
