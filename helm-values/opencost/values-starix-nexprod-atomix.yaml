@@ -216,7 +216,7 @@ opencost:
     useDefaultFqdn: false
 
     ingress:
-      enabled: true
+      enabled: false
       ingressClassName: "haproxy"
       annotations: {}
       hosts:

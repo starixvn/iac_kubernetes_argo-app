@@ -169,10 +169,10 @@ opencost:
     bearer_token_key: DB_BEARER_TOKEN
     kubeRBACProxy: false
     external:
-      enabled: true
-      url: "http://10.10.50.145:30062/"
-    internal:
       enabled: false
+      url: ""
+    internal:
+      enabled: true
       serviceName: prometheus-lumi-local-kube-prometheus
       namespaceName: monitoring
       port: 9090
@@ -215,11 +215,11 @@ opencost:
     useDefaultFqdn: false
 
     ingress:
-      enabled: true
+      enabled: false
       ingressClassName: "haproxy"
       annotations: {}
       hosts:
-        - host: opencost.lumigame.com
+        - host: ""
           paths:
             - /
       servicePort: http-ui
