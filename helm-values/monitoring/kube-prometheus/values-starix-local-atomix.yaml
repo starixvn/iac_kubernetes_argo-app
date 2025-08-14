@@ -43,7 +43,7 @@ alertmanager:
       routes:
       - receiver: "null"
         match_re:
-          alertname: "Kubernetes Service Restart|Kubernetes Pod Not Running"
+          alertname: "Kubernetes Service Restart|.*Pod.*"
       - receiver: 'alert-nx-atomix'
         match_re:
           alertname: "Kubernetes Cluster Pod Usage Above 80%"
