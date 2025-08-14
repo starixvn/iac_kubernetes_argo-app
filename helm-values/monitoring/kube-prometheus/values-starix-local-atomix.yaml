@@ -96,7 +96,7 @@ alertmanager:
 
     - name: dev-services
       slack_configs:
-      - channel: "#alert-josh-test"
+      - channel: "#dev-services"
         api_url: "https://slack.com/api/chat.postMessage"
         color: '{{ template "sre.slack.color" . }}'
         fallback: '{{ template "sre.slack.fallback" . }}'
@@ -104,7 +104,7 @@ alertmanager:
           bearer_token_file: /etc/alertmanager/secrets/alertmanager-secrets/nexopscopbot_bearer_token
         icon_emoji: '{{ template "sre.slack.iconemoji" . }}'
         send_resolved: true
-        username: '{{ template "sre.slack.username" . }} - ST.LOCAL'
+        username: '{{ template "sre.slack.username" . }}🔹ST.LOCAL'
         title: '{{ template "sre.slack.title" . }}'
         text: '{{ template "sre.slack.body" . }}'
 
@@ -115,7 +115,7 @@ alertmanager:
         fallback: '{{ template "sre.slack.fallback" . }}'
         icon_emoji: '{{ template "sre.slack.iconemoji" . }}'
         send_resolved: false
-        username: '{{ template "sre.slack.username" . }} - ST.LOCAL'
+        username: '{{ template "sre.slack.username" . }}🔹ST.LOCAL'
         title: '{{ template "kubescape.slack.title" . }}'
         text: '{{ template "sre.slack.body" . }}'
 
