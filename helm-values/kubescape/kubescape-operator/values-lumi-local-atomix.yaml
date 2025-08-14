@@ -122,8 +122,6 @@ storage:
 
   cleanupInterval: "168h"
 
-  resources: {}
-
 nodeAgent:
   name: node-agent
   image:
