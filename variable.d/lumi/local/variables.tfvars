@@ -25,6 +25,12 @@ argo_applications_by_team = {
         value_files   = ["values-lumi-local-atomix.yaml"]
         ### trigger
       }
+      kubescape-op = {
+        namespace     = "kubescape"
+        helm_path     = "kubescape/kubescape-operator"
+        auto_sync     = false
+        chart_version = "1.29.0"
+      }
     }
   }
 }
