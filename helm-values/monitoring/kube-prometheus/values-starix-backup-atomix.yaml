@@ -49,13 +49,13 @@ prometheus:
     - name: minio.rules
       rules:
       - alert: MinioDiskSpaceUsage
-        expr: (100 - round(minio_cluster_capacity_usable_free_bytes / minio_cluster_capacity_usable_total_bytes * 100, 0.01)) > 90
+        expr: (100 - round(minio_cluster_capacity_usable_free_bytes / minio_cluster_capacity_usable_total_bytes * 100, 0.01)) > 1
         for: 0m
         labels:
           severity: critical
           service: Minio
         annotations:
-          summary: Minio disk space usage Over 90%
+          summary: Minio disk space usage Over 1%
           description: "Minio available free space is low ~ {{ $value }}%"
 
 kube-state-metrics:
@@ -100,14 +100,21 @@ alertmanager:
     #     color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
     - name: minio-services
       slack_configs:
-      - channel: '#local_disk_critical'
+      # - channel: '#local_disk_critical'
+      - channel: '#alert-josh-test'
+        api_url: "https://slack.com/api/chat.postMessage"
         icon_emoji: ":minio-ico:"
         username: "MinIO🔹Backup Cluster"
         color: '{{ template "sre.slack.color" . }}'
         fallback: '{{ template "sre.slack.fallback" . }}'
+        http_config:
+          bearer_token_file: /etc/alertmanager/secrets/alertmanager-secrets/nexopscopbot_bearer_token
         send_resolved: true
         title: '{{ template "sre.slack.title" . }}'
         text: '{{ template "sre.slack.body" . }}'
+
+  secrets:
+  - alertmanager-secrets
 
 node-exporter:
   extraVolumes:
