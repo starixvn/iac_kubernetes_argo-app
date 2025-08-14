@@ -132,7 +132,7 @@ storage:
   nodeSelector:
     kubernetes.io/os: linux
 
-  cleanupInterval: "6h"
+  cleanupInterval: "168h"
 
 nodeAgent:
   name: node-agent
@@ -142,8 +142,8 @@ nodeAgent:
     pullPolicy: IfNotPresent
 
   config:
-    maxLearningPeriod: 24h # duration string
-    learningPeriod: 12h # duration string
+    maxLearningPeriod: 48h # duration string
+    learningPeriod: 24h # duration string
     updatePeriod: 10m # duration string
     nodeProfileInterval: 10m # duration string
     networkStreamingInterval: 2m # duration string
