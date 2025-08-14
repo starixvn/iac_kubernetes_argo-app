@@ -93,7 +93,7 @@ opencost:
       retentionResolution1d: 15
 
     persistence:
-      enabled: true
+      enabled: false
       mountPath: /mnt/export
       annotations: {}
       accessMode: "ReadWriteOnce"
