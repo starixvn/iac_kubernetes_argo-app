@@ -1,7 +1,7 @@
 clusterName: "lumi.local"
 
 # excludeNamespaces: "kubescape,kube-system,kube-public,kube-node-lease,kubeconfig,gmp-system,gmp-public"
-includeNamespaces: "12b,aff,ai,alpha,alphaplus-789y,alphaplus-ibc,alphaplus-mbc,fanex,fps,hrm,la,lap,licensee,nap,nap-mail,shared,telegrambot,tw"
+includeNamespaces: "l1,l2"
 
 capabilities:
   # ====== configuration scanning related capabilities ======
