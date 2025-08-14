@@ -43,9 +43,9 @@ opencost:
     cloudProviderApiKey: ""
     defaultClusterId: 'lumi.uat'
     image:
-      registry: ghcr.io
-      repository: opencost/opencost
-      tag: "1.115.0@sha256:fb6468a1ef45dbd4a9e521122c8d306f882bb33d1657d28d21aeaef79412e9e1"
+      registry: lumhub.ops-klprod.gamora.prod/kbt/base
+      repository: opencost
+      tag: "1.115.0"
       pullPolicy: IfNotPresent
       fullImageName: null
     extraEnv:
@@ -181,7 +181,7 @@ opencost:
   ui:
     enabled: false
     image:
-      registry: ghcr.io
+      registry: lumhub.ops-klprod.gamora.prod/kbt/base
       repository: opencost/opencost-ui
       tag: "1.115.0@sha256:d544b2f16b76540606acb3d25e029e368611feb2751b86cb5903b0212b75a71e"
       pullPolicy: IfNotPresent
