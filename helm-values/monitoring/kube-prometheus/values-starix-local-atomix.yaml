@@ -43,10 +43,16 @@ alertmanager:
       routes:
       - receiver: "null"
         match_re:
-          namespace: "hrm"
-      - receiver: "alerts-test"
+          alertname: "Kubernetes Service Restart"
+      - receiver: 'alert-nx-atomix'
         match_re:
-          namespace: "monitoring"
+          alertname: "Kubernetes Cluster Pod Usage Above 80%"
+      - receiver: 'alert-nx-atomix-local'
+        match_re:
+          alertname: "Kubernetes.*"
+      # - receiver: "velero_alerts"
+      #   match:
+      #     service: "Velero.*"
       - receiver: dev-services
         match:
           service: "OpenSearch"
@@ -61,21 +67,32 @@ alertmanager:
       repeat_interval: 9999h
 
     receivers:
-    - name: "null"
-    - name: "alerts-test"
+    - name: 'null'
+    - name: 'alert-nx-atomix-local'
       slack_configs:
-      - api_url: "https://hooks.slack.com/services/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"
-        channel: "#alerts-test"
-        send_resolved: true
-        icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
-        title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
-        text: |
-          *Domain:* `{{ .CommonLabels.instance }}`
-          *Alert:* `{{ .CommonLabels.alertname }}`
-          *Status:* `{{ .Status | toUpper }}`
-          *Summary:* `{{ .CommonAnnotations.summary }}`
-          *Description:* `{{ .CommonAnnotations.description }}`
-        color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+        - api_url: "https://hooks.slack.com/services/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"
+          channel: '#alert-nx-atomix-local'
+          send_resolved: true
+          icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+          title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
+          text: |
+            *Cluster:* `Kubernetes-ST-Local`
+            *Summary:* `{{ .CommonLabels.alertname }}`
+            *Description:* `{{ .CommonAnnotations.description }}`
+          color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+
+    - name: 'alert-nx-atomix'
+      slack_configs:
+        - api_url: "https://hooks.slack.com/services/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"
+          channel: '#alert-nx-atomix'
+          send_resolved: true
+          icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+          title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
+          text: |
+            *Cluster:* `Kubernetes-ST-Local`
+            *Summary:* `{{ .CommonLabels.alertname }}`
+            *Description:* `{{ .CommonAnnotations.description }}`
+          color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
 
     - name: dev-services
       slack_configs:
@@ -100,33 +117,3 @@ alertmanager:
           text: '{{ template "sre.slack.body" . }}'
 
     - name: default-receiver
-
-blackboxExporter:
-  configuration: |
-    modules:
-      dns_probe:
-        prober: dns
-        dns:
-          query_name: "gitlab.nexdev.net"
-          query_type: "A"
-          valid_rcodes:
-            - NOERROR
-          preferred_ip_protocol: "ip4"
-
-  extraDeploy:
-    - |
-      ### DNS Monitor
-      kind: Probe
-      apiVersion: monitoring.coreos.com/v1
-      metadata:
-        name: dns-probe
-        namespace: monitoring
-      spec:
-        interval: 30s
-        module: dns_probe
-        prober:
-          url: prometheus-starix-local-ku-blackbox-exporter.monitoring.svc.starix.local:19115
-        targets:
-          staticConfig:
-            static:
-            - gitlab.nexdev.net
