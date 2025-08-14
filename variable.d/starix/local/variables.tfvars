@@ -27,7 +27,6 @@ argo_applications_by_team = {
       kubescape-op = {
         namespace     = "kubescape"
         helm_path     = "kubescape/kubescape-operator"
-        auto_sync     = false
         chart_version = "1.29.0"
       }
     }
