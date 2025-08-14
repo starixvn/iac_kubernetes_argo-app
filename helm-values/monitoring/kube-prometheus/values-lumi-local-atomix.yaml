@@ -138,7 +138,7 @@ alertmanager:
         fallback: '{{ template "sre.slack.fallback" . }}'
         icon_emoji: '{{ template "sre.slack.iconemoji" . }}'
         send_resolved: false
-        username: '{{ template "sre.slack.username" . }}🔹ST.LOCAL'
+        username: '{{ template "sre.slack.username" . }}🔹SC.LOCAL'
         title: '{{ template "kubescape.slack.title" . }}'
         text: '{{ template "sre.slack.body" . }}'
 

@@ -50,10 +50,10 @@ alertCRD:
   scopeNamespaced: false
 
 persistence:
-  storageClass: "longhorn"
+  storageClass: "local-path"
   accessMode: ReadWriteOnce
   size:
-    backingStorage: 10Gi
+    backingStorage: 20Gi
     kubevuln: 5Gi
 
 global:
@@ -97,6 +97,7 @@ kubevuln:
 
   nodeSelector:
     kubernetes.io/os: linux
+    nexops-tools: "yes"
 
   replicaCount: 1
 
@@ -117,8 +118,9 @@ storage:
 
   nodeSelector:
     kubernetes.io/os: linux
+    nexops-tools: "yes"
 
-  cleanupInterval: "7d"
+  cleanupInterval: "168h"
 
 nodeAgent:
   name: node-agent
@@ -128,8 +130,8 @@ nodeAgent:
     pullPolicy: IfNotPresent
 
   config:
-    maxLearningPeriod: 2d # duration string
-    learningPeriod: 1d # duration string
+    maxLearningPeriod: 48h # duration string
+    learningPeriod: 24h # duration string
     updatePeriod: 10m # duration string
     nodeProfileInterval: 10m # duration string
     networkStreamingInterval: 2m # duration string
@@ -140,7 +142,7 @@ nodeAgent:
       method: POST
     alertManagerExporterUrls: [prometheus-atx-local-kube-alertmanager.monitoring:9093]
     stdoutExporter: true
-    # syslogExporterURL: 10.18.200.193:30078
+    syslogExporterURL: 10.18.200.193:30078
     skipKernelVersionCheck: false
     malwareScanAllFiles: false
     hostMalwareSensor: disable
