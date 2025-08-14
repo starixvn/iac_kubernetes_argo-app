@@ -101,8 +101,8 @@ alertmanager:
     - name: minio-services
       slack_configs:
       # - channel: '#local_disk_critical'
-      - channel: '#alert-josh-test'
-        # api_url: "https://slack.com/api/chat.postMessage"
+      - channel: '#longhorn_alerts'
+        api_url: "https://hooks.slack.com/services/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"
         icon_emoji: ":minio-ico:"
         username: "MinIO🔹Backup Cluster"
         color: '{{ template "sre.slack.color" . }}'
