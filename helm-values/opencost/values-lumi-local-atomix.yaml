@@ -43,9 +43,9 @@ opencost:
     cloudProviderApiKey: ""
     defaultClusterId: 'lumi.local'
     image:
-      registry: ghcr.io
-      repository: opencost/opencost
-      tag: "1.115.0@sha256:fb6468a1ef45dbd4a9e521122c8d306f882bb33d1657d28d21aeaef79412e9e1"
+      registry: hub.lumigame.com/base
+      repository: opencost
+      tag: "1.115.0"
       pullPolicy: IfNotPresent
       fullImageName: null
     extraEnv:
@@ -93,7 +93,7 @@ opencost:
       retentionResolution1d: 15
 
     persistence:
-      enabled: true
+      enabled: false
       mountPath: /mnt/export
       annotations: {}
       accessMode: "ReadWriteOnce"
@@ -169,10 +169,10 @@ opencost:
     bearer_token_key: DB_BEARER_TOKEN
     kubeRBACProxy: false
     external:
-      enabled: false
+      enabled: true
       url: "http://10.10.50.145:30062/"
     internal:
-      enabled: true
+      enabled: false
       serviceName: prometheus-lumi-local-kube-prometheus
       namespaceName: monitoring
       port: 9090
