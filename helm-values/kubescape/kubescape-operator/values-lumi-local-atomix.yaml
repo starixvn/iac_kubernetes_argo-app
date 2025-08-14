@@ -50,7 +50,7 @@ alertCRD:
   scopeNamespaced: false
 
 persistence:
-  storageClass: "longhorn"
+  storageClass: "local-path"
   accessMode: ReadWriteOnce
   size:
     backingStorage: 10Gi
@@ -97,6 +97,7 @@ kubevuln:
 
   nodeSelector:
     kubernetes.io/os: linux
+    nexops-tools: "yes"
 
   replicaCount: 1
 
@@ -117,6 +118,7 @@ storage:
 
   nodeSelector:
     kubernetes.io/os: linux
+    nexops-tools: "yes"
 
   cleanupInterval: "7d"
 
