@@ -169,10 +169,10 @@ opencost:
     bearer_token_key: DB_BEARER_TOKEN
     kubeRBACProxy: false
     external:
-      enabled: true
+      enabled: false
       url: "http://10.148.58.202:30062/"
     internal:
-      enabled: false
+      enabled: true
       serviceName: prometheus-atx-prod-kube-p-prometheus
       namespaceName: monitoring
       port: 9090
