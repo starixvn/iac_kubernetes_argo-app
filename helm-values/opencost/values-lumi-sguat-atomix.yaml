@@ -9,7 +9,8 @@ imagePullSecrets: []
 
 serviceAccount:
   create: true
-  annotations: {}
+  annotations: 
+  eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:user/tf.dennis.le
   automountServiceAccountToken: true
   name: opencost-atx-sguat
 
@@ -37,13 +38,13 @@ rbac:
   enabled: true
 
 opencost:
-  cloudIntegrationSecret: ""
+  cloudIntegrationSecret: "cloud-costs"
   exporter:
     apiPort: 9003
     cloudProviderApiKey: ""
     defaultClusterId: 'lumi.sguat'
     image:
-      registry: lumhub.ops-klprod.gamora.prod/kbt/base
+      registry: lumhub.sc-t1prod.gamora.prod/aws/base
       repository: opencost
       tag: "1.115.0"
       pullPolicy: IfNotPresent
@@ -113,7 +114,7 @@ opencost:
       tls: []
 
   customPricing:
-    enabled: true
+    enabled: false
     configmapName: custom-pricing-model
     configPath: /tmp/custom-config
     createConfigmap: true
@@ -132,6 +133,19 @@ opencost:
 
   dataRetention:
     dailyResolutionDays: 15
+
+  cloudCost:
+    # -- Enable cloud cost ingestion and querying, dependant on valid integration credentials
+    enabled: true
+    # -- Number of hours between each run of the Cloud Cost pipeline
+    refreshRateHours: 6
+    # -- Number of days into the past that a Cloud Cost standard run will query for
+    runWindowDays: 3
+    # -- The number of standard runs before a Month-to-Date run occurs
+    monthToDateInterval: 6
+    # -- The max number of days that any single query will be made to construct Cloud Costs
+    queryWindowDays: 7
+
 
   metrics:
     kubeStateMetrics:
@@ -173,7 +187,7 @@ opencost:
       url: "https://prometheus-eks-sguat.sportsfun.app/"
     internal:
       enabled: true
-      serviceName: prometheus-atx-uat-kube-pr-prometheus
+      serviceName: prometheus-atx-sguat-kube-prometheus
       namespaceName: monitoring
       port: 9090
       scheme: http
@@ -181,7 +195,7 @@ opencost:
   ui:
     enabled: false
     image:
-      registry: lumhub.ops-klprod.gamora.prod/kbt/base
+      registry: lumhub.sc-t1prod.gamora.prod/aws/base
       repository: opencost/opencost-ui
       tag: "1.115.0@sha256:d544b2f16b76540606acb3d25e029e368611feb2751b86cb5903b0212b75a71e"
       pullPolicy: IfNotPresent
