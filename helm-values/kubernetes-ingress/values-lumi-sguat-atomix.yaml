@@ -41,7 +41,7 @@ controller:
 
   extraArgs:
     - --disable-ipv6
-
+    - --configmap-errorfiles=haproxy-ingress/errorfile
   # logging:
   #   level: info
   #   traffic:
@@ -93,6 +93,8 @@ controller:
 defaultBackend:
   image: "hub.lumigame.com/base/nexops-tools/default-backend-ingress"
 
+clusterInfo: "eks-sc-sguat"
+
 extraResources:
 ##############################
 ## WILDCARD SSL LOADER
@@ -135,24 +137,16 @@ extraResources:
               port:
                 number: 1024
           path: /
-          pathType: Prefix         
-
-##############################
-## DEFAULT BACKEND CONF
-##############################
-- |
-  apiVersion: networking.k8s.io/v1
-  kind: Ingress
-  metadata:
-    name: be-default-{{ .Release.Name }}
-    namespace: {{ include "kubernetes-ingress.namespace" . }}
-  spec:
-    ingressClassName: {{ .Values.controller.ingressClassResource.name }}
+          pathType: Prefix
     defaultBackend:
       service:
         name: be-default-{{ .Release.Name }}
         port:
-          number: 80
+          number: 8088
+
+##############################
+## DEFAULT BACKEND CONF
+##############################
 - |
   apiVersion: apps/v1
   kind: Deployment
@@ -160,7 +154,7 @@ extraResources:
     name: be-default-{{ .Release.Name }}
     namespace: {{ include "kubernetes-ingress.namespace" . }}
   spec:
-    replicas: 1
+    replicas: 2
     selector:
       matchLabels:
         app: nexops
@@ -174,7 +168,10 @@ extraResources:
           image: {{ .Values.defaultBackend.image }}
           imagePullPolicy: Always
           ports:
-          - containerPort: 8080
+          - containerPort: 80
+          env:
+          - name: CLUSTER_NAME
+            value: {{ .Values.clusterInfo }}
 - |
   apiVersion: v1
   kind: Service
@@ -183,9 +180,101 @@ extraResources:
     namespace: {{ include "kubernetes-ingress.namespace" . }}
   spec:
     ports:
-    - port: 80
-      targetPort: 8080
+    - port: 8088
+      targetPort: 80
       protocol: TCP
       name: http
     selector:
       app: nexops
+## Config Map 503 Page
+- |
+  apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: errorfile
+    namespace: haproxy-ingress
+  data:
+    503: |-
+      HTTP/1.1 503 Service Unavailable
+      Cache-Control: no-cache
+      Connection: close
+      Content-Type: text/html
+
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Service Unavailable</title>
+          <!-- Cluster: {{ .Values.clusterInfo }} -->
+          <style>
+              body {
+                  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                  background-color: #f8f9fa;
+                  color: #343a40;
+                  margin: 0;
+                  padding: 0;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  height: 100vh;
+              }
+              .container {
+                  background-color: white;
+                  padding: 2rem;
+                  border-radius: 12px;
+                  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+                  max-width: 600px;
+                  width: 90%;
+                  text-align: center;
+              }
+              .main-message {
+                  font-size: 1.8rem;
+                  font-weight: 600;
+                  margin-bottom: 1rem;
+                  color: #333;
+              }
+              .sub-message {
+                  font-size: 1.1rem;
+                  line-height: 1.5;
+                  color: #666;
+                  margin-bottom: 1.5rem;
+              }
+              .help-box {
+                  background-color: #f1f3f5;
+                  padding: 1.5rem;
+                  border-radius: 8px;
+                  margin: 1.5rem 0;
+                  text-align: left;
+              }
+              .help-title {
+                  font-weight: 600;
+                  margin-bottom: 0.5rem;
+                  color: #444;
+              }
+              .cluster-info {
+                  position: fixed;
+                  bottom: 10px;
+                  right: 10px;
+                  font-size: 0.7rem;
+                  color: #aaa;
+                  opacity: 0.5;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <h1 class="main-message">Service Unavailable</h1>
+              <p class="sub-message">The server is currently unable to handle the request due to a temporary overload or maintenance. Please try again later.</p>
+              
+              <div class="help-box">
+                  <p class="help-title">What you can do</p>
+                  <ul>
+                      <li>Wait a few minutes and refresh the page</li>
+                      <li>Check your network connection</li>
+                      <li>Contact the website administrator if the problem persists</li>
+                  </ul>
+              </div>
+          </div>
+      </body>
+      </html>
