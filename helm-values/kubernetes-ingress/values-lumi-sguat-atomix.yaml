@@ -142,7 +142,7 @@ extraResources:
       service:
         name: be-default-{{ .Release.Name }}
         port:
-          number: 80  
+          number: 8088
 
 ##############################
 ## DEFAULT BACKEND CONF
@@ -180,7 +180,7 @@ extraResources:
     namespace: {{ include "kubernetes-ingress.namespace" . }}
   spec:
     ports:
-    - port: 80
+    - port: 8088
       targetPort: 80
       protocol: TCP
       name: http
