@@ -137,24 +137,16 @@ extraResources:
               port:
                 number: 1024
           path: /
-          pathType: Prefix         
-
-##############################
-## DEFAULT BACKEND CONF
-##############################
-- |
-  apiVersion: networking.k8s.io/v1
-  kind: Ingress
-  metadata:
-    name: be-default-{{ .Release.Name }}
-    namespace: {{ include "kubernetes-ingress.namespace" . }}
-  spec:
-    ingressClassName: {{ .Values.controller.ingressClassResource.name }}
+          pathType: Prefix
     defaultBackend:
       service:
         name: be-default-{{ .Release.Name }}
         port:
-          number: 80
+          number: 80  
+
+##############################
+## DEFAULT BACKEND CONF
+##############################
 - |
   apiVersion: apps/v1
   kind: Deployment
