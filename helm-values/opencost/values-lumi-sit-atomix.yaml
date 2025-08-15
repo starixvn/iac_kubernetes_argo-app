@@ -170,7 +170,7 @@ opencost:
     kubeRBACProxy: false
     external:
       enabled: true
-      url: "http://172.16.4.102:30062/"
+      url: "http://172.16.4.91:30062/"
     internal:
       enabled: false
       serviceName: prometheus-atx-sit-kube-pr-prometheus
