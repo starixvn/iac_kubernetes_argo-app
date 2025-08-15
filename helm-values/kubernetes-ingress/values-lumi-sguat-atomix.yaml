@@ -91,7 +91,7 @@ controller:
       memory: 400Mi
 
 defaultBackend:
-  image: "hub.lumigame.com/base/nexops-tools/default-backend-ingress"
+  image: "hub.nexdev.net/base/nexops-tools/default-backend-ingress"
 
 clusterInfo: "eks-sc-sguat"
 
