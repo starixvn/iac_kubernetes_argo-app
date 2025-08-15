@@ -74,7 +74,7 @@ alertmanager:
       routes:
       - receiver: 'null'
         match_re:
-          pod: ".*website1.*"
+          pod: ".*website1.*|opencost.*"
       - receiver: 'alert-nx-pentagon'
         match_re:
           namespace: "l1|l2|gn|hd|sk|sp|tg|mg"
