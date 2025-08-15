@@ -1,7 +1,7 @@
 nameOverride: ""
 fullnameOverride: ""
 namespaceOverride: ""
-clusterName: "lumi.sguat"
+clusterName: "cluster.local"
 
 loglevel: info
 
@@ -42,7 +42,7 @@ opencost:
   exporter:
     apiPort: 9003
     cloudProviderApiKey: ""
-    defaultClusterId: 'lumi.sguat'
+    defaultClusterId: 'cluster.local'
     image:
       registry: lumhub.sc-t1prod.gamora.prod/aws/base
       repository: opencost
@@ -183,8 +183,8 @@ opencost:
     bearer_token_key: DB_BEARER_TOKEN
     kubeRBACProxy: false
     external:
-      enabled: true
-      url: "https://prometheus-eks-sguat.sportsfun.app/"
+      enabled: false
+      url: ""
     internal:
       enabled: false
       serviceName: prometheus-atx-sguat-kube-prometheus
