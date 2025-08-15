@@ -186,7 +186,7 @@ opencost:
       enabled: false
       url: ""
     internal:
-      enabled: false
+      enabled: true
       serviceName: prometheus-atx-sguat-kube-prometheus
       namespaceName: monitoring
       port: 9090
