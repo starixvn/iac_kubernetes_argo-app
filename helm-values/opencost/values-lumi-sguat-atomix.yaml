@@ -10,7 +10,7 @@ imagePullSecrets: []
 serviceAccount:
   create: true
   annotations: 
-  eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:user/tf.dennis.le
+  eks.amazonaws.com/role-arn: arn:aws:eks:ap-southeast-1:014999276089:cluster/nx-pentagon-t1uat-v1
   automountServiceAccountToken: true
   name: opencost-atx-sguat
 
@@ -183,10 +183,10 @@ opencost:
     bearer_token_key: DB_BEARER_TOKEN
     kubeRBACProxy: false
     external:
-      enabled: false
+      enabled: true
       url: "https://prometheus-eks-sguat.sportsfun.app/"
     internal:
-      enabled: true
+      enabled: false
       serviceName: prometheus-atx-sguat-kube-prometheus
       namespaceName: monitoring
       port: 9090
