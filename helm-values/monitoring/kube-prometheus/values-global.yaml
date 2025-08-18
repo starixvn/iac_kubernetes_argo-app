@@ -433,7 +433,7 @@ prometheus:
         # Opensearch Cluster Red 
         - alert: OpensearchClusterRed
           expr: opensearch_cluster_status == 2
-          for: 0m
+          for: 5m
           labels:
             severity: CRITICAL
             service: OpenSearch
@@ -445,7 +445,7 @@ prometheus:
         # Opensearch Cluster Yellow 
         - alert: OpensearchClusterYellow
           expr: opensearch_cluster_status == 1
-          for: 0m
+          for: 5m
           labels:
             severity: WARNING
             service: OpenSearch
