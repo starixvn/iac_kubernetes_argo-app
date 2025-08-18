@@ -32,6 +32,12 @@ logstashPipeline:
         type => "http-app"
         tags => ["uat","pioneers"]
       }
+
+      syslog {
+        port => 5970
+        type => "kubescape"
+        tags => ["uat", "sc"]
+      }
     }
 
   vault_filter.conf: |
@@ -245,6 +251,48 @@ logstashPipeline:
       }
     }
 
+  kubescape_filter.conf: |
+    if [type] == "kubescape" {
+      grok {
+        match => {
+          "message" => "<%{NONNEGINT:syslog_pri}>%{NONNEGINT:version}%{SPACE}(?:-|%{TIMESTAMP_ISO8601:syslog_timestamp})%{SPACE}(?:-|%{IPORHOST:hostname})%{SPACE}(?:%{SYSLOG5424PRINTASCII:program}|-)%{SPACE}(?:-|%{SYSLOG5424PRINTASCII:process_id})%{SPACE}(?:-|%{SYSLOG5424PRINTASCII:message_id})%{SPACE}(?:-|(?<structured_data>(\[.*?[^\\]\])+))(?:%{SPACE}%{GREEDYDATA:syslog_message}|)"
+        }
+        add_tag => [ "match" ]
+      }
+      if "match" in [tags] {
+        syslog_pri {
+          remove_field => "syslog_pri"
+        }
+        date {
+          match => [ "syslog_timestamp", "ISO8601", "MMM dd HH:mm:ss", "MMM dd HH:mm:ss.SSS" ]
+          remove_field => "syslog_timestamp"
+        }
+        if [structured_data] {
+          ruby {
+            code => '
+              # https://github.com/logstash-plugins/logstash-input-syslog/issues/15#issuecomment-270367033
+              def extract_syslog5424_sd(syslog5424_sd)
+                sd = {}
+                syslog5424_sd.scan(/\[(?<element>.*?[^\\])\]/) do |element|
+                  data = element[0].match(/(?<sd_id>[^\ ]+)(?<sd_params> .*)?/)
+                  sd_id = data[:sd_id].split("@", 2)[0]
+                  sd[sd_id] = {}
+                  next if data.nil? || data[:sd_params].nil?
+                  data[:sd_params].scan(/ (.*?[=](?:""|".*?[^\\]"))/) do |set|
+                    set = set[0].match(/(?<param_name>.*?)[=]\"(?<param_value>.*)\"/)
+                    sd[sd_id][set[:param_name]] = set[:param_value]
+                  end
+                end
+                sd
+              end
+              event.set("[sd]", extract_syslog5424_sd(event.get("[structured_data]")))
+            '
+            remove_field => "structured_data"
+          }
+        }
+      }
+    }
+
   vault_output.conf: |
     output {
       if [type] == "vault" {
@@ -385,6 +433,33 @@ logstashPipeline:
       }
     }
 
+  kubescape_output.conf: |
+    output {
+      if [type] == "kubescape" {
+        if [tag] == "sc" {
+          opensearch {
+            hosts => ["https://opsi.ops-klprod.gamora.prod:443"]
+            user => "logstash"
+            password => "logstash"
+            ssl => true
+            ssl_certificate_verification => false
+            index => "logstash-kubescape-uat"
+            action => "create"
+          }
+        }
+        else {
+          opensearch {
+            hosts => ["https://opsi.ops-klprod.gamora.prod:443"]
+            user => "logstash"
+            password => "logstash"
+            ssl => true
+            ssl_certificate_verification => false
+            index => "logstash-unknown"
+            action => "create"
+          } 
+        }
+      }
+    }
 
   main_output.conf: |
     output {
@@ -433,6 +508,13 @@ extraPorts:
     containerPort: 6969
     protocol: TCP
 
+  - name: syslog-app-tcp
+    containerPort: 6970
+    protocol: TCP
+  - name: syslog-app-udp
+    containerPort: 6970
+    protocol: UDP
+
 
 service:
   type: NodePort
@@ -469,3 +551,14 @@ service:
     port: 6969
     protocol: TCP
     targetPort: http-pier
+
+  - name: syslog-app-tcp
+    nodePort: 30970
+    port: 6970
+    protocol: TCP
+    targetPort: syslog-app-tcp
+  - name: syslog-app-udp
+    nodePort: 30970
+    port: 6970
+    protocol: UDP
+    targetPort: syslog-app-udp
