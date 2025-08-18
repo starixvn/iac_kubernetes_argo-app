@@ -34,7 +34,7 @@ logstashPipeline:
       }
 
       syslog {
-        port => 5970
+        port => 6970
         type => "kubescape"
         tags => ["uat", "sc"]
       }
