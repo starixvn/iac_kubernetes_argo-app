@@ -510,10 +510,10 @@ extraPorts:
     containerPort: 6969
     protocol: TCP
 
-  - name: syslog-app-tcp
+  - name: kubescape-sc-tcp
     containerPort: 6970
     protocol: TCP
-  - name: syslog-app-udp
+  - name: kubescape-sc-udp
     containerPort: 6970
     protocol: UDP
 
@@ -554,13 +554,13 @@ service:
     protocol: TCP
     targetPort: http-pier
 
-  - name: syslog-app-tcp
+  - name: kubescape-sc-tcp
     nodePort: 30970
     port: 6970
     protocol: TCP
-    targetPort: syslog-app-tcp
-  - name: syslog-app-udp
+    targetPort: kubescape-sc-tcp
+  - name: kubescape-sc-udp
     nodePort: 30970
     port: 6970
     protocol: UDP
-    targetPort: syslog-app-udp
+    targetPort: kubescape-sc-udp
