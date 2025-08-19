@@ -438,7 +438,7 @@ logstashPipeline:
   kubescape_output.conf: |
     output {
       if [type] == "kubescape" {
-        if [tag] == "sc" {
+        if "sc" in [tags] and "uat" in [tags] {
           opensearch {
             hosts => ["https://opsi.ops-klprod.gamora.prod:443"]
             user => "logstash"
