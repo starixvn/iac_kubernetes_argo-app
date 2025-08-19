@@ -18,7 +18,6 @@ argo_applications_by_team = {
         value_files = [
           "values-lumi-sgprod-atomix.yaml"
         ]
-        # trigger
       }
       harbor = {
         helm_path     = "registry/harbor"
@@ -33,7 +32,7 @@ argo_applications_by_team = {
         namespace     = "monitoring"
         helm_path     = "monitoring/kube-prometheus"
         chart_version = "9.5.11"
-        skip_crds     = false
+        skip_crds     = true
         value_files = [
           "values-global.yaml",
           "values-lumi-sgprod-atomix.yaml"
@@ -43,14 +42,12 @@ argo_applications_by_team = {
         helm_path     = "opencost"
         chart_version = "2.1.9"
         value_files   = ["values-lumi-sgprod-atomix.yaml"]
-        ### trigger
       }
 
       awx-operator = {
         helm_path     = "awx-operator"
         chart_version = "3.1.0"
         auto_sync     = false
-        skip_crds     = false
         value_files = [
           "values-starix-sgprod-atomix.yaml"
         ]
@@ -59,10 +56,8 @@ argo_applications_by_team = {
         namespace     = "portainer"
         helm_path     = "portainer"
         chart_version = "1.0.63"
-        skip_crds     = true
         value_files = [
           "values-starix-sgprod-lumi.yaml"
-          # trigger
         ]
       }
 
@@ -70,9 +65,7 @@ argo_applications_by_team = {
         namespace     = "velero"
         helm_path     = "velero"
         chart_version = "1.14.1"
-        skip_crds     = false
         value_files   = ["values-starix-sgprod-atomix.yaml"]
-        #trigger
       }
 
     }
