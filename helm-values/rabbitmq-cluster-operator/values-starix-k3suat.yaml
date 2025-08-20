@@ -13,6 +13,8 @@ rabbitCluster:
       nodePort: 30672
     manager:
       nodePort: 31672
+    headless:
+      enabled: true
 
   nodeSelector:
     rabbit: "yes"
