@@ -34,7 +34,7 @@ config:
     [INPUT]
       Name syslog
       Tag syslog.haproxy
-      Parser haproxy
+      # Parser haproxy
       Listen 0.0.0.0
       Port 5170
       Mode udp
