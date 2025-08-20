@@ -180,6 +180,13 @@ argo_applications_by_team = {
         ######## trigger deploy sentry
       }
 
+      redis-was-custom = {
+        helm_path     = "redis-was-custom"
+        chart_version = "18.17.0"
+        value_files   = ["values-starix-k3suat-wabisabi.yaml"]
+        # trigger
+      }
+
     }
   }
 
