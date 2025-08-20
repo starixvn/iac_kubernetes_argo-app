@@ -84,6 +84,8 @@ ingress:
     - "sentry-scklprod-ovs.byb6181.com"
     - "sentry-scklprod-ovs.ops-klprod.gamora.prod"
     - "sentrysc-ovs.starixplay.com"
+    - "sentry.sabagame.com"
+    - "sentry.sabagaming.com"
   ingressClassName: "haproxy"
 
 
