@@ -97,6 +97,7 @@ config:
       Name opensearch
       Match syslog.haproxy
       Host opsi.ops-klprod.gamora.prod
+      Port 443
       tls On
       tls.verify Off
       HTTP_User logstash
