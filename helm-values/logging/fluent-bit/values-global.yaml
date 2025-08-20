@@ -35,7 +35,7 @@ config:
     [PARSER]
       Name  haproxy
       Format  regex
-      Regex  (?<day_time>\w+  \d+ \S+) (?<ps>\S+)\[(?<pid>\d+)\]: (?<c_ip>\S+):(?<c_port>\d+) \[(?<time>.+)\] (?<f_end>[\w-]+)(\~)?.(?<b_end>[\w-]*)\/(?<b_server><?[\w-]+>?) (?<tq>-?\d+)\/(?<tw>-?\d+)\/(?<tc>-?\d+)\/(?<tr>-?\d+)\/(?<tt>-?\d+) (?<status_code>\d+) (?<bytes>\d+) (?<req_cookie>\S+) (?<res_cookie>\S+) (?<t_state>[\w-]+) (?<actconn>-?[0-9])\/(?<feconn>-?\d+)\/(?<beconn>\d+)\/(?<srv_conn>\d+)\/(?<retries>\d+) (?<srv_queue>\d+)\/(?<backend_queue>\d+) (\"<?[\w]+>?\")*(\"((?<method>[\w]+) (?<path>[^#?\s]+)(\?)?(?<query>[^#?\s+]*).(?<version>[\w+\/\.]+))\")*
+      Regex  (?<c_ip>\S+):(?<c_port>\d+) \[(?<time>.+)\] (?<f_end>[\w-]+)(\~)?.(?<b_end>[\w-]*)\/(?<b_server><?[\w-]+>?) (?<tq>-?\d+)\/(?<tw>-?\d+)\/(?<tc>-?\d+)\/(?<tr>-?\d+)\/(?<tt>-?\d+) (?<status_code>\d+) (?<bytes>\d+) (?<req_cookie>\S+) (?<res_cookie>\S+) (?<t_state>[\w-]+) (?<actconn>-?[0-9])\/(?<feconn>-?\d+)\/(?<beconn>\d+)\/(?<srv_conn>\d+)\/(?<retries>\d+) (?<srv_queue>\d+)\/(?<backend_queue>\d+) (\"<?[\w]+>?\")*(\"((?<method>[\w]+) (?<path>[^#?\s]+)(\?)?(?<query>[^#?\s+]*).(?<version>[\w+\/\.]+))\")*
       Time_Key    time
       Time_Format %d/%b/%Y:%H:%M:%S.%L
       Time_Keep   On
