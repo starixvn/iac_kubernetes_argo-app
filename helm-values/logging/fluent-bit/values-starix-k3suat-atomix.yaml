@@ -96,7 +96,7 @@ config:
     [OUTPUT]
       Name opensearch
       Match syslog.haproxy
-      Host opsearch-atx-k3sprod.logging
+      Host opsi.ops-klprod.gamora.prod
       tls On
       tls.verify Off
       HTTP_User logstash
