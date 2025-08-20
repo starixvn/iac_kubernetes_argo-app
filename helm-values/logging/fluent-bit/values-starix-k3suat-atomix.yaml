@@ -1,6 +1,12 @@
 image:
   repository: nexhub.ops-klprod.gamora.prod/kbt/base/fluent/fluent-bit
 
+extraPorts:
+- port: 5170
+  containerPort: 5170
+  protocol: UDP
+  name: syslog
+
 config:
   inputs: |
     [INPUT]
@@ -30,7 +36,7 @@ config:
       Tag syslog.haproxy
       Parser haproxy
       Listen 0.0.0.0
-      Port 514
+      Port 5170
       Mode udp
       
   filters: |
