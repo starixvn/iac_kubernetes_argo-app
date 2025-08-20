@@ -83,6 +83,7 @@ ingress:
   hostnames:
     - "sentrysc-ovs.ops-kluat.gamora.prod"
     - "sentry-ovs.sgamesuat.com"
+    - "scsentry.sgamesuat.com"
   ingressClassName: "haproxy"
 
 
