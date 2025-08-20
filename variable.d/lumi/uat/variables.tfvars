@@ -32,6 +32,11 @@ argo_applications_by_team = {
         value_files   = ["values-lumi-uat-atomix.yaml"]
         ### trigger
       }
+      kubescape-op = {
+        namespace     = "kubescape"
+        helm_path     = "kubescape/kubescape-operator"
+        chart_version = "1.29.0"
+      }
       fluent-bit = {
         namespace     = "logging"
         helm_path     = "logging/fluent-bit"

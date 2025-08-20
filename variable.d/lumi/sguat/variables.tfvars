@@ -18,14 +18,13 @@ argo_applications_by_team = {
         value_files = [
           "values-lumi-sguat-atomix.yaml"
         ]
-        ## trigger
       }
 
       prometheus = {
         namespace     = "monitoring"
         helm_path     = "monitoring/kube-prometheus"
         chart_version = "9.5.11"
-        skip_crds     = false
+        skip_crds     = true
         value_files = [
           "values-global.yaml",
           "values-lumi-sguat-atomix.yaml"
@@ -35,16 +34,13 @@ argo_applications_by_team = {
         helm_path     = "opencost"
         chart_version = "2.1.9"
         value_files   = ["values-lumi-sguat-atomix.yaml"]
-        ### trigger
       }
 
       velero = {
         namespace     = "velero"
         helm_path     = "velero"
         chart_version = "1.14.1"
-        skip_crds     = false
         value_files   = ["values-starix-sguat-atomix.yaml"]
-        #trigger
       }
 
     }

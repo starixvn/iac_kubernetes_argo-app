@@ -102,7 +102,7 @@ alertmanager:
         matchers:
         - alertname="KubescapeRuleViolated"
         - severity!="low"
-        group_by: ['namespace', 'container_name', 'rule_name']
+        group_by: ['container_name', 'rule_name']
       group_by: ['alertname', 'cluster', 'namespace', 'pod', 'description', 'instance']
       group_wait: 30s
       group_interval: 5m

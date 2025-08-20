@@ -196,10 +196,27 @@ roles:
     allowedActions:
     - kibana_all_write
 
+- name: "pentagon-member"
+  clusterPermissions:
+  - cluster_composite_ops
+  - cluster_monitor
+  indexPermissions:
+  - indexPatterns:
+    - "*haproxy-ing-sc*"
+    allowedActions:
+    - index
+    - read
+  tenantPermissions:
+  - tenantPatterns:
+    - pentagon
+    allowedActions:
+    - kibana_all_write
+
 tenants:
 - name: "pioneers"
 - name: "subarashi"
 - name: "nexpe"
+- name: "pentagon"
 
 actionGroups: []
 

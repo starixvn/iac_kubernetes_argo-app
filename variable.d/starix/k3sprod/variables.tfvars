@@ -3,7 +3,6 @@ cluster_org = "starix"
 cluster_env = "k3sprod"
 
 default_project = "tf-starix-k3sprod"
-vault_addr      = "https://vault.nexdev.net"
 
 # ARGO APPLICATIONS
 argo_applications_by_team = {
