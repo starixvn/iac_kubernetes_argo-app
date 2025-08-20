@@ -44,7 +44,6 @@ ingress:
   additionalHostNames:
   - "sentrypro-sc.ops-klprod.gamora.prod"
   - "sentrysc.starixplay.com"
-  - "sentry.sabagame.com"
   ingressClassName: "haproxy"
 
 
