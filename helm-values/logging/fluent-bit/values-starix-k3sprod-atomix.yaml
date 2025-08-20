@@ -6,39 +6,14 @@ image:
 #   node-role.kubernetes.io/etcd: "true"
 #   node-role.kubernetes.io/master: "true"
 
-tolerations:
-- operator: Exists
-
-luaScripts:
-  strip_ansi_color_code: |
-    function strip_ansi_color_code(tag, timestamp, record)
-      if type(record["log"]) == "string" then 
-        record["log"] = record["log"]:gsub('[\27\155][][()#;?%d]*[A-PRZcf-ntqry=><~]', '') 
-        return 2, 0, record 
-      end 
-      return 0, 0, 0
-    end
-
-
 config:
-  service: |
-    [SERVICE]
-      Daemon Off
-      Flush {{ .Values.flush }}
-      Log_Level {{ .Values.logLevel }}
-      Parsers_File /fluent-bit/etc/parsers.conf
-      Parsers_File /fluent-bit/etc/conf/custom_parsers.conf
-      HTTP_Server On
-      HTTP_Listen 0.0.0.0
-      HTTP_Port {{ .Values.metricsPort }}
-      Health_Check On
   inputs: |
     [INPUT]
       Name tail
       Path /var/log/containers/coredns*.log,/var/log/containers/kube*.log
       multiline.parser docker, cri
       Tag kube.kubesystem
-      Mem_Buf_Limit 64MB
+      Mem_Buf_Limit 5MB
       Skip_Long_Lines On
 
     [INPUT]
@@ -54,6 +29,14 @@ config:
       Tag host.all
       Read_From_Tail On
       Strip_Underscores On
+
+    [INPUT]
+      Name syslog
+      Tag syslog.haproxy
+      Parser haproxy
+      Listen 0.0.0.0
+      Port 514
+      Mode udp
       
   filters: |
     [FILTER]
@@ -107,11 +90,14 @@ config:
       Index logstash-kubesystem-container-log
       Replace_Dots On
 
-
-  customParsers: |
-    [PARSER]
-      Name docker_no_time
-      Format json
-      Time_Keep Off
-      Time_Key time
-      Time_Format %Y-%m-%dT%H:%M:%S.%L
+    [OUTPUT]
+      Name opensearch
+      Match syslog.haproxy
+      Host opsearch-atx-k3sprod.logging
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-debug
+      Replace_Dots On
