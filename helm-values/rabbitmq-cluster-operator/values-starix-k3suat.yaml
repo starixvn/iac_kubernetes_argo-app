@@ -17,7 +17,7 @@ rabbitCluster:
       enabled: true
 
   nodeSelector:
-    rabbit: "yes"
+  #  rabbit: "yes"
   tolerations:
     - key: rabbit-deployapi
       operator: "Equal"
