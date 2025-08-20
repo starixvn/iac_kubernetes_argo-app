@@ -47,9 +47,12 @@ controller:
 
   logging:
     traffic:
-      address: "logstash-atx-k3suat-logstash.logging.svc"
-      port: "5045"
-      format: "rfc3164"
+      # address: "logstash-atx-k3suat-logstash.logging.svc"
+      # port: "5045"
+      # format: "rfc3164"
+      # facility: "local1"
+      address: "fluent-bit-atx-k3suat.logging.svc"
+      port: "5170"
       facility: "local1"
 
   resources:
