@@ -32,7 +32,7 @@ capabilities:
   # matching docs before enabling.
   autoUpgrading: disable
   kubescapeOffline: enable
-  prometheusExporter: enable
+  prometheusExporter: disable
   # seccompGenerator: disable
 
   testing:
