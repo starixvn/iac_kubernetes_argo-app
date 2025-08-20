@@ -37,9 +37,8 @@ argo_applications_by_team = {
       rabbitmq = {
         helm_path     = "rabbitmq-cluster-operator"
         chart_version = "4.3.15"
-        value_files = [
-          "values-starix-k3suat.yaml"
-        ]
+        auto_sync     = false
+        value_files   = ["values-starix-k3suat.yaml"]
       }
 
       haproxy-service = {
