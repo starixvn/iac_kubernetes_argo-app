@@ -53,6 +53,7 @@ controller:
       # facility: "local1"
       address: "fluent-bit-atx-k3suat.logging.svc"
       port: "5170"
+      format: "rfc5424"
       facility: "local1"
 
   resources:
