@@ -42,7 +42,7 @@ config:
     [FILTER]
       Name modify
       Match *
-      Add env k3suat
+      Add env uat
 
     [FILTER]
       Name kubernetes
