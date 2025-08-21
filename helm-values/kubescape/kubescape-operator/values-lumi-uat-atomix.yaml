@@ -1,4 +1,4 @@
-clusterName: "lumi.local"
+clusterName: "lumi.uat"
 
 # excludeNamespaces: "kubescape,kube-system,kube-public,kube-node-lease,kubeconfig,gmp-system,gmp-public"
 includeNamespaces: "gn,hd,l1,l2,mg,sk,sp,tg"
