@@ -35,8 +35,6 @@ clusterOperator:
       operator: "Equal"
       value: "yes"
       effect: "NoSchedule"
-  metrics:
-
 
 msgTopologyOperator:
   nodeSelector:
