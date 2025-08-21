@@ -130,7 +130,7 @@ alertmanager:
 
     - name: kubescape-notify
       slack_configs:
-      - channel: "#alert-josh-test"
+      - channel: "#dev-services"
         color: '{{ template "sre.slack.color" . }}'
         fallback: '{{ template "sre.slack.fallback" . }}'
         icon_emoji: '{{ template "sre.slack.iconemoji" . }}'
