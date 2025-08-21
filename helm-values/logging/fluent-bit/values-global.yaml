@@ -10,6 +10,7 @@ luaScripts:
       end 
       return 0, 0, 0
     end
+
   haproxy_to_waf.lua: |
     local MONTHS = {
       Jan=1,Feb=2,Mar=3,Apr=4,May=5,Jun=6,Jul=7,Aug=8,Sep=9,Oct=10,Nov=11,Dec=12
@@ -45,13 +46,6 @@ luaScripts:
       local n = tonumber(s)
       if n == nil then return nil end
       return math.floor(n)
-    end
-
-    -- Map HAProxy status to WAF-like action
-    local function map_action(status_code)
-      local n = to_int(status_code) or 0
-      if n >= 400 then return "BLOCK" end
-      return "ALLOW"
     end
 
     -- Build headers array like AWS WAF ("name","value" pairs). We only have UA by default.
@@ -98,38 +92,19 @@ luaScripts:
         httpVersion = http_version or "HTTP/?"
       }
 
-      -- Action + rule metadata
-      waf["action"]           = map_action(record["status_code"])
-      waf["terminatingRuleId"] = "haproxy_default"
-      waf["terminatingRuleType"] = "REGULAR"
-      waf["httpSourceName"]   = "haproxy"
-      waf["httpSourceId"]     = record["backend_server"] or record["frontend"]
-
       -- Optional: carry timing/metrics similar to WAF extended fields
       waf["labels"] = {
         frontend       = record["frontend"],
         backendServer  = record["backend_server"],
-        termination    = record["termination_state"]
       }
 
       waf["metrics"] = {
         statusCode   = to_int(record["status_code"]),
         bytesRead    = to_int(record["bytes_read"]),
         timers       = {
-          Tq = to_int(record["Tq"]),
-          Tw = to_int(record["Tw"]),
           Tc = to_int(record["Tc"]),
           Tr = to_int(record["Tr"]),
           Tt = to_int(record["Tt"])
-        },
-        concurrency  = {
-          actconn = to_int(record["actconn"]),
-          feconn  = to_int(record["feconn"]),
-          beconn  = to_int(record["beconn"]),
-          srvconn = to_int(record["srv_conn"]),
-          retries = to_int(record["retries"]),
-          srvq    = to_int(record["srv_queue"]),
-          beq     = to_int(record["backend_queue"])
         }
       }
 
