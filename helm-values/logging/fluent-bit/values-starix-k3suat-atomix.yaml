@@ -58,6 +58,12 @@ config:
       Key_name message
       Parser haproxy
 
+    [FILTER]
+      Name lua
+      Match syslog.haproxy
+      script /fluent-bit/scripts/haproxy_to_waf.lua
+      call map_to_waf_like
+
   outputs: |
     [OUTPUT]
       Name opensearch

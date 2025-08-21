@@ -10,6 +10,119 @@ luaScripts:
       end 
       return 0, 0, 0
     end
+  haproxy_to_waf.lua: |
+    local MONTHS = {
+      Jan=1,Feb=2,Mar=3,Apr=4,May=5,Jun=6,Jul=7,Aug=8,Sep=9,Oct=10,Nov=11,Dec=12
+    }
+
+    local function to_rfc3339(accept_date)
+      if type(accept_date) ~= "string" then return nil end
+      local d, mon, y, hh, mm, ss, ms =
+        accept_date:match("^(%d%d?)%/(%a%a%a)%/(%d%d%d%d):(%d%d):(%d%d):(%d%d)%.?(%d*)$")
+      if not (d and mon and y and hh and mm and ss) then return nil end
+      local month = MONTHS[mon]
+      if not month then return nil end
+      local ms_part = (ms and #ms > 0) and ("." .. ms) or ""
+      local tz = os.getenv("FLUENT_TIMEZONE") or "UTC"
+      if tz == "UTC" then
+        return string.format("%04d-%02d-%02dT%02d:%02d:%02d%sZ",
+          y, month, d, hh, mm, ss, ms_part)
+      else
+        -- No offset math (unknown); return local-ish ISO8601 without zone.
+        return string.format("%04d-%02d-%02dT%02d:%02d:%02d%s",
+          y, month, d, hh, mm, ss, ms_part)
+      end
+    end
+
+    local function parse_http_request(req)
+      if type(req) ~= "string" then return nil,nil,nil end
+      local m,u,v = req:match("^(%S+)%s+(%S+)%s+(%S+)$")
+      return m,u,v
+    end
+
+    local function to_int(s)
+      if s == nil then return nil end
+      local n = tonumber(s)
+      if n == nil then return nil end
+      return math.floor(n)
+    end
+
+    -- Map HAProxy status to WAF-like action
+    local function map_action(status_code)
+      local n = to_int(status_code) or 0
+      if n >= 400 then return "BLOCK" end
+      return "ALLOW"
+    end
+
+    -- Build headers array like AWS WAF ("name","value" pairs). We only have UA by default.
+    local function build_headers(record)
+      local headers = {}
+      if record["http_user_agent"] and #record["http_user_agent"] > 0 then
+        table.insert(headers, { name = "User-Agent", value = record["http_user_agent"] })
+      end
+      -- You can enrich more headers here if HAProxy captures them (e.g., Host, X-Forwarded-For)
+      return headers
+    end
+
+    function map_to_waf_like(tag, ts, record)
+      -- Prefer 'message' over 'msg' (already normalized by modify filter)
+      -- Defensive: don’t crash on missing fields.
+      local waf = {}
+
+      -- Timestamp
+      local iso = to_rfc3339(record["accept_date"])
+      waf["timestamp"] = iso or record["accept_date"] or record["time"] or os.date("!%Y-%m-%dT%H:%M:%SZ")
+
+      -- HTTP request sub-doc
+      local method, uri, http_version = parse_http_request(record["http_request"])
+      waf["httpRequest"] = {
+        clientIp    = record["client_ip"] or record["source"] or "0.0.0.0",
+        country     = nil,               -- optional future GeoIP enrichment
+        headers     = build_headers(record),
+        uri         = uri or "/",
+        method      = method or "UNKNOWN",
+        httpVersion = http_version or "HTTP/?"
+      }
+
+      -- Action + rule metadata
+      waf["action"]           = map_action(record["status_code"])
+      waf["terminatingRuleId"] = "haproxy_default"
+      waf["terminatingRuleType"] = "REGULAR"
+      waf["httpSourceName"]   = "haproxy"
+      waf["httpSourceId"]     = record["backend_server"] or record["frontend"]
+
+      -- Optional: carry timing/metrics similar to WAF extended fields
+      waf["labels"] = {
+        frontend       = record["frontend"],
+        backendServer  = record["backend_server"],
+        termination    = record["termination_state"]
+      }
+
+      waf["metrics"] = {
+        statusCode   = to_int(record["status_code"]),
+        bytesRead    = to_int(record["bytes_read"]),
+        timers       = {
+          Tq = to_int(record["Tq"]),
+          Tw = to_int(record["Tw"]),
+          Tc = to_int(record["Tc"]),
+          Tr = to_int(record["Tr"]),
+          Tt = to_int(record["Tt"])
+        },
+        concurrency  = {
+          actconn = to_int(record["actconn"]),
+          feconn  = to_int(record["feconn"]),
+          beconn  = to_int(record["beconn"]),
+          srvconn = to_int(record["srv_conn"]),
+          retries = to_int(record["retries"]),
+          srvq    = to_int(record["srv_queue"]),
+          beq     = to_int(record["backend_queue"])
+        }
+      }
+
+      -- Return a fully replaced record
+      return 1, ts, waf
+    end
+
 
 config:
   service: |
@@ -35,8 +148,5 @@ config:
     [PARSER]
       Name  haproxy
       Format  regex
-      Regex ^(?<client_ip>\S+):(?<client_port>\d+) \[(?<accept_date>[^\]]+)\] (?<frontend>[^ ]+) (?<backend_server>[^ ]+) (?<Tq>\d+)/(?<Tw>\d+)/(?<Tc>\d+)/(?<Tr>\d+)/(?<Tt>\d+) (?<status_code>\d+) (?<bytes_read>\d+) (?<captured_request_cookie>[^ ]+) (?<captured_response_cookie>[^ ]+) (?<termination_state>[^ ]+) (?<actconn>\d+)/(?<feconn>\d+)/(?<beconn>\d+)/(?<srv_conn>\d+)/(?<retries>\d+) (?<srv_queue>\d+)/(?<backend_queue>\d+) \{(?<http_user_agent>[^\}]*)\} "(?<http_request>[^"]+)"
-      Time_Key    time
-      Time_Format %d/%b/%Y:%H:%M:%S.%L
-      Time_Keep   On
-      Time_Strict  Off
+      Regex ^(?<client_ip>\S+):(?<client_port>\d+)\s+\[(?<accept_date>[^\]]+)\]\s+(?<frontend>\S+)\s+(?<backend_server>\S+)\s+(?<Tq>\d+)\/(?<Tw>\d+)\/(?<Tc>\d+)\/(?<Tr>\d+)\/(?<Tt>\d+)\s+(?<status_code>\d+)\s+(?<bytes_read>\d+)\s+(?<captured_request_cookie>\S+)\s+(?<captured_response_cookie>\S+)\s+(?<termination_state>\S+)\s+(?<actconn>\d+)\/(?<feconn>\d+)\/(?<beconn>\d+)\/(?<srv_conn>\d+)\/(?<retries>\d+)\s+(?<srv_queue>\d+)\/(?<backend_queue>\d+)\s+\{(?<http_user_agent>[^\}]*)\}\s+"(?<http_request>[^"]+)"$
+
