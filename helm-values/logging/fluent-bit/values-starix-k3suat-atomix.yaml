@@ -39,10 +39,6 @@ config:
       Mode udp
       
   filters: |
-    [FILTER]
-      Name modify
-      Match *
-      Add env uat
 
     [FILTER]
       Name kubernetes
@@ -80,6 +76,11 @@ config:
     #   Match syslog.haproxy
     #   script /fluent-bit/scripts/merge_geoip.lua
     #   call merge_geoip
+
+    [FILTER]
+      Name modify
+      Match *
+      Add env uat
 
   outputs: |
     [OUTPUT]
