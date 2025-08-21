@@ -35,7 +35,7 @@ config:
     [PARSER]
       Name  haproxy
       Format  regex
-      Regex  (?<c_ip>\S+):(?<c_port>\d+) \[(?<time>.+)\] (?<f_end>[\w-]+)(\~)?.(?<b_end>[\w-]*)\/(?<b_server><?[\w-]+>?) (?<tq>-?\d+)\/(?<tw>-?\d+)\/(?<tc>-?\d+)\/(?<tr>-?\d+)\/(?<tt>-?\d+) (?<status_code>\d+) (?<bytes>\d+) (?<req_cookie>\S+) (?<res_cookie>\S+) (?<t_state>[\w-]+) (?<actconn>-?[0-9])\/(?<feconn>-?\d+)\/(?<beconn>\d+)\/(?<srv_conn>\d+)\/(?<retries>\d+) (?<srv_queue>\d+)\/(?<backend_queue>\d+) (\"<?[\w]+>?\")*(\"((?<method>[\w]+) (?<path>[^#?\s]+)(\?)?(?<query>[^#?\s+]*).(?<version>[\w+\/\.]+))\")*
+      Regex ^(?<client_ip>\S+):(?<client_port>\d+) \[(?<accept_date>[^\]]+)\] (?<frontend>[^ ]+) (?<backend_server>[^ ]+) (?<Tq>\d+)/(?<Tw>\d+)/(?<Tc>\d+)/(?<Tr>\d+)/(?<Tt>\d+) (?<status_code>\d+) (?<bytes_read>\d+) (?<captured_request_cookie>[^ ]+) (?<captured_response_cookie>[^ ]+) (?<termination_state>[^ ]+) (?<actconn>\d+)/(?<feconn>\d+)/(?<beconn>\d+)/(?<srv_conn>\d+)/(?<retries>\d+) (?<srv_queue>\d+)/(?<backend_queue>\d+) \{(?<http_user_agent>[^\}]*)\} "(?<http_request>[^"]+)"
       Time_Key    time
       Time_Format %d/%b/%Y:%H:%M:%S.%L
       Time_Keep   On

@@ -34,7 +34,6 @@ config:
     [INPUT]
       Name syslog
       Tag syslog.haproxy
-      # Parser haproxy
       Listen 0.0.0.0
       Port 5170
       Mode udp
@@ -52,6 +51,12 @@ config:
       Keep_Log Off
       K8S-Logging.Parser On
       K8S-Logging.Exclude On
+
+    [FILTER]
+      Name parser
+      Match syslog.haproxy
+      Key_name message
+      Parser haproxy
 
   outputs: |
     [OUTPUT]
