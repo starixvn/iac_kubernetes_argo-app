@@ -13,8 +13,7 @@ rabbitCluster:
       nodePort: 30672
     manager:
       nodePort: 31672
-    headless:
-      enabled: true
+
 
   nodeSelector:
   #  rabbit: "yes"
@@ -24,6 +23,10 @@ rabbitCluster:
       value: "yes"
       effect: "NoSchedule"
 
+  metrics:
+    serviceMonitor:
+      enabled: true
+
 clusterOperator:
   nodeSelector:
     rabbit: "yes"
@@ -32,6 +35,8 @@ clusterOperator:
       operator: "Equal"
       value: "yes"
       effect: "NoSchedule"
+  metrics:
+
 
 msgTopologyOperator:
   nodeSelector:
