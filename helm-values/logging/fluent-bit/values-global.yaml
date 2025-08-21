@@ -56,8 +56,8 @@ luaScripts:
         clientIp    = record["client_ip"] or record["source"] or "0.0.0.0",
         headers     = build_headers(record),
         method      = record["http_method"] or "UNKNOWN",
-        requestHost = record["request_host"] or "-",
-        requestPath = "/" .. (record["request_path"] or ""),
+        host        = record["request_host"] or "-",
+        path        = "/" .. (record["request_path"] or ""),
         httpVersion = record["http_version"] or "HTTP/?",
         uri         = string.format("%s/%s", record["request_host"] or "-", record["request_path"] or "")
       }
