@@ -3,7 +3,7 @@ tolerations:
 
 luaScripts:
   strip_ansi_color_code: |
-    function strip_ansi_color_code(tag, timestamp, record)
+    function strip_ansi_color_code(tag, ts, record)
       if type(record["log"]) == "string" then 
         record["log"] = record["log"]:gsub('[\27\155][][()#;?%d]*[A-PRZcf-ntqry=><~]', '') 
         return 2, 0, record 
@@ -38,6 +38,10 @@ luaScripts:
         local val = parts[i]
         if val and val ~= "-" then
           table.insert(headers, { name = name, value = val })
+          if name == "X-Forwarded-For" then
+            -- promote to record for GeoIP lookup
+            record["http_xff"] = val
+          end
         end
       end
       return headers
@@ -83,6 +87,33 @@ luaScripts:
       return 1, ts, waf
     end
 
+  merge_geoip.lua: |
+    function merge_geoip(tag, ts, record)
+      if record["geoip_country_name"] or record["geoip_city_name"] then
+        local lat = record["geoip_latitude"]
+        local lon = record["geoip_longitude"]
+
+        -- Build nested geoip object
+        record["geoip"] = {
+          country_name = record["geoip_country_name"],
+          country_iso  = record["geoip_country_iso"],
+          city_name    = record["geoip_city_name"],
+          location     = {
+            lat = lat,
+            lon = lon
+          }
+        }
+
+        -- Clean up flat fields produced by geoip2 filter
+        record["geoip_country_name"] = nil
+        record["geoip_country_iso"]  = nil
+        record["geoip_city_name"]    = nil
+        record["geoip_latitude"]     = nil
+        record["geoip_longitude"]    = nil
+      end
+
+      return 1, ts, record
+    end
 
 config:
   service: |

@@ -64,6 +64,23 @@ config:
       script /fluent-bit/scripts/haproxy_to_waf.lua
       call map_to_waf_like
 
+    # [FILTER]
+    #   Name   geoip2
+    #   Match  syslog.haproxy
+    #   Database /etc/geoip/GeoLite2-City.mmdb
+    #   Lookup_key http_xff
+    #   Record geoip_country_name country.names.en
+    #   Record geoip_country_iso country.iso_code
+    #   Record geoip_city_name city.names.en
+    #   Record geoip_latitude location.latitude
+    #   Record geoip_longitude location.longitude
+
+    # [FILTER]
+    #   Name lua
+    #   Match syslog.haproxy
+    #   script /fluent-bit/scripts/merge_geoip.lua
+    #   call merge_geoip
+
   outputs: |
     [OUTPUT]
       Name opensearch
@@ -114,5 +131,5 @@ config:
       HTTP_User logstash
       HTTP_Passwd logstash
       Suppress_Type_Name On
-      Index logstash-debug
+      Index logstash-haproxy-ing-k3suat-uat
       Replace_Dots On
