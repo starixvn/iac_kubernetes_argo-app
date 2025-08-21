@@ -57,10 +57,24 @@ luaScripts:
     -- Build headers array like AWS WAF ("name","value" pairs). We only have UA by default.
     local function build_headers(record)
       local headers = {}
-      if record["http_user_agent"] and #record["http_user_agent"] > 0 then
-        table.insert(headers, { name = "User-Agent", value = record["http_user_agent"] })
+      local raw = record["http_headers_raw"]
+
+      if raw and #raw > 0 then
+        -- Split by '|'
+        local parts = {}
+        for h in string.gmatch(raw, "([^|]+)") do
+          table.insert(parts, h)
+        end
+
+        -- Map positions to known headers
+        local names = { "Host", "User-Agent", "Referer", "X-Forwarded-For" }
+        for i, v in ipairs(parts) do
+          if v ~= "-" and v ~= "" then
+            table.insert(headers, { name = names[i] or ("Header"..i), value = v })
+          end
+        end
       end
-      -- You can enrich more headers here if HAProxy captures them (e.g., Host, X-Forwarded-For)
+
       return headers
     end
 
@@ -148,5 +162,4 @@ config:
     [PARSER]
       Name  haproxy
       Format  regex
-      Regex ^(?<client_ip>\S+):(?<client_port>\d+)\s+\[(?<accept_date>[^\]]+)\]\s+(?<frontend>\S+)\s+(?<backend_server>\S+)\s+(?<Tq>\d+)\/(?<Tw>\d+)\/(?<Tc>\d+)\/(?<Tr>\d+)\/(?<Tt>\d+)\s+(?<status_code>\d+)\s+(?<bytes_read>\d+)\s+(?<captured_request_cookie>\S+)\s+(?<captured_response_cookie>\S+)\s+(?<termination_state>\S+)\s+(?<actconn>\d+)\/(?<feconn>\d+)\/(?<beconn>\d+)\/(?<srv_conn>\d+)\/(?<retries>\d+)\s+(?<srv_queue>\d+)\/(?<backend_queue>\d+)\s+\{(?<http_user_agent>[^\}]*)\}\s+"(?<http_request>[^"]+)"$
-
+      Regex ^(?<client_ip>\S+):(?<client_port>\d+)\s+\[(?<accept_date>[^\]]+)\]\s+(?<frontend>\S+)\s+(?<backend_server>\S+)\s+(?<Tq>\d+)\/(?<Tw>\d+)\/(?<Tc>\d+)\/(?<Tr>\d+)\/(?<Tt>\d+)\s+(?<status_code>\d+)\s+(?<bytes_read>\d+)\s+(?<captured_request_cookie>\S+)\s+(?<captured_response_cookie>\S+)\s+(?<termination_state>\S+)\s+(?<actconn>\d+)\/(?<feconn>\d+)\/(?<beconn>\d+)\/(?<srv_conn>\d+)\/(?<retries>\d+)\s+(?<srv_queue>\d+)\/(?<backend_queue>\d+)\s+\{(?<http_headers_raw>[^\}]*)\}\s+"(?<http_request>[^"]+)"$
