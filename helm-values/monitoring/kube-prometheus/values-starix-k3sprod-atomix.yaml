@@ -51,14 +51,14 @@ prometheus:
                target_label: instance
              - target_label: __address__
                replacement: prometheus-atx-k3sprod-kub-blackbox-exporter.monitoring.svc.starix.k3sprod:19115
-        - job_name: "rabbitmq"
-          static_configs:
-            - targets: ["rabbitmq-cluster.rabbitmq-nap-alpha:15692"]
-              labels:
-                rabbitmq_instance: "nap_alpha"
-            - targets: ["rabbitmq-cluster.rabbitmq-fps:15692"]
-              labels:
-                rabbitmq_instance: "fps"
+        # - job_name: "rabbitmq"
+        #   static_configs:
+        #     - targets: ["rabbitmq-cluster.rabbitmq-nap-alpha:15692"]
+        #       labels:
+        #         rabbitmq_instance: "nap_alpha"
+        #     - targets: ["rabbitmq-cluster.rabbitmq-fps:15692"]
+        #       labels:
+        #         rabbitmq_instance: "fps"
 
 
   #additionalPrometheusRules:
