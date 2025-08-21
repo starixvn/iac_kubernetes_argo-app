@@ -1,0 +1,42 @@
+tolerations:
+- operator: Exists
+
+luaScripts:
+  strip_ansi_color_code: |
+    function strip_ansi_color_code(tag, timestamp, record)
+      if type(record["log"]) == "string" then 
+        record["log"] = record["log"]:gsub('[\27\155][][()#;?%d]*[A-PRZcf-ntqry=><~]', '') 
+        return 2, 0, record 
+      end 
+      return 0, 0, 0
+    end
+
+config:
+  service: |
+    [SERVICE]
+      Daemon Off
+      Flush {{ .Values.flush }}
+      Log_Level {{ .Values.logLevel }}
+      Parsers_File /fluent-bit/etc/parsers.conf
+      Parsers_File /fluent-bit/etc/conf/custom_parsers.conf
+      HTTP_Server On
+      HTTP_Listen 0.0.0.0
+      HTTP_Port {{ .Values.metricsPort }}
+      Health_Check On
+
+  customParsers: |
+    [PARSER]
+      Name docker_no_time
+      Format json
+      Time_Keep Off
+      Time_Key time
+      Time_Format %Y-%m-%dT%H:%M:%S.%L
+
+    [PARSER]
+      Name  haproxy
+      Format  regex
+      Regex  (?<c_ip>\S+):(?<c_port>\d+) \[(?<time>.+)\] (?<f_end>[\w-]+)(\~)?.(?<b_end>[\w-]*)\/(?<b_server><?[\w-]+>?) (?<tq>-?\d+)\/(?<tw>-?\d+)\/(?<tc>-?\d+)\/(?<tr>-?\d+)\/(?<tt>-?\d+) (?<status_code>\d+) (?<bytes>\d+) (?<req_cookie>\S+) (?<res_cookie>\S+) (?<t_state>[\w-]+) (?<actconn>-?[0-9])\/(?<feconn>-?\d+)\/(?<beconn>\d+)\/(?<srv_conn>\d+)\/(?<retries>\d+) (?<srv_queue>\d+)\/(?<backend_queue>\d+) (\"<?[\w]+>?\")*(\"((?<method>[\w]+) (?<path>[^#?\s]+)(\?)?(?<query>[^#?\s+]*).(?<version>[\w+\/\.]+))\")*
+      Time_Key    time
+      Time_Format %d/%b/%Y:%H:%M:%S.%L
+      Time_Keep   On
+      Time_Strict  Off
