@@ -85,14 +85,8 @@ config:
     [FILTER]
       Name lua
       Match syslog.haproxy
-      script /fluent-bit/scripts/haproxy_to_waf.lua
+      script /fluent-bit/scripts/enrich.lua
       call waf_headers_enrich
-
-    # [FILTER]
-    #   Name lua
-    #   Match syslog.haproxy
-    #   script /fluent-bit/scripts/haproxy_to_waf.lua
-    #   call map_to_waf_like
 
     # [FILTER]
     #   Name   geoip2
@@ -108,7 +102,7 @@ config:
     # [FILTER]
     #   Name lua
     #   Match syslog.haproxy
-    #   script /fluent-bit/scripts/merge_geoip.lua
+    #   script /fluent-bit/scripts/enrich.lua
     #   call merge_geoip
 
     [FILTER]
