@@ -115,6 +115,27 @@ luaScripts:
       return 1, ts, record
     end
 
+  drop_rules.lua: |
+    function drop_success(tag, ts, record)
+      -- Defensive checks
+      local status = record["metrics"] and record["metrics"]["statusCode"]
+      local timers = record["metrics"] and record["metrics"]["timers"]
+      local tr     = timers and timers["Tr"]
+
+      -- Drop logs if:
+      -- statusCode == "200" AND Tr < 5000 ms (5 seconds)
+      if status == "200" and tr ~= nil then
+        local tr_num = tonumber(tr)
+        if tr_num and tr_num < 5000 then
+          return -1, ts, record -- drop this record
+        end
+      end
+
+      -- Keep everything else
+      return 1, ts, record
+    end
+
+
 config:
   service: |
     [SERVICE]

@@ -77,6 +77,12 @@ config:
     #   call merge_geoip
 
     [FILTER]
+      Name lua
+      Match syslog.haproxy
+      script /fluent-bit/scripts/drop_rules.lua
+      call drop_success
+
+    [FILTER]
       Name modify
       Match *
       Add env uat
