@@ -1,5 +1,6 @@
 image:
   repository: nexhub.ops-klprod.gamora.prod/kbt/base/fluent/fluent-bit
+  tag: 4.0.3-geoip
 
 extraPorts:
 - port: 5170
@@ -104,22 +105,22 @@ config:
       script /fluent-bit/scripts/enrich.lua
       call waf_headers_enrich
 
-    # [FILTER]
-    #   Name   geoip2
-    #   Match  syslog.haproxy
-    #   Database /etc/geoip/GeoLite2-City.mmdb
-    #   Lookup_key http_xff
-    #   Record geoip_country_name country.names.en
-    #   Record geoip_country_iso country.iso_code
-    #   Record geoip_city_name city.names.en
-    #   Record geoip_latitude location.latitude
-    #   Record geoip_longitude location.longitude
+    [FILTER]
+      Name   geoip2
+      Match  syslog.haproxy
+      Database /fluent-bit/etc/geoip/GeoLite2-City.mmdb
+      Lookup_key http_xff
+      Record geoip_country_name country.names.en
+      Record geoip_country_iso country.iso_code
+      Record geoip_city_name city.names.en
+      Record geoip_latitude location.latitude
+      Record geoip_longitude location.longitude
 
-    # [FILTER]
-    #   Name lua
-    #   Match syslog.haproxy
-    #   script /fluent-bit/scripts/enrich.lua
-    #   call merge_geoip
+    [FILTER]
+      Name lua
+      Match syslog.haproxy
+      script /fluent-bit/scripts/enrich.lua
+      call merge_geoip
 
     [FILTER]
       Name lua
