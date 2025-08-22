@@ -11,7 +11,7 @@ luaScripts:
       return 0, 0, 0
     end
 
-  haproxy_to_waf.lua: |
+  enrich.lua: |
     function waf_headers_enrich(tag, ts, record)
       local raw = record["http_headers_raw"]
       if type(raw) ~= "string" or raw == "" then
@@ -46,82 +46,6 @@ luaScripts:
       return 1, ts, record
     end
 
-    local function to_rfc3339(ts)
-      if not ts then return nil end
-      -- format: 21/Aug/2025:12:34:56.789
-      local d, mon, y, h, m, s = ts:match("(%d+)/(%a+)/(%d+):(%d+):(%d+):(%d+)")
-      if not d then return ts end
-      local months = {
-        Jan="01",Feb="02",Mar="03",Apr="04",May="05",Jun="06",
-        Jul="07",Aug="08",Sep="09",Oct="10",Nov="11",Dec="12"
-      }
-      local mm = months[mon] or "01"
-      return string.format("%s-%s-%sT%s:%s:%sZ", y, mm, d, h, m, s)
-    end
-
-    -- Convert "Host|User-Agent|Referer|X-Forwarded-For" → header objects
-    local function build_headers(record)
-      local headers = {}
-      if not record["http_headers_raw"] then return headers end
-      local parts = {}
-      for token in string.gmatch(record["http_headers_raw"], "([^|]+)") do
-        table.insert(parts, token)
-      end
-      local names = {"Host", "User-Agent", "Referer", "X-Forwarded-For"}
-      for i, name in ipairs(names) do
-        local val = parts[i]
-        if val and val ~= "-" then
-          table.insert(headers, { name = name, value = val })
-          if name == "X-Forwarded-For" then
-            -- promote to record for GeoIP lookup
-            record["http_xff"] = val
-          end
-        end
-      end
-      return headers
-    end
-
-    function map_to_waf_like(tag, ts, record)
-      -- Prefer 'message' over 'msg' (already normalized by modify filter)
-      -- Defensive: don’t crash on missing fields.
-      local waf = {}
-
-      -- Timestamp
-      waf["timestamp"] = to_rfc3339(record["accept_date"]) or record["accept_date"]
-      
-      -- HTTP request sub-doc
-      waf["httpRequest"] = {
-        clientIp    = record["client_ip"] or record["source"] or "0.0.0.0",
-        headers     = build_headers(record),
-        method      = record["http_method"] or "UNKNOWN",
-        host        = record["request_host"] or "-",
-        path        = "/" .. (record["request_path"] or ""),
-        httpVersion = record["http_version"] or "HTTP/?",
-        uri         = string.format("%s/%s", record["request_host"] or "-", record["request_path"] or "")
-      }
-
-      -- Optional: carry timing/metrics similar to WAF extended fields
-      waf["labels"] = {
-        frontend  = record["frontend"],
-        backend   = record["backend"],
-        server    = record["server"]
-      }
-
-      waf["metrics"] = {
-        statusCode   = tonumber(record["status_code"]),
-        bytesRead    = tonumber(record["bytes_read"]),
-        timers       = {
-          Tc = tonumber(record["Tc"]),
-          Tr = tonumber(record["Tr"]),
-          Tt = tonumber(record["Tt"])
-        }
-      }
-
-      -- Return a fully replaced record
-      return 1, ts, waf
-    end
-
-  merge_geoip.lua: |
     function merge_geoip(tag, ts, record)
       if record["geoip_country_name"] or record["geoip_city_name"] then
         local lat = record["geoip_latitude"]
@@ -149,22 +73,20 @@ luaScripts:
       return 1, ts, record
     end
 
-  drop_rules.lua: |
+  drop.lua: |
     function drop_success(tag, ts, record)
       -- Defensive checks
-      -- local status = record["metrics"] and record["metrics"]["statusCode"]
       local status = record["status_code"]
-      local timers = record["metrics"] and record["metrics"]["timers"]
-      local tr     = timers and timers["Tr"]
+      local tr     = record["Tr"]
 
       -- Drop logs if:
-      -- statusCode == "200" AND Tr < 5000 ms (5 seconds)
-      -- if status == "200" and tr ~= nil then
-      if status == "200" then
+      -- status_code == "200" AND Tr < 5000 ms (5 seconds)
+      if status == "200" and tr ~= nil then
+      -- if status == "200" then
         local tr_num = tonumber(tr)
-        -- if tr_num and tr_num < 5000 then
-        return -1, ts, record -- drop this record
-        -- end
+        if tr_num and tr_num < 5000 then
+          return -1, ts, record -- drop this record
+        end
       end
 
       -- Keep everything else
