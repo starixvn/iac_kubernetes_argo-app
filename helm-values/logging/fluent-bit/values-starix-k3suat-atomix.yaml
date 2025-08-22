@@ -55,11 +55,11 @@ config:
       Preserve_Key On
       Reserve_Data On
 
-    [FILTER]
-      Name lua
-      Match syslog.haproxy
-      script /fluent-bit/scripts/haproxy_to_waf.lua
-      call map_to_waf_like
+    # [FILTER]
+    #   Name lua
+    #   Match syslog.haproxy
+    #   script /fluent-bit/scripts/haproxy_to_waf.lua
+    #   call map_to_waf_like
 
     # [FILTER]
     #   Name   geoip2
