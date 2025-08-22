@@ -37,6 +37,7 @@ config:
       Listen 0.0.0.0
       Port 5170
       Mode udp
+      Source_Address_Key host
       
   filters: |
     [FILTER]
@@ -75,6 +76,7 @@ config:
       Remove feconn
       Remove pid
       Remove pri
+      Remove msgid
       Remove retries
       Remove srv_conn
       Remove srv_queue
