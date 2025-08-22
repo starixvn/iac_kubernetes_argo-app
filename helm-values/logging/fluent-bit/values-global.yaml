@@ -152,7 +152,8 @@ luaScripts:
   drop_rules.lua: |
     function drop_success(tag, ts, record)
       -- Defensive checks
-      local status = record["metrics"] and record["metrics"]["status_code"]
+      -- local status = record["metrics"] and record["metrics"]["statusCode"]
+      local status = record["status_code"]
       local timers = record["metrics"] and record["metrics"]["timers"]
       local tr     = timers and timers["Tr"]
 
