@@ -86,7 +86,7 @@ config:
       Name lua
       Match syslog.haproxy
       script /fluent-bit/scripts/haproxy_to_waf.lua
-      call http_headers_raw
+      call waf_headers_enrich
 
     # [FILTER]
     #   Name lua
