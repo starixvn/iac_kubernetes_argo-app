@@ -40,6 +40,11 @@ config:
       
   filters: |
     [FILTER]
+      Name modify
+      Match *
+      Add env uat
+
+    [FILTER]
       Name kubernetes
       Match kube.*
       Merge_Log On
@@ -54,6 +59,26 @@ config:
       Parser haproxy
       Preserve_Key On
       Reserve_Data On
+
+    [FILTER]
+      Name   modify
+      Match  syslog.haproxy
+      Remove Tc
+      Remove Tq
+      Remove Tw
+      Remove actconn
+      Remove backend_queue
+      Remove beconn
+      Remove captured_request_cookie
+      Remove captured_response_cookie
+      Remove extradata
+      Remove feconn
+      Remove pid
+      Remove pri
+      Remove retries
+      Remove srv_conn
+      Remove srv_queue
+      Remove termination_state
 
     # [FILTER]
     #   Name lua
@@ -83,11 +108,6 @@ config:
       Match syslog.haproxy
       script /fluent-bit/scripts/drop_rules.lua
       call drop_success
-
-    [FILTER]
-      Name modify
-      Match *
-      Add env uat
 
   outputs: |
     [OUTPUT]
