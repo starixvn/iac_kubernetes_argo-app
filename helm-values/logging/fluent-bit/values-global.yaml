@@ -52,6 +52,11 @@ luaScripts:
       -- Defensive: don’t crash on missing fields.
       local waf = {}
 
+      -- Preserve original syslog log line (traceability/debugging)
+      if record["log"] then
+        waf["raw_message"] = record["log"]
+      end
+
       -- Timestamp
       waf["timestamp"] = to_rfc3339(record["accept_date"]) or record["accept_date"]
       
