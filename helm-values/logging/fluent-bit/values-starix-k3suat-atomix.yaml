@@ -45,22 +45,13 @@ config:
       Name modify
       Match *
       Add env uat
+      Add engine k3s
 
-    [FILTER]
-      Name parser
+    [FILTER] # Trim port from the host field
+      Name lua
       Match syslog.*
-      Key_name host
-      Parser fluent_source_addr
-      Preserve_Key On
-      Reserve_Data On
-
-    [FILTER]
-      Name modify
-      Match syslog.*
-      Set host ${proto}://${ip}
-      Remove proto
-      Remove ip
-      Remove port
+      script /fluent-bit/scripts/enrich.lua
+      call strip_port
 
     [FILTER]
       Name kubernetes
