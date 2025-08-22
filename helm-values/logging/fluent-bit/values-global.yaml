@@ -12,6 +12,40 @@ luaScripts:
     end
 
   haproxy_to_waf.lua: |
+    function waf_headers_enrich(tag, ts, record)
+      local raw = record["http_headers_raw"]
+      if type(raw) ~= "string" or raw == "" then
+        return 1, ts, record
+      end
+
+      local parts = {}
+      for token in string.gmatch(raw, "([^|]+)") do
+        table.insert(parts, token)
+      end
+
+      local headers = {}
+      local names = {"Host", "User-Agent", "Referer", "X-Forwarded-For"}
+      for i, name in ipairs(names) do
+        local val = parts[i]
+        if val and val ~= "-" then
+          table.insert(headers, { name = name, value = val })
+          if name == "X-Forwarded-For" then
+            -- promote to record for GeoIP lookup
+            record["http_xff"] = val
+          end
+        end
+      end
+
+      if #headers > 0 then
+        record["httpRequest"] = { headers = headers }
+      end
+
+      -- Remove original raw field
+      record["http_headers_raw"] = nil
+
+      return 1, ts, record
+    end
+
     local function to_rfc3339(ts)
       if not ts then return nil end
       -- format: 21/Aug/2025:12:34:56.789

@@ -82,6 +82,12 @@ config:
       Remove srv_queue
       Remove termination_state
 
+    [FILTER]
+      Name lua
+      Match syslog.haproxy
+      script /fluent-bit/scripts/haproxy_to_waf.lua
+      call http_headers_raw
+
     # [FILTER]
     #   Name lua
     #   Match syslog.haproxy
