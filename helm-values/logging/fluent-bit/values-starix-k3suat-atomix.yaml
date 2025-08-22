@@ -108,7 +108,7 @@ config:
     [FILTER]
       Name lua
       Match syslog.haproxy
-      script /fluent-bit/scripts/drop_rules.lua
+      script /fluent-bit/scripts/drop.lua
       call drop_success
 
   outputs: |
