@@ -41,7 +41,7 @@ luaScripts:
       end
 
       -- Remove original raw field
-      record["http_headers_raw"] = nil
+      -- record["http_headers_raw"] = nil
 
       return 1, ts, record
     end
