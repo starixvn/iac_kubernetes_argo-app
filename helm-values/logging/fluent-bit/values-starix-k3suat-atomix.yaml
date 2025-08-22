@@ -110,11 +110,11 @@ config:
       Match  syslog.haproxy
       Database /fluent-bit/etc/geoip/GeoLite2-City.mmdb
       Lookup_key http_xff
-      Record geoip_country_name country.names.en
-      Record geoip_country_iso country.iso_code
-      Record geoip_city_name city.names.en
-      Record geoip_latitude location.latitude
-      Record geoip_longitude location.longitude
+      Record geoip_country_name http_xff %{country.names.en}
+      Record geoip_country_iso http_xff %{country.iso_code}
+      Record geoip_city_name http_xff %{city.names.en}
+      Record geoip_latitude http_xff %{location.latitude}
+      Record geoip_longitude http_xff %{location.longitude}
 
     [FILTER]
       Name lua
