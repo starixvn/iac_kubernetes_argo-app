@@ -126,9 +126,9 @@ luaScripts:
       -- statusCode == "200" AND Tr < 5000 ms (5 seconds)
       if status == "200" and tr ~= nil then
         local tr_num = tonumber(tr)
-        if tr_num and tr_num < 5000 then
-          return -1, ts, record -- drop this record
-        end
+        -- if tr_num and tr_num < 5000 then
+        return -1, ts, record -- drop this record
+        -- end
       end
 
       -- Keep everything else
