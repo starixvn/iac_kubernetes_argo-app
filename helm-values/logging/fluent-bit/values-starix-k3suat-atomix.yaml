@@ -15,7 +15,7 @@ config:
       Path /var/log/containers/coredns*.log,/var/log/containers/kube*.log
       multiline.parser docker, cri
       Tag kube.kubesystem
-      Mem_Buf_Limit 5MB
+      Mem_Buf_Limit 10MB
       Skip_Long_Lines On
 
     [INPUT]
