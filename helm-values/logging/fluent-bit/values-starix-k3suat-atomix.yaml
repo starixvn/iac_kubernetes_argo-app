@@ -52,6 +52,7 @@ config:
       Match syslog.haproxy
       Key_name message
       Parser haproxy
+      Preserve_Key On
 
     [FILTER]
       Name lua
