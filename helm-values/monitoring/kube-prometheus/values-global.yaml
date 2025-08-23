@@ -239,28 +239,28 @@ prometheus:
               annotations:
                 summary: "Kubernetes - Container {{$labels.container}} in pod {{$labels.pod}} has high CPU usage"
                 description: 'Container {{$labels.container}} in pod {{$labels.pod}} (namespace: {{$labels.namespace}}) on {{$labels.instance}} has been using {{$value | humanize}}% of its CPU limit for more than 5 minutes.'
-            # Warning alert - 60% threshold
-            - alert: Kubernetes Disk is too busy (IO wait > 60%)
+            # Warning alert - 80% threshold
+            - alert: Kubernetes Disk is too busy (IO wait > 80%)
               expr: |
-                (rate(node_disk_io_time_seconds_total{device!~"dm-.*|loop.*|ram.*"}[5m])) > 0.60
+                (rate(node_disk_io_time_seconds_total{device!~"dm-.*|loop.*|ram.*"}[5m])) > 0.80
               for: 5m
               labels:
                 severity: warning
                 component: system
               annotations:
                 summary: "Kubernetes - Host {{$labels.instance}} has high disk I/O wait time"
-                description: "Disk {{$labels.device}} on {{$labels.instance}} has been busy for 60% of time for more than 5 minutes.\n  VALUE = {{ $value }}"
-            # Critical alert - 85% threshold
-            - alert: Kubernetes Disk is too busy (IO wait > 85%)
+                description: "Disk {{$labels.device}} on {{$labels.instance}} has been busy for 80% of time for more than 5 minutes.\n  VALUE = {{ $value }}"
+            # Critical alert - 90% threshold
+            - alert: Kubernetes Disk is too busy (IO wait > 90%)
               expr: |
-                (rate(node_disk_io_time_seconds_total{device!~"dm-.*|loop.*|ram.*"}[5m])) > 0.85
+                (rate(node_disk_io_time_seconds_total{device!~"dm-.*|loop.*|ram.*"}[5m])) > 0.90
               for: 5m
               labels:
                 severity: critical
                 component: system
               annotations:
                 summary: "Kubernetes - Host {{ $labels.instance }} has critical disk I/O wait time"
-                description: "Disk {{ $labels.device }} on {{ $labels.instance }} has been busy for 85% of time for more than 5 minutes.\n  VALUE = {{ $value }}"
+                description: "Disk {{ $labels.device }} on {{ $labels.instance }} has been busy for 90% of time for more than 5 minutes.\n  VALUE = {{ $value }}"
 
     - name: longhorn.rules
       groups:
