@@ -61,14 +61,15 @@ alertmanager:
     global:
       resolve_timeout: 15m
       http_config:
-        proxy_url: "http://iusqd.gamora.prod:8801"
+        proxy_url: "http://iusqd-uat.gamora.prod:8801"
 
     route:
       receiver: default-receiver
       routes:
       - receiver: 'null'
-        match_re:
-          namespace: "l1|l2|gn|hd|sk|sp|tg|mg|cattle-system"
+        matchers:
+        - namespace=~"l1|l2|gn|hd|sk|sp|tg|mg|cattle-system"
+        - component="kubernetes"
       - receiver: 'alert-nx-atomix'
         match_re:
           alertname: "Kubernetes Cluster Pod Usage Above 80%"
