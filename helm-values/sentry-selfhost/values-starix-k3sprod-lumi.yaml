@@ -62,7 +62,7 @@ relay:
   - name: HTTPS_PROXY
     value: "http://iusqd.gamora.prod:8801"
   - name: NO_PROXY
-    value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,sentry-scklp.byb6181.com,sentry-lui-k3sprod-web,.starix.k3sprod,.starixplay.com"
+    value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,sentry-scklp.byb6181.com,sentry-lui-k3sprod-web,.starix.k3sprod,.starixplay.com,sentry-lui-k3sprod-symbolicator"
 
 hooks:
   activeDeadlineSeconds: 2000
@@ -249,7 +249,7 @@ sentry:
     - name: HTTPS_PROXY
       value: "http://iusqd.gamora.prod:8801"
     - name: NO_PROXY
-      value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,sentry-scklp.byb6181.com,.starixplay.com"
+      value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,sentry-scklp.byb6181.com,.starixplay.com,sentry-lui-k3sprod-symbolicator"
 
   worker:
     enabled: true
@@ -261,7 +261,7 @@ sentry:
     - name: HTTPS_PROXY
       value: "http://iusqd.gamora.prod:8801"
     - name: NO_PROXY
-      value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,sentry-scklp.byb6181.com,.starixplay.com"
+      value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,sentry-scklp.byb6181.com,.starixplay.com,sentry-lui-k3sprod-symbolicator"
 
   workerEvents:
     enabled: true
