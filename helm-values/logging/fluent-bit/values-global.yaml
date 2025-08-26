@@ -3,13 +3,106 @@ tolerations:
 
 luaScripts:
   strip_ansi_color_code: |
-    function strip_ansi_color_code(tag, timestamp, record)
+    function strip_ansi_color_code(tag, ts, record)
       if type(record["log"]) == "string" then 
         record["log"] = record["log"]:gsub('[\27\155][][()#;?%d]*[A-PRZcf-ntqry=><~]', '') 
         return 2, 0, record 
       end 
       return 0, 0, 0
     end
+
+  enrich.lua: |
+    function waf_headers_enrich(tag, ts, record)
+      local raw = record["http_headers_raw"]
+      if type(raw) ~= "string" or raw == "" then
+        return 1, ts, record
+      end
+
+      local parts = {}
+      for token in string.gmatch(raw, "([^|]+)") do
+        table.insert(parts, token)
+      end
+
+      local headers = {}
+      local names = {"Host", "User-Agent", "Referer", "X-Forwarded-For"}
+      for i, name in ipairs(names) do
+        local val = parts[i]
+        if val and val ~= "-" then
+          table.insert(headers, { name = name, value = val })
+          if name == "X-Forwarded-For" then
+            -- promote to record for GeoIP lookup
+            record["http_xff"] = val
+          end
+        end
+      end
+
+      if #headers > 0 then
+        record["httpRequest"] = { headers = headers }
+      end
+
+      -- Remove original raw field
+      -- record["http_headers_raw"] = nil
+
+      return 1, ts, record
+    end
+
+    function strip_port(tag, ts, record)
+      local h = record["host"]
+      if type(h) == "string" then
+        local proto, ip = string.match(h, "^(%w+)://([0-9%.]+):%d+$")
+        if proto and ip then
+          record["host"] = proto .. "://" .. ip
+        end
+      end
+      return 1, ts, record
+    end
+
+    function merge_geoip(tag, ts, record)
+      if record["geoip_country_name"] or record["geoip_city_name"] then
+        local lat = record["geoip_latitude"]
+        local lon = record["geoip_longitude"]
+
+        -- Build nested geoip object
+        record["geoip"] = {
+          country_name = record["geoip_country_name"],
+          country_iso  = record["geoip_country_iso"],
+          city_name    = record["geoip_city_name"],
+          location     = {
+            lat = lat,
+            lon = lon
+          }
+        }
+
+        -- Clean up flat fields produced by geoip2 filter
+        record["geoip_country_name"] = nil
+        record["geoip_country_iso"]  = nil
+        record["geoip_city_name"]    = nil
+        record["geoip_latitude"]     = nil
+        record["geoip_longitude"]    = nil
+      end
+
+      return 1, ts, record
+    end
+
+  drop.lua: |
+    function drop_success(tag, ts, record)
+      -- Defensive checks
+      local status = record["status_code"]
+      local tr     = record["Tr"]
+
+      -- Drop logs if:
+      -- status_code == "200" AND Tr < 5000 ms (5 seconds)
+      if status == "200" and tr ~= nil then
+        local tr_num = tonumber(tr)
+        if tr_num and tr_num < 5000 then
+          return -1, ts, record -- drop this record
+        end
+      end
+
+      -- Keep everything else
+      return 1, ts, record
+    end
+
 
 config:
   service: |
@@ -35,8 +128,5 @@ config:
     [PARSER]
       Name  haproxy
       Format  regex
-      Regex  (?<c_ip>\S+):(?<c_port>\d+) \[(?<time>.+)\] (?<f_end>[\w-]+)(\~)?.(?<b_end>[\w-]*)\/(?<b_server><?[\w-]+>?) (?<tq>-?\d+)\/(?<tw>-?\d+)\/(?<tc>-?\d+)\/(?<tr>-?\d+)\/(?<tt>-?\d+) (?<status_code>\d+) (?<bytes>\d+) (?<req_cookie>\S+) (?<res_cookie>\S+) (?<t_state>[\w-]+) (?<actconn>-?[0-9])\/(?<feconn>-?\d+)\/(?<beconn>\d+)\/(?<srv_conn>\d+)\/(?<retries>\d+) (?<srv_queue>\d+)\/(?<backend_queue>\d+) (\"<?[\w]+>?\")*(\"((?<method>[\w]+) (?<path>[^#?\s]+)(\?)?(?<query>[^#?\s+]*).(?<version>[\w+\/\.]+))\")*
-      Time_Key    time
-      Time_Format %d/%b/%Y:%H:%M:%S.%L
-      Time_Keep   On
-      Time_Strict  Off
+      Regex ^(?<client_ip>\S+):(?<client_port>\d+)\s+\[(?<accept_date>[^\]]+)\]\s+(?<frontend>\S+)\s+(?<backend>[^\/]+)\/(?<server>\S+)\s+(?<Tq>\d+)\/(?<Tw>\d+)\/(?<Tc>\d+)\/(?<Tr>\d+)\/(?<Tt>\d+)\s+(?<status_code>\d+)\s+(?<bytes_read>\d+)\s+(?<captured_request_cookie>\S+)\s+(?<captured_response_cookie>\S+)\s+(?<termination_state>\S+)\s+(?<actconn>\d+)\/(?<feconn>\d+)\/(?<beconn>\d+)\/(?<srv_conn>\d+)\/(?<retries>\d+)\s+(?<srv_queue>\d+)\/(?<backend_queue>\d+)\s+\{(?<http_headers_raw>[^\}]*)\}\s+"(?<http_method>[A-Z]+)\s+(?<request_host>[^/]+)/(?<request_path>[^ ]*)\s+(?<http_version>HTTP/\d\.\d)"$
+

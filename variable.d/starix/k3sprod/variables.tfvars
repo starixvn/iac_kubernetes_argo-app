@@ -76,6 +76,10 @@ argo_applications_by_team = {
         namespace     = "logging"
         helm_path     = "logging/fluent-bit"
         chart_version = "0.50.0"
+        value_files = [
+          "values-global.yaml",
+          "values-starix-k3sprod-atomix.yaml",
+        ]
       }
       #- Jaeger -#
       jaeger = {

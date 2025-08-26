@@ -22,6 +22,10 @@ rabbitCluster:
       value: "yes"
       effect: "NoSchedule"
 
+  metrics:
+    serviceMonitor:
+      enabled: true
+
 clusterOperator:
   nodeSelector:
     rabbit: "yes"

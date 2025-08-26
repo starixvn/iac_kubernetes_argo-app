@@ -1,4 +1,4 @@
-clusterName: "lumi.local"
+clusterName: "lumi.uat"
 
 # excludeNamespaces: "kubescape,kube-system,kube-public,kube-node-lease,kubeconfig,gmp-system,gmp-public"
 includeNamespaces: "gn,hd,l1,l2,mg,sk,sp,tg"
@@ -140,7 +140,7 @@ nodeAgent:
       url: http://synchronizer:8089/apis/v1/kubescape.io
       maxAlertsPerMinute: 1000
       method: POST
-    alertManagerExporterUrls: [prometheus-atx-k3suat-kube-alertmanager.monitoring:9093]
+    alertManagerExporterUrls: [prometheus-atx-uat-kube-pr-alertmanager.monitoring:9093]
     stdoutExporter: true
     syslogExporterURL: 10.148.58.162:30970
     skipKernelVersionCheck: false
