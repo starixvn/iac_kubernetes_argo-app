@@ -67,6 +67,10 @@ alertmanager:
       receiver: default-receiver
       routes:
       - receiver: 'null'
+        match_re:
+         namespace: "l1|l2|gn|hd|sk|sp|tg|mg|cattle-system"
+         alertname: "Kubernetes Service.*"
+      - receiver: 'null'
         matchers:
         - namespace=~"l1|l2|gn|hd|sk|sp|tg|mg|cattle-system"
         - component="kubernetes"
