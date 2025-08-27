@@ -71,8 +71,8 @@ ingress: &ingress
     ingressClass: haproxy
 
 global:
-  ingress: **ingress
-  postgresql: **postgres
+  ingress: *ingress
+  postgresql: *postgres
   kafka: *kafka
   redis: *redis
   quickwit: *quickwit
