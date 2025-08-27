@@ -25,6 +25,9 @@ ingress:
   ingressClassName: haproxy
   hosts:
   - host: flb.ops-klprod.gamora.prod
+  extraHosts:
+  - host: flb-fwd.ops-klprod.gamora.prod
+    port: 24224
 
 flush: 20
 
