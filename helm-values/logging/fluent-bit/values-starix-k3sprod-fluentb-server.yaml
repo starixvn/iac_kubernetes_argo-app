@@ -16,6 +16,10 @@ resources:
   requests:
     memory: 128Mi
 
+service:
+  type: NodePort
+  nodePort: 30020
+
 ingress:
   enabled: true
   ingressClassName: haproxy
@@ -28,11 +32,11 @@ ingress:
 flush: 20
 
 extraPorts:
-- port: 5170
-  containerPort: 5170
-  protocol: UDP
-  name: syslog
-- port: 24224
+# - port: 5170
+#   containerPort: 5170
+#   protocol: UDP
+#   name: syslog
+- port: 32224
   containerPort: 24224
   protocol: TCP
   name: forward
