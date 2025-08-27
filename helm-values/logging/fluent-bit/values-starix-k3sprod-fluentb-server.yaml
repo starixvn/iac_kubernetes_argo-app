@@ -33,7 +33,7 @@ extraPorts:
 - port: 24224
   containerPort: 24224
   protocol: TCP
-  name: syslog
+  name: forward
 
 config:
   inputs: |
