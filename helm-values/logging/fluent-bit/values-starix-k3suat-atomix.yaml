@@ -177,8 +177,8 @@ config:
     [OUTPUT]
       Name forward
       Match syslog.haproxy
-      Host flb-fwd.ops-klprod.gamora.prod
-      Port 80
+      Host flb.ops-klprod.gamora.prod
+      Port 32224
       # Username fluentbit 
       # Password 29a2VG8BnWXsr3hX
       # Self_Hostname flb-ap.client.local
