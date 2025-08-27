@@ -25,17 +25,10 @@ ingress:
   ingressClassName: haproxy
   hosts:
   - host: flb.ops-klprod.gamora.prod
-  extraHosts:
-  - host: flb-fwd.ops-klprod.gamora.prod
-    port: 24224
 
 flush: 20
 
 extraPorts:
-# - port: 5170
-#   containerPort: 5170
-#   protocol: UDP
-#   name: syslog
 - port: 24224
   containerPort: 24224
   protocol: TCP
@@ -44,14 +37,6 @@ extraPorts:
 
 config:
   inputs: |
-    [INPUT]
-      Name syslog
-      Tag syslog.haproxy
-      Listen 0.0.0.0
-      Port 5170
-      Mode udp
-      Source_Address_Key host
-
     [INPUT]
       Name forward
       Tag forward.haproxy.sc.t1prod
@@ -66,87 +51,11 @@ config:
     [FILTER]
       Name modify
       Match *
-      Add env prod
-      Add region kl
-      Add engine k3s
-
-    [FILTER] # Trim port from the host field
-      Name lua
-      Match syslog.*
-      script /fluent-bit/scripts/enrich.lua
-      call strip_port
-
-    [FILTER]
-      Name parser
-      Match syslog.haproxy
-      Key_name message
-      Parser haproxy
-      Preserve_Key On
-      Reserve_Data On
-
-    [FILTER]
-      Name   modify
-      Match  syslog.haproxy
-      Remove Tc
-      Remove Tq
-      Remove Tw
-      Remove actconn
-      Remove backend_queue
-      Remove beconn
-      Remove captured_request_cookie
-      Remove captured_response_cookie
-      Remove extradata
-      Remove feconn
-      Remove pid
-      Remove pri
-      Remove msgid
-      Remove retries
-      Remove srv_conn
-      Remove srv_queue
-      Remove termination_state
-
-    [FILTER]
-      Name lua
-      Match syslog.haproxy
-      script /fluent-bit/scripts/enrich.lua
-      call waf_headers_enrich
-
-    [FILTER]
-      Name   geoip2
-      Match  syslog.haproxy
-      Database /fluent-bit/etc/geoip/GeoLite2-City.mmdb
-      Lookup_key http_xff
-      Record geoip_country_name http_xff %{country.names.en}
-      Record geoip_country_iso http_xff %{country.iso_code}
-      Record geoip_city_name http_xff %{city.names.en}
-      Record geoip_latitude http_xff %{location.latitude}
-      Record geoip_longitude http_xff %{location.longitude}
-
-    [FILTER]
-      Name lua
-      Match syslog.haproxy
-      script /fluent-bit/scripts/enrich.lua
-      call merge_geoip
-
-    [FILTER]
-      Name lua
-      Match syslog.haproxy
-      script /fluent-bit/scripts/drop.lua
-      call drop_success
+      Add env unknown
+      Add region unknown
+      Add engine unknown
 
   outputs: |
-    [OUTPUT]
-      Name opensearch
-      Match syslog.haproxy
-      Host opsearch-atx-k3sprod.logging
-      tls On
-      tls.verify Off
-      HTTP_User logstash
-      HTTP_Passwd logstash
-      Suppress_Type_Name On
-      Index logstash-haproxy-ing-k3sprod-prod
-      Replace_Dots On
-
     [OUTPUT]
       Name opensearch
       Match forward.haproxy.sc.t1prod
