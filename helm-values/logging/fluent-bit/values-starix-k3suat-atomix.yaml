@@ -183,6 +183,6 @@ config:
       # Password 29a2VG8BnWXsr3hX
       # Self_Hostname flb-ap.client.local
       Compress gzip
-      Require_ack_response true
-      tls on
-      tls.verify off
+      # Require_ack_response true
+      # tls on
+      # tls.verify off
