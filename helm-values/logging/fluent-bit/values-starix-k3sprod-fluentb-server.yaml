@@ -9,7 +9,7 @@ nodeSelector:
   node-role.kubernetes.io/etcd: "true"
   node-role.kubernetes.io/master: "true"
 
-resources: {}
+resources:
   limits:
     memory: 256Mi
   requests:
