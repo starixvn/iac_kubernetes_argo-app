@@ -179,7 +179,8 @@ config:
       Match syslog.haproxy
       Host flb-fwd.ops-klprod.gamora.prod
       Port 80
-      Security.Users fluentbit 29a2VG8BnWXsr3hX
+      Username fluentbit 
+      Password 29a2VG8BnWXsr3hX
       Self_Hostname flb-ap.client.local
       Compress gzip
       Require_ack_response true
