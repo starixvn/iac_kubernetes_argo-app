@@ -3,6 +3,7 @@ image:
   tag: 4.0.3-geoip
 
 kind: Deployment
+replicaCount: 3
 
 nodeSelector:
   node-role.kubernetes.io/control-plane: "true"
