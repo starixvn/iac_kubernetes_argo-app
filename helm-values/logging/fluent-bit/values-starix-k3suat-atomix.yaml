@@ -8,6 +8,8 @@ extraPorts:
   protocol: UDP
   name: syslog
 
+flush: 20
+
 config:
   inputs: |
     [INPUT]
@@ -159,15 +161,28 @@ config:
       Index logstash-kubesystem-container-log
       Replace_Dots On
 
+    # [OUTPUT]
+    #   Name opensearch
+    #   Match syslog.haproxy
+    #   Host opsi.ops-klprod.gamora.prod
+    #   Port 443
+    #   tls On
+    #   tls.verify Off
+    #   HTTP_User logstash
+    #   HTTP_Passwd logstash
+    #   Suppress_Type_Name On
+    #   Index logstash-haproxy-ing-k3suat-uat
+    #   Replace_Dots On
+
     [OUTPUT]
-      Name opensearch
+      Name forward
       Match syslog.haproxy
-      Host opsi.ops-klprod.gamora.prod
-      Port 443
-      tls On
-      tls.verify Off
-      HTTP_User logstash
-      HTTP_Passwd logstash
-      Suppress_Type_Name On
-      Index logstash-haproxy-ing-k3suat-uat
-      Replace_Dots On
+      Host flb-fwd.ops-klprod.gamora.prod
+      Port 32224
+      Username fluentbit 
+      Password 29a2VG8BnWXsr3hX
+      Self_Hostname flb-ap.client.local
+      Compress gzip
+      Require_ack_response true
+      # tls on
+      # tls.verify off

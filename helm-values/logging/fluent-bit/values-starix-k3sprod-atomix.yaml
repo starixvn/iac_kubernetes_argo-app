@@ -44,12 +44,23 @@ config:
       Port 5170
       Mode udp
       Source_Address_Key host
+
+    [INPUT]
+      Name forward
+      Tag forward.haproxy.sc.t1prod
+      Listen 0.0.0.0
+      Port 24224
+      Buffer_Chunk_Size 1M
+      Buffer_Max_Size 6M
+      Security.Users fluentbit 29a2VG8BnWXsr3hX
+      Self_Hostname flb-klp.server.local
       
   filters: |
     [FILTER]
       Name modify
       Match *
       Add env prod
+      Add region kl
       Add engine k3s
 
     [FILTER] # Trim port from the host field
@@ -171,4 +182,16 @@ config:
       HTTP_Passwd logstash
       Suppress_Type_Name On
       Index logstash-haproxy-ing-k3sprod-prod
+      Replace_Dots On
+
+    [OUTPUT]
+      Name opensearch
+      Match forward.haproxy.sc.t1prod
+      Host opsearch-atx-k3sprod.logging
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-haproxy-ing-sc-t1prod
       Replace_Dots On
