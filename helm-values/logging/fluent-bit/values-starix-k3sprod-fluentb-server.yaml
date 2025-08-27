@@ -20,9 +20,9 @@ ingress:
   enabled: true
   ingressClassName: haproxy
   hosts:
-  - host: fluentb.ops-klprod.gamora.prod
+  - host: flb.ops-klprod.gamora.prod
   extraHosts:
-  - host: fluentb-forward.ops-klprod.gamora.prod
+  - host: flb-fwd.ops-klprod.gamora.prod
     port: 24224
 
 flush: 20
