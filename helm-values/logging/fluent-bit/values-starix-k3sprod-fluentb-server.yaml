@@ -17,9 +17,10 @@ resources:
     memory: 128Mi
 
 ingress:
-  enabled: false
-  ingressClassName: ""
-  hosts: []
+  enabled: true
+  ingressClassName: haproxy
+  hosts:
+  - host: fluentb.ops-klprod.gamora.prod
   extraHosts: []
 
 flush: 20
@@ -28,6 +29,10 @@ extraPorts:
 - port: 5170
   containerPort: 5170
   protocol: UDP
+  name: syslog
+- port: 24224
+  containerPort: 24224
+  protocol: TCP
   name: syslog
 
 config:
