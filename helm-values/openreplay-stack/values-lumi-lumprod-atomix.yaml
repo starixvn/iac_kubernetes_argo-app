@@ -57,7 +57,14 @@ minio:
       accessKey: &accessKey "openreplay"
       secretKey: &secretKey "%8~Hb2+_210l$1IzXZxc"
 
+# For enterpriseEdition
+quickwit: &quickwit
+  enabled: false
 
+
+# For enterpriseEdition
+connector: &connector
+  enabled: false
 
 postgresql: &postgres
   postgresqlPassword: "c_xHJhX4%nDU__NV_eno"
