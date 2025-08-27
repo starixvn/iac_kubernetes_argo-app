@@ -36,10 +36,11 @@ extraPorts:
 #   containerPort: 5170
 #   protocol: UDP
 #   name: syslog
-- port: 32224
+- port: 24224
   containerPort: 24224
   protocol: TCP
   name: forward
+  nodePort: 32224
 
 config:
   inputs: |
