@@ -1,0 +1,109 @@
+databases:
+  postgresql:
+    fullnameOverride: openreplay-postgresql
+    resources:
+      limits:
+        memory: 2Gi
+      requests:
+        cpu: 250m
+        memory: 256Mi    
+  minio:
+    enabled: false
+    # fullnameOverride: openreplay-minio
+    # resources:
+    #   limits:
+    #     memory: 512Mi
+    #   requests:
+    #     cpu: 100m
+    #     memory: 128Mi
+  redis:
+    fullnameOverride: openreplay-redis
+    usePassword: false
+    cluster:
+      enabled: false
+    redis:
+      resources:
+        limits:
+          memory: 2Gi
+        requests:
+          cpu: 100m
+          memory: 128Mi    
+
+openreplay:
+  ingress-nginx:
+    enabled: false
+
+
+
+
+
+clickhouse: &clickhouse
+  enabled: false
+
+kafka: &kafka
+  # For enterpriseEdition
+  enabled: false
+
+redis: &redis
+  enabled: true
+  redisHost: "openreplay-redis-master"
+  redisPort: "6379"
+
+minio:
+  # Disable this if you use an external object storage service (s3)
+  enabled: false
+  global:
+    minio:
+      accessKey: &accessKey "openreplay"
+      secretKey: &secretKey "%8~Hb2+_210l$1IzXZxc"
+
+
+
+postgresql: &postgres
+  postgresqlPassword: "c_xHJhX4%nDU__NV_eno"
+  postgresqlHost: "openreplay-postgresql"
+  postgresqlPort: "5432"
+  postgresqlUser: "postgres"
+  postgresqlDatabase: "postgres"
+
+ingress: &ingress
+  controller:
+    ingressClass: haproxy
+
+global:
+  ingress: **ingress
+  postgresql: **postgres
+  kafka: *kafka
+  redis: *redis
+  quickwit: *quickwit
+  clickhouse: *clickhouse
+  connector: *connector
+  openReplayContainerRegistry: "public.ecr.aws/p1t3u8a3"
+  assistKey: "p^qVt8cfqp-YyP6Cb?lI"
+  assistJWTSecret: "p^qVt8cfqp-YyP6Cb?lI"
+  jwtSecret: "p^qVt8cfqp-YyP6Cb?lI"
+  jwtSpotSecret: "p^qVt8cfqp-YyP6Cb?lI"
+  tokenSecret: "p^qVt8cfqp-YyP6Cb?lI"
+  pvcRWXName: "longhorn-rwx"
+  s3:
+    region: "minio"
+    # if you're using iam roles for authentication, keep the value empty.
+    # endpoint: ""
+    endpoint: "https://s3-api.starixsoft.com"
+    assetsBucket: "openreplay-sessions-assets"
+    recordingsBucket: "openreplay-mobs"
+    sourcemapsBucket: "openreplay-sourcemaps"
+    spotsBucket: "openreplay-spots"
+    # if you're using one node installation, where
+    # you're using local s3, make sure these variables
+    # are same as minio.global.minio.accesskey and  secretKey
+    accessKey: *accessKey
+    secretKey: *secretKey  
+  domainName: "openreplay.lumigame.com"
+
+
+chalice:
+  env:
+    JWT_REFRESH_SECRET: "p^qVt8cfqp-YyP6Cb?lI"
+    JWT_SPOT_REFRESH_SECRET: "p^qVt8cfqp-YyP6Cb?lI"
+

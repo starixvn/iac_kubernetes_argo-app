@@ -85,6 +85,13 @@ argo_applications_by_team = {
         ####### trigger
       }
 
+      openreplay = {
+        helm_path     = "openreplay-stack"
+        chart_version = "0.1.0"
+        auto_sync     = false
+        value_files   = ["values-lumi-lumprod-atomix.yaml"]
+      }
+
     }
   }
 }
