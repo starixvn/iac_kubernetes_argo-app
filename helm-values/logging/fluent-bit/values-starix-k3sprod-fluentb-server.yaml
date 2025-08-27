@@ -54,8 +54,8 @@ config:
       Port 24224
       Buffer_Chunk_Size 1M
       Buffer_Max_Size 6M
-      Security.Users fluentbit 29a2VG8BnWXsr3hX
-      Self_Hostname flb-klp.server.local
+      # Security.Users fluentbit 29a2VG8BnWXsr3hX
+      # Self_Hostname flb-klp.server.local
       
   filters: |
     [FILTER]
