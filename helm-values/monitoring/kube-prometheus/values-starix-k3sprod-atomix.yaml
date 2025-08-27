@@ -106,6 +106,10 @@ alertmanager:
         match_re:
           alertname: ".*memory usage exceeds 90%.*"
           pod: "sentry-lui-k3sprod-kafka-controller-1|.*logstash.*"
+      - receiver: 'null'
+        match_re:
+         namespace: "logging"
+         alertname: "Kubernetes Service Restart"
       - receiver: 'nexpe-services-alert'
         match_re:
           namespace: "nexpe|gosql|tw|nexops|rabbitmq.*"
