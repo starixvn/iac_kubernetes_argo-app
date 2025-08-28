@@ -74,7 +74,7 @@ global:
   jwtSecret: "p^qVt8cfqp-YyP6Cb?lI"
   jwtSpotSecret: "p^qVt8cfqp-YyP6Cb?lI"
   tokenSecret: "p^qVt8cfqp-YyP6Cb?lI"
-  pvcRWXName: "longhorn-rwx"
+  pvcRWXName: "openreplay-rwx"
   s3:
     region: "minio"
     endpoint: "https://s3-api.starixsoft.com"
