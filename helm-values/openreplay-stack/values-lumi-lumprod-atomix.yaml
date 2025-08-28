@@ -73,6 +73,7 @@ postgresql: &postgres
 
 ingress: &haproxy-ingress
   controller:
+    ingressClassName: "haproxy"
     ingressClass: haproxy
 
 global:
