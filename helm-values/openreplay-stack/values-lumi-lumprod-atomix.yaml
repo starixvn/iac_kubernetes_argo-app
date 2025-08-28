@@ -32,10 +32,10 @@ databases:
           memory: 128Mi
   clickhouse:
     enabled: true
-    fullnameOverride: openreplay-clickhouse
+    fullnameOverride: "openreplay-clickhouse"
+    nameOverride: "openreplay-clickhouse"
     image:
-      repository: hub.nexdev.net
-      pullPolicy: base/clickhouse/clickhouse-server
+      repository: hub.nexdev.net/base/clickhouse/clickhouse-server
       tag: "23.3.19.32"    
 
 openreplay:
