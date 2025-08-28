@@ -2,7 +2,7 @@ fromVersion: "v1.22.0"
 
 tags:
   db: true
-  app: false
+  app: true
 
 
 databases:
