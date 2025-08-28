@@ -36,7 +36,7 @@ databases:
     nameOverride: "openreplay-clickhouse"
     image:
       repository: hub.nexdev.net/base/clickhouse/clickhouse-server
-      tag: "23.3.19.32"
+      tag: "25.1-alpine"
     backupImage:
       repository: hub.nexdev.net/base/alexakulov/clickhouse-backup
       pullPolicy: IfNotPresent
