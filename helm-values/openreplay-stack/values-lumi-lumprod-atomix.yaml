@@ -2,7 +2,7 @@ fromVersion: "v1.22.0"
 
 tags:
   db: true
-  app: true
+  app: false
 
 
 databases:
@@ -29,7 +29,13 @@ databases:
           memory: 2Gi
         requests:
           cpu: 100m
-          memory: 128Mi    
+          memory: 128Mi
+  clickhouse:
+    fullnameOverride: openreplay-clickhouse
+    image:
+      repository: hub.nexdev.net
+      pullPolicy: base/clickhouse/clickhouse-server
+      tag: "23.3.19.32"    
 
 openreplay:
   ingress-nginx:
@@ -38,8 +44,13 @@ openreplay:
 
 
 clickhouse: &clickhouse
-  enabled: false
-
+  enabled: true
+  chHost: openreplay-clickhouse
+  username: default
+  password: "super-secure-password"
+  service:
+    webPort: 9000
+    dataPort: 8123
 kafka: &kafka
   enabled: false
 
