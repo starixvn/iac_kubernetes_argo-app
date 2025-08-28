@@ -1,21 +1,8 @@
 databases:
   postgresql:
-    fullnameOverride: openreplay-postgresql
-    resources:
-      limits:
-        memory: 2Gi
-      requests:
-        cpu: 250m
-        memory: 256Mi    
+    fullnameOverride: openreplay-postgresql 
   minio:
     enabled: false
-    # fullnameOverride: openreplay-minio
-    # resources:
-    #   limits:
-    #     memory: 512Mi
-    #   requests:
-    #     cpu: 100m
-    #     memory: 128Mi
   redis:
     fullnameOverride: openreplay-redis
     usePassword: false
@@ -34,14 +21,10 @@ openreplay:
     enabled: false
 
 
-
-
-
 clickhouse: &clickhouse
   enabled: false
 
 kafka: &kafka
-  # For enterpriseEdition
   enabled: false
 
 redis: &redis
@@ -55,7 +38,7 @@ minio:
   global:
     minio:
       accessKey: &accessKey "openreplay"
-      secretKey: &secretKey "%8~Hb2+_210l$1IzXZxc"
+      secretKey: &secretKey "8~Hb2+_210l$1IzXZxc"
 
 # For enterpriseEdition
 quickwit: &quickwit
@@ -67,18 +50,18 @@ connector: &connector
   enabled: false
 
 postgresql: &postgres
-  postgresqlPassword: "c_xHJhX4%nDU__NV_eno"
+  postgresqlPassword: "super-secure-password"
   postgresqlHost: "openreplay-postgresql"
   postgresqlPort: "5432"
   postgresqlUser: "postgres"
   postgresqlDatabase: "postgres"
 
-ingress: &ingress
+ingress: &haproxy-ingress
   controller:
     ingressClass: haproxy
 
 global:
-  ingress: *ingress
+  ingress: *haproxy-ingress
   postgresql: *postgres
   kafka: *kafka
   redis: *redis
@@ -94,8 +77,6 @@ global:
   pvcRWXName: "longhorn-rwx"
   s3:
     region: "minio"
-    # if you're using iam roles for authentication, keep the value empty.
-    # endpoint: ""
     endpoint: "https://s3-api.starixsoft.com"
     assetsBucket: "openreplay-sessions-assets"
     recordingsBucket: "openreplay-mobs"
