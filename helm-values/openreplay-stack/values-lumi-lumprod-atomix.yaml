@@ -31,6 +31,7 @@ databases:
           cpu: 100m
           memory: 128Mi
   clickhouse:
+    enabled: true
     fullnameOverride: openreplay-clickhouse
     image:
       repository: hub.nexdev.net
@@ -51,6 +52,7 @@ clickhouse: &clickhouse
   service:
     webPort: 9000
     dataPort: 8123
+
 kafka: &kafka
   enabled: false
 
