@@ -45,6 +45,12 @@ databases:
 openreplay:
   ingress-nginx:
     enabled: false
+  quickwit:
+    image:
+      repository: hub.nexdev.net/base/quickwit/quickwit
+      pullPolicy: IfNotPresent
+      tag: "latest"
+
 
 
 
