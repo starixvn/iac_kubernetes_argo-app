@@ -31,6 +31,10 @@ openreplay:
     enabled: false
 
 
+
+  
+
+
 tags:
   db: true
   app: true
@@ -74,6 +78,8 @@ postgresql: &postgres
 ingress: &haproxy-ingress
   className: "haproxy"
   controller:
+    ingressClassResource:
+      name: "haproxy"
     ingressClassName: "haproxy"
     ingressClass: haproxy
 
