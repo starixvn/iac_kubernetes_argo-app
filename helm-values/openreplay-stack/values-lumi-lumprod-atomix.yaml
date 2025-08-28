@@ -52,7 +52,7 @@ clickhouse: &clickhouse
   enabled: true
   chHost: clickhouse-openreplay-clickhouse
   username: default
-  password: "super-secure-password"
+  password: ""
   service:
     webPort: 9000
     dataPort: 8123
