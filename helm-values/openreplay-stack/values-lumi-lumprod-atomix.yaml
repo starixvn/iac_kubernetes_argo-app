@@ -33,7 +33,7 @@ openreplay:
 
 tags:
   db: true
-  app: false
+  app: true
 
 
 clickhouse: &clickhouse
