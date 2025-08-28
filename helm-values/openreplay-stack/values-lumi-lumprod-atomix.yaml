@@ -1,5 +1,10 @@
 fromVersion: "v1.22.0"
 
+tags:
+  db: true
+  app: false
+
+
 databases:
   postgresql:
     fullnameOverride: openreplay-postgresql
@@ -30,14 +35,6 @@ openreplay:
   ingress-nginx:
     enabled: false
 
-
-
-  
-
-
-tags:
-  db: true
-  app: true
 
 
 clickhouse: &clickhouse
