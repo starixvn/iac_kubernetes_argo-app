@@ -36,7 +36,11 @@ databases:
     nameOverride: "openreplay-clickhouse"
     image:
       repository: hub.nexdev.net/base/clickhouse/clickhouse-server
-      tag: "23.3.19.32"    
+      tag: "23.3.19.32"
+    backupImage:
+      repository: hub.nexdev.net/base/alexakulov/clickhouse-backup
+      pullPolicy: IfNotPresent
+      tag: "latest"
 
 openreplay:
   ingress-nginx:
