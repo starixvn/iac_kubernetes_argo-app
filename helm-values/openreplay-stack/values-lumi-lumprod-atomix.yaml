@@ -50,7 +50,7 @@ openreplay:
 
 clickhouse: &clickhouse
   enabled: true
-  chHost: openreplay-clickhouse
+  chHost: clickhouse-openreplay-clickhouse
   username: default
   password: "super-secure-password"
   service:
