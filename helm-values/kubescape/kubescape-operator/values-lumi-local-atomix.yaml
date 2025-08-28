@@ -5,8 +5,8 @@ includeNamespaces: "gn,hd,l1,l2,mg,sk,sp,tg"
 
 capabilities:
   # ====== configuration scanning related capabilities ======
-  configurationScan: disable
-  nodeScan: disable
+  configurationScan: enable
+  nodeScan: enable
   
   # ====== Image vulnerabilities scanning related capabilities ======
   nodeSbomGeneration: disable
