@@ -2,10 +2,18 @@ fromVersion: "v1.22.0"
 
 databases:
   postgresql:
-    fullnameOverride: openreplay-postgresql 
+    fullnameOverride: openreplay-postgresql
+    image:
+      registry: hub.nexdev.net
+      repository: base/bitnami/postgresql
+      tag: 17.4.0-debian-12-r13
   minio:
     enabled: false
   redis:
+    image:
+      registry: hub.nexdev.net
+      repository: base/bitnami/redis
+      tag: 7.2.5-debian-12-r4
     fullnameOverride: openreplay-redis
     usePassword: false
     cluster:
