@@ -27,9 +27,6 @@ prometheus:
     storageClass: ""
     size: 30Gi
 
-  externalLabels:
-    clusterDomain: "{{ .Values.clusterDomain }}"
-
   ## @param prometheus.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if prometheus.resources is set (prometheus.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
@@ -172,6 +169,6 @@ alertmanager:
         actions: 
         - type: "button"
           text: ":opensearch-ico: Logs"
-          url: '{{ template "kubescape.slack.logs_url" . }}'
+          url: "https://logs.nexdev.net/app/data-explorer/discover/?security_tenant=private#/view/ae4836f0-77f0-11f0-98b6-dd570b75d8b6?_g=%28filters%3A%21%28%29%2CrefreshInterval%3A%28pause%3A%21t%2Cvalue%3A0%29%2Ctime%3A%28from%3Anow-15m%2Cto%3Anow%29%29"
 
     - name: default-receiver
