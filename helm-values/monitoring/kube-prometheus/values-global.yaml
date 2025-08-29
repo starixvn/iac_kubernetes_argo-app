@@ -576,7 +576,9 @@ alertmanager:
       {{ end }}
 
       {{ define "sre.slack.color" -}}
-        {{- if eq .Status "firing" -}}
+        {{- if eq .CommonLabels.alertname "KubescapeRuleViolated" -}}
+          #32CD32
+        {{- else if eq .Status "firing" -}}
           {{- if eq (.CommonLabels.severity | toUpper) "CRITICAL" -}}
             #FF5733
           {{- else if eq (.CommonLabels.severity | toUpper) "WARNING" -}}
