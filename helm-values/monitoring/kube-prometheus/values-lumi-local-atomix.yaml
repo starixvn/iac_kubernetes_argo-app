@@ -167,5 +167,9 @@ alertmanager:
         username: '{{ template "sre.slack.username" . }}🔹SC.LOCAL'
         title: '{{ template "kubescape.slack.title" . }}'
         text: '{{ template "sre.slack.body" . }}'
+        actions: 
+        - type: "button"
+          text: ":opensearch-ico: Logs"
+          url: "https://logs.nexdev.net/app/data-explorer/discover/?security_tenant=private#/view/ae4836f0-77f0-11f0-98b6-dd570b75d8b6?_g=%28filters%3A%21%28%29%2CrefreshInterval%3A%28pause%3A%21t%2Cvalue%3A0%29%2Ctime%3A%28from%3Anow-15m%2Cto%3Anow%29%29"
 
     - name: default-receiver
