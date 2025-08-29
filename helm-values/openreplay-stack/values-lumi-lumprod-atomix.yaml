@@ -50,7 +50,12 @@ openreplay:
       repository: hub.nexdev.net/base/quickwit/quickwit
       pullPolicy: IfNotPresent
       tag: "latest"
-
+  global:
+    clusterDomain: "svc.lumi.lumprod"
+  chalice:
+    env:
+      CH_COMPRESSION: "false"
+      SKIP_H_SSL: true
 
 
 
