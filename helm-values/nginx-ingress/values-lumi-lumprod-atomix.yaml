@@ -4,4 +4,4 @@ controller:
     node-role.kubernetes.io/control-plane: "true"
   service:
     loadBalancerIP: "10.10.50.149"
-    externalTrafficPolicy: "cluster"
+
