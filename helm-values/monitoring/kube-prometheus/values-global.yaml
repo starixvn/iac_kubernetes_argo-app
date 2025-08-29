@@ -577,6 +577,7 @@ alertmanager:
            • *{{ $key | title }}:* `{{ $value }}`
           {{- end -}}
         {{- end -}}
+        ---
       {{- end }}
 
       {{ define "sre.slack.fallback" }}
