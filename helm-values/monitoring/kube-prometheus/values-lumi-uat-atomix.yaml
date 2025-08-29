@@ -87,7 +87,9 @@ alertmanager:
         matchers:
         - alertname="KubescapeRuleViolated"
         - severity!="low"
+        - description!=""
         group_by: ['container_name', 'rule_name']
+      Unexpected domain communication: gn-mini-keno-service-uat-service.gn.svc.lumi.uat
       group_by: ['alertname', 'cluster', 'namespace', 'pod', 'description']
       group_wait: 30s
       group_interval: 5m
@@ -143,6 +145,10 @@ alertmanager:
         username: '{{ template "sre.slack.username" . }}🔹SC.UAT'
         title: '{{ template "kubescape.slack.title" . }}'
         text: '{{ template "sre.slack.body" . }}'
+        actions: 
+        - type: "button"
+          text: ":opensearch-ico: Logs"
+          url: "https://ops-klp.starixplay.com/app/data-explorer/discover/?security_tenant=private#/view/da533070-81a4-11f0-941a-9d0249d23087?_g=%28filters%3A%21%28%29%2CrefreshInterval%3A%28pause%3A%21t%2Cvalue%3A0%29%2Ctime%3A%28from%3Anow-15m%2Cto%3Anow%29%29"
 
     - name: default-receiver
 
