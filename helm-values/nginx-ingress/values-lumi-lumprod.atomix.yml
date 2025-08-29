@@ -1,0 +1,10 @@
+controller:
+  kind: DaemonSet
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: "true"
+  service:
+    loadBalancerIP: "10.10.50.149"
+    externalTrafficPolicy: "cluster"
+    nodePorts:
+      http: "31080"
+      https: "31443"
