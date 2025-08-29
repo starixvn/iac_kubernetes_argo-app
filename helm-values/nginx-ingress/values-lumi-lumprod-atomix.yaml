@@ -2,6 +2,7 @@ controller:
   kind: DaemonSet
   config:
     strict-validate-path-type: "false"
+    allow-snippet-annotations: "true"
   nodeSelector:
     node-role.kubernetes.io/control-plane: "true"
   service:
