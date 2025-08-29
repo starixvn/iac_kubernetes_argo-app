@@ -89,7 +89,6 @@ alertmanager:
         - severity!="low"
         - description!=""
         group_by: ['container_name', 'rule_name']
-      Unexpected domain communication: gn-mini-keno-service-uat-service.gn.svc.lumi.uat
       group_by: ['alertname', 'cluster', 'namespace', 'pod', 'description']
       group_wait: 30s
       group_interval: 5m
