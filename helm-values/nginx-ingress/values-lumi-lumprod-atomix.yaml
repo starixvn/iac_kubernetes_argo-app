@@ -4,6 +4,8 @@ controller:
     strict-validate-path-type: "false"
     allow-snippet-annotations: "true"
     annotations-risk-level: "Critical"
+  extraArgs:
+    default-ssl-certificate: "haproxy-ingress/lumigame-cert"
   nodeSelector:
     node-role.kubernetes.io/control-plane: "true"
   service:
