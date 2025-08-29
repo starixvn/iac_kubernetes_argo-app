@@ -100,17 +100,17 @@ postgresql: &postgres
   postgresqlUser: "postgres"
   postgresqlDatabase: "postgres"
 
-ingress: &haproxy-ingress
-  className: "haproxy"
+ingress: &nginx-ingress
+  className: "nginx"
   controller:
     ingressClassResource:
-      name: "haproxy"
-    ingressClassName: "haproxy"
-    ingressClass: haproxy
+      name: "nginx"
+    ingressClassName: "nginx"
+    ingressClass: nginx
 
 
 global:
-  ingress: *haproxy-ingress
+  ingress: *nginx-ingress
   postgresql: *postgres
   kafka: *kafka
   redis: *redis
