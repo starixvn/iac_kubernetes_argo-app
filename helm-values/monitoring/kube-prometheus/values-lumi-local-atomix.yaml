@@ -168,6 +168,7 @@ alertmanager:
         title: '{{ template "kubescape.slack.title" . }}'
         text: '{{ template "sre.slack.body" . }}'
         actions: 
+        - type: "divider"
         - type: "button"
           text: ":opensearch-ico: Logs"
           url: '{{ template "kubescape.slack.logs_url" . }}'
