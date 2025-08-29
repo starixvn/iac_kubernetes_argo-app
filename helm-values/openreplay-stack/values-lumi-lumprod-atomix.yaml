@@ -124,6 +124,7 @@ global:
   jwtSpotSecret: "p^qVt8cfqp-YyP6Cb?lI"
   tokenSecret: "p^qVt8cfqp-YyP6Cb?lI"
   pvcRWXName: "openreplay-rwx"
+  clusterDomain: "svc.lumi.lumprod"
   s3:
     region: "minio"
     endpoint: "https://s3-api.starixsoft.com"
