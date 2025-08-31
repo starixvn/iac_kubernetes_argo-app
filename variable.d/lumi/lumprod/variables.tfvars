@@ -62,13 +62,6 @@ argo_applications_by_team = {
         ]
       }
 
-      opencost = {
-        helm_path     = "opencost"
-        chart_version = "2.1.9"
-        value_files   = ["values-lumi-lumprod-atomix.yaml"]
-        ### trigger
-      }
-
       postgresql-sonar = {
         namespace     = "nexpe"
         helm_path     = "postgresql"
