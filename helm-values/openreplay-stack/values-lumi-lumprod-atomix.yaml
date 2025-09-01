@@ -56,6 +56,7 @@ openreplay:
     env:
       CH_COMPRESSION: "false"
       SKIP_H_SSL: true
+      CLUSTER_URL: "svc.lumi.lumprod"
 
 
 
