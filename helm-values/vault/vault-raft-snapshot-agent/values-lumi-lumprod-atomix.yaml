@@ -13,7 +13,7 @@ cronjob:
   - name: retainDay
     value: "7"
   - name: S3_HOST
-    value: https://s3-api.nexdev.net
+    value: https://s3-api.starixsoft.com
   - name: S3_BUCKET
     value: vault-backup
   - name: S3_PATH

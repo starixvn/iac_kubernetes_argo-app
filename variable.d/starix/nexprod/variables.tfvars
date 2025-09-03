@@ -89,6 +89,22 @@ argo_applications_by_team = {
       }
     }
   }
+  stx = {
+    team_name = "atomix"
+    applications = {
+      vault = {
+        namespace     = "vault"
+        helm_path     = "vault"
+        chart_version = "0.30.1"
+        auto_sync     = false
+      }
+      vault-dev-snap-agent = {
+        namespace     = "vault"
+        helm_path     = "vault/vault-raft-snapshot-agent"
+        chart_version = "0.1.0"
+      }
+    }
+  }
 }
 
 argo_projects = {
