@@ -96,26 +96,46 @@ logstashPipeline:
           if [facility_label] == "local1" {
             mutate {
               add_tag => ["haproxy_access", "hap-ing", "k3sprod"]
+              add_field => { "env" => "prod" }
+              add_field => { "org" => "starix" }
+              add_field => { "region" => "kl" }
+              add_field => { "engine" => "k3s" }
             }
           } 
           else if [facility_label] == "local3" {
             mutate {
               add_tag => ["haproxy_access", "hap-swarm", "st", "alphaklprod"]
+              add_field => { "env" => "prod" }
+              add_field => { "org" => "alpha" }
+              add_field => { "region" => "kl" }
+              add_field => { "engine" => "swarm" }
             }
           }
           else if [facility_label] == "local4" {
             mutate {
               add_tag => ["haproxy_access", "hap-swarm", "st", "stklprod"]
+              add_field => { "env" => "prod" }
+              add_field => { "org" => "starix" }
+              add_field => { "region" => "kl" }
+              add_field => { "engine" => "swarm" }
             }
           }
           else if [facility_label] == "local5" {
             mutate {
               add_tag => ["haproxy_access", "hap-swarm", "st", "fpsklprod"]
+              add_field => { "env" => "prod" }
+              add_field => { "org" => "fps" }
+              add_field => { "region" => "kl" }
+              add_field => { "engine" => "swarm" }
             }
           }
           else if [facility_label] == "local7" {
             mutate {
               add_tag => ["haproxy_access", "hap-ing", "sc", "scklprod"]
+              add_field => { "env" => "prod" }
+              add_field => { "org" => "lumi" }
+              add_field => { "region" => "kl" }
+              add_field => { "engine" => "k8s" }
             }
           }
           else {
@@ -390,86 +410,71 @@ logstashPipeline:
   syslog_output.conf: |
     output {
       if [type] == "syslog" {
-        if "hap-swarm" in [tags] {
-          if "alphaklprod" in [tags] and "prod" in [tags] {
-            opensearch {
-              hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
-              user => "logstash"
-              password => "logstash"
-              ssl => true
-              ssl_certificate_verification => false
-              index => "logstash-haproxy-swarm-starix-alphaklprod"
-              action => "create"
-            }
+        if [engine] == "swarm" [env] == "prod" and [org] == "alpha" {
+          opensearch {
+            hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
+            user => "logstash"
+            password => "logstash"
+            ssl => true
+            ssl_certificate_verification => false
+            index => "logstash-haproxy-swarm-starix-alphaklprod"
+            action => "create"
           }
-          else if "stklprod" in [tags] and "prod" in [tags] {
-            opensearch {
-              hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
-              user => "logstash"
-              password => "logstash"
-              ssl => true
-              ssl_certificate_verification => false
-              index => "logstash-haproxy-swarm-starix-klprod"
-              action => "create"
-            }
-          }
-          else if "fpsklprod" in [tags] and "prod" in [tags] {
-            opensearch {
-              hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
-              user => "logstash"
-              password => "logstash"
-              ssl => true
-              ssl_certificate_verification => false
-              index => "logstash-haproxy-swarm-fpsklprod-klprod"
-              action => "create"
-            }
-          }
-          else {
-            opensearch {
-              hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
-              user => "logstash"
-              password => "logstash"
-              ssl => true
-              ssl_certificate_verification => false
-              index => "logstash-haproxy-swarm-unknown-klprod"
-              action => "create"
-            }         
-          } 
         }
-        else if "hap-ing" in [tags] {
-          if "prod" in [tags] and "k3sprod" in [tags] {
-            opensearch {
-              hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
-              user => "logstash"
-              password => "logstash"
-              ssl => true
-              ssl_certificate_verification => false
-              index => "logstash-haproxy-ing-k3sprod-prod"
-              action => "create"
-            }
+        else if [engine] == "swarm" [env] == "prod" and [org] == "starix" {
+          opensearch {
+            hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
+            user => "logstash"
+            password => "logstash"
+            ssl => true
+            ssl_certificate_verification => false
+            index => "logstash-haproxy-swarm-starix-klprod"
+            action => "create"
           }
-          else if "scklprod" in [tags] and "sc" in [tags] {
-            opensearch {
-              hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
-              user => "logstash"
-              password => "logstash"
-              ssl => true
-              ssl_certificate_verification => false
-              index => "logstash-haproxy-ing-sc-klprod"
-              action => "create"
-            }
+        }
+        else if [engine] == "swarm" [env] == "prod" and [org] == "fps" {
+          opensearch {
+            hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
+            user => "logstash"
+            password => "logstash"
+            ssl => true
+            ssl_certificate_verification => false
+            index => "logstash-haproxy-swarm-fpsklprod-klprod"
+            action => "create"
           }
-          else {
-            opensearch {
-              hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
-              user => "logstash"
-              password => "logstash"
-              ssl => true
-              ssl_certificate_verification => false
-              index => "logstash-haproxy-ing-unknown-prod"
-              action => "create"
-            }         
+        }
+        else if [engine] == "k3s" [env] == "prod" and [org] == "starix" {
+          opensearch {
+            hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
+            user => "logstash"
+            password => "logstash"
+            ssl => true
+            ssl_certificate_verification => false
+            index => "logstash-haproxy-ing-k3sprod-prod"
+            action => "create"
           }
+        }
+        else if [engine] == "k8s" [env] == "prod" and [org] == "lumi" {
+          opensearch {
+            hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
+            user => "logstash"
+            password => "logstash"
+            ssl => true
+            ssl_certificate_verification => false
+            index => "logstash-haproxy-ing-sc-klprod"
+            action => "create"
+          }
+        }
+        else {
+          opensearch {
+            hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
+            user => "logstash"
+            password => "logstash"
+            ssl => true
+            ssl_certificate_verification => false
+            index => "logstash-unknown"
+            action => "create"
+          }         
         }
       }
     }
