@@ -55,6 +55,11 @@ argo_applications_by_team = {
         auto_sync     = false
         value_files   = ["values-starix-nexprod-vaultdev.yaml", ]
       }
+      vault-snap-agent = {
+        namespace     = "vault-dev"
+        helm_path     = "vault/vault-raft-snapshot-agent"
+        chart_version = "0.1.0"
+      }
 
       # redis-standalone = {
       #   helm_path     = "redis-standalone"
