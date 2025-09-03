@@ -1,6 +1,7 @@
 ---
 image:
   repository: hub.nexdev.net/base/nexops-tools/vault-snapshot
+  tag: 1.20.1
 
 cronjob:
   schedule: "15 17 * * *"

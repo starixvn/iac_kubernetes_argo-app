@@ -92,6 +92,18 @@ argo_applications_by_team = {
         value_files   = ["values-lumi-lumprod-atomix.yaml"]
       }
 
+      vault = {
+        namespace     = "vault"
+        helm_path     = "vault"
+        chart_version = "0.28.1"
+        auto_sync     = false
+      }
+      vault-snap-agent = {
+        namespace     = "vault"
+        helm_path     = "vault/vault-raft-snapshot-agent"
+        chart_version = "0.1.0"
+      }
+
     }
   }
 }
