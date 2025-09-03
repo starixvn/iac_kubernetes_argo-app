@@ -47,6 +47,15 @@ argo_applications_by_team = {
           "values-starix-nexprod-atomix.yaml",
         ]
       }
+
+      vault = {
+        namespace     = "vault-dev"
+        helm_path     = "vault"
+        chart_version = "0.30.1"
+        auto_sync     = false
+        value_files   = ["values-starix-nexprod-vaultdev.yaml", ]
+      }
+
       # redis-standalone = {
       #   helm_path     = "redis-standalone"
       #   chart_version = "18.17.0"
