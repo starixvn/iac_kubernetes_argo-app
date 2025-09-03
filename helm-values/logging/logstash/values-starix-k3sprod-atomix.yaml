@@ -410,7 +410,7 @@ logstashPipeline:
   syslog_output.conf: |
     output {
       if [type] == "syslog" {
-        if [engine] == "swarm" [env] == "prod" and [org] == "alpha" {
+        if [engine] == "swarm" and [env] == "prod" and [org] == "alpha" {
           opensearch {
             hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
             user => "logstash"
@@ -421,7 +421,7 @@ logstashPipeline:
             action => "create"
           }
         }
-        else if [engine] == "swarm" [env] == "prod" and [org] == "starix" {
+        else if [engine] == "swarm" and [env] == "prod" and [org] == "starix" {
           opensearch {
             hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
             user => "logstash"
@@ -432,7 +432,7 @@ logstashPipeline:
             action => "create"
           }
         }
-        else if [engine] == "swarm" [env] == "prod" and [org] == "fps" {
+        else if [engine] == "swarm" and [env] == "prod" and [org] == "fps" {
           opensearch {
             hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
             user => "logstash"
@@ -443,7 +443,7 @@ logstashPipeline:
             action => "create"
           }
         }
-        else if [engine] == "k3s" [env] == "prod" and [org] == "starix" {
+        else if [engine] == "k3s" and [env] == "prod" and [org] == "starix" {
           opensearch {
             hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
             user => "logstash"
@@ -454,7 +454,7 @@ logstashPipeline:
             action => "create"
           }
         }
-        else if [engine] == "k8s" [env] == "prod" and [org] == "lumi" {
+        else if [engine] == "k8s" and [env] == "prod" and [org] == "lumi" {
           opensearch {
             hosts => ["https://opsearch-atx-k3sprod.logging:9200"]
             user => "logstash"
