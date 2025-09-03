@@ -92,10 +92,15 @@ argo_applications_by_team = {
         value_files   = ["values-lumi-lumprod-atomix.yaml"]
       }
 
+      vault-secrets-operator = {
+        namespace     = "vault"
+        helm_path     = "vault/vault-secrets-operator"
+        chart_version = "0.10.0"
+      }
       vault = {
         namespace     = "vault"
         helm_path     = "vault"
-        chart_version = "0.28.1"
+        chart_version = "0.30.1"
         auto_sync     = false
       }
       vault-snap-agent = {
