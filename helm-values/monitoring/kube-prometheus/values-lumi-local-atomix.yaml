@@ -90,7 +90,7 @@ alertmanager:
          alertname: "Kubernetes Service.*|Kubernetes Pod Not Running"
       - receiver: 'null'
         match_re:
-         alertname: "Kubernetes Container CPU usage exceeds 90% of the resource limit"
+         alertname: "Kubernetes Container CPU usage exceeds 90% of the resource limit|Kubernetes Container memory usage exceeds 90% of the resource limit"
       - receiver: 'null'
         matchers:
         - namespace=~"l1|l2|gn|hd|sk|sp|tg|mg"
