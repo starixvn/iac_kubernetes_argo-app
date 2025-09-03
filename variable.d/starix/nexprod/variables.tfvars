@@ -48,7 +48,7 @@ argo_applications_by_team = {
         ]
       }
 
-      vault = {
+      vault-dev = {
         namespace     = "vault-dev"
         helm_path     = "vault"
         chart_version = "0.30.1"
