@@ -465,3 +465,125 @@ snuba:
   clickhouse:
     maxConnections: 100
 
+
+
+backups_path:
+  alias: "s3b"
+  url: "https://s3-api.starixsoft.com:9000"
+  key: "sentry-backup"
+  sec: "sFe9?iMnHhOQ"
+  env: "prod"
+  org: "lumi"
+
+
+extraManifests:
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: '{{ printf "%s-sentry-backup-sa" .Release.Name }}'
+    namespace: '{{ .Release.Namespace }}'
+
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: ClusterRole
+  metadata:
+    name: '{{ printf "%s-sentry-pods-exec" .Release.Name }}'
+  rules:
+    - apiGroups: [""]
+      resources: ["pods"]
+      verbs: ["get","list"]
+    - apiGroups: [""]
+      resources: ["pods/exec"]
+      verbs: ["create"] 
+
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: ClusterRoleBinding
+  metadata:
+    name: '{{ printf "%s-sentry-pods-exec-binding" .Release.Name }}'
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: '{{ printf "%s-sentry-pods-exec" .Release.Name }}'
+  subjects:
+    - kind: ServiceAccount
+      name: '{{ printf "%s-sentry-backup-sa" .Release.Name }}'
+      namespace: '{{ .Release.Namespace }}'
+
+- apiVersion: batch/v1
+  kind: CronJob
+  metadata:
+    name: '{{ printf "%s-sentry-backup" .Release.Name }}'
+    namespace: '{{ .Release.Namespace }}'
+  spec:
+    schedule: "0 3 * * *"
+    concurrencyPolicy: Forbid
+    successfulJobsHistoryLimit: 3
+    failedJobsHistoryLimit: 3
+    jobTemplate:
+      spec:
+        template:
+          spec:
+            serviceAccountName: '{{ printf "%s-sentry-backup-sa" .Release.Name }}'
+            automountServiceAccountToken: true
+            restartPolicy: OnFailure
+            containers:
+              - name: sentry-backup-job
+                image: hub.nexdev.net/base/kubectl-mc
+                imagePullPolicy: Always
+                env:
+                  - name: S3_ALIAS
+                    value: "{{ .Values.backups_path.alias }}"
+                  - name: S3_URL
+                    value: "{{ .Values.backups_path.url }}"
+                  - name: S3_KEY
+                    value: "{{ .Values.backups_path.key }}"
+                  - name: S3_SEC
+                    value: "{{ .Values.backups_path.sec }}"
+                  - name: SENTRY_ENV
+                    value: "{{ .Values.backups_path.env }}"
+                  - name: SENTRY_ORG
+                    value: "{{ .Values.backups_path.org }}"
+                  - name: HTTP_PROXY
+                    value: "iusqd.gamora.prod:8801"
+                  - name: HTTPS_PROXY
+                    value: "iusqd.gamora.prod:8801"
+                  - name: NO_PROXY
+                    value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.svc,.k3suat"
+                command: ["/bin/bash","-lc"]
+                args:
+                  - |
+                    set -eu pipefail
+                    export PATH="/opt/bitnami/kubectl/bin:$PATH"
+                    userVerify="dev@sabawork.com"
+                    podName="$(kubectl get pod | grep web | awk '{print $1}')"
+                    date="$(date +%F)"
+                    fileName="backup-file-sentry_$date.json"
+                    pathFile=/tmp/$fileName
+
+                    # command backup
+                    echo "[backup] start" >>/proc/1/fd/1
+                    kubectl exec $podName -- bash -c 'set -e; cd /tmp; sentry export global backup-file-sentry.json' >/proc/1/fd/1 2>/proc/1/fd/2
+                    echo "[backup] done -> /tmp/backup-file-sentry.json" >>/proc/1/fd/1
+
+                    # verify backup file
+                    echo "[verify] start" >>/proc/1/fd/1
+                    # bring backup file to cronjob container
+                    kubectl exec $podName -- bash -c 'set -e;cat /tmp/backup-file-sentry.json' > $pathFile
+                    [ -s $pathFile ] || { echo "[verify] FAIL: empty file" >>/proc/1/fd/2; exit 1; }
+                    cat $pathFile | grep -q $userVerify || { echo "[verify] FAIL:  missing user $userVerify" >>/proc/1/fd/2; exit 1; }
+                    echo "[verify] OK: $pathFile" >>/proc/1/fd/1
+                    
+                    # push backup file to MinIO
+                    echo "[push S3 MinIO] start" >>/proc/1/fd/1
+                    mc alias set $S3_ALIAS $S3_URL $S3_KEY $S3_SEC
+                    mc cp $pathFile $S3_ALIAS/sentry-backup-data/$SENTRY_ORG/$SENTRY_ENV/$fileName
+                    echo "[push S3 MinIO] OK: => sentry-backup-data/$SENTRY_ORG/$SENTRY_ENV/$fileName" >>/proc/1/fd/1
+                resources:
+                  requests:
+                    cpu: 50m
+                    memory: 64Mi
+                  limits:
+                    memory: 256Mi
+                securityContext:
+                  runAsNonRoot: true
+                  allowPrivilegeEscalation: false
+
