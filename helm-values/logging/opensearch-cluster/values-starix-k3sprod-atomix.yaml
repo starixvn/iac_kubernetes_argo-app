@@ -157,6 +157,10 @@ roles:
     - nexpe
     allowedActions:
     - kibana_all_write
+  - tenantPatterns:
+    - starix
+    allowedActions:
+    - kibana_all_read
 
 - name: "subarashi-member"
   clusterPermissions:
