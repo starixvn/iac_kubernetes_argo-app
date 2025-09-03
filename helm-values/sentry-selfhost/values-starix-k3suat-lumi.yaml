@@ -538,6 +538,12 @@ extraManifests:
                     value: "{{ .Values.backups_path.env }}"
                   - name: SENTRY_ORG
                     value: "{{ .Values.backups_path.org }}"
+                  - name: HTTP_PROXY
+                    value: "iusqd.gamora.prod:8801"
+                  - name: HTTPS_PROXY
+                    value: "iusqd.gamora.prod:8801"
+                  - name: NO_PROXY
+                    value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.svc,.k3suat"
                 command: ["/bin/bash","-lc"]
                 args:
                   - |
