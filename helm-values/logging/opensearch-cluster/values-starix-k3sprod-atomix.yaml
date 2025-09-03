@@ -142,6 +142,22 @@ cluster:
 
 # -- List of Opensearch Resources
 roles:
+- name: "starix-global"
+  clusterPermissions:
+  - cluster_composite_ops
+  - cluster_monitor
+  indexPermissions:
+  - indexPatterns:
+    - "logstash-haproxy-swarm-starix-klprod"
+    allowedActions:
+    - index
+    - read
+  tenantPermissions:
+  - tenantPatterns:
+    - starix
+    allowedActions:
+    - kibana_all_read
+
 - name: "nexpe-member"
   clusterPermissions:
   - cluster_composite_ops
@@ -157,10 +173,6 @@ roles:
     - nexpe
     allowedActions:
     - kibana_all_write
-  - tenantPatterns:
-    - starix
-    allowedActions:
-    - kibana_all_read
 
 - name: "subarashi-member"
   clusterPermissions:
