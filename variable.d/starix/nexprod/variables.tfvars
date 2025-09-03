@@ -90,7 +90,7 @@ argo_applications_by_team = {
     }
   }
   stx = {
-    team_name = "atomix"
+    team_name = "starix"
     applications = {
       vault = {
         namespace     = "vault"
