@@ -20,5 +20,5 @@ metricsService:
 
 defaultVaultConnection:
   enabled: true
-  address: "http://vault-atx-lumprod-active:8200"
+  address: "https://vault.nexdev.net"
   skipTLSVerify: true
