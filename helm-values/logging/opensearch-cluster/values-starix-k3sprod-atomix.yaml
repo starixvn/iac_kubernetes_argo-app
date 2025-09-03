@@ -213,6 +213,7 @@ roles:
     - kibana_all_write
 
 tenants:
+- name: "starix"
 - name: "pioneers"
 - name: "subarashi"
 - name: "nexpe"
