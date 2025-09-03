@@ -50,7 +50,7 @@ argo_applications_by_team = {
 
       vault-secrets-operator = {
         namespace     = "vault"
-        helm_path     = "vault-secrets-operator"
+        helm_path     = "vault/vault-secrets-operator"
         chart_version = "0.10.0"
       }
       vault-dev = {
