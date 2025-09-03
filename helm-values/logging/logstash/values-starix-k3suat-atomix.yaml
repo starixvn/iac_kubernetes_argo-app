@@ -71,16 +71,28 @@ logstashPipeline:
           if [facility_label] == "local1" {
             mutate {
               add_tag => ["haproxy_access", "hap-ing", "k3suat"]
+              add_field => { "env" => "uat" }
+              add_field => { "org" => "starix" }
+              add_field => { "region" => "kl" }
+              add_field => { "engine" => "k3s" }
             }
           }
           else if [facility_label] == "local3" {
             mutate {
               add_tag => ["haproxy_access", "hap-swarm", "st", "stuat"]
+              add_field => { "env" => "uat" }
+              add_field => { "org" => "starix" }
+              add_field => { "region" => "kl" }
+              add_field => { "engine" => "swarm" }
             }
           }
           else if [facility_label] == "local5" {
             mutate {
               add_tag => ["haproxy_access", "hap-ing", "scuat"]
+              add_field => { "env" => "uat" }
+              add_field => { "org" => "lumi" }
+              add_field => { "region" => "kl" }
+              add_field => { "engine" => "k8s" }
             }
           }
           else {
@@ -326,53 +338,49 @@ logstashPipeline:
   syslog_output.conf: |
     output {
       if [type] == "syslog" {
-        if "hap-swarm" in [tags] {
-          if "stkluat" in [tags] and "uat" in [tags] {
-            opensearch {
-              hosts => ["https://opsi.ops-klprod.gamora.prod:443"]
-              user => "logstash"
-              password => "logstash"
-              ssl => true
-              ssl_certificate_verification => false
-              index => "logstash-haproxy-swarm-starix-stuat"
-              action => "create"
-            }
+        if [engine] == "swarm" and [env] == "uat" and [org] == "starix" {
+          opensearch {
+            hosts => ["https://opsi.ops-klprod.gamora.prod:443"]
+            user => "logstash"
+            password => "logstash"
+            ssl => true
+            ssl_certificate_verification => false
+            index => "logstash-haproxy-swarm-starix-uat"
+            action => "create"
           }
         }
-        else if "hap-ing" in [tags] {
-          if "k3suat" in [tags] and "uat" in [tags] {
-            opensearch {
-              hosts => ["https://opsi.ops-klprod.gamora.prod:443"]
-              user => "logstash"
-              password => "logstash"
-              ssl => true
-              ssl_certificate_verification => false
-              index => "logstash-haproxy-ing-k3suat-uat"
-              action => "create"
-            }
+        else if [engine] == "k3s" and [env] == "uat" and [org] == "starix" {
+          opensearch {
+            hosts => ["https://opsi.ops-klprod.gamora.prod:443"]
+            user => "logstash"
+            password => "logstash"
+            ssl => true
+            ssl_certificate_verification => false
+            index => "logstash-haproxy-ing-k3suat-uat"
+            action => "create"
           }
-          else if "scuat" in [tags] and "uat" in [tags] {
-            opensearch {
-              hosts => ["https://opsi.ops-klprod.gamora.prod:443"]
-              user => "logstash"
-              password => "logstash"
-              ssl => true
-              ssl_certificate_verification => false
-              index => "logstash-haproxy-ing-sc-uat"
-              action => "create"
-            }
+        }
+        else if [engine] == "k8s" and [env] == "uat" and [org] == "lumi" {
+          opensearch {
+            hosts => ["https://opsi.ops-klprod.gamora.prod:443"]
+            user => "logstash"
+            password => "logstash"
+            ssl => true
+            ssl_certificate_verification => false
+            index => "logstash-haproxy-ing-sc-uat"
+            action => "create"
           }
-          else {
-            opensearch {
-              hosts => ["https://opsi.ops-klprod.gamora.prod:443"]
-              user => "logstash"
-              password => "logstash"
-              ssl => true
-              ssl_certificate_verification => false
-              index => "logstash-haproxy-unknown"
-              action => "create"
-            }         
-          }
+        }
+        else {
+          opensearch {
+            hosts => ["https://opsi.ops-klprod.gamora.prod:443"]
+            user => "logstash"
+            password => "logstash"
+            ssl => true
+            ssl_certificate_verification => false
+            index => "logstash-haproxy-unknown"
+            action => "create"
+          }         
         }
       }
     }
