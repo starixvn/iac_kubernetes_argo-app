@@ -30,8 +30,9 @@ luaScripts:
         if val and val ~= "-" then
           table.insert(headers, { name = name, value = val })
           if name == "X-Forwarded-For" then
-            -- promote to record for GeoIP lookup
             record["http_xff"] = val
+          elseif name == "Referer" then
+            record["http_referer"] = val
           end
         end
       end
