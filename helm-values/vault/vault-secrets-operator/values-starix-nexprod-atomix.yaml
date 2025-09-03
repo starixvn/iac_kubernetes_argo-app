@@ -1,0 +1,23 @@
+---
+controller:
+  replicas: 1
+
+manager:
+  kubernetesClusterDomain: starix.nexprod
+  manager:
+    image:
+      pullPolicy: IfNotPresent
+      repository: hub.nexdev.net/base/hashicorp/vault-secrets-operator
+
+metricsService:
+  ports:
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: https
+  type: ClusterIP
+
+defaultVaultConnection:
+  enabled: true
+  address: "http://vault-starix-nexprod-active:8200"
+  skipTLSVerify: true
