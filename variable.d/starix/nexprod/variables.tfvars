@@ -1,4 +1,4 @@
-#####
+####
 cluster_org = "starix"
 cluster_env = "nexprod"
 
@@ -90,7 +90,7 @@ argo_applications_by_team = {
     }
   }
   stx = {
-    team_name = "atomix"
+    team_name = "starix"
     applications = {
       vault = {
         namespace     = "vault"
@@ -98,7 +98,7 @@ argo_applications_by_team = {
         chart_version = "0.30.1"
         auto_sync     = false
       }
-      vault-dev-snap-agent = {
+      vault-snap-agent = {
         namespace     = "vault"
         helm_path     = "vault/vault-raft-snapshot-agent"
         chart_version = "0.1.0"

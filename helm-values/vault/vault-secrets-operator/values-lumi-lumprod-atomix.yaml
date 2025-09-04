@@ -7,8 +7,7 @@ controller:
       repository: hub.lumigame.com/base/hashicorp/vault-secrets-operator
 
 manager:
-  kubernetesClusterDomain: starix.nexprod
-    
+  kubernetesClusterDomain: lumi.lumprod
 
 metricsService:
   ports:
@@ -22,3 +21,20 @@ defaultVaultConnection:
   enabled: true
   address: "https://vault.nexdev.net"
   skipTLSVerify: true
+
+###################################
+# Persist Service Account Token
+###################################
+extraResources:
+- |
+  apiVersion: v1
+  kind: Secret
+  type: kubernetes.io/service-account-token
+  metadata:
+    name: {{ include "vso.chart.fullname" . }}-token
+    namespace: {{ .Release.Namespace }}
+    annotations:
+      kubernetes.io/service-account.name: {{ include "vso.chart.fullname" . }}-controller-manager
+    labels:
+      app.kubernetes.io/component: controller-manager
+    {{- include "vso.chart.labels" . | nindent 4 }}

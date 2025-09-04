@@ -19,16 +19,16 @@ argo_applications_by_team = {
           "values-lumi-local-atomix.yaml",
         ]
       }
-      opencost = {
-        helm_path     = "opencost"
-        chart_version = "2.1.9"
-        value_files   = ["values-lumi-local-atomix.yaml"]
-        ### trigger
-      }
       kubescape-op = {
         namespace     = "kubescape"
         helm_path     = "kubescape/kubescape-operator"
         chart_version = "1.29.0"
+        auto_sync     = false
+      }
+      vault-secrets-operator = {
+        namespace     = "vault"
+        helm_path     = "vault/vault-secrets-operator"
+        chart_version = "0.10.0"
       }
     }
   }
