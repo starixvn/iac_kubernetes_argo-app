@@ -12,7 +12,7 @@ extraPorts:
   protocol: UDP
   name: syslog
 
-flush: 20
+flush: 30
 
 config:
   inputs: |
