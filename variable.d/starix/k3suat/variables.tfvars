@@ -166,7 +166,7 @@ argo_applications_by_team = {
     applications = {
       vault = {
         helm_path     = "vault"
-        chart_version = "0.28.1"
+        chart_version = "0.30.1"
         auto_sync     = false
       }
       vault-snap-agent = {

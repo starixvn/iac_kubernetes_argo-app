@@ -1,6 +1,7 @@
 ---
 image:
   repository: nexhub.ops-klprod.gamora.prod/kbt/base/nexops-tools/vault-snapshot
+  tag: 1.20.1
 
 cronjob:
   schedule: "15 17 * * *"
