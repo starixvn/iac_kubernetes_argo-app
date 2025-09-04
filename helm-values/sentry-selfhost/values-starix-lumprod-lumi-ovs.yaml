@@ -189,7 +189,7 @@ extraManifests:
                     set -eu pipefail
                     export PATH="/opt/bitnami/postgresql/bin:$PATH"
                     date="$(date +%F)"
-                    fileName="sentry-data-$SENTRY_ORG-$SENTRY_ENV_$date.sql"
+                    fileName="sentry-ovs-data-${SENTRY_ORG}-${SENTRY_ENV}_$date.sql"
                     dbName="sentry"
                     dbUser="postgres"
                     dbPass="very-secure-password"
