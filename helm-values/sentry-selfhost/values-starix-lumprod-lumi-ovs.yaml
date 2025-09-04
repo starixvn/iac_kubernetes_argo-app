@@ -182,7 +182,7 @@ extraManifests:
                   - name: SENTRY_ORG
                     value: "{{ .Values.backups_path.org }}"
                   - name: PG_H
-                    value: "{{ printf \"%s-postgresql\" .Release.Name }}"
+                    value: "{{ printf \"%s-sentry-postgresql\" .Release.Name }}"
                 command: ["/bin/bash","-lc"]
                 args:
                   - |
