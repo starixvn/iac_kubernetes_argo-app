@@ -6,6 +6,14 @@ image:
 #   node-role.kubernetes.io/control-plane: ""
 #   node-role.kubernetes.io/master: ""
 
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
 extraPorts:
 - port: 5170
   containerPort: 5170
