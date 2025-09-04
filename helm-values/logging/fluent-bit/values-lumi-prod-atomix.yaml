@@ -1,36 +1,29 @@
 image:
   repository: nexhub.ops-klprod.gamora.prod/kbt/base/fluent/fluent-bit
+  tag: 4.0.3-geoip
 
 # nodeSelector:
 #   node-role.kubernetes.io/control-plane: ""
 #   node-role.kubernetes.io/master: ""
 
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
 tolerations:
 - operator: Exists
 
-luaScripts:
-  strip_ansi_color_code: |
-    function strip_ansi_color_code(tag, timestamp, record)
-      if type(record["log"]) == "string" then 
-        record["log"] = record["log"]:gsub('[\27\155][][()#;?%d]*[A-PRZcf-ntqry=><~]', '') 
-        return 2, 0, record 
-      end 
-      return 0, 0, 0
-    end
-
+extraPorts:
+- port: 5170
+  containerPort: 5170
+  protocol: UDP
+  name: syslog
 
 config:
-  service: |
-    [SERVICE]
-      Daemon Off
-      Flush {{ .Values.flush }}
-      Log_Level {{ .Values.logLevel }}
-      Parsers_File /fluent-bit/etc/parsers.conf
-      Parsers_File /fluent-bit/etc/conf/custom_parsers.conf
-      HTTP_Server On
-      HTTP_Listen 0.0.0.0
-      HTTP_Port {{ .Values.metricsPort }}
-      Health_Check On
   inputs: |
     [INPUT]
       Name tail
@@ -54,13 +47,23 @@ config:
       Tag host.all
       Read_From_Tail On
       Strip_Underscores On
+
+    [INPUT]
+      Name syslog
+      Tag syslog.haproxy
+      Listen 0.0.0.0
+      Port 5170
+      Mode udp
+      Source_Address_Key host
       
   filters: |
     [FILTER]
       Name modify
       Match *
-      Add env scprod
-      Add cluster_type k8s
+      Add env prod
+      Add region kl
+      Add team pentagon
+      Add engine k8s
 
     [FILTER]
       Name kubernetes
@@ -69,6 +72,64 @@ config:
       Keep_Log Off
       K8S-Logging.Parser On
       K8S-Logging.Exclude On
+
+    [FILTER] # Trim port from the host field
+      Name lua
+      Match syslog.*
+      script /fluent-bit/scripts/enrich.lua
+      call strip_port
+
+    [FILTER]
+      Name parser
+      Match syslog.haproxy
+      Key_name message
+      Parser haproxy
+      Preserve_Key On
+      Reserve_Data On
+
+    [FILTER]
+      Name   modify
+      Match  syslog.haproxy
+      Remove Tc
+      Remove Tq
+      Remove Tw
+      Remove actconn
+      Remove backend_queue
+      Remove beconn
+      Remove captured_request_cookie
+      Remove captured_response_cookie
+      Remove extradata
+      Remove feconn
+      Remove pid
+      Remove pri
+      Remove msgid
+      Remove retries
+      Remove srv_conn
+      Remove srv_queue
+      Remove termination_state
+
+    [FILTER]
+      Name lua
+      Match syslog.haproxy
+      script /fluent-bit/scripts/enrich.lua
+      call waf_headers_enrich
+
+    [FILTER]
+      Name   geoip2
+      Match  syslog.haproxy
+      Database /fluent-bit/etc/geoip/GeoLite2-City.mmdb
+      Lookup_key http_xff
+      Record geoip_country_name http_xff %{country.names.en}
+      Record geoip_country_iso http_xff %{country.iso_code}
+      Record geoip_city_name http_xff %{city.names.en}
+      Record geoip_latitude http_xff %{location.latitude}
+      Record geoip_longitude http_xff %{location.longitude}
+
+    [FILTER]
+      Name lua
+      Match syslog.haproxy
+      script /fluent-bit/scripts/enrich.lua
+      call merge_geoip
 
   outputs: |
     [OUTPUT]
@@ -110,11 +171,15 @@ config:
       Index logstash-kubesystem-container-log
       Replace_Dots On
 
-
-  customParsers: |
-    [PARSER]
-      Name docker_no_time
-      Format json
-      Time_Keep Off
-      Time_Key time
-      Time_Format %Y-%m-%dT%H:%M:%S.%L
+    [OUTPUT]
+      Name opensearch
+      Match syslog.haproxy
+      Host opsi-klp.starixplay.com
+      Port 443
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-haproxy-ing-sc-klprod
+      Replace_Dots On
