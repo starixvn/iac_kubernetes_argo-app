@@ -1,0 +1,117 @@
+image:
+  repository: lumhub.ops-klprod.gamora.prod/kbt/base/fluent/fluent-bit
+  tag: 4.0.3-geoip
+
+# nodeSelector:
+#   node-role.kubernetes.io/control-plane: ""
+#   node-role.kubernetes.io/master: ""
+
+extraPorts:
+- port: 5170
+  containerPort: 5170
+  protocol: UDP
+  name: syslog
+
+flush: 20
+
+config:
+  inputs: |
+    [INPUT]
+      Name syslog
+      Tag syslog.haproxy
+      Listen 0.0.0.0
+      Port 5170
+      Mode udp
+      Source_Address_Key host
+      
+  filters: |
+    [FILTER]
+      Name modify
+      Match *
+      Add env prod
+      Add region aws
+      Add team pentagon
+      Add engine k8s
+
+    [FILTER] # Trim port from the host field
+      Name lua
+      Match syslog.*
+      script /fluent-bit/scripts/enrich.lua
+      call strip_port
+
+    [FILTER]
+      Name parser
+      Match syslog.haproxy
+      Key_name message
+      Parser haproxy
+      Preserve_Key On
+      Reserve_Data On
+
+    [FILTER]
+      Name   modify
+      Match  syslog.haproxy
+      Remove Tc
+      Remove Tq
+      Remove Tw
+      Remove actconn
+      Remove backend_queue
+      Remove beconn
+      Remove captured_request_cookie
+      Remove captured_response_cookie
+      Remove extradata
+      Remove feconn
+      Remove pid
+      Remove pri
+      Remove msgid
+      Remove retries
+      Remove srv_conn
+      Remove srv_queue
+      Remove termination_state
+
+    [FILTER]
+      Name lua
+      Match syslog.haproxy
+      script /fluent-bit/scripts/enrich.lua
+      call waf_headers_enrich
+
+    [FILTER]
+      Name   geoip2
+      Match  syslog.haproxy
+      Database /fluent-bit/etc/geoip/GeoLite2-City.mmdb
+      Lookup_key http_xff
+      Record geoip_country_name http_xff %{country.names.en}
+      Record geoip_country_iso http_xff %{country.iso_code}
+      Record geoip_city_name http_xff %{city.names.en}
+      Record geoip_latitude http_xff %{location.latitude}
+      Record geoip_longitude http_xff %{location.longitude}
+
+    [FILTER]
+      Name lua
+      Match syslog.haproxy
+      script /fluent-bit/scripts/enrich.lua
+      call merge_geoip
+
+  outputs: |
+    # [OUTPUT]
+    #   Name forward
+    #   Match syslog.haproxy
+    #   Host 127.0.0.1
+    #   Port 24224
+    #   Username fluentbit
+    #   Password 29a2VG8BnWXsr3hX
+    #   Self_Hostname flb-ap.client.local
+    #   Compress gzip
+    #   Require_ack_response true
+    [OUTPUT]
+      Name opensearch
+      Match syslog.haproxy
+      Host opsi-klp.starixplay.com
+      Port 443
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-haproxy-ing-sc-t1prod
+      Replace_Dots On
+      Compress gzip

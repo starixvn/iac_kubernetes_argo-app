@@ -38,6 +38,17 @@ argo_applications_by_team = {
           "values-lumi-sgprod-atomix.yaml"
         ]
       }
+
+      fluent-bit = {
+        namespace     = "logging"
+        helm_path     = "logging/fluent-bit"
+        chart_version = "0.50.0"
+        value_files = [
+          "values-global.yaml",
+          "values-lumi-sgprod-atomix.yaml",
+        ]
+      }
+
       opencost = {
         helm_path     = "opencost"
         chart_version = "2.1.9"
