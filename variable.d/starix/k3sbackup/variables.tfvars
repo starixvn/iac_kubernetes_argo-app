@@ -45,6 +45,11 @@ argo_applications_by_team = {
         helm_path     = "nfs-subdir-external-provisioner"
         chart_version = "4.0.18"
       }
+      vault-secrets-operator = {
+        namespace     = "vault"
+        helm_path     = "vault/vault-secrets-operator"
+        chart_version = "0.10.0"
+      }
     }
   }
 }

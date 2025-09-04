@@ -30,6 +30,11 @@ argo_applications_by_team = {
         helm_path     = "kubescape/kubescape-operator"
         chart_version = "1.29.0"
       }
+      vault-secrets-operator = {
+        namespace     = "vault"
+        helm_path     = "vault/vault-secrets-operator"
+        chart_version = "0.10.0"
+      }
     }
   }
 }
