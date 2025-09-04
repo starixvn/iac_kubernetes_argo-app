@@ -1,5 +1,5 @@
 image:
-  repository: lumhub.ops-klprod.gamora.prod/kbt/base/fluent/fluent-bit
+  repository: lumhub.sc-t1prod.gamora.prod/aws/base/fluent/fluent-bit
   tag: 4.0.3-geoip
 
 # nodeSelector:
