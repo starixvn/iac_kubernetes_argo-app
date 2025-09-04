@@ -144,7 +144,7 @@ backups_path:
   url: "https://s3-api.starixsoft.com"
   key: "sentry-backup"
   sec: "sFe9?iMnHhOQ"
-  env: "uat"
+  env: "local"
   org: "lumi"
 
 
