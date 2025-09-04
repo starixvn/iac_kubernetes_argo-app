@@ -45,13 +45,13 @@ controller:
     - --disable-ipv6
     - --configmap-errorfiles=haproxy-ingress/errorfile
 
-  # logging:
-  #   level: info
-  #   traffic:
-  #     address: "address:rsyslog-service.logging"
-  #     port: "514"
-  #     format: "rfc3164"
-  #     facility: "local1"
+  logging:
+    level: info
+    traffic:
+      address: "fluent-bit-atx-sgprod.logging.svc"
+      port: "5170"
+      format: "rfc5424"
+      facility: "local1"
 
   logging:
     level: info
