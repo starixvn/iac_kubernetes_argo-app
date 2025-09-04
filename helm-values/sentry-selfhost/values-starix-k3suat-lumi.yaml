@@ -552,7 +552,7 @@ extraManifests:
                     userVerify="dev@sabawork.com"
                     podName="$(kubectl get pod | grep web | awk '{print $1}')"
                     date="$(date +%F)"
-                    fileName="backup-file-sentry-${SENTRY_ORG}-${SENTRY_ENV}__$date.json"
+                    fileName="backup-file-sentry-${SENTRY_ORG}-${SENTRY_ENV}_$date.json"
                     pathFile=/tmp/$fileName
 
                     # command backup
