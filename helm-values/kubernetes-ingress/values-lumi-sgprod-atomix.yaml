@@ -53,12 +53,12 @@ controller:
       format: "rfc5424"
       facility: "local1"
 
-  logging:
-    level: info
-    traffic:
-      address: "stdout"
-      format: "raw"
-      facility: "daemon"
+  # logging:
+  #   level: info
+  #   traffic:
+  #     address: "stdout"
+  #     format: "raw"
+  #     facility: "daemon"
 
   serviceMonitor:
     enabled: true
