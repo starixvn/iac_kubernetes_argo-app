@@ -10,7 +10,7 @@ imagePullSecrets: []
 serviceAccount:
   create: true
   annotations: 
-  eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:user/tf.troy.vo
+  eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:role/nx-pentagon-t1uat-v1-cluster-20250609085217281300000003
   automountServiceAccountToken: true
   name: opencost-atx-sguat
 
