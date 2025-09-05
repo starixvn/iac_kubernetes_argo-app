@@ -212,6 +212,24 @@ roles:
     allowedActions:
     - kibana_all_write
 
+- name: "wabisabi-member"
+  clusterPermissions:
+  - cluster_composite_ops
+  - cluster_monitor
+  indexPermissions:
+  - indexPatterns:
+    - "logstash-haproxy-swarm-starix-klprod"
+    - "logstash-haproxy-swarm-fpsklprod-klprod"
+    - "logstash-haproxy-swarm-*prod"
+    allowedActions:
+    - index
+    - read
+  tenantPermissions:
+  - tenantPatterns:
+    - pioneers
+    allowedActions:
+    - kibana_all_write
+
 - name: "pentagon-member"
   clusterPermissions:
   - cluster_composite_ops
@@ -229,10 +247,12 @@ roles:
     - kibana_all_write
 
 tenants:
+- name: "nexpe"
 - name: "starix"
 - name: "pioneers"
 - name: "subarashi"
-- name: "nexpe"
+- name: "wabisabi"
+- name: "synergy"
 - name: "pentagon"
 
 actionGroups: []
