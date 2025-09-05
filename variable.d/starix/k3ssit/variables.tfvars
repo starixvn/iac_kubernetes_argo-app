@@ -47,6 +47,16 @@ argo_applications_by_team = {
         chart_version = "2.11.0"
         auto_sync     = false
       }
+      vault = {
+        helm_path     = "vault"
+        chart_version = "0.30.1"
+        auto_sync     = false
+      }
+      vault-snap-agent = {
+        namespace     = "vault"
+        helm_path     = "vault/vault-raft-snapshot-agent"
+        chart_version = "0.1.0"
+      }
     }
   }
   lui = {
