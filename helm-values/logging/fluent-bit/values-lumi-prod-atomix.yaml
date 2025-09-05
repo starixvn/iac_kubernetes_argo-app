@@ -125,6 +125,7 @@ config:
       Record geoip_city_name http_xff %{city.names.en}
       Record geoip_latitude http_xff %{location.latitude}
       Record geoip_longitude http_xff %{location.longitude}
+      Log_Level error
 
     [FILTER]
       Name lua
@@ -175,7 +176,7 @@ config:
     [OUTPUT]
       Name opensearch
       Match syslog.haproxy
-      Host opsi-klp.starixplay.com
+      Host opsi.ops-klprod.gamora.prod
       Port 443
       tls On
       tls.verify Off
