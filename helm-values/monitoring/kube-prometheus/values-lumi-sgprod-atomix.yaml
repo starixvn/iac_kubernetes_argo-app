@@ -75,6 +75,10 @@ alertmanager:
       - receiver: 'null'
         match_re:
           pod: ".*website1.*|opencost.*"
+      - receiver: 'null'
+        match_re:
+         namespace: "logging"
+         alertname: "Kubernetes Service Restart"
       - receiver: 'alert-nx-pentagon'
         match_re:
           namespace: "l1|l2|gn|hd|sk|sp|tg|mg"

@@ -82,6 +82,10 @@ alertmanager:
       - receiver: 'null'
         match_re:
           namespace: "l1|l2|gn|hd|sk|sp|tg|mg|cattle-system|tf-atx-opencost"
+      - receiver: 'null'
+        match_re:
+         namespace: "logging"
+         alertname: "Kubernetes Service Restart"
       - receiver: 'alert-nx-atomix'
         match_re:
           alertname: "Kubernetes Cluster Pod Usage Above 80%"
