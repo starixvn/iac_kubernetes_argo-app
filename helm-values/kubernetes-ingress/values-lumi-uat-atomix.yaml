@@ -47,16 +47,21 @@ controller:
         nodePort: 31088
 
   logging:
+    level: info
     # traffic:
     #   address: "stdout"
     #   format: "raw"
     #   facility: "daemon"
-    level: info
+    # traffic:
+    #   address: "10.148.58.162"
+    #   port: "30045"
+    #   format: "rfc3164"
+    #   facility: "local5"
     traffic:
-      address: "10.148.58.162"
-      port: "30045"
-      format: "rfc3164"
-      facility: "local5"
+      address: "fluent-bit-atx-uat.logging.svc"
+      port: "5170"
+      format: "rfc5424"
+      facility: "local1"
 
   nodeSelector:
     node-role.kubernetes.io/ingress: ""
