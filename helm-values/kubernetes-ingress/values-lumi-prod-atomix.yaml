@@ -47,16 +47,21 @@ controller:
         nodePort: 31088
 
   logging:
+    level: info
     # traffic:
     #   address: "stdout"
     #   format: "raw"
     #   facility: "daemon"
-    level: info
+    # traffic:
+    #   address: "logstash.ops-klprod.gamora.prod"
+    #   port: "30045"
+    #   format: "rfc3164"
+    #   facility: "local7"
     traffic:
-      address: "logstash.ops-klprod.gamora.prod"
-      port: "30045"
-      format: "rfc3164"
-      facility: "local7"
+      address: "fluent-bit-atx-prod.logging.svc"
+      port: "5170"
+      format: "rfc5424"
+      facility: "local1"
 
   nodeSelector:
     node-role.kubernetes.io/ingress: ""
