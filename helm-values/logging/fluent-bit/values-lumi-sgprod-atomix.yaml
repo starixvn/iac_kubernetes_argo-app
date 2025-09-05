@@ -39,7 +39,7 @@ config:
       Add env prod
       Add region aws
       Add team pentagon
-      Add engine k8s
+      Add engine eks
 
     [FILTER] # Trim port from the host field
       Name lua

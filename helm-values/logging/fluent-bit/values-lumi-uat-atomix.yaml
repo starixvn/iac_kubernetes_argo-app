@@ -59,8 +59,10 @@ config:
     [FILTER]
       Name modify
       Match *
-      Add env scuat
-      Add cluster_type k8s
+      Add env prod
+      Add region kl
+      Add team pentagon
+      Add engine k8s
 
     [FILTER]
       Name kubernetes
