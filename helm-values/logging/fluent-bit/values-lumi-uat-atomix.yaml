@@ -59,7 +59,7 @@ config:
     [FILTER]
       Name modify
       Match *
-      Add env prod
+      Add env uat
       Add region kl
       Add team pentagon
       Add engine k8s
