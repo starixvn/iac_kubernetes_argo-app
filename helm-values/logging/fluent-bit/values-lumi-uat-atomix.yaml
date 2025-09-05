@@ -183,5 +183,5 @@ config:
       HTTP_User logstash
       HTTP_Passwd logstash
       Suppress_Type_Name On
-      Index logstash-haproxy-swarm-starix-uat
+      Index logstash-haproxy-ing-sc-uat
       Replace_Dots On
