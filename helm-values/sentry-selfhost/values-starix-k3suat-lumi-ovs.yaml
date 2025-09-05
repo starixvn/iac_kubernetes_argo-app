@@ -27,7 +27,7 @@ web:
   - name: HTTPS_PROXY
     value: "http://iusqd.gamora.prod:8801"
   - name: NO_PROXY
-    value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.starix.k3suat,.byb6181.com,.gamora.prod"
+    value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.starix.k3suat,.byb6181.com,.gamora.prod,.sgamesuat.com"
   nodeSelector:
     sc-sentry-ovs: "yes"
   tolerations:
@@ -51,7 +51,7 @@ worker:
   - name: HTTPS_PROXY
     value: "http://iusqd.gamora.prod:8801"
   - name: NO_PROXY
-    value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.starix.k3suat,.byb6181.com,.gamora.prod"
+    value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.starix.k3suat,.byb6181.com,.gamora.prod,.sgamesuat.com"
   nodeSelector:
     sc-sentry-ovs: "yes"
   tolerations:
