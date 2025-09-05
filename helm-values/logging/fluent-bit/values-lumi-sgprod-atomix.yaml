@@ -92,6 +92,7 @@ config:
       Record geoip_city_name http_xff %{city.names.en}
       Record geoip_latitude http_xff %{location.latitude}
       Record geoip_longitude http_xff %{location.longitude}
+      Log_Level error
 
     [FILTER]
       Name lua
