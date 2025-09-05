@@ -51,9 +51,7 @@ opencost:
       fullImageName: null
     extraEnv:
       CLUSTER_ID: "lumi.sguat"
-    extraArgs:
-      - "--aws-spot-label=eks.amazonaws.com/capacityType"
-      - "--aws-spot-label-value=SPOT"
+    extraArgs: []
     command: []
     replicas: 1
     resources:
@@ -121,30 +119,17 @@ opencost:
     configPath: /tmp/custom-config
     createConfigmap: true
     provider: aws
-    aws:
-      - instanceType: "m5.large"
-        cost: 0.096        # On-demand price
-        spotCost: 0.0288   # Spot price (30% of on-demand)
-      - instanceType: "c5.xlarge"
-        cost: 0.170        # On-demand price  
-        spotCost: 0.051    # Spot price (30% of on-demand)
-      - instanceType: "r5.2xlarge"
-        cost: 0.504
-        spotCost: 0.1512
-      - instanceType: "t3.medium"
-        cost: 0.0416
-        spotCost: 0.01248
-    # costModel:
-    #   description: "Custom pricing configuration for lumi.sguat environment"
-    #   region: "aws"
-    #   zone: "default-zone"
-    #   CPU: 0.008333      # USD / vCPU / h
-    #   RAM: 0.002778      # USD / GB RAM / h
-    #   storage: 0.019444  # USD / GB disk / h
-    #   LoadBalancerCost: 0.0
-    #   LBIngressDataCost: 0.00
-    #   FirstFiveForwardingRulesCost: 0.0
-    #   AdditionalForwardingRuleCost: 0.0
+    costModel:
+      description: "Custom pricing configuration for lumi.sguat environment"
+      region: "aws"
+      zone: "default-zone"
+      CPU: 0.008333      # USD / vCPU / h
+      RAM: 0.002778      # USD / GB RAM / h
+      storage: 0.019444  # USD / GB disk / h
+      LoadBalancerCost: 0.0
+      LBIngressDataCost: 0.00
+      FirstFiveForwardingRulesCost: 0.0
+      AdditionalForwardingRuleCost: 0.0
 
   dataRetention:
     dailyResolutionDays: 15
