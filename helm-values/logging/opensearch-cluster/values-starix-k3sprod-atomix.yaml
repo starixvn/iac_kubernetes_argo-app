@@ -220,7 +220,6 @@ roles:
   - indexPatterns:
     - "logstash-haproxy-swarm-starix-klprod"
     - "logstash-haproxy-swarm-fpsklprod-klprod"
-    - "logstash-haproxy-swarm-*prod"
     allowedActions:
     - index
     - read
