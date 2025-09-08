@@ -10,7 +10,7 @@ imagePullSecrets: []
 serviceAccount:
   create: true
   annotations: 
-  eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:role/nx-pentagon-t1uat-v1-cluster-20250609085217281300000003
+  eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:role/OpenCostSpotFeedRole
   automountServiceAccountToken: true
   name: opencost-atx-sguat
 
@@ -133,6 +133,7 @@ opencost:
       awsSpotDataRegion: "ap-southeast-1"
       awsSpotDataBucket: "vnteam-s3-eks-uat-spot-data"
       awsSpotDataPrefix: "eks-uat-spot-data"
+      projectID: "014999276089"
 
   dataRetention:
     dailyResolutionDays: 15
