@@ -121,15 +121,18 @@ opencost:
     provider: aws
     costModel:
       description: "Custom pricing configuration for lumi.sguat environment"
-      region: "aws"
+      region: "ap-southeast-1"
       zone: "default-zone"
-      CPU: 0.008333      # USD / vCPU / h
-      RAM: 0.002778      # USD / GB RAM / h
-      storage: 0.019444  # USD / GB disk / h
-      LoadBalancerCost: 0.0
-      LBIngressDataCost: 0.00
-      FirstFiveForwardingRulesCost: 0.0
-      AdditionalForwardingRuleCost: 0.0
+      # CPU: 0.008333      # USD / vCPU / h
+      # RAM: 0.002778      # USD / GB RAM / h
+      # storage: 0.019444  # USD / GB disk / h
+      # LoadBalancerCost: 0.0
+      # LBIngressDataCost: 0.00
+      # FirstFiveForwardingRulesCost: 0.0
+      # AdditionalForwardingRuleCost: 0.0
+      awsSpotDataRegion: "ap-southeast-1"
+      awsSpotDataBucket: "vnteam-s3-eks-uat-spot-data"
+      awsSpotDataPrefix: "eks-uat-spot-data"
 
   dataRetention:
     dailyResolutionDays: 15
