@@ -97,10 +97,10 @@ server:
 
   updateStrategyType: "RollingUpdate"
 
-  extraEnvironmentVars:
-    HTTP_PROXY: iusqd.gamora.prod:8801
-    HTTPS_PROXY: iusqd.gamora.prod:8801
-    NO_PROXY: 127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.vault-stx-k3ssit-internal,.vault-stx-k3ssit-active,.vault-stx-k3ssit,.vault-stx-k3ssit-ui,.gamora.prod,.svc,.starix.k3ssit
+  # extraEnvironmentVars:
+  #   HTTP_PROXY: iusqd.gamora.prod:8801
+  #   HTTPS_PROXY: iusqd.gamora.prod:8801
+  #   NO_PROXY: 127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.vault-stx-k3ssit-internal,.vault-stx-k3ssit-active,.vault-stx-k3ssit,.vault-stx-k3ssit-ui,.gamora.prod,.svc,.starix.k3ssit
 
 
   extraSecretEnvironmentVars:
