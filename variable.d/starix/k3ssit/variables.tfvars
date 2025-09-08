@@ -53,7 +53,7 @@ argo_applications_by_team = {
         auto_sync     = false
       }
       vault-snap-agent = {
-        namespace     = "vault"
+        namespace     = "tf-stx-vault"
         helm_path     = "vault/vault-raft-snapshot-agent"
         chart_version = "0.1.0"
       }
