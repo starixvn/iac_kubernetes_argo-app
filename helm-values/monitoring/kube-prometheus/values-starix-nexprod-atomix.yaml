@@ -1,0 +1,255 @@
+---
+clusterDomain: starix.nexprod
+
+operator:
+  enabled: true
+
+prometheus:
+  service:
+    type: NodePort
+    ports:
+      http: 9090
+    nodePorts:
+      http: "30062"
+
+  retention: 7d
+  retentionSize: "100GB"
+
+  persistence:
+    enabled: true
+    storageClass: "longhorn"
+    size: 100Gi
+
+  resourcesPreset: "2xlarge"
+
+  additionalScrapeConfigs:
+    # - job_name: 'gitlab-ci-pipelines-exporter'
+    #   scrape_interval: 10s
+    #   scrape_timeout: 5s
+    #   static_configs:
+    #     - targets: ['nexpe-gitlab-ci-pipelines-exporter-nexprod-service:8080']
+    enabled: true
+    type: internal #external
+    external:
+      name: ""
+      key: ""
+    internal:
+      jobList:
+        - job_name: "n8n_gcp_metrics"
+          metrics_path: "/webhook/gcp-metrics"
+          scrape_interval: 30s
+          scrape_timeout: 5s
+          scheme: "https"
+          static_configs:
+            - targets: ["n8n.nexdev.net"]
+  #additionalPrometheusRules: []
+
+node-exporter:
+  extraVolumes:
+    - hostPath:
+        path: /var/lib
+        type: ""
+      name: mnt
+
+  extraVolumeMounts:
+    - mountPath: /host/root/var/lib
+      mountPropagation: HostToContainer
+      name: mnt
+      readOnly: true
+
+  extraArgs:
+    path.rootfs: "/host/root"
+    collector.filesystem.mount-points-exclude: "^/(dev|proc|sys|var/lib/docker/.+)($|/)"
+    collector.filesystem.fs-types-exclude: "^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs|squashfs|nsfs|tmpfs)$"
+
+alertmanager:
+  enabled: true
+  config:
+    global:
+      resolve_timeout: 5m
+
+    route:
+      receiver: default-receiver
+      routes:
+        - receiver: "null"
+          match_re:
+            namespace: "gitlab-runner|zabbix-proxy-nexprod|cert-manager|trivy-operator-starix|sample|sentry-starix"
+        - receiver: "null"
+          match_re:
+            pod: "scan-vulnerabilityreport-.*|c-.*|.*-rollover-.*|.*-cleaner-.*|.*-cleanup-.*|.*-nodesclean-.*|.*-snapshot-.*|.*-zabbix-server-.*|.*ken.*|.*test.*|.*worker.*|opencost.*"
+        - receiver: "kubernetes_nexprod_lumprod" #Runner CI alert (AVG Memory)
+          match_re:
+            alertname: "Runner High Average Node Memory Usage"
+        - receiver: "null" #ignore Runner alert (CPU/Memory)
+          match_re:
+            instance: "10.18.200.134.*|10.18.200.153.*|10.18.200.187.*|10.18.200.189.*|10.17.200.65.*|10.17.200.66.*|10.18.200.205.*|10.18.200.214.*"
+            alertname: ".*[Mm]emory.*|.*CPU.*"
+        - receiver: 'null'
+          match_re:
+            namespace: "logging"
+            alertname: "Kubernetes Service Restart"
+        - receiver: "nexpe-services-alert"
+          match_re:
+            namespace: "nexpe|gosql|tw|starix"
+        - receiver: 'alert-nx-atomix'
+          match_re:
+            alertname: "Kubernetes Cluster Pod Usage Above 80%"
+        - receiver: "kubernetes_nexprod_lumprod"
+          match_re:
+            alertname: "Kubernetes.*"
+        - receiver: "longhorn_alerts"
+          match:
+            service: "Longhorn"
+          group_by: ["alertname", "job", "pvc"]
+        - receiver: "velero_alerts"
+          match:
+            service: "Velero.*"
+        - receiver: "domains"
+          match_re:
+            alertname: "SSLCertificate.*"
+        - receiver: dev-services
+          matchers:
+          - service="OpenSearch"
+          - alertname!="OpensearchClusterYellow"
+          - job!="opensearch-cluster-master-headless"
+          group_by: ["alertname", "job"]
+        - receiver: "alerts-test"
+          match_re:
+            alertname: "HAProxy.*"
+          group_by: ["alertname", "instance"]
+      group_by: ["alertname", "job", "pod", "description", "instance", "nodename"]
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 9999h
+
+    receivers:
+      - name: "null"
+      - name: "longhorn_alerts"
+        slack_configs:
+          - api_url: "https://hooks.slack.com/services/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"
+            channel: "#longhorn_alerts"
+            send_resolved: true
+            icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+            title: '{{ if eq .Status "firing" }}🔥 PROBLEM 🔥 {{ .CommonLabels.alertname }}{{ else }}✅ RESOLVED ✅ {{ .CommonLabels.alertname }}{{ end }}'
+            text: |
+              *Cluster:* `Kubernetes-NexProd`
+              *Severity:* `{{ .CommonLabels.severity }}`{{ if .CommonLabels.pvc }}
+              *PVC:* `{{ .CommonLabels.pvc }}`{{ end }}{{ if .CommonLabels.pvc_namespace }}
+              *Namespace:* `{{ .CommonLabels.pvc_namespace }}`{{ end }}{{ if .CommonAnnotations.description }}
+              *Description:* `{{ .CommonAnnotations.description }}`{{ end }}
+
+      - name: "kubernetes_nexprod_lumprod"
+        slack_configs:
+          - api_url: "https://hooks.slack.com/services/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"
+            channel: "#kubernetes_nexprod_lumprod"
+            send_resolved: true
+            icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+            title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
+            text: |
+              *Cluster:* `Kubernetes-NexProd`
+              *Summary:* `{{ .CommonLabels.alertname }}`
+              *Description:* `{{ .CommonAnnotations.description }}`
+            color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+
+      - name: 'alert-nx-atomix'
+        slack_configs:
+          - api_url: "https://hooks.slack.com/services/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"
+            channel: '#alert-nx-atomix'
+            send_resolved: true
+            icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+            title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
+            text: |
+              *Cluster:* `Kubernetes-NexProd`
+              *Summary:* `{{ .CommonLabels.alertname }}`
+              *Description:* `{{ .CommonAnnotations.description }}`
+            color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+
+
+      - name: "nexpe-services-alert"
+        slack_configs:
+          - api_url: "https://hooks.slack.com/services/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"
+            channel: "#nexpe-services-alert"
+            send_resolved: true
+            icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+            title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
+            text: |
+              *Cluster:* `Kubernetes-NexProd`
+              *Summary:* `{{ .CommonLabels.alertname }}`
+              *Description:* `{{ .CommonAnnotations.description }}`
+            color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+
+      - name: "velero_alerts"
+        slack_configs:
+          - api_url: "https://hooks.slack.com/services/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"
+            channel: "#velero_alerts"
+            send_resolved: true
+            icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+            title: '{{ if eq .Status "firing" }}🔥 PROBLEM 🔥 {{ .CommonLabels.alertname }}{{ else }}✅ RESOLVED ✅ {{ .CommonLabels.alertname }}{{ end }}'
+            text: |
+              *Cluster:* `Kubernetes-NexProd`
+              🚨 *{{ .CommonLabels.alertname }}* ({{ .Status | toUpper }})
+              🔁 Schedule: `{{ .CommonLabels.schedule }}`
+              ❗ Severity: `{{ .CommonLabels.severity }}`
+              📝 {{ .CommonAnnotations.description }}
+
+      - name: "domains"
+        slack_configs:
+          - api_url: "https://hooks.slack.com/services/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"
+            channel: "#domains"
+            title: '{{ if eq .Status "firing" }} 🔥 :globe_with_meridians: DOMAIN PROBLEM 🔥 {{ else }} ✅ :globe_with_meridians: DOMAIN RESOLVED ✅ {{ end }}'
+            text: |
+              *Domain:* {{ .CommonLabels.instance }}
+              *Severity:* `{{ .CommonLabels.severity | toUpper }}`
+              *Problem:* {{ .CommonAnnotations.problem }}
+              *Status:* {{ .CommonAnnotations.status }}
+            color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+            send_resolved: false
+
+      - name: "alerts-test"
+        slack_configs:
+          - api_url: "https://hooks.slack.com/services/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"
+            channel: "#alerts-test"
+            send_resolved: true
+            icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+            title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
+            text: |
+              *Cluster:* `Kubernetes-NexProd`
+              *Problem:* `{{ .CommonAnnotations.description }}`
+              *Value:* `{{ .CommonAnnotations.value }}`
+            color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+
+      - name: dev-services
+        slack_configs:
+          - channel: "#dev-services"
+            color: '{{ template "sre.slack.color" . }}'
+            fallback: '{{ template "sre.slack.fallback" . }}'
+            icon_emoji: ":opensearch-ico:"
+            send_resolved: true
+            username: "OpenSearch STD - NEXPROD"
+            title: '{{ template "sre.slack.title" . }}'
+            text: '{{ template "sre.slack.body" . }}'
+
+      - name: default-receiver
+
+blackboxExporter:
+  configuration: |
+    modules:
+      # http_2xx:
+      #   prober: http
+      #   timeout: 60s
+      #   http:
+      #     method: GET
+      #     valid_http_versions: [ "HTTP/1.1", "HTTP/2" ]
+      #     valid_status_codes: [200]
+      # http_connect:
+      #   prober: http
+      #   timeout: 60s
+      #   http:
+      #     method: GET
+      #     preferred_ip_protocol: "ip4"
+      ssl_cert:
+        prober: tcp
+        timeout: 60s
+        tcp:
+          preferred_ip_protocol: "ip4"
+          tls: true

@@ -1,0 +1,189 @@
+---
+clusterDomain: lumi.lumprod
+
+operator:
+  enabled: true
+
+
+kube-state-metrics:
+  resourcesPreset: "none"
+  nodeSelector:
+    nexops-tools: "yes"
+
+prometheus:
+  service:
+    type: NodePort
+    ports:
+      http: 9090
+    nodePorts:
+      http: "30062"
+  nodeSelector:
+    prometheus-node: "yes"
+
+  retention: 7d
+  retentionSize: "100GB"
+
+  persistence:
+    enabled: true
+    storageClass: "local-path"
+    size: 100Gi
+
+  resourcesPreset: "2xlarge"
+
+  additionalScrapeConfigs:
+    enabled: true
+    type: internal
+    internal:
+      jobList: []
+
+  # additionalPrometheusRules: []
+
+node-exporter:
+  extraVolumes:
+  - hostPath:
+      path: /var/lib
+      type: ""
+    name: mnt
+
+  extraVolumeMounts:
+  - mountPath: /host/root/var/lib
+    mountPropagation: HostToContainer
+    name: mnt
+    readOnly: true
+
+  extraArgs:
+    path.rootfs: "/host/root"
+    collector.filesystem.mount-points-exclude: "^/(dev|proc|sys|var/lib/docker/.+)($|/)"
+    collector.filesystem.fs-types-exclude: "^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs|squashfs|nsfs|tmpfs)$"
+
+alertmanager:
+  enabled: true
+  config:
+    global:
+      resolve_timeout: 15m
+
+    route:
+      receiver: default-receiver
+      routes:
+      - receiver: 'null'
+        match_re:
+          namespace: "gitlab-runner|zabbix-proxy-lumprod|fleet-default|sentry-lumi|trivy-operator-lumi|sample|gitlab-server"
+      - receiver: 'null'
+        match_re:
+          pod: "scan-vulnerabilityreport-.*|c-.*|.*-rollover-.*|.*cleaner.*|.*cleanup.*|.*node-exporter.*|.*packagebuider.*"
+      - receiver: "null" #ignore Runner alert (CPU/Memory)
+        match_re:
+          instance: "10.10.50.91.*|10.10.50.90.*|10.10.50.43.*|10.10.50.88.*|10.10.50.29.*|10.10.50.30.*|10.10.50.84.*"
+          alertname: ".*[Mm]emory.*|.*CPU.*"
+      - receiver: 'null'
+        match_re:
+         namespace: "logging"
+         alertname: "Kubernetes Service Restart"
+      - receiver: 'nexpe-services-alert'
+        match_re:
+          namespace: "nexpe|gosql|tw|starix"
+      - receiver: 'alert-nx-atomix'
+        match_re:
+          alertname: "Kubernetes Cluster Pod Usage Above 80%"
+      - receiver: 'kubernetes_nexprod_lumprod'
+        match_re:
+          alertname: "Kubernetes.*"
+      - receiver: 'longhorn_alerts'
+        match:
+          service: "Longhorn"
+      - receiver: "velero_alerts"
+        match:
+          service: "Velero.*"
+        group_by: ['alertname', 'job', 'pvc']
+      - receiver: dev-services
+        matchers:
+        - service="OpenSearch"
+        - alertname!="OpensearchClusterYellow"
+        - job!="opensearch-cluster-master-headless"
+        group_by: ["alertname", "job"]
+      group_by: ['alertname','job','pod', 'description', 'instance']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 9999h
+
+    receivers:
+    - name: 'null'
+    - name: 'longhorn_alerts'
+      slack_configs:
+        - api_url: "https://hooks.slack.com/services/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"
+          channel: '#longhorn_alerts'
+          send_resolved: true
+          icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+          title: '{{ if eq .Status "firing" }}🔥 PROBLEM 🔥 {{ .CommonLabels.alertname }}{{ else }}✅ RESOLVED ✅ {{ .CommonLabels.alertname }}{{ end }}'
+          text: |
+            *Cluster:* `Kubernetes-LumProd`
+            *Severity:* `{{ .CommonLabels.severity }}`{{ if .CommonLabels.pvc }}
+            *PVC:* `{{ .CommonLabels.pvc }}`{{ end }}{{ if .CommonLabels.pvc_namespace }}
+            *Namespace:* `{{ .CommonLabels.pvc_namespace }}`{{ end }}{{ if .CommonAnnotations.description }}
+            *Description:* `{{ .CommonAnnotations.description }}`{{ end }}
+
+    - name: 'kubernetes_nexprod_lumprod'
+      slack_configs:
+        - api_url: "https://hooks.slack.com/services/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"
+          channel: '#kubernetes_nexprod_lumprod'
+          send_resolved: true
+          icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+          title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
+          text: |
+            *Cluster:* `Kubernetes-LumProd`
+            *Summary:* `{{ .CommonLabels.alertname }}`
+            *Description:* `{{ .CommonAnnotations.description }}`
+          color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+
+    - name: 'alert-nx-atomix'
+      slack_configs:
+        - api_url: "https://hooks.slack.com/services/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"
+          channel: '#alert-nx-atomix'
+          send_resolved: true
+          icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+          title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
+          text: |
+            *Cluster:* `Kubernetes-LumProd`
+            *Summary:* `{{ .CommonLabels.alertname }}`
+            *Description:* `{{ .CommonAnnotations.description }}`
+          color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+
+    - name: 'nexpe-services-alert'
+      slack_configs:
+        - api_url: "https://hooks.slack.com/services/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"
+          channel: '#nexpe-services-alert'
+          send_resolved: true
+          icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+          title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
+          text: |
+            *Cluster:* `Kubernetes-LumProd`
+            *Summary:* `{{ .CommonLabels.alertname }}`
+            *Description:* `{{ .CommonAnnotations.description }}`
+          color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+
+    - name: "velero_alerts"
+      slack_configs:
+        - api_url: "https://hooks.slack.com/services/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"
+          channel: "#alerts-test"
+          send_resolved: true
+          icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+          title: '{{ if eq .Status "firing" }}🔥 PROBLEM 🔥 {{ .CommonLabels.alertname }}{{ else }}✅ RESOLVED ✅ {{ .CommonLabels.alertname }}{{ end }}'
+          text: |
+            *Cluster:* `Kubernetes-LumProd`
+            🚨 *{{ .CommonLabels.alertname }}* ({{ .Status | toUpper }})
+            🔁 Schedule: `{{ .CommonLabels.schedule }}`
+            ❗ Severity: `{{ .CommonLabels.severity }}`
+            📝 {{ .CommonAnnotations.description }}
+
+    - name: dev-services
+      slack_configs:
+        - channel: "#dev-services"
+          color: '{{ template "sre.slack.color" . }}'
+          fallback: '{{ template "sre.slack.fallback" . }}'
+          icon_emoji: ":opensearch-ico:"
+          send_resolved: true
+          username: "OpenSearch STD - LUMPROD"
+          title: '{{ template "sre.slack.title" . }}'
+          text: '{{ template "sre.slack.body" . }}'
+
+    - name: default-receiver

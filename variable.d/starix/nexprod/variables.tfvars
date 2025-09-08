@@ -25,6 +25,17 @@ argo_applications_by_team = {
         chart_version = "2.10.2"
       }
 
+      prometheus = {
+        namespace     = "monitoring"
+        helm_path     = "monitoring/kube-prometheus"
+        chart_version = "9.5.11"
+        skip_crds     = true
+        value_files = [
+          "values-global.yaml",
+          "values-starix-nexprod-atomix.yaml",
+        ]
+      }
+
       #############
       #- Logging -#
       #############
