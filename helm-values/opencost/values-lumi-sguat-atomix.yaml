@@ -12,7 +12,7 @@ serviceAccount:
   annotations: 
   eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:role/OpenCostSpotFeedRole
   automountServiceAccountToken: true
-  name: opencost-atx-sguat
+  #name: "opencost-atx-sguat"
 
 networkPolicies:
   enabled: true
