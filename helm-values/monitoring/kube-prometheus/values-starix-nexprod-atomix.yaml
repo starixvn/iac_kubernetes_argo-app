@@ -17,13 +17,14 @@ prometheus:
 
   persistence:
     enabled: true
+    storageClass: "local-path"
     size: 100Gi
 
   resourcesPreset: "2xlarge"
 
   additionalScrapeConfigs:
     enabled: true
-    type: internal #external
+    type: internal
     external:
       name: ""
       key: ""
@@ -36,7 +37,6 @@ prometheus:
           scheme: "https"
           static_configs:
             - targets: ["n8n.nexdev.net"]
-  #additionalPrometheusRules: []
 
 node-exporter:
   extraVolumes:
@@ -105,7 +105,6 @@ alertmanager:
           matchers:
           - service="OpenSearch"
           - alertname!="OpensearchClusterYellow"
-          - job!="opensearch-cluster-master-headless"
           group_by: ["alertname", "job"]
         - receiver: "alerts-test"
           match_re:
@@ -247,3 +246,4 @@ alertmanager:
 #         tcp:
 #           preferred_ip_protocol: "ip4"
 #           tls: true
+        
