@@ -21,7 +21,7 @@ cronjob:
   - name: VAULT_ROLE
     value: vault-snapshot
   - name: VAULT_ADDR
-    value: http://vault-stx-nexprod-active:8200
+    value: http://vault-dev-atx-nexprod:8200
   - name: AWS_SECRET_ACCESS_KEY
     valueFrom:
       secretKeyRef:
