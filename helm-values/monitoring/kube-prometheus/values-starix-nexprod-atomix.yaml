@@ -17,17 +17,11 @@ prometheus:
 
   persistence:
     enabled: true
-    storageClass: "longhorn"
     size: 100Gi
 
   resourcesPreset: "2xlarge"
 
   additionalScrapeConfigs:
-    # - job_name: 'gitlab-ci-pipelines-exporter'
-    #   scrape_interval: 10s
-    #   scrape_timeout: 5s
-    #   static_configs:
-    #     - targets: ['nexpe-gitlab-ci-pipelines-exporter-nexprod-service:8080']
     enabled: true
     type: internal #external
     external:
