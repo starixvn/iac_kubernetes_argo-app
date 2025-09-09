@@ -112,7 +112,7 @@ alertmanager:
       - receiver: 'null'
         match_re:
          namespace: "logging"
-         alertname: "Kubernetes Service Restart"
+         alertname: "Kubernetes Pod Restart"
       - receiver: 'nexpe-services-alert'
         match_re:
           namespace: "nexpe|gosql|tw|nexops|rabbitmq.*"
