@@ -74,7 +74,21 @@ alertmanager:
         channel: '#alert-nx-atomix-local'
         send_resolved: true
         icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
-        title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
+        title: >-
+          {{ if eq .Status "firing" }}:fire:{{ else }}:white_check_mark:{{ end }}
+          {{- if regexMatch "(?i)CPU" .CommonLabels.alertname }} :computer: CPU
+          {{- else if regexMatch "(?i)Memory" .CommonLabels.alertname }} :floppy_disk: Memory
+          {{- else if regexMatch "(?i)Disk" .CommonLabels.alertname }} :minidisc: Disk
+          {{- else if regexMatch "(?i)Node" .CommonLabels.alertname }} :server: Node
+          {{- else if regexMatch "(?i)Pod" .CommonLabels.alertname }} :whale: Pod
+          {{- else if regexMatch "(?i)Service" .CommonLabels.alertname }} :gear: Service
+          {{- else if regexMatch "(?i)HTTP" .CommonLabels.alertname }} :globe_with_meridians: HTTP
+          {{- else if regexMatch "(?i)Network" .CommonLabels.alertname }} :satellite: Network
+          {{- else if regexMatch "(?i)Database" .CommonLabels.alertname }} :card_file_box: Database
+          {{- else if regexMatch "(?i)Latency" .CommonLabels.alertname }} :hourglass_flowing_sand: Latency
+          {{- else if regexMatch "(?i)Error" .CommonLabels.alertname }} :x: Error
+          {{- else }} :grey_question: Unknown{{ end }}
+          {{ if eq .Status "firing" }} PROBLEM :fire: {{ else }} RESOLVED :white_check_mark: {{ end }}
         text: |
           *Cluster:* `Kubernetes-ST-Local`
           *Summary:* `{{ .CommonLabels.alertname }}`
