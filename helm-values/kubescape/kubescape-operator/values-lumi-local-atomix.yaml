@@ -10,6 +10,7 @@ capabilities:
   
   # ====== Image vulnerabilities scanning related capabilities ======
   nodeSbomGeneration: disable
+  scanEmbeddedSBOMs: disable
   vulnerabilityScan: disable
   relevancy: disable
 
@@ -64,7 +65,6 @@ kubescape:
   name: kubescape
   image:
     repository: hub.lumigame.com/base/kubescape/kubescape
-    tag: v3.0.37
     pullPolicy: IfNotPresent
 
   nodeSelector:
@@ -81,7 +81,6 @@ operator:
   name: operator
   image:
     repository: hub.lumigame.com/base/kubescape/operator
-    tag: v0.2.97
     pullPolicy: IfNotPresent
 
   nodeSelector:
@@ -92,7 +91,6 @@ operator:
 kubevuln:
   image:
     repository: hub.lumigame.com/base/kubescape/kubevuln
-    tag: v0.3.82
     pullPolicy: IfNotPresent
 
   nodeSelector:
@@ -113,7 +111,6 @@ kubevuln:
 storage:
   image:
     repository: hub.lumigame.com/base/kubescape/storage
-    tag: v0.0.206
     pullPolicy: IfNotPresent
 
   nodeSelector:
@@ -126,7 +123,6 @@ nodeAgent:
   name: node-agent
   image:
     repository: hub.lumigame.com/base/kubescape/node-agent
-    tag: v0.2.357
     pullPolicy: IfNotPresent
 
   config:
@@ -165,17 +161,26 @@ synchronizer:
   name: synchronizer
   image:
     repository: hub.lumigame.com/base/kubescape/synchronizer
-    tag: v0.0.114
     pullPolicy: IfNotPresent
   nodeSelector:
     kubernetes.io/os: linux
+
+serviceDiscovery:
+  name: service-discovery
+  urlDiscovery:
+    name: url-discovery
+    image:
+      repository: hub.lumigame.com/base/kubescape/http-request
+  configMapUpdate:
+    name: update-configmap
+    image:
+      repository: hub.lumigame.com/base/kubescape/kubectl
 
 kubescapeScheduler:
   scanSchedule: "0 8 * * *"
   image:
     # -- source code: https://github.com/kubescape/http-request (public repo)
     repository: hub.lumigame.com/base/kubescape/http-request
-    tag: v0.2.12
     pullPolicy: IfNotPresent
 
   nodeSelector:
@@ -186,7 +191,6 @@ kubevulnScheduler:
   image:
     # source code - https://github.com/kubescape/http-request
     repository: hub.lumigame.com/base/kubescape/http-request
-    tag: v0.2.12
     pullPolicy: IfNotPresent
   nodeSelector:
     kubernetes.io/os: linux
@@ -197,7 +201,6 @@ prometheusExporter:
   name: "prometheus-exporter"
   image:
     repository: hub.lumigame.com/base/kubescape/prometheus-exporter
-    tag: v0.2.5
     pullPolicy: IfNotPresent
 
   nodeSelector:
