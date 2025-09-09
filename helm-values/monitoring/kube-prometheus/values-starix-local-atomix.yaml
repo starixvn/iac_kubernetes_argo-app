@@ -76,17 +76,15 @@ alertmanager:
         icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
         title: >-
           {{ if eq .Status "firing" }}:fire:{{ else }}:white_check_mark:{{ end }}
-          {{- if match "(?i)cpu" .CommonLabels.alertname }} :computer: CPU
-          {{- else if match "(?i)memory" .CommonLabels.alertname }} :floppy_disk: Memory
-          {{- else if match "(?i)disk" .CommonLabels.alertname }} :minidisc: Disk
-          {{- else if match "(?i)node" .CommonLabels.alertname }} :server: Node
-          {{- else if match "(?i)pod" .CommonLabels.alertname }} :package: Pod
-          {{- else if match "(?i)service" .CommonLabels.alertname }} :gear: Service
-          {{- else if match "(?i)http" .CommonLabels.alertname }} :globe_with_meridians: HTTP
-          {{- else if match "(?i)network" .CommonLabels.alertname }} :satellite: Network
-          {{- else if match "(?i)database" .CommonLabels.alertname }} :card_file_box: Database
-          {{- else if match "(?i)latency" .CommonLabels.alertname }} :hourglass_flowing_sand: Latency
-          {{- else if match "(?i)error" .CommonLabels.alertname }} :x: Error
+          {{- if match "(?i)cpu" .CommonLabels.alertname }} ⚡ CPU
+          {{- else if match "(?i)memory" .CommonLabels.alertname }} 🧩 Memory
+          {{- else if match "(?i)disk" .CommonLabels.alertname }} 💿 Disk
+          {{- else if match "(?i)node" .CommonLabels.alertname }} 🖥️ Node
+          {{- else if match "(?i)pod" .CommonLabels.alertname }} 📦 Pod
+          {{- else if match "(?i)service" .CommonLabels.alertname }} ⚙️ Service
+          {{- else if match "(?i)http" .CommonLabels.alertname }} 🌐 HTTP
+          {{- else if match "(?i)bandwidth" .CommonLabels.alertname }} 🌐 Bandwidth
+          {{- else if match "(?i)api" .CommonLabels.alertname }} ❌ KUBERNETES API
           {{- else }} :grey_question: Unknown{{ end }}
           {{ if eq .Status "firing" }} PROBLEM :fire: {{ else }} RESOLVED :white_check_mark: {{ end }}
         text: |
