@@ -77,13 +77,13 @@ alertmanager:
         title: >-
           {{ if eq .Status "firing" }}:fire:{{ else }}:white_check_mark:{{ end }}
           {{- if match "(?i)cpu" .CommonLabels.alertname }} ⚡ CPU
-          {{- else if match "(?i)memory" .CommonLabels.alertname }} 🧩 Memory
-          {{- else if match "(?i)disk" .CommonLabels.alertname }} 💿 Disk
-          {{- else if match "(?i)node" .CommonLabels.alertname }} 🖥️ Node
-          {{- else if match "(?i)pod" .CommonLabels.alertname }} 📦 Pod
-          {{- else if match "(?i)service" .CommonLabels.alertname }} ⚙️ Service
+          {{- else if match "(?i)memory" .CommonLabels.alertname }} 🧩 MEMORY
+          {{- else if match "(?i)disk" .CommonLabels.alertname }} 💿 DISK
+          {{- else if match "(?i)node" .CommonLabels.alertname }} 🖥️ NODE
+          {{- else if match "(?i)pod" .CommonLabels.alertname }} 📦 POD
+          {{- else if match "(?i)service" .CommonLabels.alertname }} ⚙️ SERVICE
           {{- else if match "(?i)http" .CommonLabels.alertname }} 🌐 HTTP
-          {{- else if match "(?i)bandwidth" .CommonLabels.alertname }} 🌐 Bandwidth
+          {{- else if match "(?i)bandwidth" .CommonLabels.alertname }} 🌐 BANDWIDTH
           {{- else if match "(?i)api" .CommonLabels.alertname }} ❌ KUBERNETES API
           {{- else }} :grey_question: Unknown{{ end }}
           {{ if eq .Status "firing" }} PROBLEM :fire: {{ else }} RESOLVED :white_check_mark: {{ end }}
