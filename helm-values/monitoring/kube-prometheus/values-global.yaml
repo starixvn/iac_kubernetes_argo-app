@@ -85,15 +85,6 @@ prometheus:
                 summary: "Pod Not Running"
                 description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is not running."
 
-            # - alert: Kubernetes Pod Restart Detected
-            #   expr: increase(kube_pod_container_status_restarts_total[1m]) > 0
-            #   for: 0m
-            #   labels:
-            #     severity: warning
-            #   annotations:
-            #     summary: "Pod {{ $labels.pod }} restarted"
-            #     description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} just restarted!"
-
             - alert: Kubernetes Pod Restart
               expr: time() - kube_pod_created < 300
               for: 1m
@@ -101,7 +92,7 @@ prometheus:
                 severity: warning
               annotations:
                 summary: "Service {{ $labels.deployment }} restart in namespace {{ $labels.namespace }}"
-                description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} was created recently, indicating a service Restart."
+                description: "Pod {{ $labels.pod }} in (namespace {{ $labels.namespace }}) was Restarted."
 
             - alert: Kubernetes High Pod Restart Count
               expr: increase(kube_pod_container_status_restarts_total{namespace!~"kube-system|monitoring"}[10m]) > 3
@@ -110,7 +101,7 @@ prometheus:
                 severity: warning
               annotations:
                 summary: "High pod restart count"
-                description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} restarted more than 3 times in the last 10 minutes."
+                description: "Pod {{ $labels.pod }} in (namespace {{ $labels.namespace }}) restarted more than 3 times in the last 10 minutes."
 
             - alert: Kubernetes API Server Down
               expr: up{job="apiserver"} == 0
@@ -139,7 +130,7 @@ prometheus:
               annotations:
                 summary: Kubernetes - Node unusual network throughput out (instance {{ $labels.instance }})
                 description: "Node {{ $labels.instance }} interface {{ $labels.device }} transmit bandwidth is high (>90%)\n  Current: {{ $value | humanizePercentage }}\n  Interface: {{ $labels.device }}"
-            # Node receive bandwidth is high (>90%)
+
             - alert: Kubernetes Node receive bandwidth is high (>90%)
               expr: ((rate(node_network_receive_bytes_total{device!~"lo|veth.*|docker.*|cbr.*"}[5m]) / on(instance, device) node_network_speed_bytes) * 100) > 90
               for: 5m
@@ -148,6 +139,7 @@ prometheus:
               annotations:
                 summary: Kubernetes - Node unusual network throughput in (instance {{ $labels.instance }})
                 description: "Node receive bandwidth is high (>90%).\n  VALUE = {{ $value }}%"
+
             #HAProxy High HTTP 5xx Error Rate
             - alert: Kubernetes High HTTP 5xx Error Rate
               expr: |
@@ -162,8 +154,8 @@ prometheus:
               annotations:
                 summary: "Kubernetes - High 5xx error rate on HAProxy frontend {{$labels.frontend}}"
                 description: |
-                  'The HAProxy frontend '{{$labels.frontend}}' is experiencing a high rate of 5xx errors on more than 1% of requests.
-                  The current error rate is {{ printf "%.2f" $value}}% and has been sustained for over 15 minutes.'
+                  "The HAProxy frontend '{{$labels.frontend}}' is experiencing a high rate of 5xx errors on more than 1% of requests.
+                  The current error rate is {{ printf "%.2f" $value}}% and has been sustained for over 15 minutes."
 
             #HAProxy Critical HTTP 5xx Error Rate
             - alert: Kubernetes Critical HTTP 5xx Error Rate
@@ -179,8 +171,9 @@ prometheus:
               annotations:
                 summary: "Kubernetes - High 5xx error rate on HAProxy frontend {{$labels.frontend}}"
                 description: |
-                  'The HAProxy frontend '{{$labels.frontend}}' is experiencing a high rate of 5xx errors on more than 5% of requests.
-                  The current error rate is {{ printf "%.2f" $value}}% and has been sustained for over 15 minutes.'
+                  "The HAProxy frontend '{{$labels.frontend}}' is experiencing a high rate of 5xx errors on more than 5% of requests.
+                  The current error rate is {{ printf "%.2f" $value}}% and has been sustained for over 15 minutes."
+
             #Disk latency is growing (write operations > 100ms)
             - alert: Kubernetes Disk latency is growing (write operations > 100ms)
               expr: (rate(node_disk_write_time_seconds_total[1m]) / rate(node_disk_writes_completed_total[1m]) > 0.1 and rate(node_disk_writes_completed_total[1m]) > 0)
@@ -208,6 +201,7 @@ prometheus:
               annotations:
                 summary: "Kubernetes - Pod {{$labels.pod}} is missing resource limits"
                 description: 'Container {{$labels.container}} in pod {{$labels.pod}} (namespace: {{$labels.namespace}}) is missing {{$labels.resource}} limits.'
+
             # Container memory usage exceeds 90% of the resource limit 
             - alert: Kubernetes Container memory usage exceeds 90% of the resource limit 
               expr: |
@@ -224,6 +218,7 @@ prometheus:
               annotations:
                 description: 'Container {{ $labels.container }} in pod {{ $labels.pod }} (namespace: {{ $labels.namespace }}) on node {{ $labels.instance }} is above 90% threshold'
                 summary: "Kubernetes - Critical memory usage in Kubernetes container"
+
             # Container CPU usage exceeds 90% of the resource limit 
             - alert: Kubernetes Container CPU usage exceeds 90% of the resource limit 
               expr: |
@@ -239,7 +234,7 @@ prometheus:
               annotations:
                 summary: "Kubernetes - Container {{$labels.container}} in pod {{$labels.pod}} has high CPU usage"
                 description: 'Container {{$labels.container}} in pod {{$labels.pod}} (namespace: {{$labels.namespace}}) on {{$labels.instance}} has been using {{$value | humanize}}% of its CPU limit for more than 5 minutes.'
-            # Warning alert - 80% threshold
+            
             - alert: Kubernetes Disk is too busy (IO wait > 80%)
               expr: |
                 (rate(node_disk_io_time_seconds_total{device!~"dm-.*|loop.*|ram.*"}[5m])) > 0.80
@@ -249,8 +244,8 @@ prometheus:
                 component: system
               annotations:
                 summary: "Kubernetes - Host {{$labels.instance}} has high disk I/O wait time"
-                description: "Disk {{$labels.device}} on {{$labels.instance}} has been busy for 80% of time for more than 5 minutes.\n  VALUE = {{ $value }}"
-            # Critical alert - 90% threshold
+                description: Disk {{$labels.device}} on {{$labels.instance}} has been busy for {{$value | printf "%.2f"}}%
+
             - alert: Kubernetes Disk is too busy (IO wait > 90%)
               expr: |
                 (rate(node_disk_io_time_seconds_total{device!~"dm-.*|loop.*|ram.*"}[5m])) > 0.90
@@ -260,7 +255,7 @@ prometheus:
                 component: system
               annotations:
                 summary: "Kubernetes - Host {{ $labels.instance }} has critical disk I/O wait time"
-                description: "Disk {{ $labels.device }} on {{ $labels.instance }} has been busy for 90% of time for more than 5 minutes.\n  VALUE = {{ $value }}"
+                description: Disk {{$labels.device}} on {{$labels.instance}} has been busy for {{$value | printf "%.2f"}}%
 
     - name: longhorn.rules
       groups:
