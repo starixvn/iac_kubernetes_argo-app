@@ -1,0 +1,88 @@
+---
+global:
+  image:
+    registry: "hub.lumigame.com/base"
+
+targetNamespaces: "sp"
+excludeNamespaces: ""
+
+# targetWorkloads: "pod,replicaset,replicationcontroller,statefulset,daemonset,cronjob,job"
+targetWorkloads: "replicaset"
+
+operator:
+  replicas: 1
+  metricsVulnIdEnabled: true
+  scanJobsConcurrentLimit: 3
+  vulnerabilityScannerEnabled: true
+  sbomGenerationEnabled: false
+  configAuditScannerEnabled: false
+  rbacAssessmentScannerEnabled: false
+  infraAssessmentScannerEnabled: false
+  # batchDeleteLimit: 1
+
+  revisionHistoryLimit: 1
+
+  # httpProxy: "http://10.70.70.136:3128"
+  # httpsProxy: "http://10.70.70.136:3128"
+  # noProxy: "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,127.0.0.1,localhost,.svc,.starix.testlab"
+
+# trivyOperator:
+#   scanJobTolerations:
+#   - operator: Exists
+
+trivy:
+  debug: false
+
+  # Standalone or ClientServer
+  # mode: ClientServer
+  mode: Standalone
+
+  # serverURL: "https://trivy.nexdev.net"
+  # clientServerSkipUpdate: true
+  serverInsecure: true
+  # serverToken: "H5nF5ywy262wt881ZWpq"
+
+  githubToken: "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"
+
+  severity: HIGH,CRITICAL
+  # ignoreUnfixed: true
+  # offlineScan: true
+  # -- vulnType can be used to tell Trivy to filter vulnerabilities by a pkg-type (library, os)
+  vulnType: ~
+
+  # skipJavaDBUpdate: true
+
+  # -- httpProxy is the HTTP proxy used by Trivy to download the vulnerabilities database from GitHub.
+  # httpProxy: "http://proxysqd.nexdev.net:3128"
+  # -- httpsProxy is the HTTPS proxy used by Trivy to download the vulnerabilities database from GitHub.
+  # httpsProxy: "http://proxysqd.nexdev.net:3128"
+  # -- noProxy is a comma separated list of IPs and domain names that are not subject to proxy settings.
+  # noProxy: "localhost,127.0.0.1,10.0.0.0/8,192.168.0.0/16,.svc,.starix.nexprod"
+
+  supportedConfigAuditKinds: ""
+
+nodeSelector:
+  nexops-tools: "yes"
+
+serviceMonitor:
+  enabled: true
+  namespace: monitoring
+  interval: 5m
+
+# nodeCollector:
+#   tolerations:
+#   - operator: Exists
+
+
+# alternateReportStorage:
+#   enabled: true
+#   mountPath: "/mnt/data/trivy-operator"
+#   volumeName: "trivy-operator-report-pvc"
+#   storage: "3Gi"
+#   # -- storageClassName for the PVC (optional, uses cluster default if not specified)
+#   storageClassName: "longhorn-rwx"
+#   accessModes:
+#     - ReadWriteMany
+#   podSecurityContext:
+#     runAsUser: 10000
+#     fsGroup: 10000

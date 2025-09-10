@@ -30,6 +30,11 @@ argo_applications_by_team = {
         helm_path     = "vault/vault-secrets-operator"
         chart_version = "0.10.0"
       }
+      trivy-op = {
+        namespace     = "trivy"
+        helm_path     = "trivy-stack/trivy-operator"
+        chart_version = "0.30.0"
+      }
     }
   }
 }
