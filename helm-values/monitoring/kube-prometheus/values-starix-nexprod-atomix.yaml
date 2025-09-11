@@ -227,19 +227,14 @@ alertmanager:
 blackboxExporter:
   configuration: |
     modules:
-      ssl_cert:
-        prober: ssl
+      http_2xx:
+        prober: http
         timeout: 60s
-        tcp:
-          preferred_ip_protocol: "ip4"
-          tls: true
-      # http_2xx:
-      #   prober: http
-      #   timeout: 60s
-      #   http:
-      #     method: GET
-      #     valid_http_versions: [ "HTTP/1.1", "HTTP/2" ]
-      #     valid_status_codes: [200]
+        http:
+          method: GET
+          valid_http_versions: [ "HTTP/1.1", "HTTP/2" ]
+          tls_config:
+            insecure_skip_verify: false
       # http_connect:
       #   prober: http
       #   timeout: 60s
@@ -258,1021 +253,764 @@ extraDeploy:
       prometheus: main
   spec:
     interval: 60s
-    module: ssl_cert
+    module: http_2xx
     prober:
       url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
     targets:
       staticConfig:
         static:
-          - saba.win:443
-          - https://www.trumpback.com
+          - https://tolgee.sabagame.com
+          - https://h1.v988ag.com
           - https://ops-klp.starixplay.com
-          - https://licbotwebhook2.starixplay.com
-          - https://mb.ec88ag.com
+          - https://intp24.726872.com
+          - https://www.center88.com
+          - https://direct.sabagame.com
           - https://lap.nova88.com
-          - https://banner.9bet.com
+          - https://mb.ec88ag.com
+          - https://www.hay88ag.net
+          - https://go.nova88gol.com
+          - https://mb.hira88.com
           - https://gosqlproxy-dr.starixplay.com
-          - https://ba.oneops.net
           - https://www.vgames88.com
+          - https://bbmgr.com
           - https://sc.saceted.com
+          - https://mb2.aweda88.com
           - https://promotion.playvgames.com
           - https://zata88.com
+          - https://adm2.hotdog-games.com
+          - https://n8n-wasa.nexdev.net
           - https://intp22.focapts.com
-          - https://ext.nova88.net
+          - https://admin.detecas.com
+          - https://nsc.detecas.com
+          - https://api.kenosaba.com
           - https://affiliate.spondemo.com
-          - https://napsc-klp.starixplay.com
           - https://affadmin.macaubet.bpadmin999.com
+          - https://guides2.hotdog-games.com
+          - https://banner.spondemo.com
           - https://h2.ultra988.com
           - https://bwing19.com
-          - https://m72.oneops.net
+          - https://datawarehouse.oneops.net
           - https://hrm-ntx.nexdev.net
+          - https://mbp1.gatonic.com
           - https://api.zenovatrix.net
+          - https://idagent88.com
+          - https://stats-alpha.starixplay.com
+          - https://www.wina78.com
+          - https://zuki88.com
           - https://mb.rubikta.com
           - https://mb.center88.com
+          - https://client.gamesaba.com
+          - https://mb.go88ag.com
           - https://hrm-new-nexvision.nexdev.net
-          - https://adm2.v-gaming.net
+          - https://spuctscc.oneops.net
+          - https://qlandkl.starixplay.com
           - https://www.vv4ever.com
           - https://intp12.focapts.com
           - https://mgadm.sabagame.com
+          - https://fps-dcs.oneops.net
+          - https://gw.sabagame.net
+          - https://banners.picasso12.com
           - https://mb.myb8b.com
           - https://result.hotdog-games.com
           - https://m.gamesaba.com
-          - https://client2.vgaming.win
+          - https://focapts.com
+          - https://adm.hotdog-games.com
+          - https://sb3.oneops.net
           - https://nsc.omnivexium.com
-          - https://dailysaba.com
-          - https://fb-hrm-webservice.lumiplus.vn
-          - https://aff.bwingmkt1.com
-          - https://www.sbal88.com
+          - https://vvinfo1.com
+          - https://hrm-digibytesky.nexdev.net
           - https://lap.jollyadmin888.com
+          - https://www.sbal88.com
           - https://www.balu88.com
-          - https://fps-admin-klp.starixplay.com
-          - https://aff.bwingmkt4.com
+          - https://h2.726872.com
+          - https://guides.kenosaba.com
+          - https://msite2.oneops.net
+          - https://api.hotdog-games.com
           - https://bwing.com
           - https://aff.bwing15.com
           - https://mb.123888999.com
+          - https://lobby2.hotdog-games.com
+          - https://intp33.726872.com
+          - https://deposit-api-gw.oneops.net
           - https://hrm-new.nexdev.net
-          - https://telegramreceiver.bth688.com
           - https://intp3.gatonic.com
+          - https://fps-trans-api.oneops.net
           - https://aff.bwing06.com
+          - https://mb.saki88.com
+          - https://mb.bbmgr.com
+          - https://guides.sabagame.com
+          - https://bo.bwing.com
           - https://hrm-ascentis.nexdev.net
-          - https://cts-api-klp.starixplay.com
           - https://sc.detecas.com
           - https://mb.idag88.com
+          - https://aff.nova88.net
           - https://la.oneops.net
           - https://intp13.focapts.com
           - https://saki88.com
           - https://alpha-content-demo.oneops.net
+          - https://v88agent.com
+          - https://bwing11.com
+          - https://mb.troy88.com
           - https://banner.athena000.com
+          - https://aff.bwing10.com
+          - https://spufsbsng.oneops.net
           - https://affadmin.g123.pro
-          - https://aff.bwingmkt8.com
           - https://www.aweda88.com
           - https://banner.nova88.net
+          - https://api.detecas.com
           - https://mb.fina88.com
           - https://ndict-api.nexdev.net
           - https://bi.starixplay.com
           - https://adm.gamesaba.com
           - https://hrm-nexvision.nexdev.net
-          - https://result.sabagaming.com
+          - https://www.spo68.com
+          - https://bo.nova88.net
+          - https://affadmin.itc303.bpadmin999.com
           - https://nova88cash.com
           - https://mb.fina88ag.com
+          - https://zuranic.com
+          - https://info.lumiplus.vn
           - https://nsc.saceted.com
+          - https://fps-evo-api.oneops.net
           - https://intp13.gatonic.com
           - https://www.halo888.com
           - https://bwing20.com
           - https://bwing03.com
-          - https://dcs3.oneops.net
-          - https://result2.v-gaming.net
+          - https://guides.hotdog-games.com
           - https://h2.focapts.com
-          - https://hrm-new.elementsc.ph
+          - https://fpc.zenovatrix.net
           - https://fpp.trivenzio.com
+          - https://hrm-new.elementsc.ph
           - https://api2.hotdog-games.com
+          - https://sasa889.com
           - https://intp24.focapts.com
+          - https://mb.b8ag.com
           - https://mb.sabi88.com
-          - https://naphub-klp.starixplay.com
-          - https://www.bth788.com
           - https://intp31.focapts.com
           - https://meta88.com
-          - https://v-gaming.net
           - https://nuget.nexdev.net
-          - https://nova88-indo.info
+          - https://msite.oneops.net
+          - https://idp2.gatonic.com
+          - https://accounting2.oneops.net
           - https://www.bele88.com
+          - https://fpp.omnivexium.com
+          - https://n17881788.com
           - https://drsam11.com
+          - https://ibcindo68.com
           - https://rubikta.com
+          - https://bwinghotevent.co
           - https://ww2.hotdog-games.com
+          - https://proxy.sabakeno.com
           - https://v88ag.com
-          - https://promotion.vgaming88.net
           - https://licbot.nexdev.net
+          - https://hrm-oseas.nexdev.net
           - https://spuvr.oneops.net
+          - https://guides.sabakeno.com
           - https://www.agbong88.com
           - https://guides.numberx.win
-          - https://oic2.oneops.net
           - https://proxy.kenosaba.com
+          - https://oneops.net
           - https://mb.zata88.com
           - https://hrm.sandsdover.com
           - https://n8n.lumigame.com
-          - https://lumhub.starixplay.com
-          - https://h1.bt1789.com
+          - https://proxy.gamesaba.com
+          - https://api.numberx.win
           - https://balu88.com
+          - https://www.fina88ag.com
           - https://mb.spo68.com
-          - https://mbc-mb-klp.starixplay.com
+          - https://affiliate.athena000.com
+          - https://mini2.vgaming.win
           - https://goal.lumiplus.vn
-          - https://reports.oneops.net
           - https://intp22.gatonic.com
+          - https://reports.oneops.net
           - https://lapcronjobs.oneops.net
           - https://www.gamesaba.com
+          - https://www.idag88.com
           - https://mb.boag89.com
-          - https://dcs2.oneops.net
+          - https://www.bbmgr.com
+          - https://macaubet.com
           - https://alpha-content.oneops.net
+          - https://hrm-new.xpeedcorp.com
           - https://ext.bwing.com
-          - https://fps-fpp-klp.starixplay.com
+          - https://extnap.oneops.net
+          - https://x311y.com
+          - https://mb.wi43ver.com
           - https://gw.gamesaba.com
           - https://mb.bori88.com
+          - https://fpc.omnivexium.com
           - https://www.zuki88.com
+          - https://nova88gol.com
           - https://promotion.vgames88.com
-          - https://intp2.focapts.com
           - https://affadmin.nova88103.net
+          - https://intp2.focapts.com
+          - https://w2.vgaming.win
           - https://parlayrms.oneops.net
           - https://intp3.focapts.com
-          - https://owp-chat-klp.starixplay.com
+          - https://lap.owadmin999.com
           - https://intp32.726872.com
           - https://affadmin.athena000.com
-          - https://jaeger-s1.nexdev.net
+          - https://mb.b88ag.com
+          - https://www.hira88.com
+          - https://nova88bkk.com
+          - https://grafana-klp.starixplay.com
+          - https://mb.bong88ag.com
+          - https://gitlab.starixsoft.com
           - https://client.sabagame.com
-          - https://rancher-klp.starixplay.com
+          - https://center88.com
           - https://intp34.gatonic.com
+          - https://rancher-klp.starixplay.com
           - https://mb.vv4ever.com
           - https://aff.bwing07.com
-          - https://go.athena000.com
           - https://www.vvinfo1.com
-          - https://proxy2.hotdog-games.com
-          - https://cm3.oneops.net
+          - https://go.athena000.com
+          - https://nova88india.com
+          - https://hrm-new.sandsdover.com
           - https://client.playvgames.com
-          - https://bwingmkt10.com
+          - https://n8n.nexdev.net
+          - https://portal.1100011.com
+          - https://www.idb68.com
+          - https://gitlab.nexdev.net
+          - https://client.vgames88.com
+          - https://exapi.detecas.com
+          - https://affadmin.spondemo.com
           - https://minio-hrm.starixplay.com
-          - https://go.macaubet.com
-          - https://sabagame.mobi
+          - https://www.go88al.com
           - https://nui-sc-klp.starixplay.com
-          - https://client.vgaming.win
-          - https://www.zuranic.com
+          - https://gw.saba.win
           - https://intp14.726872.com
+          - https://www.zuranic.com
           - https://b8ag.com
           - https://www.wi43ver.com
+          - https://nova88idn.com
           - https://mb.x311y.com
+          - https://mb.me88ag.com
+          - https://mega199.com
           - https://grafana-hrm.starixplay.com
-          - https://saba.club
+          - https://www.idagent88.com
+          - https://www.vi89ag.com
+          - https://adm.playvgames.com
+          - https://intp21.726872.com
+          - https://www.meta88.com
           - https://www.feli88.com
           - https://grafanasc-klp.starixplay.com
+          - https://sentrysc.starixplay.com
+          - https://bwinghotevent.club
+          - https://mb2.b8ag.com
           - https://www.pele88.com
           - https://intp23.gatonic.com
           - https://aff.nova88india.com
           - https://trumpback.com
           - https://go.spondemo.com
-          - https://crm1-klp.starixplay.com
+          - https://result.numberx.win
           - https://intp2.726872.com
           - https://www.logifun.com
-          - https://spufs.oneops.net
+          - https://intp33.gatonic.com
           - https://lapcronjobs1.oneops.net
-          - https://789y-mb-klp.starixplay.com
-          - https://www2.v-gaming.net
+          - https://spufs.oneops.net
           - https://lm.oneops.net
+          - https://deployapi-sc-klp.starixplay.com
           - https://mb.mefolk.com
-          - https://jaeger-elasticsearch-k3s.lumigame.com
+          - https://mb.halo888.com
           - https://nova88asia.com
-          - https://cts-api-simple-klp.starixplay.com
           - https://xd2.hotdog-games.com
+          - https://bwing07.com
           - https://idb68.com
+          - https://intp21.gatonic.com
           - https://oic.oneops.net
           - https://nova88sports.com
-          - https://licbotwebhook.starixplay.com
-          - https://goal123.com
-          - https://gw.sabagaming.com
-          - https://intp1.focapts.com
-          - https://affmanager.easymon5678.com
-          - https://aff.duongdenkhungthanh.com
-          - https://www.asawa88.com
-          - https://ndict.nexdev.net
-          - https://intp2.gatonic.com
-          - https://affadmin.athena000.bpadmin999.com
-          - https://la2.oneops.net
-          - https://hrm.comtechsb.com
-          - https://intp32.gatonic.com
-          - https://fpjsc.casemed.net
-          - https://tvs.oneops.net
-          - https://mgapi.sabagaming.com
-          - https://api.vgaming88.net
-          - https://mb.b88agent.com
-          - https://intp23.focapts.com
-          - https://go.nova88india.com
-          - https://hub.nexdev.net
-          - https://sentry.nexdev.net
-          - https://indo-mb-klp.starixplay.com
-          - https://aff.bwinghotevent.club
-          - https://bwingmkt9.com
-          - https://fs.oneops.net
-          - https://aff.bwingmkt10.com
-          - https://mb.consonate.com
-          - https://telegramreceiver.ultra88.com
-          - https://alpha-content-demo-klp.starixplay.com
-          - https://gw.numberx.win
-          - https://api.vgames88.com
-          - https://mb.mu88ag.com
-          - https://mb.idagent88.com
-          - https://amazzu.com
-          - https://riskcontrol.oneops.net
-          - https://guides.saba.win
-          - https://internal.amazzu.com
-          - https://crmbotendpoint.oneops.net
-          - https://hrm-bpo.nexdev.net
-          - https://intp11.726872.com
-          - https://affadmin.goal123.com
-          - https://fps-dcs-klp.starixplay.com
-          - https://admpromo.vgaming88.net
-          - https://www.affxml.com
-          - https://hrm-new.sms-vn.com
-          - https://deployapi-k8sklhr.starixplay.com
-          - https://sputgr.oneops.net
-          - https://licbot3.oneops.net
-          - https://mb2.troy88.com
-          - https://affadmin.spondemo.bpadmin999.com
-          - https://mb.aweda88.com
-          - https://cts-service-klp.starixplay.com
-          - https://adm.numberx.vip
-          - https://www.baik168.com
-          - https://fps-sc-klp.starixplay.com
-          - https://mb.file678.com
-          - https://result.sabakeno.net
-          - https://api.file678.com
-          - https://idp1.gatonic.com
-          - https://result.playvgames.com
-          - https://affiliate.macaubet.com
-          - https://mb.feli88.com
-          - https://mb.123halo.com
-          - https://vn-migration01-klp.starixplay.com
-          - https://git3.nexdev.net
-          - https://sc.trivenzio.com
-          - https://uatlicbotendpoint.starixplay.com
-          - https://aff.bwing03.com
-          - https://789y-mb2-klp.starixplay.com
-          - https://api.trivenzio.com
-          - https://api.sabagaming.com
-          - https://bwing08.com
-          - https://sabi88.com
-          - https://www.logi88.com
-          - https://keno.gamesaba.com
-          - https://www.fika88.com
-          - https://www.sasa889.com
-          - https://www.zeta88.com
-          - https://sc.omnivexium.com
-          - https://report.amazzu.com
-          - https://msite-klp.starixplay.com
-          - https://static.amazzu.com
-          - https://fs-bsngservice-klp.starixplay.com
-          - https://hrmapi.starixplay.com
-          - https://reports-klp.starixplay.com
-          - https://www.spoag89.com
-          - https://keno.playvgames.com
-          - https://mini.sabagame.com
-          - https://b88ag.com
-          - https://aff.bwing12.com
-          - https://hrm-nextfortune.nexdev.net
-          - https://tgrs3.oneops.net
-          - https://spumain.oneops.net
-          - https://api2.sabagame.com
-          - https://mb.wabi88.com
-          - https://feeds.12bet.com
-          - https://admperf.sabagame.com
-          - https://12b-cronjobs.oneops.net
-          - https://mb.viva6889.com
-          - https://scdeployapi2.starixplay.com
-          - https://portainer-klp.starixplay.com
-          - https://vgaming.io
-          - https://aff.bwing11.com
-          - https://www.xfile101.com
-          - https://mb2.logifun.com
-          - https://vn-dep-api-gw.amazzu.com
-          - https://mb2.halo888.com
-          - https://mb.buap88.com
-          - https://mbc-int-klp.starixplay.com
-          - https://mini.vgames88.com
-          - https://fpjsc.detecas.com
-          - https://api.omnivexium.com
-          - https://hrm-fts.nexdev.net
-          - https://awx.nexdev.net
-          - https://mb.wasa88.com
-          - https://guides2.numberx.win
-          - https://result2.numberx.win
-          - https://rocketorproxy.starixplay.com
-          - https://mb.champi68.com
-          - https://m73.oneops.net
-          - https://staging-ex-nap.gatonic.com
-          - https://gw.sabagame.com
-          - https://www.kenosaba.com
-          - https://vn-sc-jaeger-klp.starixplay.com
-          - https://www.v88agent.com
-          - https://alpha-content-2.oneops.net
-          - https://sabaagent.com
-          - https://fpp.zenovatrix.net
-          - https://analytics.amazzu.com
-          - https://www.champi68.com
-          - https://m.sabagame.com
-          - https://portainer.lumigame.com
-          - https://crm-klp.starixplay.com
-          - https://cts3.oneops.net
-          - https://vn-portainer-sgprod.sportsfun.app
-          - https://mb.manga88.com
-          - https://mb.perpa88.com
-          - https://keno.vgames88.com
-          - https://fpjsc.saceted.com
-          - https://mb2.asand88.com
-          - https://guides.sabagaming.com
-          - https://bori88.com
-          - https://u32.oneops.net
-          - https://vn-zabbix.sportsfun.app
-          - https://stdeployapi2.starixplay.com
-          - https://affadmin.9bet.com
-          - https://www.numberx.win
-          - https://www.123halo.com
-          - https://whoami-be.sabagaming.com
-          - https://stats-sc.starixplay.com
-          - https://gw.hotdog-games.com
-          - https://skynexapi.starixplay.com
-          - https://hub2.oneops.net
-          - https://idp3.gatonic.com
-          - https://hrm-acora.nexdev.net
-          - https://adm.sabagaming.com
-          - https://gw.vgaming88.net
-          - https://stdeployapi.starixplay.com
-          - https://tgrs.oneops.net
-          - https://fpjsc.trivenzio.com
-          - https://www.bth688.com
-          - https://hrm-webservice.nexdev.net
-          - https://gw2.numberx.win
-          - https://mb.mega199.com
-          - https://intp1.gatonic.com
-          - https://portainer.nexdev.net
-          - https://fps-job.oneops.net
-          - https://789y-klp.starixplay.com
-          - https://www.b88agent.com
-          - https://licbot.oneops.net
-          - https://mefolk.com
-          - https://hrm.sms-vn.com
-          - https://h3.focapts.com
-          - https://www.ozerani.com
-          - https://affmanager.12vtwo.com
-          - https://feli88.com
-          - https://bwingmkt8.com
-          - https://jenkins.nexdev.net
-          - https://crmupload.oneops.net
-          - https://aff.bwingmkt5.com
-          - https://mini.vgaming.win
-          - https://ow.hotdog-games.com
-          - https://mb2.123halo.com
-          - https://bwing05.com
-          - https://hub.oneops.net
-          - https://www.pilot88.com
-          - https://fps-portal-api-klp.starixplay.com
-          - https://nova88.pub
-          - https://mb.drsam11.com
-          - https://bwing12.com
-          - https://portainer.starixplay.com
-          - https://sentry-s1.nexentgame.com
-          - https://www.bori88.com
-          - https://mb.pele88.com
-          - https://mini.gamesaba.com
-          - https://cm2.oneops.net
-          - https://hrm-new.lumiplus.vn
-          - https://api.v-gaming.net
-          - https://bwing18.com
-          - https://spondemo.com
-          - https://www.sabagames.io
-          - https://spuctsagencycc.oneops.net
-          - https://www.asand88.com
-          - https://npm.lumigame.com
-          - https://m.vgames88.com
-          - https://www.drsam11.com
-          - https://skynexapi-kl.starixplay.com
-          - https://www.boag89.com
-          - https://hrm-hyjay.nexdev.net
-          - https://mb.wina78.com
-          - https://mb.vi89ag.com
-          - https://sentry.starixplay.com
-          - https://aff.bwing02.com
-          - https://intp11.focapts.com
-          - https://nova88sb.com
-          - https://bwing06.com
-          - https://cts2.oneops.net
-          - https://cts-mainservice-simple-klp.starixplay.com
-          - https://xd.hotdog-games.com
-          - https://itc303.com
-          - https://proxy.sabagaming.com
-          - https://deployapi-fps-klp.starixplay.com
-          - https://banner.bwing.com
-          - https://fps-int-api-klp.starixplay.com
-          - https://settle-klp.starixplay.com
-          - https://proxy.playvgames.com
-          - https://www.dexa88.com
-          - https://mb.ibcindo68.com
-          - https://fpc.trivenzio.com
-          - https://zeta88.com
-          - https://vn-migration02-klp.starixplay.com
-          - https://intp3.726872.com
-          - https://mb.boluna.net
-          - https://fpp.saceted.com
-          - https://fs2.oneops.net
-          - https://www.li88ag.com
-          - https://mb.spoag89.com
-          - https://sc.zenovatrix.net
-          - https://proxy.v-gaming.net
-          - https://hrm-evo.nexdev.net
-          - https://w2.numberx.win
-          - https://result.vgames88.com
-          - https://www.stakecity.com
-          - https://ops-fps-klp.starixplay.com
-          - https://api2.gamesaba.com
-          - https://aff.sutbong123.com
-          - https://proxy.numberx.club
-          - https://api.ultra88.com
-          - https://fps-evo-api-klp.starixplay.com
-          - https://affadmin.bwing.com
-          - https://oic3.oneops.net
-          - https://aff.bwingmkt7.com
-          - https://aff.bwingmkt6.com
-          - https://intp34.focapts.com
-          - https://mb.xfile101.com
-          - https://newstag.oneops.net
-          - https://crm2.oneops.net
-          - https://go.sutbong123.com
-          - https://mb.hay88ag.net
-          - https://nexdev.net
-          - https://spucts.oneops.net
-          - https://nexcel.info
-          - https://nsc.trivenzio.com
-          - https://vault-st-klp.starixplay.com
-          - https://mb.riki88.com
-          - https://nova88-indo.com
-          - https://fps-trans-api-klp.starixplay.com
-          - https://h1.726872.com
-          - https://mgproxy.sabagame.com
-          - https://keno2.vgaming.win
-          - https://www.bo89ag.com
-          - https://lbs.oneops.net
-          - https://riskcontrol3.oneops.net
-          - https://www.nemo88.com
-          - https://www.vgaming.win
-          - https://keno.sabagame.com
-          - https://aff.bwing19.com
-          - https://licbotendpoint.starixplay.com
-          - https://fpc.casemed.net
-          - https://mb.agbong88.com
-          - https://bwing10.com
-          - https://affadmin.9bet.bpadmin999.com
-          - https://h1.bth688.com
-          - https://www.go88ag.com
-          - https://n88sc.oneops.net
-          - https://bt.amazzu.com
-          - https://proxy2.v-gaming.net
-          - https://mgapi.sabagame.com
-          - https://intp23.726872.com
-          - https://h1.ultra988.com
-          - https://deployapi-alpha-klp.starixplay.com
-          - https://n88sc3.oneops.net
-          - https://go.nexdev.net
-          - https://fps-job-klp.starixplay.com
-          - https://bwing17.com
-          - https://duongdenkhungthanh.com
-          - https://www.wi88ag.com
-          - https://affadmin.macaubet.com
-          - https://www.b8ag.com
-          - https://cts-simple-klp.starixplay.com
-          - https://tolgee.sabagame.com
-          - https://h1.v988ag.com
-          - https://fps-api-klp.starixplay.com
-          - https://www.center88.com
-          - https://intp24.726872.com
-          - https://direct.sabagame.com
-          - https://aff.bwingmkt9.com
-          - https://indo-int-klp.starixplay.com
-          - https://go.nova88gol.com
-          - https://mb.hira88.com
-          - https://www.hay88ag.net
-          - https://nexhub.starixplay.com
-          - https://nemo88.com
-          - https://bbmgr.com
-          - https://sabagame.com
-          - https://mb2.aweda88.com
-          - https://adm2.hotdog-games.com
-          - https://admin.detecas.com
-          - https://n8n-wasa.nexdev.net
-          - https://nsc.detecas.com
-          - https://api.kenosaba.com
-          - https://banner.spondemo.com
-          - https://guides2.hotdog-games.com
-          - https://datawarehouse.oneops.net
-          - https://mbp1.gatonic.com
-          - https://bwingmkt6.com
-          - https://idagent88.com
-          - https://stats-alpha.starixplay.com
-          - https://www.wina78.com
-          - https://zuki88.com
-          - https://client.gamesaba.com
-          - https://mb.go88ag.com
-          - https://spuctscc.oneops.net
-          - https://qlandkl.starixplay.com
-          - https://guides.sabakeno.net
-          - https://scqa1.detecas.com
-          - https://gw.sabagame.net
-          - https://fps-dcs.oneops.net
-          - https://banners.picasso12.com
-          - https://proxy2.numberx.win
-          - https://focapts.com
-          - https://adm.hotdog-games.com
-          - https://sb3.oneops.net
-          - https://fps-fpc-klp.starixplay.com
-          - https://vvinfo1.com
-          - https://hrm-digibytesky.nexdev.net
-          - https://fps-ext-api-klp.starixplay.com
-          - https://h2.726872.com
-          - https://msite2.oneops.net
-          - https://guides.kenosaba.com
-          - https://api.hotdog-games.com
-          - https://lobby2.hotdog-games.com
-          - https://intp33.726872.com
-          - https://deposit-api-gw.oneops.net
-          - https://fps-trans-api.oneops.net
-          - https://mgproxy.sabagaming.com
-          - https://mb.bbmgr.com
-          - https://guides.sabagame.com
-          - https://mb.saki88.com
-          - https://bo.bwing.com
-          - https://api-thor.ivorysport.com
-          - https://guides.v-gaming.net
-          - https://aff.nova88.net
-          - https://bwing11.com
-          - https://v88agent.com
-          - https://gw.v-gaming.net
-          - https://mb.troy88.com
-          - https://aff.bwing10.com
-          - https://riskcontrol-klp.starixplay.com
-          - https://spufsbsng.oneops.net
-          - https://api.detecas.com
-          - https://www.spo68.com
-          - https://bo.nova88.net
-          - https://affadmin.itc303.bpadmin999.com
-          - https://info.lumiplus.vn
-          - https://zuranic.com
-          - https://ba3.oneops.net
-          - https://bomtanhoitu.live
-          - https://saba.casino
-          - https://fps-evo-api.oneops.net
-          - https://vn-reward-wallet-api-klp.starixplay.com
-          - https://guides.hotdog-games.com
-          - https://fpc.zenovatrix.net
-          - https://sasa889.com
-          - https://mb.b8ag.com
-          - https://msite.oneops.net
-          - https://idp2.gatonic.com
-          - https://sabamobi.net
-          - https://accounting2.oneops.net
-          - https://fs-service-klp.starixplay.com
-          - https://fpp.omnivexium.com
-          - https://n17881788.com
-          - https://ibcindo68.com
-          - https://bwinghotevent.co
-          - https://proxy.sabakeno.com
-          - https://hrm-oseas.nexdev.net
-          - https://guides.sabakeno.com
-          - https://oneops.net
-          - https://aff.bwingmkt2.com
-          - https://proxy.gamesaba.com
-          - https://guides.numberx.vip
-          - https://mountfile-klp.starixplay.com
-          - https://api.numberx.win
-          - https://www.fina88ag.com
-          - https://affiliate.athena000.com
-          - https://tvs-klp.starixplay.com
-          - https://result.vgaming88.net
-          - https://mini2.vgaming.win
-          - https://www.idag88.com
-          - https://saba88.mobi
-          - https://mgadm.sabagaming.com
-          - https://www.bbmgr.com
-          - https://macaubet.com
-          - https://hrm-new.xpeedcorp.com
-          - https://extnap.oneops.net
-          - https://cts-ccservice-klp.starixplay.com
-          - https://saba99.com
-          - https://x311y.com
-          - https://mb.wi43ver.com
-          - https://fpc.omnivexium.com
-          - https://nova88gol.com
-          - https://w2.vgaming.win
-          - https://lm3.oneops.net
-          - https://lap.owadmin999.com
-          - https://mb.b88ag.com
-          - https://www.hira88.com
-          - https://proxy.sabakeno.net
-          - https://nova88bkk.com
-          - https://mb.bong88ag.com
-          - https://gitlab.starixsoft.com
-          - https://grafana-klp.starixplay.com
-          - https://center88.com
-          - https://dcs.oneops.net
-          - https://nova88india.com
-          - https://hrm-new.sandsdover.com
-          - https://napmailfiles-klp.starixplay.com
-          - https://n8n.nexdev.net
-          - https://portal.1100011.com
-          - https://gitlab.nexdev.net
-          - https://www.idb68.com
-          - https://client.vgames88.com
-          - https://exapi.detecas.com
-          - https://affadmin.spondemo.com
-          - https://www.go88al.com
-          - https://gw.saba.win
-          - https://nova88idn.com
-          - https://mega199.com
-          - https://mb.me88ag.com
-          - https://www.idagent88.com
-          - https://bwingmkt1.com
-          - https://ansible.nexdev.net
-          - https://www.vi89ag.com
-          - https://adm.playvgames.com
-          - https://intp21.726872.com
-          - https://scdeployapi.starixplay.com
-          - https://m7-klp.starixplay.com
-          - https://www.meta88.com
-          - https://bwingmkt7.com
-          - https://sentrysc.starixplay.com
-          - https://bwinghotevent.club
-          - https://www.bt1789.com
-          - https://mb2.b8ag.com
-          - https://result.numberx.win
-          - https://nap.oneops.net
-          - https://789y-int-klp.starixplay.com
-          - https://cts-vrservice-simple-klp.starixplay.com
-          - https://intp33.gatonic.com
-          - https://alpha-content-2-klp.starixplay.com
-          - https://deployapi-sc-klp.starixplay.com
-          - https://mb.halo888.com
-          - https://bwing07.com
-          - https://nova88.media
-          - https://intp21.gatonic.com
           - https://mb.pilot88.com
-          - https://h1.focapts.com
-          - https://banner.macaubet.com
           - https://sc-deployapi-t1prod.sportsfun.app
-          - https://nova88promo.com
+          - https://h1.focapts.com
           - https://fpc.saceted.com
+          - https://nova88promo.com
+          - https://licbotwebhook.starixplay.com
           - https://mb.trumpback.com
           - https://napmailfiles.oneops.net
+          - https://goal123.com
           - https://athena000.com
           - https://mb.stakecity.com
-          - https://cts-klp.starixplay.com
-          - https://ansible.starixplay.com
+          - https://intp1.focapts.com
           - https://www.726872.com
-          - https://fps-jsc-klp.starixplay.com
+          - https://affmanager.easymon5678.com
           - https://banner.goal123.com
           - https://www.x311y.com
           - https://mb.meta88.com
           - https://aff.goal123.com
-          - https://www.b88ag.com
           - https://www.mega199.com
-          - https://bwingmkt4.com
+          - https://www.b88ag.com
+          - https://www.asawa88.com
+          - https://aff.duongdenkhungthanh.com
+          - https://ndict.nexdev.net
+          - https://intp2.gatonic.com
+          - https://affadmin.athena000.bpadmin999.com
           - https://vv4ever.com
+          - https://hrm.comtechsb.com
+          - https://fpjsc.casemed.net
+          - https://intp32.gatonic.com
           - https://result.sabagame.com
+          - https://tvs.oneops.net
           - https://mb.logifun.com
-          - https://parlayrms-klp.starixplay.com
-          - https://fs3.oneops.net
+          - https://mb.b88agent.com
+          - https://intp23.focapts.com
+          - https://go.nova88india.com
           - https://www.hotdog-games.com
+          - https://sentry.nexdev.net
           - https://12ying.com
+          - https://hub.nexdev.net
           - https://mb.vi88ag.com
           - https://mb.vvinfo1.com
           - https://gw.playvgames.com
+          - https://aff.bwinghotevent.club
+          - https://fs.oneops.net
+          - https://mb.consonate.com
           - https://www.v88ag.com
           - https://mb.v88agent.com
+          - https://telegramreceiver.ultra88.com
           - https://hrm.nexdev.net
-          - https://sabavn.net
           - https://logi88.com
           - https://aff.bwing05.com
-          - https://nova88.social
+          - https://api.vgames88.com
           - https://admpromo.vgames88.com
-          - https://n88sc2.oneops.net
-          - https://admin.luminetsoft.com
+          - https://mb.mu88ag.com
+          - https://amazzu.com
+          - https://mb.idagent88.com
+          - https://riskcontrol.oneops.net
           - https://fps-int-api.oneops.net
+          - https://guides.saba.win
           - https://indo-mb2-klp.starixplay.com
+          - https://internal.amazzu.com
           - https://www.manga88.com
+          - https://crmbotendpoint.oneops.net
           - https://jaeger.lumigame.com
           - https://awx-klprod.starixplay.com
+          - https://intp11.726872.com
+          - https://hrm-bpo.nexdev.net
+          - https://affadmin.goal123.com
           - https://owp1.oneops.net
           - https://crm3.oneops.net
+          - https://www.affxml.com
           - https://mb.logi88.com
           - https://mb.ultra88.com
           - https://fpjsc.omnivexium.com
+          - https://hrm-new.sms-vn.com
+          - https://deployapi-k8sklhr.starixplay.com
+          - https://affadmin.spondemo.bpadmin999.com
+          - https://mb2.troy88.com
+          - https://mb.aweda88.com
           - https://mb.bictown.com
-          - https://rocketorproxyuat.starixuat.com
-          - https://extnap-klp.starixplay.com
           - https://intp14.gatonic.com
-          - https://www.bictown.com
           - https://h1.halo988.com
+          - https://www.baik168.com
           - https://hrm-emc.nexdev.net
-          - https://api2.v-gaming.net
-          - https://cts-service-simple-klp.starixplay.com
+          - https://mb.file678.com
+          - https://api.file678.com
+          - https://idp1.gatonic.com
+          - https://result.playvgames.com
           - https://aff.bwing.com
+          - https://mb.feli88.com
+          - https://mb.123halo.com
           - https://h2.v988ag.com
           - https://idag88.com
           - https://aff.bwinghotevent.co
+          - https://git3.nexdev.net
           - https://www.hay88ag.com
-          - https://api.numberx.vip
-          - https://lap.bpadmin999.com
+          - https://sc.trivenzio.com
+          - https://aff.bwing03.com
+          - https://789y-mb2-klp.starixplay.com
           - https://adm.vgames88.com
+          - https://lap.bpadmin999.com
+          - https://api.trivenzio.com
           - https://bong88ag.com
           - https://www.ultra88.com
+          - https://bwing08.com
           - https://ozerani.com
           - https://bwing09.com
           - https://baik168.com
           - https://crm.oneops.net
-          - https://saba123.com
+          - https://sabi88.com
           - https://hub.lumigame.com
+          - https://www.logi88.com
+          - https://keno.gamesaba.com
           - https://intp34.726872.com
           - https://viva6889.com
-          - https://reports2.oneops.net
-          - https://aff.nova88bkk.com
           - https://intp1.726872.com
+          - https://aff.nova88bkk.com
+          - https://www.fika88.com
+          - https://www.sasa889.com
+          - https://www.zeta88.com
           - https://www.viva6889.com
+          - https://sc.omnivexium.com
           - https://12bet.com
           - https://mb2.ultra88.com
           - https://deployapi-toolklprod.starixplay.com
-          - https://spudcs.oneops.net
           - https://mb.litap88.com
           - https://www.wasa88.com
-          - https://u33.oneops.net
-          - https://guides2.v-gaming.net
           - https://affadmin.bwing88.com
+          - https://report.amazzu.com
+          - https://u33.oneops.net
           - https://b88agent.com
-          - https://crmbotendpoint-klp.starixplay.com
+          - https://static.amazzu.com
           - https://mb.wi88ag.com
-          - https://mb2.b88ag.com
           - https://sonarqube.nexdev.net
-          - https://zabbix.starixplay.com
+          - https://mb2.b88ag.com
+          - https://hrmapi.starixplay.com
           - https://hrm-slk.nexdev.net
-          - https://fs-simple-klp.starixplay.com
+          - https://www.spoag89.com
+          - https://keno.playvgames.com
+          - https://mini.sabagame.com
           - https://vn-reward-wallet-api.oneops.net
           - https://www.3x998.com
           - https://sb2.oneops.net
-          - https://guides.vgaming88.net
+          - https://b88ag.com
+          - https://aff.bwing12.com
+          - https://hrm-nextfortune.nexdev.net
+          - https://spumain.oneops.net
+          - https://mb.wabi88.com
           - https://hrm.lumiplus.vn
           - https://intp31.gatonic.com
-          - https://gamesaba.com
           - https://client.hotdog-games.com
-          - https://riki88.com
+          - https://feeds.12bet.com
           - https://nv-cronjobs.oneops.net
+          - https://riki88.com
           - https://go.goal123.com
           - https://m.vgaming.win
-          - https://logs.starixplay.com
-          - https://napcm-klp.starixplay.com
           - https://www.ibcindo68.com
           - https://stats-nap.starixplay.com
+          - https://admperf.sabagame.com
           - https://bwing02.com
+          - https://12b-cronjobs.oneops.net
           - https://fps-portal-api.oneops.net
-          - https://sc.casemed.net
+          - https://mb.viva6889.com
           - https://www.buap88.com
-          - https://portainer.sportsfun.app
-          - https://result.numberx.vip
+          - https://sc.casemed.net
+          - https://portainer-klp.starixplay.com
           - https://Nova88fun.com
           - https://www.wabi88.com
-          - https://intp31.726872.com
           - https://result.sabakeno.com
           - https://api.sabakeno.com
+          - https://intp31.726872.com
+          - https://aff.bwing11.com
+          - https://www.xfile101.com
           - https://ext.amazzu.com
+          - https://mb2.logifun.com
           - https://www.123888999.com
           - https://api.sabagame.com
+          - https://vn-dep-api-gw.amazzu.com
+          - https://mb2.halo888.com
+          - https://mb.buap88.com
+          - https://mini.vgames88.com
+          - https://fpjsc.detecas.com
           - https://www.file678.com
+          - https://api.omnivexium.com
+          - https://hrm-fts.nexdev.net
+          - https://awx.nexdev.net
+          - https://mb.wasa88.com
           - https://www.sabi88.com
-          - https://accounting.oneops.net
+          - https://result2.numberx.win
+          - https://guides2.numberx.win
           - https://guides.vgames88.com
           - https://mini.playvgames.com
+          - https://mb.champi68.com
+          - https://accounting.oneops.net
           - https://myb8b.com
-          - https://bwingmkt3.com
+          - https://staging-ex-nap.gatonic.com
           - https://hrm.ghrworld.com
-          - https://go.duongdenkhungthanh.com
-          - https://scqa2.detecas.com
+          - https://gw.sabagame.com
           - https://sub.detecas.com
+          - https://go.duongdenkhungthanh.com
           - https://borinote.com
           - https://aff.bwing13.com
           - https://bwing01.com
           - https://1100011.com
-          - https://aff.bwingmkt3.com
+          - https://www.kenosaba.com
           - https://aff.bwing09.com
           - https://www.playvgames.com
           - https://mb.hay88ag.com
-          - https://lm2.oneops.net
+          - https://vn-sc-jaeger-klp.starixplay.com
+          - https://www.v88agent.com
+          - https://alpha-content-2.oneops.net
+          - https://fpp.zenovatrix.net
           - https://fpjsc.zenovatrix.net
+          - https://analytics.amazzu.com
+          - https://www.champi68.com
           - https://cts.oneops.net
+          - https://m.sabagame.com
           - https://logifun.com
+          - https://portainer.lumigame.com
           - https://fika88.com
           - https://www.saki88.com
           - https://intp32.focapts.com
-          - https://affadmin.nova88.net
-          - https://owp-klp.starixplay.com
           - https://dexa88.com
+          - https://affadmin.nova88.net
           - https://gw2.hotdog-games.com
           - https://extb2c.amazzu.com
           - https://proxy.vgames88.com
+          - https://vn-portainer-sgprod.sportsfun.app
           - https://hi.tawkwith.com
-          - https://la3.oneops.net
+          - https://mb.manga88.com
+          - https://mb.perpa88.com
           - https://aff.nova88gol.com
-          - https://mb.baik168.com
+          - https://keno.vgames88.com
+          - https://fpjsc.saceted.com
           - https://www.borinote.com
-          - https://adm.vgaming88.net
+          - https://mb.baik168.com
           - https://intp24.gatonic.com
+          - https://mb2.asand88.com
+          - https://bori88.com
           - https://hrm-new.comtechsb.com
           - https://mb.zuki88.com
           - https://whoami-fe.sabagame.com
           - https://intp33.focapts.com
+          - https://u32.oneops.net
           - https://xfile101.com
-          - https://api-klp.starixplay.com
+          - https://www.numberx.win
           - https://wabi88.com
+          - https://www.123halo.com
           - https://result2.hotdog-games.com
+          - https://stats-sc.starixplay.com
+          - https://gw.hotdog-games.com
           - https://mbp3.gatonic.com
           - https://sonarqube.lumigame.com
           - https://mb.go88al.com
           - https://vn-zabbix-klp.starixplay.com
+          - https://idp3.gatonic.com
           - https://intp12.726872.com
+          - https://hrm-acora.nexdev.net
           - https://bo.goal123.com
           - https://gitlab-dev.nexdev.net
           - https://intp11.gatonic.com
           - https://www.portoa88.com
-          - https://cts-mainservice-klp.starixplay.com
-          - https://www.v-gaming.net
-          - https://crmupload-klp.starixplay.com
+          - https://hrm-webservice.nexdev.net
+          - https://fpjsc.trivenzio.com
+          - https://tgrs.oneops.net
           - https://cm.oneops.net
           - https://mb.dexa88.com
           - https://manga88.com
-          - https://cts-agencyccservice-klp.starixplay.com
+          - https://intp1.gatonic.com
           - https://ext.goal123.com
-          - https://mb.nemo88.com
+          - https://mb.mega199.com
+          - https://portainer.nexdev.net
           - https://mb.bo89ag.com
+          - https://fps-job.oneops.net
           - https://api2.numberx.win
-          - https://proxy.numberx.win
-          - https://indo-klp.starixplay.com
+          - https://www.b88agent.com
+          - https://licbot.oneops.net
           - https://mb.portoa88.com
+          - https://mefolk.com
           - https://api.gamesaba.com
+          - https://hrm.sms-vn.com
           - https://intp12.gatonic.com
           - https://settle.oneops.net
+          - https://www.ozerani.com
+          - https://h3.focapts.com
           - https://aff.bwing18.com
-          - https://adm.numberx.win
+          - https://affmanager.12vtwo.com
           - https://bwing16.com
-          - https://lumhub.sportsfun.app
+          - https://adm.numberx.win
           - https://mb.ozerani.com
           - https://keno.vgaming.win
           - https://sutbong123.com
+          - https://feli88.com
+          - https://jenkins.nexdev.net
+          - https://crmupload.oneops.net
+          - https://ow.hotdog-games.com
+          - https://mini.vgaming.win
           - https://intp21.focapts.com
-          - https://hrm-ssi.nexdev.net
+          - https://mb2.123halo.com
+          - https://bwing05.com
+          - https://www.pilot88.com
+          - https://hub.oneops.net
+          - https://mb.drsam11.com
           - https://api.saceted.com
-          - https://fps-nsc-klp.starixplay.com
+          - https://hrm-ssi.nexdev.net
+          - https://bwing12.com
           - https://www.focapts.com
-          - https://fs-klp.starixplay.com
-          - https://sentrysc-ovs.starixplay.com
           - https://hrm-new.cymabell.com
+          - https://sentrysc-ovs.starixplay.com
           - https://mb2.asawa88.com
           - https://direct.playvgames.com
           - https://bwing15.com
           - https://mb.fika88.com
-          - https://rocketorproxy2.starixplay.com
-          - https://ws.detecas.com
           - https://detecas.com
+          - https://www.bori88.com
+          - https://mb.pele88.com
           - https://mb.zeta88.com
           - https://mb.3x998.com
-          - https://result.v-gaming.net
           - https://www.consonate.com
+          - https://mini.gamesaba.com
           - https://boluna.net
           - https://direct.gamesaba.com
+          - https://hrm-new.lumiplus.vn
           - https://www.boluna.net
           - https://mb.sasa889.com
-          - https://cts-agencyccservice-simple-klp.starixplay.com
+          - https://bwing18.com
           - https://intp13.726872.com
-          - https://www.zata88.com
+          - https://spondemo.com
+          - https://spuctsagencycc.oneops.net
           - https://proxy.sabagame.net
+          - https://www.zata88.com
+          - https://npm.lumigame.com
+          - https://www.asand88.com
           - https://vn-awx.sportsfun.app
-          - https://napdw-klp.starixplay.com
+          - https://m.vgames88.com
+          - https://www.drsam11.com
           - https://mb.bele88.com
           - https://mb.balu88.com
+          - https://skynexapi-kl.starixplay.com
           - https://gw.vgames88.com
-          - https://ba2.oneops.net
+          - https://www.boag89.com
           - https://opsi-klp.starixplay.com
-          - https://vr-settingservice-klp.starixplay.com
+          - https://hrm-hyjay.nexdev.net
           - https://stakecity.com
+          - https://mb.wina78.com
+          - https://mb.vi89ag.com
           - https://aff.bwing08.com
           - https://result.gamesaba.com
-          - https://aff.bwing17.com
           - https://intp14.focapts.com
-          - https://bwing13.com
-          - https://file678.com
+          - https://aff.bwing17.com
           - https://mb.asawa88.com
+          - https://file678.com
+          - https://bwing13.com
+          - https://aff.bwing02.com
           - https://fpp.casemed.net
+          - https://intp11.focapts.com
           - https://www.myb8b.com
-          - https://alpha-content-klp.starixplay.com
-          - https://go.bwing.com
+          - https://nova88sb.com
           - https://bictown.com
-          - https://proxy.numberx.vip
-          - https://rocketor-proxy-klp.starixplay.com
+          - https://go.bwing.com
+          - https://bwing06.com
           - https://fpc.detecas.com
+          - https://rocketor-proxy-klp.starixplay.com
           - https://mb.asand88.com
           - https://aff.bwing01.com
           - https://cts-api.oneops.net
           - https://mb.li88ag.com
           - https://mbp2.gatonic.com
-          - https://crmbot1-klp.starixplay.com
+          - https://xd.hotdog-games.com
           - https://rocketor.nexdev.net
-          - https://m2.vgaming.win
           - https://banners.12vtwo.com
+          - https://m2.vgaming.win
           - https://www.rubikta.com
-          - https://vgaming.win
           - https://hrm-new.connectshorecorp.com
+          - https://deployapi-fps-klp.starixplay.com
+          - https://banner.bwing.com
+          - https://proxy.playvgames.com
           - https://aff.bwing16.com
+          - https://www.dexa88.com
           - https://logs.nexdev.net
           - https://hrm-letstalk.nexdev.net
+          - https://mb.ibcindo68.com
           - https://www.sabagame.com
-          - https://tgrs-klp.starixplay.com
+          - https://fpc.trivenzio.com
           - https://mb.sbal88.com
+          - https://zeta88.com
           - https://mb.v88ag.com
-          - https://eurekai.starixplay.com
           - https://api.casemed.net
-          - https://www.vgaming.io
-          - https://fs-bsngservice-simple-klp.starixplay.com
+          - https://eurekai.starixplay.com
+          - https://intp3.726872.com
+          - https://mb.boluna.net
           - https://www.sabakeno.com
-          - https://fs-service-simple-klp.starixplay.com
-          - https://fps-sub-klp.starixplay.com
+          - https://www.li88ag.com
+          - https://fpp.saceted.com
+          - https://mb.spoag89.com
           - https://www.mefolk.com
-          - https://nova88.net
           - https://hrm.smstower-vn.com
-          - https://accounting-klp.starixplay.com
+          - https://nova88.net
+          - https://sc.zenovatrix.net
           - https://lap.amazzu.com
-          - https://proxy.sabagame.com
+          - https://hrm-evo.nexdev.net
+          - https://w2.numberx.win
           - https://www.ec88ag.com
+          - https://result.vgames88.com
+          - https://www.stakecity.com
           - https://www.riki88.com
           - https://fina88.com
+          - https://ops-fps-klp.starixplay.com
           - https://adm.sabagame.com
-          - https://riskcontrol2.oneops.net
-          - https://tgrs2.oneops.net
+          - https://aff.sutbong123.com
           - https://napsc.oneops.net
-          - https://www.vi88ag.com
           - https://www.litap88.com
+          - https://www.vi88ag.com
+          - https://api.ultra88.com
           - https://halo888.com
-          - https://h1.bth788.com
-          - https://spuafc.oneops.net
-          - https://aff.bomtanhoitu.live
-          - https://fpp.detecas.com
           - https://nsc.casemed.net
+          - https://fpp.detecas.com
+          - https://affadmin.bwing.com
           - https://mbc-mb2-klp.starixplay.com
           - https://pilot88.com
+          - https://intp34.focapts.com
           - https://go.nova88bkk.com
-          - https://api.playvgames.com
           - https://result.kenosaba.com
+          - https://api.playvgames.com
+          - https://mb.xfile101.com
+          - https://crm2.oneops.net
+          - https://mb.hay88ag.net
+          - https://go.sutbong123.com
           - https://pa.amazzu.com
+          - https://nexdev.net
           - https://deployapi-nap-klp.starixplay.com
+          - https://spucts.oneops.net
+          - https://nexcel.info
+          - https://nsc.trivenzio.com
           - https://www.me88ag.com
           - https://intp22.726872.com
           - https://lobby.hotdog-games.com
-          - https://hub3.oneops.net
-          - https://cts-ccservice-simple-klp.starixplay.com
+          - https://vault-st-klp.starixplay.com
+          - https://mb.riki88.com
+          - https://nova88-indo.com
           - https://hira88.com
-          - https://adm.v-gaming.net
-          - https://csd.detecas.com
+          - https://h1.726872.com
+          - https://mgproxy.sabagame.com
           - https://stats-fps.starixplay.com
           - https://www.mu88ag.com
-          - https://sabamobi.com
+          - https://www.bo89ag.com
+          - https://keno2.vgaming.win
+          - https://lbs.oneops.net
           - https://sentry-ovs.starixplay.com
           - https://mb2.wasa88.com
           - https://consonate.com
-          - https://api.sabakeno.net
           - https://mb.idb68.com
-          - https://bwingmkt5.com
+          - https://www.vgaming.win
+          - https://keno.sabagame.com
           - https://guides.gamesaba.com
           - https://www.perpa88.com
-          - https://licbot2.oneops.net
           - https://deploy.lumigame.com
           - https://nova88-indo.club
+          - https://aff.bwing19.com
           - https://guides.sabagame.net
+          - https://fpc.casemed.net
           - https://h2.halo988.com
+          - https://mb.agbong88.com
+          - https://bwing10.com
           - https://mb.zuranic.com
-          - https://msite2-klp.starixplay.com
-          - https://mbc-klp.starixplay.com
           - https://proxy.hotdog-games.com
+          - https://affadmin.9bet.bpadmin999.com
           - https://affadmin.aoncash.bpadmin999.com
+          - https://www.go88ag.com
           - https://nsc.zenovatrix.net
+          - https://bt.amazzu.com
+          - https://n88sc.oneops.net
           - https://mb.borinote.com
           - https://direct.vgames88.com
+          - https://mgapi.sabagame.com
+          - https://h1.ultra988.com
+          - https://intp23.726872.com
+          - https://deployapi-alpha-klp.starixplay.com
+          - https://go.nexdev.net
           - https://portainer-hrm.starixplay.com
+          - https://bwing17.com
+          - https://duongdenkhungthanh.com
+          - https://www.wi88ag.com
           - https://www.troy88.com
-          - https://hrm-lexfin.nexdev.net
           - https://opsi-fps-klp.starixplay.com
-          - https://proxy.vgaming88.net
+          - https://hrm-lexfin.nexdev.net
           - https://guides.playvgames.com
+          - https://www.b8ag.com
           - https://m.playvgames.com
           - https://adm2.numberx.win
           - https://www.fina88.com
           - https://123halo.com
           - https://www.bong88ag.com
+
 
         
