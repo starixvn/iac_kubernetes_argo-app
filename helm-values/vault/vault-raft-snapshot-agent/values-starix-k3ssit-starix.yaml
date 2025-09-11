@@ -17,7 +17,7 @@ cronjob:
   - name: S3_BUCKET
     value: vault-backup
   - name: S3_PATH
-    value: vault-backup/starix/local/
+    value: vault-backup/starix/sit/
   - name: VAULT_ROLE
     value: vault-snapshot
   - name: VAULT_ADDR
