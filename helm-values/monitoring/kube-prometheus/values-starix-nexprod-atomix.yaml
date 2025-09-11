@@ -228,7 +228,7 @@ blackboxExporter:
   configuration: |
     modules:
       ssl_cert:
-        prober: tcp
+        prober: ssl
         timeout: 60s
         tcp:
           preferred_ip_protocol: "ip4"
@@ -264,7 +264,7 @@ extraDeploy:
     targets:
       staticConfig:
         static:
-          - https://saba.win
+          - saba.win:443
           - https://www.trumpback.com
           - https://ops-klp.starixplay.com
           - https://licbotwebhook2.starixplay.com
