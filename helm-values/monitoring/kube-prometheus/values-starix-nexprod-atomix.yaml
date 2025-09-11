@@ -260,7 +260,7 @@ extraDeploy:
     interval: 60s
     module: ssl_cert
     prober:
-      url: 	prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc:19115
+      url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
     targets:
       staticConfig:
         static:
