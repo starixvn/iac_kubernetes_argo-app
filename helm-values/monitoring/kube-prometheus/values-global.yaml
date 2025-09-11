@@ -83,7 +83,7 @@ prometheus:
                 severity: warning
               annotations:
                 summary: "Pod Not Running"
-                description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is not running."
+                description: "Pod {{ $labels.pod }} (namespace {{ $labels.namespace }}) is not running."
 
             - alert: Kubernetes Pod Restart
               expr: time() - kube_pod_created < 300
@@ -92,7 +92,7 @@ prometheus:
                 severity: warning
               annotations:
                 summary: "Service {{ $labels.deployment }} restart in namespace {{ $labels.namespace }}"
-                description: "Pod {{ $labels.pod }} in (namespace {{ $labels.namespace }}) was Restarted."
+                description: "Pod {{ $labels.pod }} (namespace {{ $labels.namespace }}) was Restarted."
 
             - alert: Kubernetes High Pod Restart Count
               expr: increase(kube_pod_container_status_restarts_total{namespace!~"kube-system|monitoring"}[10m]) > 3

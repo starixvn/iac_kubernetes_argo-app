@@ -252,7 +252,7 @@ extraDeploy:
   kind: Probe
   apiVersion: monitoring.coreos.com/v1
   metadata:
-    name: doomain-ssl-check
+    name: domain-ssl-check
     namespace: monitoring
     labels:
       prometheus: main
