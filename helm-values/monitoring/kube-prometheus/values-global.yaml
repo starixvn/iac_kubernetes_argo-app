@@ -499,6 +499,7 @@ prometheus:
                 summary: "HAProxy Ingress total concurrent connections too high"
                 value: '{{ $value }}'
                 description: "HAProxy Ingress has over {{ $value }} concurrent connections."
+    
     - name: domain.rules
       groups:
         - name: domain.rules
