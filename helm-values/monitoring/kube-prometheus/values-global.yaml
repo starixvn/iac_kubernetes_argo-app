@@ -505,7 +505,7 @@ prometheus:
           rules:
             - alert: SSLCertificateExpiringSoon < 50 days
               expr: 1 <= round((last_over_time(probe_ssl_earliest_cert_expiry[10m]) - time()) / 86400, 0.1) < 50
-              for: 2m
+              for: 5m
               labels:
                 severity: warning
               annotations:
