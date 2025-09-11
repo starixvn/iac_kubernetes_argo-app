@@ -124,15 +124,15 @@ alertmanager:
         icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
         title: >-
           {{ if eq .Status "firing" }}:fire:{{ else }}:white_check_mark:{{ end }}
-          {{- if match "(?i)cpu" .CommonLabels.alertname }} :broken_heart: CPU
-          {{- else if match "(?i)memory" .CommonLabels.alertname }} 🧩 MEMORY
-          {{- else if match "(?i)disk" .CommonLabels.alertname }} 💿 DISK
-          {{- else if match "(?i)node" .CommonLabels.alertname }} 🖥️ NODE
-          {{- else if match "(?i)pod" .CommonLabels.alertname }} 📦 POD
+          {{- if match "(?i)cpu" .CommonLabels.alertname }} :cpu: CPU
+          {{- else if match "(?i)memory" .CommonLabels.alertname }} :memory: MEMORY
+          {{- else if match "(?i)disk" .CommonLabels.alertname }} :disk-storage: DISK
+          {{- else if match "(?i)node" .CommonLabels.alertname }} :server: NODE
+          {{- else if match "(?i)pod" .CommonLabels.alertname }} :pod: POD
           {{- else if match "(?i)service" .CommonLabels.alertname }} ⚙️ SERVICE
           {{- else if match "(?i)http" .CommonLabels.alertname }} 🌐 HTTP
           {{- else if match "(?i)bandwidth" .CommonLabels.alertname }} 🌐 BANDWIDTH
-          {{- else if match "(?i)api" .CommonLabels.alertname }} ❌ KUBERNETES API
+          {{- else if match "(?i)api" .CommonLabels.alertname }} :kubernetes-api: KUBERNETES API
           {{- else }} :grey_question: Unknown{{ end }}
           {{ if eq .Status "firing" }} PROBLEM :fire: {{ else }} RESOLVED :white_check_mark: {{ end }}
         text: |
