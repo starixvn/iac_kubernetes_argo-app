@@ -77,7 +77,7 @@ alertmanager:
         title: >-
           {{ if eq .Status "firing" }}:fire:{{ else }}:white_check_mark:{{ end }}
           {{- if match "(?i)cpu" .CommonLabels.alertname }} :cpu: CPU
-          {{- else if match "(?i)memory" .CommonLabels.alertname }} :memory: MEMORY
+          {{- else if match "(?i)memory" .CommonLabels.alertname }} :memory_1: MEMORY
           {{- else if match "(?i)disk" .CommonLabels.alertname }} :disk-storage: DISK
           {{- else if match "(?i)node" .CommonLabels.alertname }} :server: NODE
           {{- else if match "(?i)pod" .CommonLabels.alertname }} :pod: POD
@@ -88,7 +88,7 @@ alertmanager:
           {{- else }} :grey_question: Unknown{{ end }}
           {{ if eq .Status "firing" }} PROBLEM :fire: {{ else }} RESOLVED :white_check_mark: {{ end }}
         text: |
-          *Cluster:* `Kubernetes-ST-Local`
+          *Cluster:* `:kubernetes-ico: ST-Local`
           *Summary:* `{{ .CommonLabels.alertname }}`
           *Description:* `{{ .CommonAnnotations.description }}`
         color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
