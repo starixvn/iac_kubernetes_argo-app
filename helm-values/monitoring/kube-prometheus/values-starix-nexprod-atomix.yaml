@@ -233,21 +233,17 @@ blackboxExporter:
         http:
           method: GET
           valid_http_versions: [ "HTTP/1.1", "HTTP/2" ]
+          fail_if_not_ssl: false
+          fail_if_ssl: false
           tls_config:
             insecure_skip_verify: false
-      # http_connect:
-      #   prober: http
-      #   timeout: 60s
-      #   http:
-      #     method: GET
-      #     preferred_ip_protocol: "ip4"
 extraDeploy:
 - |
   ### SSLCertificate
   kind: Probe
   apiVersion: monitoring.coreos.com/v1
   metadata:
-    name: domain-ssl-check
+    name: domain-check
     namespace: monitoring
     labels:
       prometheus: main
