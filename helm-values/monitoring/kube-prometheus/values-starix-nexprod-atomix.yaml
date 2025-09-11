@@ -98,7 +98,7 @@ alertmanager:
         - receiver: "velero_alerts"
           match:
             service: "Velero.*"
-        - receiver: "domains"
+        - receiver: "alert-nx-atomix-domains"
           match_re:
             alertname: "SSLCertificate.*"
         - receiver: dev-services
@@ -185,10 +185,10 @@ alertmanager:
               ❗ Severity: `{{ .CommonLabels.severity }}`
               📝 {{ .CommonAnnotations.description }}
 
-      - name: "domains"
+      - name: "alert-nx-atomix-domains"
         slack_configs:
           - api_url: "https://hooks.slack.com/services/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"
-            channel: "#domains"
+            channel: "#alert-nx-atomix-domains"
             title: '{{ if eq .Status "firing" }} 🔥 :globe_with_meridians: DOMAIN PROBLEM 🔥 {{ else }} ✅ :globe_with_meridians: DOMAIN RESOLVED ✅ {{ end }}'
             text: |
               *Domain:* {{ .CommonLabels.instance }}
