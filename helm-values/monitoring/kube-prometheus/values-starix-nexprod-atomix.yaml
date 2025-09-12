@@ -70,7 +70,7 @@ alertmanager:
             namespace: "gitlab-runner|zabbix-proxy-nexprod|cert-manager|trivy-operator-starix|sample|sentry-starix"
         - receiver: "null"
           match_re:
-            pod: "scan-vulnerabilityreport-.*|c-.*|.*-rollover-.*|.*-cleaner-.*|.*-cleanup-.*|.*-nodesclean-.*|.*-snapshot-.*|.*-zabbix-server-.*|.*ken.*|.*test.*|.*worker.*|opencost.*"
+            pod: "scan-vulnerabilityreport-.*|c-.*|.*-rollover-.*|.*-cleaner-.*|.*-cleanup-.*|.*-nodesclean-.*|.*-snapshot-.*|.*-zabbix-server-.*|.*ken.*|.*test.*|.*worker.*|.*opencost.*|.*trim.*"
         - receiver: "kubernetes_nexprod_lumprod" #Runner CI alert (AVG Memory)
           match_re:
             alertname: "Runner High Average Node Memory Usage"
@@ -283,7 +283,7 @@ extraDeploy:
           - https://affadmin.macaubet.bpadmin999.com
           - https://guides2.hotdog-games.com
           - https://banner.spondemo.com
-          - https://h2.ultra988.com/main/health
+          - https://h2.ultra988.com/alps/v1/health
           - https://bwing19.com
           - https://datawarehouse.oneops.net
           - https://hrm-ntx.nexdev.net
@@ -295,15 +295,15 @@ extraDeploy:
           - https://zuki88.com
           - https://mb.rubikta.com/main/health
           - https://mb.center88.com/main/health
-          - https://client.gamesaba.com
+          - https://client.gamesaba.com/site-67/
           - https://mb.go88ag.com/main/health
           - https://hrm-new-nexvision.nexdev.net
-          - https://spuctscc.oneops.net
+          - https://spuctscc.oneops.net/healthz
           - https://qlandkl.starixplay.com
           - https://www.vv4ever.com
           - https://intp12.focapts.com/main/health
           - https://mgadm.sabagame.com
-          - https://fps-dcs.oneops.net
+          - https://fps-dcs.oneops.net/healthz
           - https://gw.sabagame.net
           - https://banners.picasso12.com
           - https://mb.myb8b.com/main/health
@@ -330,7 +330,7 @@ extraDeploy:
           - https://deposit-api-gw.oneops.net
           - https://hrm-new.nexdev.net
           - https://intp3.gatonic.com/main/health
-          - https://fps-trans-api.oneops.net
+          - https://fps-trans-api.oneops.net/healthz
           - https://aff.bwing06.com
           - https://mb.saki88.com/main/health
           - https://mb.bbmgr.com/main/health
@@ -349,7 +349,7 @@ extraDeploy:
           - https://mb.troy88.com/main/health
           - https://banner.athena000.com
           - https://aff.bwing10.com
-          - https://spufsbsng.oneops.net
+          - https://spufsbsng.oneops.net/healthz
           - https://affadmin.g123.pro
           - https://www.aweda88.com
           - https://banner.nova88.net
@@ -367,7 +367,7 @@ extraDeploy:
           - https://zuranic.com
           - https://info.lumiplus.vn
           - https://nsc.saceted.com
-          - https://fps-evo-api.oneops.net
+          - https://fps-evo-api.oneops.net/healthz
           - https://intp13.gatonic.com/main/health
           - https://www.halo888.com
           - https://bwing20.com
@@ -375,13 +375,13 @@ extraDeploy:
           - https://guides.hotdog-games.com
           - https://h2.focapts.com/main/health
           - https://fpc.zenovatrix.net
-          - https://fpp.trivenzio.com
+          - https://fpp.trivenzio.com/healthz
           - https://hrm-new.elementsc.ph
           - https://api2.hotdog-games.com
           - https://sasa889.com
           - https://intp24.focapts.com/main/health
-          - https://mb.b8ag.com
-          - https://mb.sabi88.com
+          - https://mb.b8ag.com/main/health
+          - https://mb.sabi88.com/main/health
           - https://intp31.focapts.com/main/health
           - https://meta88.com
           - https://nuget.nexdev.net
@@ -400,7 +400,7 @@ extraDeploy:
           - https://v88ag.com
           - https://licbot.nexdev.net
           - https://hrm-oseas.nexdev.net
-          - https://spuvr.oneops.net
+          - https://spuvr.oneops.net/healthz
           - https://guides.sabakeno.com
           - https://www.agbong88.com
           - https://guides.numberx.win
@@ -408,7 +408,7 @@ extraDeploy:
           - https://mb.zata88.com/main/health
           - https://hrm.sandsdover.com
           - https://n8n.lumigame.com
-          - https://proxy.gamesaba.com
+          - https://proxy.gamesaba.com/sedie
           - https://api.numberx.win
           - https://balu88.com
           - https://www.fina88ag.com
@@ -418,7 +418,7 @@ extraDeploy:
           - https://goal.lumiplus.vn
           - https://intp22.gatonic.com/main/health
           - https://reports.oneops.net
-          - https://lapcronjobs.oneops.net
+          - https://lapcronjobs.oneops.net/ping
           - https://www.gamesaba.com
           - https://www.idag88.com
           - https://mb.boag89.com/main/health
@@ -450,7 +450,7 @@ extraDeploy:
           - https://grafana-klp.starixplay.com
           - https://mb.bong88ag.com/main/health
           - https://gitlab.starixsoft.com
-          - https://client.sabagame.com
+          - https://client.sabagame.com/site-67/
           - https://center88.com
           - https://intp34.gatonic.com/main/health
           - https://rancher-klp.starixplay.com
@@ -465,7 +465,7 @@ extraDeploy:
           - https://portal.1100011.com
           - https://www.idb68.com
           - https://gitlab.nexdev.net
-          - https://client.vgames88.com
+          - https://client.vgames88.com/site-67
           - https://exapi.detecas.com
           - https://affadmin.spondemo.com
           - https://minio-hrm.starixplay.com
@@ -500,8 +500,8 @@ extraDeploy:
           - https://intp2.726872.com/main/health
           - https://www.logifun.com
           - https://intp33.gatonic.com/main/health
-          - https://lapcronjobs1.oneops.net
-          - https://spufs.oneops.net
+          - https://lapcronjobs1.oneops.net/ping
+          - https://spufs.oneops.net/healthz
           - https://lm.oneops.net
           - https://deployapi-sc-klp.starixplay.com
           - https://mb.mefolk.com/main/health
@@ -570,9 +570,9 @@ extraDeploy:
           - https://amazzu.com
           - https://mb.idagent88.com/main/health
           - https://riskcontrol.oneops.net
-          - https://fps-int-api.oneops.net
+          - https://fps-int-api.oneops.net/healthz
           - https://guides.saba.win
-          - https://indo-mb2-klp.starixplay.com
+          - https://indo-mb2-klp.starixplay.com/main/health
           - https://internal.amazzu.com
           - https://www.manga88.com
           - https://crmbotendpoint.oneops.net
@@ -594,11 +594,11 @@ extraDeploy:
           - https://mb.aweda88.com/main/health
           - https://mb.bictown.com/main/health
           - https://intp14.gatonic.com/main/health
-          - https://h1.halo988.com/main/health
+          - https://h1.halo988.com/alps/v1/health
           - https://www.baik168.com
           - https://hrm-emc.nexdev.net
           - https://mb.file678.com/main/health
-          - https://api.file678.com/main/health
+          - https://api.file678.com/alps/v1/health
           - https://idp1.gatonic.com/main/health
           - https://result.playvgames.com
           - https://aff.bwing.com
@@ -611,10 +611,10 @@ extraDeploy:
           - https://www.hay88ag.com
           - https://sc.trivenzio.com
           - https://aff.bwing03.com
-          - https://789y-mb2-klp.starixplay.com
+          - https://789y-mb2-klp.starixplay.com/main/health	
           - https://adm.vgames88.com
           - https://lap.bpadmin999.com
-          - https://api.trivenzio.com
+          - https://api.trivenzio.com/healthz
           - https://bong88ag.com
           - https://www.ultra88.com
           - https://bwing08.com
@@ -653,7 +653,7 @@ extraDeploy:
           - https://www.spoag89.com
           - https://keno.playvgames.com
           - https://mini.sabagame.com
-          - https://vn-reward-wallet-api.oneops.net
+          - https://vn-reward-wallet-api.oneops.net/healthz
           - https://www.3x998.com
           - https://sb2.oneops.net
           - https://b88ag.com
@@ -674,7 +674,7 @@ extraDeploy:
           - https://admperf.sabagame.com
           - https://bwing02.com
           - https://12b-cronjobs.oneops.net
-          - https://fps-portal-api.oneops.net
+          - https://fps-portal-api.oneops.net/healthz
           - https://mb.viva6889.com/main/health
           - https://www.buap88.com
           - https://sc.casemed.net
@@ -686,7 +686,7 @@ extraDeploy:
           - https://intp31.726872.com/main/health
           - https://aff.bwing11.com
           - https://www.xfile101.com
-          - https://ext.amazzu.com
+          - https://ext.amazzu.com/health
           - https://mb2.logifun.com/main/health
           - https://www.123888999.com
           - https://api.sabagame.com
@@ -739,7 +739,7 @@ extraDeploy:
           - https://affadmin.nova88.net
           - https://gw2.hotdog-games.com
           - https://extb2c.amazzu.com
-          - https://proxy.vgames88.com
+          - https://proxy.vgames88.com/sedie
           - https://vn-portainer-sgprod.sportsfun.app
           - https://hi.tawkwith.com
           - https://mb.manga88.com/main/health
@@ -816,7 +816,7 @@ extraDeploy:
           - https://www.pilot88.com
           - https://hub.oneops.net
           - https://mb.drsam11.com/main/health
-          - https://api.saceted.com
+          - https://api.saceted.com/healthz
           - https://hrm-ssi.nexdev.net
           - https://bwing12.com
           - https://www.focapts.com
@@ -841,7 +841,7 @@ extraDeploy:
           - https://bwing18.com
           - https://intp13.726872.com/main/health
           - https://spondemo.com
-          - https://spuctsagencycc.oneops.net
+          - https://spuctsagencycc.oneops.net/healthz
           - https://proxy.sabagame.net
           - https://www.zata88.com
           - https://npm.lumigame.com
@@ -889,14 +889,14 @@ extraDeploy:
           - https://hrm-new.connectshorecorp.com
           - https://deployapi-fps-klp.starixplay.com
           - https://banner.bwing.com
-          - https://proxy.playvgames.com
+          - https://proxy.playvgames.com/sedie
           - https://aff.bwing16.com
           - https://www.dexa88.com
           - https://logs.nexdev.net
           - https://hrm-letstalk.nexdev.net
           - https://mb.ibcindo68.com/main/health
           - https://www.sabagame.com
-          - https://fpc.trivenzio.com
+          - https://fpc.trivenzio.com/healthz
           - https://mb.sbal88.com/main/health
           - https://zeta88.com
           - https://mb.v88ag.com/main/health
@@ -906,7 +906,7 @@ extraDeploy:
           - https://mb.boluna.net/main/health
           - https://www.sabakeno.com
           - https://www.li88ag.com
-          - https://fpp.saceted.com
+          - https://fpp.saceted.com/healthz
           - https://mb.spoag89.com/main/health
           - https://www.mefolk.com
           - https://hrm.smstower-vn.com
@@ -926,14 +926,14 @@ extraDeploy:
           - https://napsc.oneops.net
           - https://www.litap88.com
           - https://www.vi88ag.com
-          - https://api.ultra88.com
+          - https://api.ultra88.com/alps/v1/health
           - https://halo888.com
           - https://nsc.casemed.net
           - https://fpp.detecas.com
           - https://affadmin.bwing.com
-          - https://mbc-mb2-klp.starixplay.com
+          - https://mbc-mb2-klp.starixplay.com/healthz
           - https://pilot88.com
-          - https://intp34.focapts.com
+          - https://intp34.focapts.com/main/health
           - https://go.nova88bkk.com
           - https://result.kenosaba.com
           - https://api.playvgames.com
@@ -944,9 +944,9 @@ extraDeploy:
           - https://pa.amazzu.com
           - https://nexdev.net
           - https://deployapi-nap-klp.starixplay.com
-          - https://spucts.oneops.net
+          - https://spucts.oneops.net/healthz
           - https://nexcel.info
-          - https://nsc.trivenzio.com
+          - https://nsc.trivenzio.com/healthz
           - https://www.me88ag.com
           - https://intp22.726872.com
           - https://lobby.hotdog-games.com
@@ -955,7 +955,7 @@ extraDeploy:
           - https://nova88-indo.com
           - https://hira88.com
           - https://h1.726872.com/main/health
-          - https://mgproxy.sabagame.com
+          - https://mgproxy.sabagame.com/soccer-marble
           - https://stats-fps.starixplay.com
           - https://www.mu88ag.com
           - https://www.bo89ag.com
@@ -974,7 +974,7 @@ extraDeploy:
           - https://aff.bwing19.com
           - https://guides.sabagame.net
           - https://fpc.casemed.net
-          - https://h2.halo988.com/main/health
+          - https://h2.halo988.com/alps/v1/health
           - https://mb.agbong88.com/main/health
           - https://bwing10.com
           - https://mb.zuranic.com/main/health
@@ -988,7 +988,7 @@ extraDeploy:
           - https://mb.borinote.com/main/health
           - https://direct.vgames88.com
           - https://mgapi.sabagame.com
-          - https://h1.ultra988.com/main/health
+          - https://h1.ultra988.com/alps/v1/health
           - https://intp23.726872.com/main/health
           - https://deployapi-alpha-klp.starixplay.com
           - https://go.nexdev.net
@@ -997,7 +997,7 @@ extraDeploy:
           - https://duongdenkhungthanh.com
           - https://www.wi88ag.com
           - https://www.troy88.com
-          - https://opsi-fps-klp.starixplay.com
+          - https://opsi-fps-klp.starixplay.com/healthz
           - https://hrm-lexfin.nexdev.net
           - https://guides.playvgames.com
           - https://www.b8ag.com
