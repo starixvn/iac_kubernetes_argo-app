@@ -111,16 +111,16 @@ config:
     #   Self_Hostname flb-ap.client.local
     #   Compress gzip
     #   Require_ack_response true
-    # [OUTPUT]
-    #   Name opensearch
-    #   Match syslog.haproxy
-    #   Host opsi-klp.starixplay.com
-    #   Port 443
-    #   tls On
-    #   tls.verify Off
-    #   HTTP_User logstash
-    #   HTTP_Passwd logstash
-    #   Suppress_Type_Name On
-    #   Index logstash-haproxy-ing-sc-t1prod
-    #   Replace_Dots On
-    #   Compress gzip
+    [OUTPUT]
+      Name opensearch
+      Match syslog.haproxy
+      Host opsi-klp.starixplay.com
+      Port 443
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-haproxy-ing-sc-t1prod
+      Replace_Dots On
+      Compress gzip
