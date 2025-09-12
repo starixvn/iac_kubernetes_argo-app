@@ -134,31 +134,31 @@ config:
       call merge_geoip
 
   outputs: |
-    [OUTPUT]
-      Name opensearch
-      Match host.kubesystem
-      Host opsi.ops-klprod.gamora.prod
-      Port 443
-      tls On
-      tls.verify Off
-      HTTP_User logstash
-      HTTP_Passwd logstash
-      Suppress_Type_Name On
-      Index logstash-kubesystem-systemd
-      Replace_Dots On
+    # [OUTPUT]
+    #   Name opensearch
+    #   Match host.kubesystem
+    #   Host opsi.ops-klprod.gamora.prod
+    #   Port 443
+    #   tls On
+    #   tls.verify Off
+    #   HTTP_User logstash
+    #   HTTP_Passwd logstash
+    #   Suppress_Type_Name On
+    #   Index logstash-kubesystem-systemd
+    #   Replace_Dots On
 
-    [OUTPUT]
-      Name opensearch
-      Match host.all
-      Host opsi.ops-klprod.gamora.prod
-      Port 443
-      tls On
-      tls.verify Off
-      HTTP_User logstash
-      HTTP_Passwd logstash
-      Suppress_Type_Name On
-      Index logstash-system-journal-prod
-      Replace_Dots On
+    # [OUTPUT]
+    #   Name opensearch
+    #   Match host.all
+    #   Host opsi.ops-klprod.gamora.prod
+    #   Port 443
+    #   tls On
+    #   tls.verify Off
+    #   HTTP_User logstash
+    #   HTTP_Passwd logstash
+    #   Suppress_Type_Name On
+    #   Index logstash-system-journal-prod
+    #   Replace_Dots On
 
     [OUTPUT]
       Name opensearch
@@ -173,15 +173,15 @@ config:
       Index logstash-kubesystem-container-log
       Replace_Dots On
 
-    [OUTPUT]
-      Name opensearch
-      Match syslog.haproxy
-      Host opsi.ops-klprod.gamora.prod
-      Port 443
-      tls On
-      tls.verify Off
-      HTTP_User logstash
-      HTTP_Passwd logstash
-      Suppress_Type_Name On
-      Index logstash-haproxy-ing-sc-klprod
-      Replace_Dots On
+    # [OUTPUT]
+    #   Name opensearch
+    #   Match syslog.haproxy
+    #   Host opsi.ops-klprod.gamora.prod
+    #   Port 443
+    #   tls On
+    #   tls.verify Off
+    #   HTTP_User logstash
+    #   HTTP_Passwd logstash
+    #   Suppress_Type_Name On
+    #   Index logstash-haproxy-ing-sc-klprod
+    #   Replace_Dots On
