@@ -148,12 +148,12 @@ prometheus:
                   /
                   sum(rate(haproxy_frontend_http_responses_total[5m])) by (frontend)
                 ) * 100 > 1
-              for: 5m
+              for: 10m
               labels:
                 severity: warning
               annotations:
                 summary: "Kubernetes - High 5xx error rate on HAProxy frontend {{$labels.frontend}}"
-                description: HAProxy frontend '{{ $labels.frontend }}' >1% 5xx errors ({{ printf "%.2f" $value }}%) for 5m.
+                description: HAProxy frontend '{{ $labels.frontend }}' >1% 5xx errors ({{ printf "%.2f" $value }}%) for 10m.
 
             #HAProxy Critical HTTP 5xx Error Rate
             - alert: Kubernetes Critical HTTP 5xx Error Rate
@@ -168,7 +168,7 @@ prometheus:
                 severity: critical
               annotations:
                 summary: "Kubernetes - High 5xx error rate on HAProxy frontend {{$labels.frontend}}"
-                description: HAProxy frontend '{{ $labels.frontend }}' >1% 5xx errors ({{ printf "%.2f" $value }}%) for 5m.
+                description: HAProxy frontend '{{ $labels.frontend }}' >5% 5xx errors ({{ printf "%.2f" $value }}%) for 5m.
 
             #Disk latency is growing (write operations > 100ms)
             - alert: Kubernetes Disk latency is growing (write operations > 100ms)
