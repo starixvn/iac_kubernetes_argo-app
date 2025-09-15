@@ -31,7 +31,7 @@ luaScripts:
         if val and val ~= "-" then
           table.insert(headers, { name = name, value = val })
           if name == "User-agent" then
-            record["cs-user-agent"] = val
+            record["user_agent"] = val
           elseif name == "X-Forwarded-For" then
             record["http_xff"] = val
           elseif name == "Referer" then
