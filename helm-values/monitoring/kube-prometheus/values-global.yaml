@@ -168,7 +168,7 @@ prometheus:
                 summary: "Critical 5xx error rate on service {{$labels.service}}"
                 description: "HAProxy frontend service {{$labels.service}} on proxy {{$labels.proxy}} has >5% HTTP 5xx errors for over 10 minutes (current: {{ printf \"%.2f\" $value }}%)"
             
-            - alert: HAProxy Backend High 5xx Warning
+            - alert: HAProxy Backend High 5xx
               expr: |
                 (
                   (
@@ -180,7 +180,7 @@ prometheus:
                       rate(haproxy_server_http_responses_total{proxy!~".*default.*"}[1m])
                     )
                   ) * 100
-                ) > 1
+                ) > 2
               for: 10m
               labels:
                 severity: warning
@@ -188,25 +188,25 @@ prometheus:
                 summary: "High 5xx error rate on backend {{$labels.proxy}}"
                 description: 'HAProxy backend {{$labels.proxy}} has {{ printf "%.0f" $value }}% 5xx errors for over 10 minutes.'
 
-            - alert: HAProxy Backend High 5xx Critical
+            - alert: HAProxy Backend High 4xx
               expr: |
                 (
                   (
                     sum by (proxy) (
-                      rate(haproxy_server_http_responses_total{code=~"5xx", proxy!~".*default.*"}[1m])
+                      rate(haproxy_server_http_responses_total{code=~"4xx", proxy!~".*default.*"}[1m])
                     )
                     /
                     sum by (proxy) (
                       rate(haproxy_server_http_responses_total{proxy!~".*default.*"}[1m])
                     )
                   ) * 100
-                ) > 5
+                ) > 2
               for: 10m
               labels:
                 severity: warning
               annotations:
-                summary: "High 5xx error rate on backend {{$labels.proxy}}"
-                description: 'HAProxy backend {{$labels.proxy}} has {{ printf "%.0f" $value }}% 5xx errors for over 10 minutes.'
+                summary: "High 4xx error rate on backend {{$labels.proxy}}"
+                description: 'HAProxy backend {{$labels.proxy}} has {{ printf "%.0f" $value }}% 4xx errors for over 10 minutes.'
             
             #Disk latency is growing (write operations > 100ms)
             - alert: Kubernetes Disk latency is growing (write operations > 100ms)
