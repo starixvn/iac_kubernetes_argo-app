@@ -173,7 +173,7 @@ prometheus:
                 (
                   (
                     sum by (proxy) (
-                      rate(haproxy_server_http_responses_total{code=~"4xx|5xx", proxy!~".*default.*"}[1m])
+                      rate(haproxy_server_http_responses_total{code=~"5xx", proxy!~".*default.*"}[1m])
                     )
                     /
                     sum by (proxy) (
@@ -186,14 +186,14 @@ prometheus:
                 severity: warning
               annotations:
                 summary: "High 5xx error rate on backend {{$labels.proxy}}"
-                description: HAProxy backend {{$labels.proxy}} has {{ printf "%.0f" $value }}% HTTP {{ $labels.code }} errors for over 10 minutes.
+                description: 'HAProxy backend {{$labels.proxy}} has {{ printf "%.0f" $value }}% 5xx errors for over 10 minutes.'
 
             - alert: HAProxy Backend High 5xx Critical
               expr: |
                 (
                   (
                     sum by (proxy) (
-                      rate(haproxy_server_http_responses_total{code=~"4xx|5xx", proxy!~".*default.*"}[1m])
+                      rate(haproxy_server_http_responses_total{code=~"5xx", proxy!~".*default.*"}[1m])
                     )
                     /
                     sum by (proxy) (
@@ -206,7 +206,7 @@ prometheus:
                 severity: warning
               annotations:
                 summary: "High 5xx error rate on backend {{$labels.proxy}}"
-                description: HAProxy backend {{$labels.proxy}} has {{ printf "%.0f" $value }}% HTTP {{ $labels.code }} errors for over 10 minutes.
+                description: 'HAProxy backend {{$labels.proxy}} has {{ printf "%.0f" $value }}% 5xx errors for over 10 minutes.'
             
             #Disk latency is growing (write operations > 100ms)
             - alert: Kubernetes Disk latency is growing (write operations > 100ms)
