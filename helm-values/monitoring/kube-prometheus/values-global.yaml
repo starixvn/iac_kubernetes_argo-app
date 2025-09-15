@@ -141,9 +141,9 @@ prometheus:
                 description: "Node receive bandwidth is high (>90%).\n  VALUE = {{ $value }}%"
 
             #HAProxy High HTTP 5xx 4xx Error Rate (Warning)
-            - alert: HAProxy Backend High 5xx 4xx
+            - alert: HAProxy Backend High 5xx 4xx > 1%
               expr: |
-                rate(haproxy_backend_http_responses_total{code="5xx|4xx"}[5m])
+                rate(haproxy_backend_http_responses_total{code=~"5xx|4xx"}[5m])
                 / rate(haproxy_backend_http_responses_total[5m]) > 0.01
               for: 5m
               labels:
@@ -153,9 +153,9 @@ prometheus:
                 description: Backend ({{ $labels.proxy }}) in frontend ({{ $labels.service }}) is returning {{ printf "%.0f" ( $value * 100 ) }}% {{ $labels.code }} errors.
 
              #HAProxy High HTTP 5xx 4xx Error Rate (Critical)
-            - alert: HAProxy Backend High 5xx 4xx
+            - alert: HAProxy Backend High 5xx 4xx > 5%
               expr: |
-                rate(haproxy_backend_http_responses_total{code="5xx|4xx"}[5m])
+                rate(haproxy_backend_http_responses_total{code=~"5xx|4xx"}[5m])
                 / rate(haproxy_backend_http_responses_total[5m]) > 0.05
               for: 5m
               labels:
