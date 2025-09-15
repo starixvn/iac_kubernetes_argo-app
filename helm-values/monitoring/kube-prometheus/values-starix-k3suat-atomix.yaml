@@ -73,7 +73,7 @@ alertmanager:
       routes:
         - receiver: "null"
           match_re:
-            pod: "backup-.*|c-.*|.*-cleaner-.*|.*snapshot-.*|.*-cleanup-.*|.*-cron-.*|.*-update-.*|.*consumer.*"
+            pod: "c-.*|.*-cleaner-.*|.*snapshot-.*|.*-cleanup-.*|.*-cron-.*|.*-update-.*|.*consumer.*|.*backup.*"
         - receiver: 'null'
           match_re:
             namespace: "logging"
