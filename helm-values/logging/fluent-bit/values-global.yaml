@@ -13,6 +13,7 @@ luaScripts:
 
   enrich.lua: |
     function waf_headers_enrich(tag, ts, record)
+      -- Header Enrich --
       local raw = record["http_headers_raw"]
       if type(raw) ~= "string" or raw == "" then
         return 1, ts, record
@@ -29,7 +30,7 @@ luaScripts:
         local val = parts[i]
         if val and val ~= "-" then
           table.insert(headers, { name = name, value = val })
-          if name == "User-Agent" then
+          if name == "User-agent" then
             record["cs-user-agent"] = val
           elseif name == "X-Forwarded-For" then
             record["http_xff"] = val
@@ -45,6 +46,11 @@ luaScripts:
 
       -- Remove original raw field
       -- record["http_headers_raw"] = nil
+
+      -- Rename CS_ Field
+      -- record = rename_field(record, "http_method", "cs-method")
+      -- record = rename_field(record, "http_method", "cs-uri-query")
+      -- record = rename_field(record, "http_method", "sc-status")
 
       return 1, ts, record
     end
@@ -86,6 +92,19 @@ luaScripts:
 
       return 1, ts, record
     end
+
+    local function rename_field(record, old_key, new_key)
+      local val = record[old_key]
+      if val ~= nil then
+        if record[new_key] == nil then
+          record[new_key] = val
+        end
+        record[old_key] = nil
+      end
+      return record
+    end
+
+
 
   drop.lua: |
     function drop_success(tag, ts, record)
@@ -131,5 +150,5 @@ config:
     [PARSER]
       Name  haproxy
       Format  regex
-      Regex ^(?<client_ip>\S+):(?<client_port>\d+)\s+\[(?<accept_date>[^\]]+)\]\s+(?<frontend>\S+)\s+(?<backend>[^\/]+)\/(?<server>\S+)\s+(?<Tq>\d+)\/(?<Tw>\d+)\/(?<Tc>\d+)\/(?<Tr>\d+)\/(?<Tt>\d+)\s+(?<sc-status>\d+)\s+(?<bytes_read>\d+)\s+(?<captured_request_cookie>\S+)\s+(?<captured_response_cookie>\S+)\s+(?<termination_state>\S+)\s+(?<actconn>\d+)\/(?<feconn>\d+)\/(?<beconn>\d+)\/(?<srv_conn>\d+)\/(?<retries>\d+)\s+(?<srv_queue>\d+)\/(?<backend_queue>\d+)\s+\{(?<http_headers_raw>[^\}]*)\}\s+"(?<cs-method>[A-Z]+)\s+(?<request_host>[^/]+)(?<cs-uri-query>/[^ ]*)\s+(?<http_version>HTTP/\d\.\d)"$
+      Regex ^(?<client_ip>\S+):(?<client_port>\d+)\s+\[(?<accept_date>[^\]]+)\]\s+(?<frontend>\S+)\s+(?<backend>[^\/]+)\/(?<server>\S+)\s+(?<Tq>\d+)\/(?<Tw>\d+)\/(?<Tc>\d+)\/(?<Tr>\d+)\/(?<Tt>\d+)\s+(?<status_code>\d+)\s+(?<bytes_read>\d+)\s+(?<captured_request_cookie>\S+)\s+(?<captured_response_cookie>\S+)\s+(?<termination_state>\S+)\s+(?<actconn>\d+)\/(?<feconn>\d+)\/(?<beconn>\d+)\/(?<srv_conn>\d+)\/(?<retries>\d+)\s+(?<srv_queue>\d+)\/(?<backend_queue>\d+)\s+\{(?<http_headers_raw>[^\}]*)\}\s+"(?<http_method>[A-Z]+)\s+(?<request_host>[^/]+)(?<request_path>/[^ ]*)\s+(?<http_version>HTTP/\d\.\d)"$
 
