@@ -140,30 +140,70 @@ prometheus:
                 summary: Kubernetes - Node unusual network throughput in (instance {{ $labels.instance }})
                 description: "Node receive bandwidth is high (>90%).\n  VALUE = {{ $value }}%"
 
-            #HAProxy High HTTP 5xx 4xx Error Rate (Warning)
-            - alert: HAProxy Backend High 5xx 4xx > 1%
+            # - alert: HAProxy Backend High 5xx_4xx warning
+            #   expr: |
+            #     (
+            #       sum by (proxy, job, service) (
+            #         rate(haproxy_backend_http_responses_total{code=~"4xx|5xx"}[5m])
+            #       )
+            #       /
+            #       sum by (proxy, job, service) (
+            #         rate(haproxy_backend_http_responses_total[5m])
+            #       )
+            #     ) > 0.01
+            #   for: 10m
+            #   labels:
+            #     severity: warning
+            #   annotations:
+            #     summary: "HAProxy backend {{ $labels.proxy }} is returning 5xx | 4xx error"
+            #     description: Backend ({{ $labels.proxy }}) in frontend ({{ $labels.service }}) is returning {{ printf "%.0f" $value }}% {{ $labels.code }} errors.
+
+            # - alert: HAProxy Backend High 5xx_4xx critical
+            #   expr: |
+            #     (
+            #       sum by (proxy, job, service) (
+            #         rate(haproxy_backend_http_responses_total{code=~"4xx|5xx"}[5m])
+            #       )
+            #       /
+            #       sum by (proxy, job, service) (
+            #         rate(haproxy_backend_http_responses_total[5m])
+            #       )
+            #     ) > 0.05
+            #   for: 10m
+            #   labels:
+            #     severity: critical
+            #   annotations:
+            #     summary: "HAProxy backend {{ $labels.proxy }} is returning 5xx| 4xx error"
+            #     description: Backend ({{ $labels.proxy }}) in frontend ({{ $labels.service }}) is returning {{ printf "%.0f" $value }}% {{ $labels.code }} errors.
+
+            - alert: HAProxy Frontend High 5xx warning
               expr: |
-                rate(haproxy_backend_http_responses_total{code=~"5xx|4xx"}[5m])
-                / rate(haproxy_backend_http_responses_total[5m]) > 0.01
-              for: 5m
+                (
+                sum(rate(haproxy_frontend_http_responses_total{code=~"5.."}[5m])) by (service,proxy)
+                /
+                sum(rate(haproxy_frontend_http_responses_total[5m])) by (service,proxy)
+                ) * 100 > 1
+              for: 10m
               labels:
                 severity: warning
               annotations:
-                summary: "HAProxy backend {{ $labels.proxy }} is returning 5xx | 4xx error"
-                description: Backend ({{ $labels.proxy }}) in frontend ({{ $labels.service }}) is returning {{ printf "%.0f" ( $value * 100 ) }}% {{ $labels.code }} errors.
+                summary: "High 5xx error rate on service {{$labels.service}}"
+                description: HAProxy frontend service {{$labels.service}} on proxy {{$labels.proxy}} has >1% HTTP 5xx errors for over 10 minutes (current {{ printf "%.0f" $value }}%)
 
-             #HAProxy High HTTP 5xx 4xx Error Rate (Critical)
-            - alert: HAProxy Backend High 5xx 4xx > 5%
+            - alert: HAProxy Frontend High 5xx critical
               expr: |
-                rate(haproxy_backend_http_responses_total{code=~"5xx|4xx"}[5m])
-                / rate(haproxy_backend_http_responses_total[5m]) > 0.05
-              for: 5m
+                (
+                sum(rate(haproxy_frontend_http_responses_total{code=~"5.."}[5m])) by (service,proxy)
+                /
+                sum(rate(haproxy_frontend_http_responses_total[5m])) by (service,proxy)
+                ) * 100 > 5
+              for: 10m
               labels:
                 severity: critical
               annotations:
-                summary: "HAProxy backend {{ $labels.proxy }} is returning 5xx| 4xx error"
-                description: Backend ({{ $labels.proxy }}) in frontend ({{ $labels.service }}) is returning {{ printf "%.0f" ( $value * 100 ) }}% {{ $labels.code }} errors.
-
+                summary: "Critical 5xx error rate on service {{$labels.service}}"
+                description: HAProxy frontend service {{$labels.service}} on proxy {{$labels.proxy}} has >5% HTTP 5xx errors for over 10 minutes (current {{ printf "%.0f" $value }}%)
+            
             #Disk latency is growing (write operations > 100ms)
             - alert: Kubernetes Disk latency is growing (write operations > 100ms)
               expr: (rate(node_disk_write_time_seconds_total[1m]) / rate(node_disk_writes_completed_total[1m]) > 0.1 and rate(node_disk_writes_completed_total[1m]) > 0)
