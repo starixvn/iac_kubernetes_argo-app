@@ -140,28 +140,28 @@ prometheus:
                 summary: Kubernetes - Node unusual network throughput in (instance {{ $labels.instance }})
                 description: "Node receive bandwidth is high (>90%).\n  VALUE = {{ $value }}%"
 
-            #HAProxy High HTTP 5xx Error Rate
-            - alert: HAProxy Backend High 5xx
+            #HAProxy High HTTP 5xx 4xx Error Rate (Warning)
+            - alert: HAProxy Backend High 5xx 4xx
               expr: |
-                rate(haproxy_backend_http_responses_total{code="5xx"}[5m])
+                rate(haproxy_backend_http_responses_total{code="5xx|4xx"}[5m])
                 / rate(haproxy_backend_http_responses_total[5m]) > 0.01
               for: 5m
               labels:
                 severity: warning
               annotations:
-                summary: "HAProxy backend {{ $labels.proxy }} is returning 5xx error"
+                summary: "HAProxy backend {{ $labels.proxy }} is returning 5xx | 4xx error"
                 description: Backend ({{ $labels.proxy }}) in frontend ({{ $labels.service }}) is returning {{ printf "%.0f" ( $value * 100 ) }}% {{ $labels.code }} errors.
 
-             #HAProxy High HTTP 4xx Error Rate
-            - alert: HAProxy Backend High 4xx
+             #HAProxy High HTTP 5xx 4xx Error Rate (Critical)
+            - alert: HAProxy Backend High 5xx 4xx
               expr: |
-                rate(haproxy_backend_http_responses_total{code="4xx"}[5m])
-                / rate(haproxy_backend_http_responses_total[5m]) > 0.01
+                rate(haproxy_backend_http_responses_total{code="5xx|4xx"}[5m])
+                / rate(haproxy_backend_http_responses_total[5m]) > 0.05
               for: 5m
               labels:
-                severity: warning
+                severity: critical
               annotations:
-                summary: "HAProxy backend {{ $labels.proxy }} is returning 4xx error"
+                summary: "HAProxy backend {{ $labels.proxy }} is returning 5xx| 4xx error"
                 description: Backend ({{ $labels.proxy }}) in frontend ({{ $labels.service }}) is returning {{ printf "%.0f" ( $value * 100 ) }}% {{ $labels.code }} errors.
 
             #Disk latency is growing (write operations > 100ms)
