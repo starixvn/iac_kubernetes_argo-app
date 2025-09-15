@@ -188,7 +188,7 @@ prometheus:
                 severity: warning
               annotations:
                 summary: "High 5xx error rate on service {{$labels.service}}"
-                description: HAProxy frontend {{$labels.service}} on proxy {{$labels.proxy}} has >1% HTTP 5xx errors for over 10 minutes (current {{ $labels.code }}{{ $labels.code }}{{ $labels.code }})
+                description: "HAProxy frontend service {{$labels.service}} on proxy {{$labels.proxy}} has >1% HTTP 5xx errors for over 10 minutes (current: {{ printf \"%.2f\" $value }}%)"
 
             - alert: HAProxy Frontend High 5xx Critical
               expr: |
@@ -202,7 +202,7 @@ prometheus:
                 severity: critical
               annotations:
                 summary: "Critical 5xx error rate on service {{$labels.service}}"
-                description: HAProxy frontend {{$labels.service}} on proxy {{$labels.proxy}} has >5% HTTP 5xx errors for over 10 minutes (current {{ printf "%.0f" $value }}%)
+                description: "HAProxy frontend service {{$labels.service}} on proxy {{$labels.proxy}} has >5% HTTP 5xx errors for over 10 minutes (current: {{ printf \"%.2f\" $value }}%)"
             
             - alert: HAProxy Backend High 5xx Warning
               expr: |
