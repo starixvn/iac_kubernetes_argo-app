@@ -45,7 +45,7 @@ luaScripts:
       end
 
       -- Remove original raw field
-      -- record["http_headers_raw"] = nil
+      record["http_headers_raw"] = nil
 
       -- Rename CS_ Field
       -- record = rename_field(record, "http_method", "cs-method")
