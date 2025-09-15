@@ -140,42 +140,6 @@ prometheus:
                 summary: Kubernetes - Node unusual network throughput in (instance {{ $labels.instance }})
                 description: "Node receive bandwidth is high (>90%).\n  VALUE = {{ $value }}%"
 
-            # - alert: HAProxy Backend High 5xx_4xx warning
-            #   expr: |
-            #     (
-            #       sum by (proxy, job, service) (
-            #         rate(haproxy_backend_http_responses_total{code=~"4xx|5xx"}[5m])
-            #       )
-            #       /
-            #       sum by (proxy, job, service) (
-            #         rate(haproxy_backend_http_responses_total[5m])
-            #       )
-            #     ) > 0.01
-            #   for: 10m
-            #   labels:
-            #     severity: warning
-            #   annotations:
-            #     summary: "HAProxy backend {{ $labels.proxy }} is returning 5xx | 4xx error"
-            #     description: Backend ({{ $labels.proxy }}) in frontend ({{ $labels.service }}) is returning {{ printf "%.0f" $value }}% {{ $labels.code }} errors.
-
-            # - alert: HAProxy Backend High 5xx_4xx critical
-            #   expr: |
-            #     (
-            #       sum by (proxy, job, service) (
-            #         rate(haproxy_backend_http_responses_total{code=~"4xx|5xx"}[5m])
-            #       )
-            #       /
-            #       sum by (proxy, job, service) (
-            #         rate(haproxy_backend_http_responses_total[5m])
-            #       )
-            #     ) > 0.05
-            #   for: 10m
-            #   labels:
-            #     severity: critical
-            #   annotations:
-            #     summary: "HAProxy backend {{ $labels.proxy }} is returning 5xx| 4xx error"
-            #     description: Backend ({{ $labels.proxy }}) in frontend ({{ $labels.service }}) is returning {{ printf "%.0f" $value }}% {{ $labels.code }} errors.
-
             - alert: HAProxy Frontend High 5xx Warning
               expr: |
                 (
