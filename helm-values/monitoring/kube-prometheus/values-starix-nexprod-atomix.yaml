@@ -296,7 +296,7 @@ extraDeploy:
           - https://adm2.hotdog-games.com
           - https://n8n-wasa.nexdev.net
           - https://intp22.focapts.com/main/health
-          - https://admin.detecas.com
+          - https://admin.detecas.com/whoami.aspx
           - https://nsc.detecas.com
           - https://api.kenosaba.com
           - https://affiliate.spondemo.com
@@ -592,9 +592,9 @@ extraDeploy:
           - https://intp11.726872.com/main/health
           - https://hrm-bpo.nexdev.net
           - https://affadmin.goal123.com
-          - https://owp1.oneops.net
-          - https://crm3.oneops.net
-          - https://www.affxml.com
+          - https://owp1.oneops.net/healthcheck
+          - https://crm3.oneops.net/healthcheck
+          - https://www.affxml.com/whoami
           - https://mb.logi88.com/main/health
           - https://mb.ultra88.com/main/health
           - https://fpjsc.omnivexium.com/healthz
@@ -702,8 +702,8 @@ extraDeploy:
           - https://vn-dep-api-gw.amazzu.com
           - https://mb2.halo888.com/main/health
           - https://mb.buap88.com/main/health
-          - https://mini.vgames88.com
-          - https://fpjsc.detecas.com
+          - https://mini.vgames88.com/health
+          - https://fpjsc.detecas.com/healthz
           - https://www.file678.com
           - https://api.omnivexium.com/healthz
           - https://hrm-fts.nexdev.net
