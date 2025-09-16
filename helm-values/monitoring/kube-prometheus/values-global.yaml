@@ -201,12 +201,12 @@ prometheus:
                     )
                   ) * 100
                 ) > 2
-              for: 10m
+              for: 15m
               labels:
                 severity: warning
               annotations:
                 summary: "High 4xx error rate on backend {{$labels.proxy}}"
-                description: 'HAProxy backend {{$labels.proxy}} has {{ printf "%.0f" $value }}% 4xx errors for over 10 minutes.'
+                description: 'HAProxy backend {{$labels.proxy}} has {{ printf "%.0f" $value }}% 4xx errors for over 15 minutes.'
             
             #Disk latency is growing (write operations > 100ms)
             - alert: Kubernetes Disk latency is growing (write operations > 100ms)
