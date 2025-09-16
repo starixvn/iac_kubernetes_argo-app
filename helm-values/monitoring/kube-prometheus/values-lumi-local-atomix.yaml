@@ -90,7 +90,7 @@ alertmanager:
          alertname: "Kubernetes Pod Restart|Kubernetes High Pod Restart Count|Kubernetes Pod Not Running"
       - receiver: 'null'
         match_re:
-         alertname: "Kubernetes Container CPU usage exceeds 90% of the resource limit|Kubernetes Container memory usage exceeds 90% of the resource limit"
+         alertname: "Kubernetes Container CPU usage exceeds 90% of the resource limit|Kubernetes Container memory usage exceeds 90% of the resource limit|HAProxy.*"
       - receiver: 'null'
         matchers:
         - namespace=~"l1|l2|gn|hd|sk|sp|tg|mg"
@@ -124,7 +124,7 @@ alertmanager:
         icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
         title: >-
           {{ if eq .Status "firing" }}:fire:{{ else }}:white_check_mark:{{ end }}
-          {{- if match "(?i)cpu" .CommonLabels.alertname }} :cpu: CPU
+          {{- if match "(?i)cpu" .CommonLabels.alertname }} :cpu_1: CPU
           {{- else if match "(?i)memory" .CommonLabels.alertname }} :memory_1: MEMORY
           {{- else if match "(?i)disk" .CommonLabels.alertname }} :disk: DISK
           {{- else if match "(?i)node" .CommonLabels.alertname }} :server: NODE
