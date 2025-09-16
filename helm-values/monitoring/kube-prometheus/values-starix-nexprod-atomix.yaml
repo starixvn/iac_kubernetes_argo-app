@@ -215,7 +215,7 @@ alertmanager:
               *Problem:* {{ .CommonAnnotations.problem }}
               *Status:* {{ .CommonAnnotations.status }}
             color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
-            send_resolved: false
+            send_resolved: true
 
       - name: "alerts-test"
         slack_configs:
@@ -274,6 +274,7 @@ extraDeploy:
     targets:
       staticConfig:
         static:
+          - https://tolgee-test.sabagame.com
           - https://tolgee.sabagame.com
           - https://h1.v988ag.com
           - https://ops-klp.starixplay.com
