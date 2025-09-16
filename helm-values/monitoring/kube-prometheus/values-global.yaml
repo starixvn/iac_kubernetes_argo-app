@@ -565,8 +565,18 @@ prometheus:
                 severity: critical
               annotations:
                 summary: "SSL certificate has expired"
-                problem: "The SSL certificate expired"
+                problem: "The SSL certificate will expire soon"
                 status: 'Remaining {{ $value | printf "%.0f" }} days.'
+
+            - alert: StatusCodeUnexpected
+              expr: probe_http_status_code != 200 and probe_http_status_code != 0
+              for: 2m
+              labels:
+                severity: warning
+              annotations:
+                summary: "Unexpected HTTP status code"
+                problem: "Unexpected HTTP status code"
+                status: '{{ $value }}'
 
 
 alertmanager:

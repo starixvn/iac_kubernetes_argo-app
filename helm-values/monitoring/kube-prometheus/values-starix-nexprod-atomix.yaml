@@ -104,6 +104,9 @@ alertmanager:
         - receiver: "alert-nx-atomix-domains"
           match_re:
             alertname: "SSLCertificate.*"
+        - receiver: "alert-nx-atomix-domains"
+          match_re:
+            alertname: "StatusCodeUnexpected"
         - receiver: dev-services
           matchers:
           - service="OpenSearch"
@@ -285,7 +288,7 @@ extraDeploy:
           - https://gosqlproxy-dr.starixplay.com
           - https://www.vgames88.com
           - https://bbmgr.com
-          - https://sc.saceted.com
+          - https://sc.saceted.com/whoami.aspx
           - https://mb2.aweda88.com/main/health
           - https://promotion.playvgames.com
           - https://zata88.com
@@ -486,7 +489,7 @@ extraDeploy:
           - https://affadmin.spondemo.com
           #- https://minio-hrm.starixplay.com
           - https://www.go88al.com
-          - https://nui-sc-klp.starixplay.com
+          #- https://nui-sc-klp.starixplay.com
           - https://gw.saba.win
           - https://intp14.726872.com/main/health
           - https://www.zuranic.com
@@ -532,7 +535,7 @@ extraDeploy:
           - https://mb.pilot88.com/main/health
           - https://sc-deployapi-t1prod.sportsfun.app
           - https://h1.focapts.com/main/health
-          - https://fpc.saceted.com
+          - https://fpc.saceted.com/healthz
           - https://nova88promo.com
           - https://licbotwebhook.starixplay.com
           - https://mb.trumpback.com/main/health
@@ -556,7 +559,7 @@ extraDeploy:
           - https://affadmin.athena000.bpadmin999.com
           - https://vv4ever.com
           - https://hrm.comtechsb.com
-          - https://fpjsc.casemed.net
+          - https://fpjsc.casemed.net/healthz
           - https://intp32.gatonic.com/main/health
           - https://result.sabagame.com
           - https://tvs.oneops.net
@@ -693,7 +696,7 @@ extraDeploy:
           - https://fps-portal-api.oneops.net/healthz
           - https://mb.viva6889.com/main/health
           - https://www.buap88.com
-          - https://sc.casemed.net
+          - https://sc.casemed.net/whoami.aspx
           - https://portainer-klp.starixplay.com
           - https://nova88fun.com
           - https://www.wabi88.com
@@ -741,7 +744,7 @@ extraDeploy:
           - https://www.v88agent.com
           - https://alpha-content-2.oneops.net
           - https://fpp.zenovatrix.net/healthz
-          - https://fpjsc.zenovatrix.net
+          - https://fpjsc.zenovatrix.net/healthz
           - https://analytics.amazzu.com
           - https://www.champi68.com
           - https://cts.oneops.net
@@ -927,7 +930,7 @@ extraDeploy:
           - https://www.mefolk.com
           - https://hrm.smstower-vn.com
           - https://nova88.net
-          - https://sc.zenovatrix.net
+          - https://sc.zenovatrix.net/healthz
           - https://lap.amazzu.com
           - https://hrm-evo.nexdev.net
           - https://w2.numberx.win
@@ -998,7 +1001,7 @@ extraDeploy:
           - https://affadmin.9bet.bpadmin999.com
           - https://affadmin.aoncash.bpadmin999.com
           - https://www.go88ag.com
-          - https://nsc.zenovatrix.net/whoami.aspx
+          - https://nsc.zenovatrix.net/healthz
           - https://bt.amazzu.com
           - https://n88sc.oneops.net
           - https://mb.borinote.com/main/health
