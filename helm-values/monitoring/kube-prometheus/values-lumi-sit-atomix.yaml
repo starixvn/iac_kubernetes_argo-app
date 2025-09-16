@@ -118,6 +118,7 @@ alertmanager:
               {{- else if match "(?i)service" .CommonLabels.alertname }} ⚙️ SERVICE
               {{- else if match "(?i)http" .CommonLabels.alertname }} 🌐 HTTP
               {{- else if match "(?i)bandwidth" .CommonLabels.alertname }} 🌐 BANDWIDTH
+              {{- else if match "(?i)haproxy" .CommonLabels.alertname }} 🌐 HAPROXY
               {{- else if match "(?i)api" .CommonLabels.alertname }} :kubernetes-api: KUBERNETES API
               {{- else }} 🔥 PROBLEM 🔥{{ end }}
               {{ if eq .Status "firing" }} PROBLEM :fire: {{ else }} RESOLVED :white_check_mark: {{ end }}

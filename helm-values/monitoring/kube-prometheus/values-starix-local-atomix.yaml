@@ -76,7 +76,7 @@ alertmanager:
         icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
         title: >-
           {{ if eq .Status "firing" }}:fire:{{ else }}:white_check_mark:{{ end }}
-          {{- if match "(?i)cpu" .CommonLabels.alertname }} :cpu: CPU
+          {{- if match "(?i)cpu" .CommonLabels.alertname }} :cpu_1: CPU
           {{- else if match "(?i)memory" .CommonLabels.alertname }} :memory_1: MEMORY
           {{- else if match "(?i)disk" .CommonLabels.alertname }} :disk: DISK
           {{- else if match "(?i)node" .CommonLabels.alertname }} :server: NODE
