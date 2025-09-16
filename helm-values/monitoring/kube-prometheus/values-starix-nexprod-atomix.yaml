@@ -274,7 +274,7 @@ extraDeploy:
     targets:
       staticConfig:
         static:
-    
+          - https://n8n-test.nexdev.net/
           - https://tolgee.sabagame.com
           - https://h1.v988ag.com
           - https://ops-klp.starixplay.com
