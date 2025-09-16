@@ -274,11 +274,11 @@ extraDeploy:
     targets:
       staticConfig:
         static:
-          - https://tolgee-test.sabagame.com
+    
           - https://tolgee.sabagame.com
           - https://h1.v988ag.com
           - https://ops-klp.starixplay.com
-          - https://intp24.726872.com/main/health
+          - https://intp24.726872.com/main/healthz
           - https://www.center88.com
           - https://direct.sabagame.com
           - https://lap.nova88.com
