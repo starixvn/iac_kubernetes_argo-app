@@ -32,7 +32,7 @@ prometheus:
       jobList:
         - job_name: "n8n_gcp_metrics"
           metrics_path: "/webhook/gcp-metrics"
-          scrape_interval: 30s
+          scrape_interval: 15s
           scrape_timeout: 5s
           scheme: "https"
           static_configs:
