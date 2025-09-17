@@ -19,7 +19,7 @@ config:
       Name tail
       Path /var/log/containers/coredns*.log,/var/log/containers/kube*.log,/var/log/containers/argocd-*.log,/var/log/containers/longhorn-*.log
       multiline.parser docker, cri
-      Tag kube.kubesystem
+      Tag kube.kubesystem.*
       Mem_Buf_Limit 10MB
       Skip_Long_Lines On
 
