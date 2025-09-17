@@ -129,18 +129,19 @@ alertmanager:
             icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
             title: >-
               {{ if eq .Status "firing" }}:fire:{{ else }}:white_check_mark:{{ end }}
-              {{- if match "(?i)cpu" .CommonLabels.alertname }} :cpu_1: CPU
-              {{- else if match "(?i)memory" .CommonLabels.alertname }} :memory_1: MEMORY
-              {{- else if match "(?i)disk" .CommonLabels.alertname }} :disk: DISK
-              {{- else if match "(?i)node" .CommonLabels.alertname }} :server: NODE
-              {{- else if match "(?i)pod" .CommonLabels.alertname }} :pod: POD
-              {{- else if match "(?i)service" .CommonLabels.alertname }} ⚙️ SERVICE
-              {{- else if match "(?i)http" .CommonLabels.alertname }} 🌐 HTTP
-              {{- else if match "(?i)bandwidth" .CommonLabels.alertname }} 🌐 BANDWIDTH
-              {{- else if match "(?i)haproxy" .CommonLabels.alertname }} 🌐 HAPROXY
-              {{- else if match "(?i)api" .CommonLabels.alertname }} :kubernetes-api: KUBERNETES API
-              {{- else }} 🔥 PROBLEM 🔥{{ end }}
-              {{ if eq .Status "firing" }} PROBLEM :fire: {{ else }} RESOLVED :white_check_mark: {{ end }}
+              {{- if match "(?i)cpu" .CommonLabels.alertname }} :cpu_1: CPU PROBLEM
+              {{- else if match "(?i)memory" .CommonLabels.alertname }} :memory_1: MEMORY PROBLEM
+              {{- else if match "(?i)disk" .CommonLabels.alertname }} :disk: DISK PROBLEM 
+              {{- else if match "(?i)node" .CommonLabels.alertname }} :server: NODE PROBLEM
+              {{- else if match "(?i)pod" .CommonLabels.alertname }} :pod: POD PROBLEM
+              {{- else if match "(?i)service" .CommonLabels.alertname }} ⚙️ SERVICE PROBLEM
+              {{- else if match "(?i)http" .CommonLabels.alertname }} 🌐 HTTP PROBLEM
+              {{- else if match "(?i)bandwidth" .CommonLabels.alertname }} 🌐 BANDWIDTH PROBLEM
+              {{- else if match "(?i)haproxy" .CommonLabels.alertname }} 🌐 HAPROXY PROBLEM
+              {{- else if match "(?i)api" .CommonLabels.alertname }} :kubernetes-api: KUBERNETES API PROBLEM
+              {{- else }} {{ if eq .Status "firing" }} PROBLEM {{ else }} RESOLVED {{ end }}
+              {{ end }}
+              {{ if eq .Status "firing" }}:fire:{{ else }}:white_check_mark:{{ end }}
             text: |
               *Cluster:* `EKS-SC-PROD`
               *Summary:* `{{ .CommonLabels.alertname }}`
