@@ -82,6 +82,9 @@ alertmanager:
       - receiver: 'null'
         match_re:
          alertname: "HAProxy.*"
+      - receiver: 'null'
+        match_re:
+          cronjob: ".*trim.*"
       - receiver: 'nexpe-services-alert'
         match_re:
           namespace: "nexpe|gosql|tw|starix"

@@ -84,6 +84,9 @@ alertmanager:
             alertname: "Kubernetes Pod Restart"
         - receiver: 'null'
           match_re:
+            cronjob: ".*trim.*"
+        - receiver: 'null'
+          match_re:
             alertname: "HAProxy.*"
         - receiver: "nexpe-services-alert"
           match_re:

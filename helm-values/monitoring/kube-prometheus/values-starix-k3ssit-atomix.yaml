@@ -80,6 +80,9 @@ alertmanager:
         match_re:
          namespace: "logging"
          alertname: "Kubernetes Pod Restart"
+      - receiver: 'null'
+        match_re:
+          cronjob: ".*trim.*"
       - receiver: 'nexpe-services-alert'
         match_re:
           namespace: "nexpe|gosql|tw|nexops"
