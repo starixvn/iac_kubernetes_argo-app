@@ -58,6 +58,15 @@ argo_applications_by_team = {
           "values-starix-nexprod-atomix.yaml",
         ]
       }
+      fluent-bit = {
+        namespace     = "logging"
+        helm_path     = "logging/fluent-bit"
+        chart_version = "0.50.0"
+        value_files = [
+          "values-global.yaml",
+          "values-starix-nexprod-atomix.yaml",
+        ]
+      }
 
       vault-secrets-operator = {
         namespace     = "vault"
