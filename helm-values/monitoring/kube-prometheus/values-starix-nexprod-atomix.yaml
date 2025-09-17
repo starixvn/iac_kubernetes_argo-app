@@ -155,7 +155,6 @@ alertmanager:
               {{- else if match "(?i)bandwidth" .CommonLabels.alertname }} 🌐 BANDWIDTH
               {{- else if match "(?i)haproxy" .CommonLabels.alertname }} 🌐 HAPROXY
               {{- else if match "(?i)api" .CommonLabels.alertname }} :kubernetes-api: KUBERNETES API
-              {{- else }} 🔥 PROBLEM 🔥{{ end }}
               {{ if eq .Status "firing" }} PROBLEM :fire: {{ else }} RESOLVED :white_check_mark: {{ end }}
             text: |
               *Cluster:* `Kubernetes-NexProd`
@@ -276,7 +275,7 @@ extraDeploy:
         static:
           - https://n8n-test.nexdev.net/
           - https://intp22.focapts.com/main/healthz/
-          - https://mb.ec88ag.com/main/healthz/
+          - https://mb.ec88ag.com/main/healthz
           - https://www.vgames88.com/test/
           - https://tolgee.sabagame.com
           - https://h1.v988ag.com
