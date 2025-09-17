@@ -63,7 +63,7 @@ config:
 
     [FILTER]
       Name    grep
-      Match   kube.kubesystem
+      Match   kube.kubesystem.*
       Exclude $log level=info
       Exclude $log \"GET (/[a-zA-Z0-9\-]*)+ HTTP/1.[01]\" 200
       Exclude $log Found redis master
@@ -132,7 +132,7 @@ config:
   outputs: |
     [OUTPUT]
       Name opensearch
-      Match kube.kubesystem
+      Match kube.kubesystem.*
       Host opensearch-cluster-master.logging
       tls On
       tls.verify Off
