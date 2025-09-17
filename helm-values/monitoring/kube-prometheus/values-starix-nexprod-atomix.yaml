@@ -144,11 +144,7 @@ alertmanager:
             send_resolved: true
             icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
             title: >-
-              {{- if eq .Status "firing" -}}
-                :fire:
-              {{- else -}}
-                :white_check_mark:
-              {{- end }}
+              {{ if eq .Status "firing" }}:fire:{{ else }}:white_check_mark:{{ end }}
               {{- if match "(?i)cpu" .CommonLabels.alertname }} :cpu_1: CPU
               {{- else if match "(?i)memory" .CommonLabels.alertname }} :memory_1: MEMORY
               {{- else if match "(?i)disk" .CommonLabels.alertname }} :disk: DISK
@@ -159,9 +155,9 @@ alertmanager:
               {{- else if match "(?i)bandwidth" .CommonLabels.alertname }} 🌐 BANDWIDTH
               {{- else if match "(?i)haproxy" .CommonLabels.alertname }} 🌐 HAPROXY
               {{- else if match "(?i)api" .CommonLabels.alertname }} :kubernetes-api: KUBERNETES API
-              {{- else }} PROBLEM
-              {{- end }}
-              {{- if eq .Status "firing" }} :fire:{{ else }} :white_check_mark:{{ end }}
+              {{- else }} {{ if eq .Status "firing" }} PROBLEM {{ else }} RESOLVED {{ end }}
+              {{ end }}
+              {{ if eq .Status "firing" }}:fire:{{ else }}:white_check_mark:{{ end }}
             text: |
               *Cluster:* `Kubernetes-NexProd`
               *Summary:* `{{ .CommonLabels.alertname }}`
