@@ -47,6 +47,8 @@ config:
       Name modify
       Match *
       Add env uat
+      Add region kl
+      Add org devops
       Add engine k3s
 
     [FILTER] # Trim port from the host field

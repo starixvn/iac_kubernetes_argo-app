@@ -62,6 +62,7 @@ config:
       Match *
       Add env uat
       Add region kl
+      Add org lumi
       Add team pentagon
       Add engine k8s
 
