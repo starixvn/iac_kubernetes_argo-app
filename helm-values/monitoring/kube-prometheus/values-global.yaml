@@ -603,7 +603,7 @@ prometheus:
                 severity: warning
               annotations:
                 summary: "No successful run in the last 24 hours."
-                description: "CronJob has no success in 24h: {{ $labels.namespace }}/{{ $labels.cronjob }}"
+                description: CronJob has no success in 24h - {{ $labels.namespace }}/{{ $labels.cronjob }}
 
             - alert: Kubernetes Cron Job Running Too Long
               expr: |
@@ -626,7 +626,7 @@ prometheus:
                 severity: warning
               annotations:
                 summary: "A job has been active for more than 2 hours continuously. Check deadline/timeout settings and external dependencies."
-                description: "CronJob running too long: {{ $labels.namespace }}/{{ $labels.cronjob }}"
+                description: CronJob running too long - {{ $labels.namespace }}/{{ $labels.cronjob }}
 
 
 alertmanager:
