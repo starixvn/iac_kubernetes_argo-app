@@ -38,6 +38,7 @@ config:
       Match *
       Add env prod
       Add region aws
+      Add org lumi
       Add team pentagon
       Add engine eks
 
