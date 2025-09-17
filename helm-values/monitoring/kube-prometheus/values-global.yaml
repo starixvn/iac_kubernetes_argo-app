@@ -578,6 +578,56 @@ prometheus:
                 problem: "Unexpected HTTP status code"
                 status: '{{ $value }}'
 
+    - name: cronjob.rules
+      groups:
+        - name: cronjob.rules
+          rules:
+            - alert: Kubernetes Cron Job No Success In 24h
+              expr: |
+                sum by (namespace, cronjob) (
+                  label_replace(
+                    max_over_time(
+                      (
+                        kube_job_status_succeeded
+                        * on(namespace, job_name) group_left(owner_name)
+                          max by (namespace, job_name, owner_name) (
+                            kube_job_owner{owner_kind="CronJob", owner_is_controller="true"}
+                          )
+                      )[24h:]
+                    ),
+                    "cronjob", "$1", "owner_name", "(.*)"
+                  )
+                ) == 0
+              for: 0m
+              labels:
+                severity: warning
+              annotations:
+                summary: "CronJob has no success in 24h: {{ $labels.namespace }}/{{ $labels.cronjob }}"
+                description: "No successful run in the last 24 hours."
+
+            - alert: Kubernetes Cron Job Running Too Long
+              expr: |
+                sum by (namespace, cronjob) (
+                  label_replace(
+                    max_over_time(
+                      (
+                        kube_job_status_active
+                        * on(namespace, job_name) group_left(owner_name)
+                          max by (namespace, job_name, owner_name) (
+                            kube_job_owner{owner_kind="CronJob", owner_is_controller="true"}
+                          )
+                      )[2h:]
+                    ),
+                    "cronjob", "$1", "owner_name", "(.*)"
+                  )
+                ) > 0
+              for: 0m
+              labels:
+                severity: warning
+              annotations:
+                summary: "CronJob running too long: {{ $labels.namespace }}/{{ $labels.cronjob }}"
+                description: "A job has been active for more than 2 hours continuously. Check deadline/timeout settings and external dependencies."
+
 
 alertmanager:
   config:
