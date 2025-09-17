@@ -10,7 +10,7 @@ image:
 extraPorts:
 - port: 5170
   containerPort: 5170
-  protocol: UDP
+  protocol: TCP
   name: syslog
 
 config:
