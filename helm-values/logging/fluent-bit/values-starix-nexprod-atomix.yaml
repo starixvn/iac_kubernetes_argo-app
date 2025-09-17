@@ -145,6 +145,7 @@ config:
     [OUTPUT]
       Name opensearch
       Match syslog.haproxy
+      Buffer_Size 64MB
       Host opensearch-cluster-master.logging
       tls On
       tls.verify Off
