@@ -72,58 +72,58 @@ config:
       Exclude $log Identifying redis master 
       Exclude $log using sentinel \(argocd\-redis\-ha\)
 
-    [FILTER]
-      Name parser
-      Match syslog.haproxy
-      Key_name message
-      Parser haproxy
-      Preserve_Key On
-      Reserve_Data On
+    # [FILTER]
+    #   Name parser
+    #   Match syslog.haproxy
+    #   Key_name message
+    #   Parser haproxy
+    #   Preserve_Key On
+    #   Reserve_Data On
 
-    [FILTER]
-      Name   modify
-      Match  syslog.haproxy
-      Remove Tc
-      Remove Tq
-      Remove Tw
-      Remove actconn
-      Remove backend_queue
-      Remove beconn
-      Remove captured_request_cookie
-      Remove captured_response_cookie
-      Remove extradata
-      Remove feconn
-      Remove pid
-      Remove pri
-      Remove msgid
-      Remove retries
-      Remove srv_conn
-      Remove srv_queue
-      Remove termination_state
+    # [FILTER]
+    #   Name   modify
+    #   Match  syslog.haproxy
+    #   Remove Tc
+    #   Remove Tq
+    #   Remove Tw
+    #   Remove actconn
+    #   Remove backend_queue
+    #   Remove beconn
+    #   Remove captured_request_cookie
+    #   Remove captured_response_cookie
+    #   Remove extradata
+    #   Remove feconn
+    #   Remove pid
+    #   Remove pri
+    #   Remove msgid
+    #   Remove retries
+    #   Remove srv_conn
+    #   Remove srv_queue
+    #   Remove termination_state
 
-    [FILTER]
-      Name lua
-      Match syslog.haproxy
-      script /fluent-bit/scripts/enrich.lua
-      call waf_headers_enrich
+    # [FILTER]
+    #   Name lua
+    #   Match syslog.haproxy
+    #   script /fluent-bit/scripts/enrich.lua
+    #   call waf_headers_enrich
 
-    [FILTER]
-      Name   geoip2
-      Match  syslog.haproxy
-      Database /fluent-bit/etc/geoip/GeoLite2-City.mmdb
-      Lookup_key http_xff
-      Record geoip_country_name http_xff %{country.names.en}
-      Record geoip_country_iso http_xff %{country.iso_code}
-      Record geoip_city_name http_xff %{city.names.en}
-      Record geoip_latitude http_xff %{location.latitude}
-      Record geoip_longitude http_xff %{location.longitude}
-      Log_Level error
+    # [FILTER]
+    #   Name   geoip2
+    #   Match  syslog.haproxy
+    #   Database /fluent-bit/etc/geoip/GeoLite2-City.mmdb
+    #   Lookup_key http_xff
+    #   Record geoip_country_name http_xff %{country.names.en}
+    #   Record geoip_country_iso http_xff %{country.iso_code}
+    #   Record geoip_city_name http_xff %{city.names.en}
+    #   Record geoip_latitude http_xff %{location.latitude}
+    #   Record geoip_longitude http_xff %{location.longitude}
+    #   Log_Level error
 
-    [FILTER]
-      Name lua
-      Match syslog.haproxy
-      script /fluent-bit/scripts/enrich.lua
-      call merge_geoip
+    # [FILTER]
+    #   Name lua
+    #   Match syslog.haproxy
+    #   script /fluent-bit/scripts/enrich.lua
+    #   call merge_geoip
 
     # [FILTER]
     #   Name lua
