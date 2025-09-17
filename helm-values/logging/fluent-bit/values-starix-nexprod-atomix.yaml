@@ -156,3 +156,5 @@ config:
       Suppress_Type_Name On
       Index logstash-haproxy-ing-nexprod
       Replace_Dots On
+      Trace_Error    On
+
