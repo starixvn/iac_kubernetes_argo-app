@@ -163,7 +163,7 @@ config:
 
     [OUTPUT]
       Name opensearch
-      Match kube.kubesystem
+      Match kube.kubesystem.*
       Host opsi.ops-klprod.gamora.prod
       Port 443
       tls On

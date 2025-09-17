@@ -165,7 +165,7 @@ config:
 
     [OUTPUT]
       Name opensearch
-      Match kube.kubesystem
+      Match kube.kubesystem.*
       Host opsearch-atx-k3sprod.logging
       tls On
       tls.verify Off
