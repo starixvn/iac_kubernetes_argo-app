@@ -110,8 +110,8 @@ alertmanager:
               {{- else if match "(?i)bandwidth" .CommonLabels.alertname }} 🌐 BANDWIDTH
               {{- else if match "(?i)haproxy" .CommonLabels.alertname }} 🌐 HAPROXY
               {{- else if match "(?i)api" .CommonLabels.alertname }} :kubernetes-api: KUBERNETES API
-              {{- else }} :grey_question: Unknown{{ end }}
-              {{ if eq .Status "firing" }} PROBLEM :fire: {{ else }} RESOLVED :white_check_mark: {{ end }}
+              {{ end }}
+              {{ if eq .Status "firing" }} PROBLEM :fire:{{ else }} RESOLVED :white_check_mark:{{ end }}
             text: |
               *Cluster:* `Kubernetes-SC-KLPROD`
               *Summary:* `{{ .CommonLabels.alertname }}`
