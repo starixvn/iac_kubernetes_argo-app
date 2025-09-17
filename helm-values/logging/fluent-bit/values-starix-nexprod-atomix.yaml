@@ -28,7 +28,7 @@ config:
       Tag syslog.haproxy
       Listen 0.0.0.0
       Port 5170
-      Mode udp
+      Mode tcp
       Source_Address_Key host
       
   filters: |
