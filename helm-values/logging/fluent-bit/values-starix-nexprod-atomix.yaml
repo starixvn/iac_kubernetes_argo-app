@@ -26,6 +26,7 @@ config:
     [INPUT]
       Name syslog
       Tag syslog.haproxy
+      Mem_Buf_Limit 12MB
       Listen 0.0.0.0
       Port 5170
       Mode udp
