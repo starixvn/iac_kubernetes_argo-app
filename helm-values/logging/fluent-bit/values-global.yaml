@@ -2,7 +2,7 @@ tolerations:
 - operator: Exists
 
 luaScripts:
-  strip_ansi_color_code: |
+  strip_ansi_color_code.lua: |
     function strip_ansi_color_code(tag, ts, record)
       if type(record["log"]) == "string" then 
         record["log"] = record["log"]:gsub('[\27\155][][()#;?%d]*[A-PRZcf-ntqry=><~]', '') 
