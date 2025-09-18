@@ -1,0 +1,161 @@
+# Custom values for Grafana Mimir with external MinIO
+# Basic production-ready configuration
+
+# Disable built-in MinIO as we're using external
+minio:
+  enabled: false
+
+
+image:
+  repository: hub.nexdev.net/base/hub.nexdev.net/base/grafana/mimir
+  tag: 2.16.0
+  pullPolicy: IfNotPresent
+
+global:
+  dnsService: kube-dns
+  dnsNamespace: kube-system
+  clusterDomain: starix.nexprod.
+
+mimir:
+  config: |
+  structuredConfig:
+    common:
+      storage:
+        backend: s3
+        s3:
+          bucket_name: "mimir-promtheus-longterm"
+          endpoint: "s3-api.starixsoft.com:443"
+          access_key_id: "grafana-mimir"
+          secret_access_key: "n@MyH#eMG7b6uMu_UUwu"
+
+
+
+alertmanager:
+  enabled: false
+
+
+
+distributor:
+  replicas: 2
+  image:
+    repository: hub.nexdev.net/base/hub.nexdev.net/base/grafana/mimir
+    tag: 2.16.0
+  resources:
+    limits:
+      cpu: 2
+      memory: 2Gi
+    requests:
+      cpu: 1
+      memory: 4Gi
+
+  
+ingester:
+  enabled: true
+  image:
+    repository: hub.nexdev.net/base/grafana/mimir
+    tag: 2.16.0
+  statefulSet:
+    enabled: false
+  replicas: 2
+  resources:
+    limits:
+      memory: 2Gi
+      cpu: 1
+    requests:
+      cpu: 1
+      memory: 2Gi
+
+
+
+
+compactor:
+  image:
+    repository: hub.nexdev.net/base/grafana/mimir
+    tag: 2.16.0
+  enabled: true
+  persistentVolume:
+    enabled: true
+    size: 20Gi  # Sufficient for 1.5M series
+  resources:
+    limits:
+      cpu: 2
+      memory: 2Gi
+    requests:
+      cpu: 1
+      memory: 2Gi
+
+
+store_gateway:
+  image:
+    repository: hub.nexdev.net/base/grafana/mimir
+    tag: 2.16.0
+  enabled: true
+  persistentVolume:
+    enabled: true
+    size: 20Gi  
+  replicas: 3    
+  resources:
+    limits:
+      cpu: 2
+      memory: 4Gi
+    requests:
+      cpu: 2
+      memory: 4Gi
+
+querier:
+  image:
+    repository: hub.nexdev.net/base/grafana/mimir
+    tag: 2.16.0
+  enabled: true
+  replicas: 2
+
+query_frontend:
+  image:
+    repository: hub.nexdev.net/base/grafana/mimir
+    tag: 2.16.0
+  enabled: true
+  replicas: 2
+
+query_scheduler:
+  enabled: true
+  image:
+    repository: hub.nexdev.net/base/grafana/mimir
+    tag: 2.16.0
+
+
+memcached:
+  image:
+    repository: memcached
+    tag: 1.6.38-alpine
+    pullPolicy: IfNotPresent
+
+
+
+# Enable metrics and monitoring
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+
+nginx:
+  image:
+    registry: docker.io
+    repository: nginxinc/nginx-unprivileged
+    tag: 1.28-alpine
+    pullPolicy: IfNotPresent
+  ingress:
+    enabled: true
+    ingressClassName: haproxy
+    hosts:
+      - host: nginx-mimir.nexdev.net
+        paths:
+          - path: /
+
+ingress:
+  enabled: true
+  ingressClassName: haproxy
+  hosts:
+    - nginx-mimir.nexdev.net
+
+
+
