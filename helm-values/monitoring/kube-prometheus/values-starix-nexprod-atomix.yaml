@@ -60,7 +60,7 @@ alertmanager:
   enabled: true
   config:
     global:
-      resolve_timeout: 15m
+      resolve_timeout: 9999h
 
     route:
       receiver: default-receiver
@@ -279,11 +279,11 @@ extraDeploy:
         static:
           - https://n8n-test.nexdev.net/
           - https://dennis.nexdev.net/test/
-          - https://intp22.focapts.com/main/healthz/
-          - https://mb.ec88ag.com/main/health/
-          - https://www.vgames88.com/test
+          - https://intp22.focapts.com/main/health/
+          - https://mb.ec88ag.com/main/healthz/
+          - https://www.vgames88.com/
           - https://mb2.aweda88.com/main/health/
-          - https://tolgee.sabagame.com
+          - https://tolgee.sabagame.com/test
           - https://h1.v988ag.com
           - https://ops-klp.starixplay.com
           - https://intp24.726872.com/main/health/
