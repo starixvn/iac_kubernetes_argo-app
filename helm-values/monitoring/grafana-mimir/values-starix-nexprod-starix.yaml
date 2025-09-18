@@ -16,16 +16,16 @@ global:
   dnsNamespace: kube-system
   clusterDomain: starix.nexprod.
 
-mimir:
-  structuredConfig: |
-    common:
-      storage:
-        backend: s3
-        s3:
-          bucket_name: "mimir-promtheus-longterm"
-          endpoint: "s3-api.starixsoft.com:443"
-          access_key_id: "grafana-mimir"
-          secret_access_key: "n@MyH#eMG7b6uMu_UUwu"
+# mimir:
+#   structuredConfig: |
+#     common:
+#       storage:
+#         backend: s3
+#         s3:
+#           bucket_name: "mimir-promtheus-longterm"
+#           endpoint: "s3-api.starixsoft.com:443"
+#           access_key_id: "grafana-mimir"
+#           secret_access_key: "n@MyH#eMG7b6uMu_UUwu"
 
 
 
