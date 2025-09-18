@@ -609,17 +609,19 @@ prometheus:
               expr: |
                 sum by (namespace, cronjob) (
                   label_replace(
-                    max_over_time(
-                      (
-                        kube_job_status_active
-                        * on(namespace, job_name) group_left(owner_name)
-                          max by (namespace, job_name, owner_name) (
-                            kube_job_owner{owner_kind="CronJob", owner_is_controller="true"}
-                          )
-                      )[2h:]
-                    ),
-                    "cronjob", "$1", "owner_name", "(.*)"
-                  )
+                    (
+                      (kube_job_status_active == 1)
+                      * on(namespace, job_name) group_left(owner_name)
+                        max by (namespace, job_name, owner_name) (
+                          kube_job_owner{owner_kind="CronJob", owner_is_controller="true"}
+                        )
+                    )
+                    *
+                    (
+                      time() - max by (namespace, job_name) (kube_job_status_start_time)
+                      > 7200
+                    )
+                  , "cronjob", "$1", "owner_name", "(.*)")
                 ) > 0
               for: 0m
               labels:
