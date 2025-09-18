@@ -17,16 +17,15 @@ global:
   clusterDomain: starix.nexprod.
 
 mimir:
-  config: |
-    structuredConfig:
-      common:
-        storage:
-          backend: s3
-          s3:
-            bucket_name: "mimir-promtheus-longterm"
-            endpoint: "s3-api.starixsoft.com:443"
-            access_key_id: "grafana-mimir"
-            secret_access_key: "n@MyH#eMG7b6uMu_UUwu"
+  structuredConfig: |
+    common:
+      storage:
+        backend: s3
+        s3:
+          bucket_name: "mimir-promtheus-longterm"
+          endpoint: "s3-api.starixsoft.com:443"
+          access_key_id: "grafana-mimir"
+          secret_access_key: "n@MyH#eMG7b6uMu_UUwu"
 
 
 
