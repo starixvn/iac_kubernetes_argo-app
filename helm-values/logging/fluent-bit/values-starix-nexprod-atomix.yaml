@@ -26,6 +26,7 @@ config:
     [INPUT]
       Name syslog
       Tag syslog.haproxy
+      Buffer_Chunk_Size 12MB
       Listen 0.0.0.0
       Port 5170
       Mode udp
@@ -123,11 +124,11 @@ config:
       script /fluent-bit/scripts/enrich.lua
       call merge_geoip
 
-    # [FILTER]
-    #   Name lua
-    #   Match syslog.haproxy
-    #   script /fluent-bit/scripts/drop.lua
-    #   call drop_success
+    [FILTER]
+      Name lua
+      Match syslog.haproxy
+      script /fluent-bit/scripts/drop.lua
+      call drop_success
 
   outputs: |
     [OUTPUT]
@@ -154,3 +155,5 @@ config:
       Suppress_Type_Name On
       Index logstash-haproxy-ing-nexprod
       Replace_Dots On
+      Trace_Error    On
+
