@@ -7,7 +7,7 @@ minio:
 
 
 image:
-  repository: hub.nexdev.net/base/hub.nexdev.net/base/grafana/mimir
+  repository: hub.nexdev.net/base/grafana/mimir
   tag: 2.16.0
   pullPolicy: IfNotPresent
 
@@ -37,7 +37,7 @@ alertmanager:
 distributor:
   replicas: 2
   image:
-    repository: hub.nexdev.net/base/hub.nexdev.net/base/grafana/mimir
+    repository: hub.nexdev.net/base/grafana/mimir
     tag: 2.16.0
   resources:
     limits:
