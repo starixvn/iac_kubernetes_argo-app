@@ -32,6 +32,8 @@ mimir:
 alertmanager:
   enabled: false
 
+ruler:
+  enabled: false
 
 
 distributor:
