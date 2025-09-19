@@ -27,8 +27,8 @@ mimir:
           access_key_id: "grafana-mimir"
           secret_access_key: "n@MyH#eMG7b6uMu_UUwu"
     limits:
-      ingestion_rate: 150000         # items/second (samples+exemplars+metadata)
-      ingestion_burst_size: 300000   # max burst across all distributors
+      ingestion_rate: 2000000         # items/second (samples+exemplars+metadata)
+      ingestion_burst_size: 30000000   # max burst across all distributors
 
 
 
