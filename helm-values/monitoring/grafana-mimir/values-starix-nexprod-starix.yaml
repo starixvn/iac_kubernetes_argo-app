@@ -51,6 +51,8 @@ distributor:
 
   
 ingester:
+  zoneAwareReplication:
+    enabled: false
   enabled: true
   image:
     repository: hub.nexdev.net/base/grafana/mimir
