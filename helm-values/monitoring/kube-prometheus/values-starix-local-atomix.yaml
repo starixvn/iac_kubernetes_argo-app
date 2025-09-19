@@ -22,6 +22,11 @@ prometheus:
     enabled: true
     size: 20Gi
 
+  remote_write:
+    - url: http://nginx-mimir.nexdev.net/api/v1/push
+      headers:
+        X-Scope-OrgID: "starix-local"
+
   ## @param prometheus.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if prometheus.resources is set (prometheus.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
