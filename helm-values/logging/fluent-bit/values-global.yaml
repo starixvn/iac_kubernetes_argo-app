@@ -20,7 +20,7 @@ luaScripts:
       end
 
       local parts = {}
-      for token in string.gmatch(raw, "([^|]+)") do
+      for token in string.gmatch(raw .. "|", "([^|]*)|") do
         table.insert(parts, token)
       end
 
@@ -28,7 +28,7 @@ luaScripts:
       local names = {"Host", "User-agent", "Referer", "X-Forwarded-For"}
       for i, name in ipairs(names) do
         local val = parts[i]
-        if val and val ~= "-" then
+        if val and val ~= "-" and val ~= "" then
           table.insert(headers, { name = name, value = val })
           if name == "User-agent" then
             record["user_agent"] = val
