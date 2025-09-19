@@ -22,7 +22,7 @@ prometheus:
     enabled: true
     size: 20Gi
 
-  remote_write:
+  remoteWrite:
     - url: http://nginx-mimir.nexdev.net/api/v1/push
       headers:
         X-Scope-OrgID: "starix-local"
