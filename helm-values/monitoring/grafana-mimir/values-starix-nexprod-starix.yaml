@@ -153,6 +153,7 @@ nginx:
       - host: nginx-mimir.nexdev.net
         paths:
           - path: /
+            pathType: Prefix
 
 ingress:
   enabled: true
