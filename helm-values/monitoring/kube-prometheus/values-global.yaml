@@ -539,7 +539,7 @@ prometheus:
         - name: domain.rules
           rules:
             - alert: SSLCertificateExpiringSoon < 5 days
-              expr: 1 <= round((last_over_time(probe_ssl_earliest_cert_expiry[10m]) - time()) / 86400, 0.1) < 10
+              expr: 1 <= round((last_over_time(probe_ssl_earliest_cert_expiry[10m]) - time()) / 86400, 0.1) < 5
               for: 5m
               labels:
                 severity: warning
