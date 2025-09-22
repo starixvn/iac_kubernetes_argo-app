@@ -998,8 +998,8 @@ blackboxExporter:
         prober: http
         timeout: 60s
         http:
-            method: GET
-            preferred_ip_protocol: "ip4"
+          method: GET
+          preferred_ip_protocol: "ip4"
 extraDeploy:
 - |
   kind: Probe
