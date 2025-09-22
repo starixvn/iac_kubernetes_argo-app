@@ -572,10 +572,20 @@ prometheus:
               expr: probe_http_status_code != 200 and probe_http_status_code != 0
               for: 1m
               labels:
-                severity: warning
+                severity: critical
               annotations:
                 summary: "Unexpected HTTP status code"
                 problem: "Unexpected HTTP status code"
+                status: '{{ $value }}'
+
+            - alert: HTTPConnectFailed
+              expr: probe_success == 0
+              for: 1m
+              labels:
+                severity: critical
+              annotations:
+                summary: "HTTP connect failed"
+                problem: "The domain {{ $labels.instance }} failed to establish HTTP connection"
                 status: '{{ $value }}'
 
     - name: cronjob.rules
