@@ -254,13 +254,23 @@ blackboxExporter:
         timeout: 60s
         http:
           method: GET
-          valid_http_versions: [ "HTTP/1.1", "HTTP/2" ]
-          valid_status_codes: [200,301,302,307,308,404]
-          # follow_redirects: true
-          # fail_if_ssl: false
-          # fail_if_not_ssl: false
-          # tls_config:
-          #   insecure_skip_verify: false
+          headers:
+            User-Agent: "Mozilla/5.0 (compatible; BlackboxExporter/1.0)"
+            Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+            Accept-Language: "en-US,en;q=0.5"
+            Accept-Encoding: "gzip, deflate"
+            Connection: "keep-alive"
+          no_follow_redirects: false
+          follow_redirects: true
+          fail_if_ssl: false
+          fail_if_not_ssl: false
+          tls_config:
+            insecure_skip_verify: true
+            server_name: ""
+          preferred_ip_protocol: "ip4"
+          ip_protocol_fallback: true
+          valid_status_codes: [200, 301, 302, 303, 307, 308]
+          valid_http_versions: ["HTTP/1.1", "HTTP/2", "HTTP/3"]
 extraDeploy:
 - |
   kind: Probe
