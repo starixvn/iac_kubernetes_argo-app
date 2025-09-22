@@ -1017,9 +1017,9 @@ extraDeploy:
     targets:
       staticConfig:
         static:
-{{- range .Values.blackboxExporter.domains }}
-          - {{ . | quote }}
-{{- end }}
+          {{- range .Values.blackboxExporter.domains }}
+                    - {{ . | quote }}
+          {{- end }}
           
 - |
   kind: Probe
@@ -1037,8 +1037,8 @@ extraDeploy:
     targets:
       staticConfig:
         static:
-{{- range .Values.blackboxExporter.domains }}
-          - {{ . | quote }}
-{{- end }}
+          {{- range .Values.blackboxExporter.domains }}
+                    - {{ . | quote }}
+          {{- end }}
 
         
