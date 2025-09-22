@@ -209,7 +209,7 @@ alertmanager:
 
       - name: "alert-nx-atomix-domains"
         slack_configs:
-          - api_url: "https://hooks.slack.com/services/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"
+          - api_url: "https://hooks.slack.com/services/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"
             channel: "#alert-nx-atomix-domains"
             title: '{{ if eq .Status "firing" }} 🔥 :globe_with_meridians: DOMAIN PROBLEM 🔥 {{ else }} ✅ :globe_with_meridians: DOMAIN RESOLVED ✅ {{ end }}'
             text: |
