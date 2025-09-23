@@ -997,14 +997,12 @@ blackboxExporter:
           tls_config:
             insecure_skip_verify: false
 
-      http_post:
+      http_connect:
         prober: http
-        timeout: 10s
+        timeout: 60s
         http:
-          method: POST
-          headers:
-            Content-Type: "application/json"
-          body: '{"status": "check"}'
+          method: GET
+          preferred_ip_protocol: "ip4"
 
 extraDeploy:
 - |
@@ -1037,7 +1035,7 @@ extraDeploy:
       prometheus: main
   spec:
     interval: 60s
-    module: http_post
+    module: http_connect
     prober:
       url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
     targets:
