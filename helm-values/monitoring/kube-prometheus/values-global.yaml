@@ -569,7 +569,7 @@ prometheus:
                 status: 'Remaining {{ $value | printf "%.0f" }} days.'
 
             - alert: StatusCodeUnexpected
-              expr: probe_http_status_code != 200 and probe_http_status_code != 0
+              expr: probe_http_status_code{job="probe/monitoring/domain-check"} != 200 and probe_http_status_code{job="probe/monitoring/domain-check"} != 0
               for: 1m
               labels:
                 severity: critical
