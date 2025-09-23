@@ -20,7 +20,7 @@ service:
 postgresql:
   enabled: true
   image:
-    repository: bitnami/postgresql
+    repository: hub.lumigame.com/base/bitnami/postgresql
     tag: 13.5.0
   architecture: "standalone"
   auth:
