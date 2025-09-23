@@ -997,24 +997,14 @@ blackboxExporter:
           tls_config:
             insecure_skip_verify: false
 
-      http_flexible:
+      http_post:
         prober: http
-        timeout: 20s 
+        timeout: 10s
         http:
-          method: GET
+          method: POST
           headers:
-            User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-            Accept: "*/*"
-          no_follow_redirects: false
-          follow_redirects: true
-          fail_if_ssl: false
-          fail_if_not_ssl: false
-          tls_config:
-            insecure_skip_verify: true 
-          preferred_ip_protocol: "ip4"
-          ip_protocol_fallback: true
-          valid_status_codes: []
-          valid_http_versions: ["HTTP/1.1", "HTTP/2", "HTTP/3"]
+            Content-Type: "application/json"
+          body: '{"status": "check"}'
 
 extraDeploy:
 - |
@@ -1047,7 +1037,7 @@ extraDeploy:
       prometheus: main
   spec:
     interval: 60s
-    module: http_flexible
+    module: http_post
     prober:
       url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
     targets:
