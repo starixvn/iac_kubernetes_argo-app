@@ -1,6 +1,6 @@
 image:
   registry: docker.io
-  repository: bitnami/elasticsearch
+  repository: hub.lumigame.com/base/bitnami/elasticsearch
   tag: 8.14.3-debian-12-r4
 
 service:

@@ -26,7 +26,7 @@ elasticsearch:
    fullnameOverride: "elasticsearch"
    image:
      registry: ""
-     repository: docker.io/bitnami/elasticsearch
+     repository: hub.lumigame.com/base//bitnami/elasticsearch
      tag: ""
    master:
      masterOnly: false
