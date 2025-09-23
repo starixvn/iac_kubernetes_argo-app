@@ -2,7 +2,7 @@
 # clusterDomain: lumi.prod
 
 global:
-  imageRegistry: "hub.lumigame.com/base"
+  imageRegistry: "lumhub.sc-t1prod.gamora.prod/aws/base"
 
 operator:
   enabled: true
