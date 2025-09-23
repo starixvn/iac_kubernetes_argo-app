@@ -988,19 +988,13 @@ blackboxExporter:
         http:
           method: GET
           valid_http_versions: [ "HTTP/1.1", "HTTP/2" ]
+          valid_status_codes: [200,0]
           follow_redirects: true
           fail_if_ssl: false
           fail_if_not_ssl: false
           tls_config:
             insecure_skip_verify: false
 
-      http_post_2xx:
-        prober: http
-        timeout: 10s
-        http:
-          method: POST
-          valid_status_codes: [200,201,202,0]
-          preferred_ip_protocol: "ip4"
 extraDeploy:
 - |
   kind: Probe
