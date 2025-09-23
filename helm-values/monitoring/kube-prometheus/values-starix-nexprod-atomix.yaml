@@ -107,9 +107,9 @@ alertmanager:
         - receiver: "alert-nx-atomix-domains"
           match_re:
             alertname: "SSLCertificate.*|StatusCodeUnexpected"
-        - receiver: "alert-nx-atomix-domains"
-          match_re:
-            alertname: "HTTPConnectFailed"
+        # - receiver: "alert-nx-atomix-domains"
+        #   match_re:
+        #     alertname: "HTTPConnectFailed"
         - receiver: dev-services
           matchers:
           - service="OpenSearch"
