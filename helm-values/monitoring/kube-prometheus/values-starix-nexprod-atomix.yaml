@@ -33,13 +33,13 @@ prometheus:
       key: ""
     internal:
       jobList:
-        - job_name: "n8n_gcp_metrics"
-          metrics_path: "/webhook/gcp-metrics"
+        - job_name: "gitlab-metrics "
+          metrics_path: "/gitlab-metrics"
           scrape_interval: 15s
           scrape_timeout: 5s
           scheme: "https"
           static_configs:
-            - targets: ["n8n.nexdev.net"]
+            - targets: ["rocketor-test.nexdev.net"]
 
 node-exporter:
   extraVolumes:
