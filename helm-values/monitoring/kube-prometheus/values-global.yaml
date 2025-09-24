@@ -578,15 +578,15 @@ prometheus:
                 problem: "Unexpected HTTP status code"
                 status: '{{ $value }}'
 
-            - alert: HTTPConnectFailed
-              expr: probe_http_connect_success{job="probe/monitoring/domain-check-http"} != 1
-              for: 1m
-              labels:
-                severity: critical
-              annotations:
-                summary: "HTTP connect failed"
-                problem: "The domain {{ $labels.instance }} failed to establish HTTP connection"
-                status: '{{ $value }}'
+            # - alert: HTTPConnectFailed
+            #   expr: probe_http_connect_success{job="probe/monitoring/domain-check-http"} != 1
+            #   for: 1m
+            #   labels:
+            #     severity: critical
+            #   annotations:
+            #     summary: "HTTP connect failed"
+            #     problem: "The domain {{ $labels.instance }} failed to establish HTTP connection"
+            #     status: '{{ $value }}'
 
     - name: cronjob.rules
       groups:

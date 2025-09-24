@@ -998,12 +998,12 @@ blackboxExporter:
           tls_config:
             insecure_skip_verify: false
 
-      http_connect:
-        prober: http
-        timeout: 60s
-        http:
-          method: GET
-          preferred_ip_protocol: "ip4"
+      # http_connect:
+      #   prober: http
+      #   timeout: 60s
+      #   http:
+      #     method: GET
+      #     preferred_ip_protocol: "ip4"
 
 extraDeploy:
 - |
@@ -1026,24 +1026,24 @@ extraDeploy:
                     - {{ . | quote }}
           {{- end }}
           
-- |
-  kind: Probe
-  apiVersion: monitoring.coreos.com/v1
-  metadata:
-    name: domain-check-http
-    namespace: monitoring
-    labels:
-      prometheus: main
-  spec:
-    interval: 60s
-    module: http_connect
-    prober:
-      url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
-    targets:
-      staticConfig:
-        static:
-          {{- range .Values.blackboxExporter.domains }}
-                    - {{ . | quote }}
-          {{- end }}
+# - |
+#   kind: Probe
+#   apiVersion: monitoring.coreos.com/v1
+#   metadata:
+#     name: domain-check-http
+#     namespace: monitoring
+#     labels:
+#       prometheus: main
+#   spec:
+#     interval: 60s
+#     module: http_connect
+#     prober:
+#       url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
+#     targets:
+#       staticConfig:
+#         static:
+#           {{- range .Values.blackboxExporter.domains }}
+#                     - {{ . | quote }}
+#           {{- end }}
 
         
