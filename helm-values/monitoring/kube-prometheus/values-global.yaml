@@ -114,7 +114,23 @@ prometheus:
 
             - alert: Kubernetes Cluster Pod Usage Above 80%
               expr: |
-                (sum(kube_pod_info{node=~".*"}) / sum(kube_node_status_allocatable{resource="pods", node=~".*"})) * 100 > 80
+                (
+                  sum(
+                    kube_pod_info{node=~".*"}
+                    * on(node) group_left()
+                    (
+                      max by (node) (kube_node_role{role!="control-plane", node=~".*"})
+                    )
+                  )
+                /
+                  sum(
+                    kube_node_status_allocatable{resource="pods", node=~".*"}
+                    * on(node) group_left()
+                    (
+                      max by (node) (kube_node_role{role!="control-plane", node=~".*"})
+                    )
+                  )
+                ) * 100 > 80
               for: 5m
               labels:
                 severity: warning
