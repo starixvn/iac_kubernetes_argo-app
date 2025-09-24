@@ -271,7 +271,7 @@ prometheus:
             
             - alert: Kubernetes Disk is too busy (IO wait > 80%)
               expr: |
-                (rate(node_disk_io_time_seconds_total{device!~"dm-.*|loop.*|ram.*"}[5m])) > 0.80
+                (rate(node_disk_io_time_seconds_total{device!~"dm-.*|loop.*|ram.*"}[5m])) * 100 > 80
               for: 5m
               labels:
                 severity: warning
@@ -282,7 +282,7 @@ prometheus:
 
             - alert: Kubernetes Disk is too busy (IO wait > 90%)
               expr: |
-                (rate(node_disk_io_time_seconds_total{device!~"dm-.*|loop.*|ram.*"}[5m])) > 0.90
+                (rate(node_disk_io_time_seconds_total{device!~"dm-.*|loop.*|ram.*"}[5m])) * 100 > 90
               for: 5m
               labels:
                 severity: critical
