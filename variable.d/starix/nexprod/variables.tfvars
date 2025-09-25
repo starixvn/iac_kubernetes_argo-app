@@ -138,7 +138,7 @@ argo_applications_by_team = {
         chart_version = "5.8.0"
         skip_crds     = false
         value_files = ["values-starix-nexprod-starix.yaml"]
-        ## trigger
+        ### trigger
       }
     }
   }

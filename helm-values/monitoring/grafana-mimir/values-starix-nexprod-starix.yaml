@@ -50,6 +50,12 @@ distributor:
       memory: 2Gi
     requests:
       memory: 2Gi
+  tolerations:
+  - effect: "NoSchedule"
+    key: "cattle.io/os"
+    value: "mimir"
+  nodeSelector:
+    node-role.kubernetes.io/mimir: "yes"
 
   
 ingester:
@@ -68,7 +74,13 @@ ingester:
   persistentVolume:
     enabled: true
     size: 20Gi  # Sufficient for 1.5M series
-    storageClass: "longhorn-effort"
+    storageClass: "local-path"
+  tolerations:
+  - effect: "NoSchedule"
+    key: "cattle.io/os"
+    value: "mimir"
+  nodeSelector:
+    node-role.kubernetes.io/mimir: "yes"
 
 
 
@@ -81,12 +93,18 @@ compactor:
   persistentVolume:
     enabled: true
     size: 20Gi  # Sufficient for 1.5M series
-    storageClass: "longhorn-effort"
+    storageClass: "local-path"
   resources:
     limits:
       memory: 2Gi
     requests:
       memory: 2Gi
+  tolerations:
+  - effect: "NoSchedule"
+    key: "cattle.io/os"
+    value: "mimir"
+  nodeSelector:
+    node-role.kubernetes.io/mimir: "yes"
 
 
 store_gateway:
@@ -97,13 +115,19 @@ store_gateway:
   persistentVolume:
     enabled: true
     size: 20Gi
-    storageClass: "longhorn-effort"
+    storageClass: "local-path"
   replicas: 3    
   resources:
     limits:
       memory: 4Gi
     requests:
       memory: 4Gi
+  tolerations:
+  - effect: "NoSchedule"
+    key: "cattle.io/os"
+    value: "mimir"
+  nodeSelector:
+    node-role.kubernetes.io/mimir: "yes"
 
 querier:
   image:
@@ -111,6 +135,12 @@ querier:
     # tag: 2.16.0
   enabled: true
   replicas: 3
+  tolerations:
+  - effect: "NoSchedule"
+    key: "cattle.io/os"
+    value: "mimir"
+  nodeSelector:
+    node-role.kubernetes.io/mimir: "yes"
 
 query_frontend:
   image:
@@ -118,12 +148,24 @@ query_frontend:
     # tag: 2.16.0
   enabled: true
   replicas: 3
+  tolerations:
+  - effect: "NoSchedule"
+    key: "cattle.io/os"
+    value: "mimir"
+  nodeSelector:
+    node-role.kubernetes.io/mimir: "yes"
 
 query_scheduler:
   enabled: true
   image:
     repository: hub.nexdev.net/base/grafana/mimir
     # tag: 2.16.0
+  tolerations:
+  - effect: "NoSchedule"
+    key: "cattle.io/os"
+    value: "mimir"
+  nodeSelector:
+    node-role.kubernetes.io/mimir: "yes"
 
 
 memcached:
@@ -131,6 +173,12 @@ memcached:
     repository: memcached
     tag: 1.6.38-alpine
     pullPolicy: IfNotPresent
+  tolerations:
+  - effect: "NoSchedule"
+    key: "cattle.io/os"
+    value: "mimir"
+  nodeSelector:
+    node-role.kubernetes.io/mimir: "yes"
 
 
 
@@ -139,6 +187,12 @@ metrics:
   enabled: true
   serviceMonitor:
     enabled: true
+  tolerations:
+  - effect: "NoSchedule"
+    key: "cattle.io/os"
+    value: "mimir"
+  nodeSelector:
+    node-role.kubernetes.io/mimir: "yes"
 
 nginx:
   image:
@@ -154,6 +208,14 @@ nginx:
         paths:
           - path: /
             pathType: Prefix
+  tolerations:
+  - effect: "NoSchedule"
+    key: "cattle.io/os"
+    value: "mimir"
+  nodeSelector:
+    node-role.kubernetes.io/mimir: "yes"
+
+
 
 ingress:
   enabled: true
