@@ -595,6 +595,17 @@ prometheus:
                 problem: "Unexpected HTTP status code"
                 status: '{{ $value }}'
 
+            - alert: CDNUnreachable
+              expr: probe_success{job="probe/monitoring/cdn-probe"} == 0 
+              for: 1m
+              labels:
+                severity: warning
+              annotations:
+                summary: "CDN unreachable"
+                problem: "CDN unreachable"
+                status: '{{ $value }}'
+
+
             # - alert: HTTPConnectFailed
             #   expr: probe_http_connect_success{job="probe/monitoring/domain-check-http"} != 1
             #   for: 1m

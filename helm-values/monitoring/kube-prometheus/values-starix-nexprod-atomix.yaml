@@ -110,9 +110,9 @@ alertmanager:
         - receiver: "alert-nx-atomix-domains"
           match_re:
             alertname: "SSLCertificate.*|StatusCodeUnexpected|TCPEndpointStatus"
-        # - receiver: "alerts-test"
-        #   match_re:
-        #     alertname: "TCPEndpointStatus"
+        - receiver: "alerts-test"
+          match_re:
+            alertname: "CDNUnreachable"
         - receiver: dev-services
           matchers:
           - service="OpenSearch"
