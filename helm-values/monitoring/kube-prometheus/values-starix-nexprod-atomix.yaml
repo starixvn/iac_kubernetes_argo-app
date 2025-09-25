@@ -1048,12 +1048,12 @@ blackboxExporter:
     - https://hrm-api.lumiplus.vn/whoami
 
   tcp:
-    - 10.10.50.136:6444
+    - 10.10.50.136:6443
     - 10.10.50.144:6443
-    - 10.17.200.90:6443
-    - e6191eebbb4840436e79dd857495912f.yl4.ap-southeast-1.eks.amazonaws.com:443
+    - 10.17.200.90:6444
+    - e6191eebbb4840436e79dd857495912f.yl4.ap-southeast-1.eks.amazonaws.com:444
     - f74006ca89d990c1b0baf42607b51b47.gr7.ap-southeast-1.eks.amazonaws.com:443
-    - sc-api-klprod.starixplay.com:16444
+    - sc-api-klprod.starixplay.com:16443
     - sc-api-kluat.starixplay.com:16443
     - sc-sit-apiserver.playonesit.com:16444
     - st-api-k3sklprod.starixplay.com:26443
