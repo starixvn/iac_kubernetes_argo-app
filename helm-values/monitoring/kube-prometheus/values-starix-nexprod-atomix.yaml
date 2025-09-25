@@ -110,9 +110,9 @@ alertmanager:
         - receiver: "alert-nx-atomix-domains"
           match_re:
             alertname: "SSLCertificate.*|StatusCodeUnexpected"
-        # - receiver: "alert-nx-atomix-domains"
-        #   match_re:
-        #     alertname: "HTTPConnectFailed"
+        - receiver: "alerts-test"
+          match_re:
+            alertname: "TCPEndpointStatus"
         - receiver: dev-services
           matchers:
           - service="OpenSearch"
@@ -231,10 +231,12 @@ alertmanager:
             icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
             title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
             text: |
-              *Cluster:* `Kubernetes-NexProd`
-              *Problem:* `{{ .CommonAnnotations.description }}`
-              *Value:* `{{ .CommonAnnotations.value }}`
+              *Domain:* {{ .CommonLabels.instance }}
+              *Severity:* `{{ .CommonLabels.severity | toUpper }}`
+              *Problem:* {{ .CommonAnnotations.problem }}
+              *Status:* {{ .CommonAnnotations.status }}
             color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+            send_resolved: true
 
       - name: dev-services
         slack_configs:
@@ -249,7 +251,68 @@ alertmanager:
 
       - name: default-receiver
 
+extraDeploy:
+- |
+  ### Domain Monitor
+  kind: Probe
+  apiVersion: monitoring.coreos.com/v1
+  metadata:
+    name: domain-check
+    namespace: monitoring
+    labels:
+      prometheus: main
+  spec:
+    interval: 60s
+    module: http_2xx
+    prober:
+      url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
+    targets:
+      staticConfig:
+        static:
+          {{- range .Values.blackboxExporter.domains }}
+                    - {{ . | quote }}
+          {{- end }}
+
+  ### TCP Monitor
+  kind: Probe
+  apiVersion: monitoring.coreos.com/v1
+  metadata:
+    name: tcp-probe
+    namespace: monitoring
+    labels:
+      prometheus: main
+  spec:
+    interval: 5s
+    module: tcp_connect
+    prober:
+      url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
+    targets:
+      staticConfig:
+        static:
+          {{- range .Values.blackboxExporter.tcp }}
+                    - {{ . | quote }}
+          {{- end }}
+
 blackboxExporter:
+  configuration: |
+    modules:
+      http_2xx:
+        prober: http
+        timeout: 60s
+        http:
+          method: GET
+          valid_http_versions: [ "HTTP/1.1", "HTTP/2" ]
+          follow_redirects: true
+          fail_if_ssl: false
+          fail_if_not_ssl: false
+          tls_config:
+            insecure_skip_verify: false
+      
+      tcp_connect:
+        prober: tcp
+        tcp:
+          preferred_ip_protocol: "ip4"
+
   domains: 
     - https://intp22.focapts.com/main/health/
     - https://mb.ec88ag.com/main/health/
@@ -984,66 +1047,16 @@ blackboxExporter:
     - https://www.bong88ag.com
     - https://hrm-api.lumiplus.vn/whoami
 
-  configuration: |
-    modules:
-      http_2xx:
-        prober: http
-        timeout: 60s
-        http:
-          method: GET
-          valid_http_versions: [ "HTTP/1.1", "HTTP/2" ]
-          follow_redirects: true
-          fail_if_ssl: false
-          fail_if_not_ssl: false
-          tls_config:
-            insecure_skip_verify: false
-
-      # http_connect:
-      #   prober: http
-      #   timeout: 60s
-      #   http:
-      #     method: GET
-      #     preferred_ip_protocol: "ip4"
-
-extraDeploy:
-- |
-  kind: Probe
-  apiVersion: monitoring.coreos.com/v1
-  metadata:
-    name: domain-check
-    namespace: monitoring
-    labels:
-      prometheus: main
-  spec:
-    interval: 60s
-    module: http_2xx
-    prober:
-      url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
-    targets:
-      staticConfig:
-        static:
-          {{- range .Values.blackboxExporter.domains }}
-                    - {{ . | quote }}
-          {{- end }}
-          
-# - |
-#   kind: Probe
-#   apiVersion: monitoring.coreos.com/v1
-#   metadata:
-#     name: domain-check-http
-#     namespace: monitoring
-#     labels:
-#       prometheus: main
-#   spec:
-#     interval: 60s
-#     module: http_connect
-#     prober:
-#       url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
-#     targets:
-#       staticConfig:
-#         static:
-#           {{- range .Values.blackboxExporter.domains }}
-#                     - {{ . | quote }}
-#           {{- end }}
-
-        
+  tcp:
+    - 10.10.50.136:6443
+    - 10.10.50.144:6443
+    - 10.17.200.90:6443
+    - e6191eebbb4840436e79dd857495912f.yl4.ap-southeast-1.eks.amazonaws.com:443
+    - f74006ca89d990c1b0baf42607b51b47.gr7.ap-southeast-1.eks.amazonaws.com:443
+    - sc-api-klprod.starixplay.com:16443
+    - sc-api-kluat.starixplay.com:16443
+    - sc-sit-apiserver.playonesit.com:16444
+    - st-api-k3sklprod.starixplay.com:26443
+    - st-api-k3skluat.starixuat.com:26443
+    - st-hrm-apiserver.starixplay.com:16445
+    - starix-k3ssit-api.playonesit.com:16443
