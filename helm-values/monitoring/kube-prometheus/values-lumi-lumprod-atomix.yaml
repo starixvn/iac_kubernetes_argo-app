@@ -1,6 +1,9 @@
 ---
 clusterDomain: lumi.lumprod
 
+global:
+  imageRegistry: "hub.lumigame.com/base"
+
 operator:
   enabled: true
 

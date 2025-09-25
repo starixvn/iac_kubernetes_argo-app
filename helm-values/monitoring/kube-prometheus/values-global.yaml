@@ -114,7 +114,23 @@ prometheus:
 
             - alert: Kubernetes Cluster Pod Usage Above 80%
               expr: |
-                (sum(kube_pod_info{node=~".*"}) / sum(kube_node_status_allocatable{resource="pods", node=~".*"})) * 100 > 80
+                (
+                  sum(
+                    kube_pod_info{node=~".*"}
+                    * on(node) group_left()
+                    (
+                      max by (node) (kube_node_role{role!="control-plane", node=~".*"})
+                    )
+                  )
+                /
+                  sum(
+                    kube_node_status_allocatable{resource="pods", node=~".*"}
+                    * on(node) group_left()
+                    (
+                      max by (node) (kube_node_role{role!="control-plane", node=~".*"})
+                    )
+                  )
+                ) * 100 > 80
               for: 5m
               labels:
                 severity: warning
@@ -271,7 +287,7 @@ prometheus:
             
             - alert: Kubernetes Disk is too busy (IO wait > 80%)
               expr: |
-                (rate(node_disk_io_time_seconds_total{device!~"dm-.*|loop.*|ram.*"}[5m])) > 0.80
+                (rate(node_disk_io_time_seconds_total{device!~"dm-.*|loop.*|ram.*"}[5m])) * 100 > 80
               for: 5m
               labels:
                 severity: warning
@@ -282,7 +298,7 @@ prometheus:
 
             - alert: Kubernetes Disk is too busy (IO wait > 90%)
               expr: |
-                (rate(node_disk_io_time_seconds_total{device!~"dm-.*|loop.*|ram.*"}[5m])) > 0.90
+                (rate(node_disk_io_time_seconds_total{device!~"dm-.*|loop.*|ram.*"}[5m])) * 100 > 90
               for: 5m
               labels:
                 severity: critical
@@ -514,11 +530,12 @@ prometheus:
           rules:
             - alert: TCPEndpointStatus
               expr: probe_success{job="probe/monitoring/tcp-probe"} == 0 
-              for: 30s
+              for: 1m
               labels:
                 severity: critical
               annotations:
                 problem: 'Connect failed (TCP unreachable)'
+                status: '{{ $value }}'
     
     - name: haproxyingress.rules
       groups:
@@ -569,7 +586,7 @@ prometheus:
                 status: 'Remaining {{ $value | printf "%.0f" }} days.'
 
             - alert: StatusCodeUnexpected
-              expr: probe_http_status_code{job="probe/monitoring/domain-check"} != 200 and probe_http_status_code{job="probe/monitoring/domain-check"} != 0
+              expr: probe_http_status_code{job="probe/monitoring/domain-check"} != 200 and probe_http_status_code{job="probe/monitoring/domain-check"} != 0 and probe_http_status_code{job="probe/monitoring/domain-check"} != 429
               for: 1m
               labels:
                 severity: critical
@@ -578,15 +595,15 @@ prometheus:
                 problem: "Unexpected HTTP status code"
                 status: '{{ $value }}'
 
-            - alert: HTTPConnectFailed
-              expr: probe_success{job="probe/monitoring/domain-check"} == 0
-              for: 1m
-              labels:
-                severity: critical
-              annotations:
-                summary: "HTTP connect failed"
-                problem: "The domain {{ $labels.instance }} failed to establish HTTP connection"
-                status: '{{ $value }}'
+            # - alert: HTTPConnectFailed
+            #   expr: probe_http_connect_success{job="probe/monitoring/domain-check-http"} != 1
+            #   for: 1m
+            #   labels:
+            #     severity: critical
+            #   annotations:
+            #     summary: "HTTP connect failed"
+            #     problem: "The domain {{ $labels.instance }} failed to establish HTTP connection"
+            #     status: '{{ $value }}'
 
     - name: cronjob.rules
       groups:

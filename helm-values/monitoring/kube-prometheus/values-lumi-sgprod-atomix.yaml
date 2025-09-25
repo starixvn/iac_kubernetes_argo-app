@@ -1,8 +1,8 @@
 ---
 # clusterDomain: lumi.prod
 
-# global:
-#   imageRegistry: "lumhub.ops-klprod.gamora.prod/kbt/base"
+global:
+  imageRegistry: "lumhub.sc-t1prod.gamora.prod/aws/base"
 
 operator:
   enabled: true
