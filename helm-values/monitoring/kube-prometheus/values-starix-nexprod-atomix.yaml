@@ -294,6 +294,27 @@ extraDeploy:
                     - {{ . | quote }}
           {{- end }}
 
+- |
+  ### CDN Monitor
+  kind: Probe
+  apiVersion: monitoring.coreos.com/v1
+  metadata:
+    name: cdn-probe
+    namespace: monitoring
+    labels:
+      prometheus: main
+  spec:
+    interval: 30s
+    module: icmp_cdn
+    prober:
+      url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
+    targets:
+      staticConfig:
+        static:
+          {{- range .Values.blackboxExporter.cdn }}
+                    - {{ . | quote }}
+          {{- end }}
+
 blackboxExporter:
   configuration: |
     modules:
@@ -313,6 +334,10 @@ blackboxExporter:
         prober: tcp
         tcp:
           preferred_ip_protocol: "ip4"
+
+      icmp_cdn:
+        prober: icmp
+        timeout: 60s
 
   domains: 
     - https://intp22.focapts.com/main/health/
@@ -1061,3 +1086,26 @@ blackboxExporter:
     - st-api-k3skluat.starixuat.com:26443
     - st-hrm-apiserver.starixplay.com:16445
     - starix-k3ssit-api.playonesit.com:16443
+
+  cdn:
+    - keno.gamesaba.com
+    - keno.sabagame.com
+    - keno.vgaming.win
+    - keno2.vgaming.win
+    - m.gamesaba.com
+    - m.sabagame.com
+    - m.vgaming.win
+    - m2.vgaming.win
+    - mini.gamesaba.com
+    - mini.sabagame.com
+    - mini.vgaming.win
+    - mini2.vgaming.win
+    - w2.numberx.win
+    - w2.vgaming.win
+    - www.gamesaba.com
+    - www.numberx.win
+    - www.sabagame.com
+    - www.vgaming.win
+    - www.vgames88.com
+
+    
