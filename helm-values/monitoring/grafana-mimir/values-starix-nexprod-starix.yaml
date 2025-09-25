@@ -27,9 +27,9 @@ mimir:
           access_key_id: "grafana-mimir"
           secret_access_key: "n@MyH#eMG7b6uMu_UUwu"
     limits:
-      max_global_series_per_user: 2000000
-      ingestion_rate: 2000000         # items/second (samples+exemplars+metadata)
-      ingestion_burst_size: 30000000   # max burst across all distributors
+      max_global_series_per_user: 2500000
+      ingestion_rate: 160000         # items/second (samples+exemplars+metadata)
+      ingestion_burst_size: 12000000    # max burst across all distributors
 
 
 
@@ -41,16 +41,14 @@ ruler:
 
 
 distributor:
-  replicas: 2
+  replicas: 3
   image:
     repository: hub.nexdev.net/base/grafana/mimir
     # tag: 2.16.0
   resources:
     limits:
-      cpu: 2
       memory: 2Gi
     requests:
-      cpu: 1
       memory: 2Gi
 
   
@@ -61,13 +59,11 @@ ingester:
   image:
     repository: hub.nexdev.net/base/grafana/mimir
     # tag: 2.16.0
-  replicas: 2
+  replicas: 3
   resources:
     limits:
       memory: 2Gi
-      cpu: 1
     requests:
-      cpu: 1
       memory: 2Gi
   persistentVolume:
     enabled: true
@@ -88,10 +84,8 @@ compactor:
     storageClass: "longhorn-effort"
   resources:
     limits:
-      cpu: 2
       memory: 2Gi
     requests:
-      cpu: 1
       memory: 2Gi
 
 
@@ -107,10 +101,8 @@ store_gateway:
   replicas: 3    
   resources:
     limits:
-      cpu: 2
       memory: 4Gi
     requests:
-      cpu: 2
       memory: 4Gi
 
 querier:
@@ -118,14 +110,14 @@ querier:
     repository: hub.nexdev.net/base/grafana/mimir
     # tag: 2.16.0
   enabled: true
-  replicas: 2
+  replicas: 3
 
 query_frontend:
   image:
     repository: hub.nexdev.net/base/grafana/mimir
     # tag: 2.16.0
   enabled: true
-  replicas: 2
+  replicas: 3
 
 query_scheduler:
   enabled: true
