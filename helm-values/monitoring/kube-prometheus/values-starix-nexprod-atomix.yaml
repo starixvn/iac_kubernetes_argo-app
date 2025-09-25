@@ -216,7 +216,7 @@ alertmanager:
             channel: "#alert-nx-atomix-domains"
             title: '{{ if eq .Status "firing" }} 🔥 :globe_with_meridians: DOMAIN PROBLEM 🔥 {{ else }} ✅ :globe_with_meridians: DOMAIN RESOLVED ✅ {{ end }}'
             text: |
-              *Domain:* {{ .CommonLabels.instance }}
+              *URL:* {{ .CommonLabels.instance }}
               *Severity:* `{{ .CommonLabels.severity | toUpper }}`
               *Problem:* {{ .CommonAnnotations.problem }}
               *Status:* {{ .CommonAnnotations.status }}
@@ -231,7 +231,7 @@ alertmanager:
             icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
             title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
             text: |
-              *Domain:* {{ .CommonLabels.instance }}
+              *URL:* {{ .CommonLabels.instance }}
               *Severity:* `{{ .CommonLabels.severity | toUpper }}`
               *Problem:* {{ .CommonAnnotations.problem }}
               *Status:* {{ .CommonAnnotations.status }}
@@ -1050,13 +1050,13 @@ blackboxExporter:
   tcp:
     - 10.10.50.136:6443
     - 10.10.50.144:6443
-    - 10.17.200.90:6444
-    - e6191eebbb4840436e79dd857495912f.yl4.ap-southeast-1.eks.amazonaws.com:444
-    - f74006ca89d990c1b0baf42607b51b47.gr7.ap-southeast-1.eks.amazonaws.com:443
+    - 10.17.200.90:6443
+    - e6191eebbb4840436e79dd857495912f.yl4.ap-southeast-1.eks.amazonaws.com:443
+    - f74006ca89d990c1b0baf42607b51b47.gr7.ap-southeast-1.eks.amazonaws.com:444
     - sc-api-klprod.starixplay.com:16443
     - sc-api-kluat.starixplay.com:16443
     - sc-sit-apiserver.playonesit.com:16444
     - st-api-k3sklprod.starixplay.com:26443
     - st-api-k3skluat.starixuat.com:26443
     - st-hrm-apiserver.starixplay.com:16445
-    - starix-k3ssit-api.playonesit.com:16443
+    - starix-k3ssit-api.playonesit.com:16444

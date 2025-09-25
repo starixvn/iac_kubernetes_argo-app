@@ -535,7 +535,7 @@ prometheus:
                 severity: critical
               annotations:
                 problem: 'Connect failed (TCP unreachable)'
-                value: '{{ $value }}'
+                status: '{{ $value }}'
     
     - name: haproxyingress.rules
       groups:
