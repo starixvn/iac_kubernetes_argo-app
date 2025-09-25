@@ -262,7 +262,7 @@ extraDeploy:
     labels:
       prometheus: main
   spec:
-    interval: 60s
+    interval: 30s
     module: http_2xx
     prober:
       url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
@@ -282,7 +282,7 @@ extraDeploy:
     labels:
       prometheus: main
   spec:
-    interval: 5s
+    interval: 30s
     module: tcp_connect
     prober:
       url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115

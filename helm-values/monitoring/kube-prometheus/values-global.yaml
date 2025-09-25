@@ -530,7 +530,7 @@ prometheus:
           rules:
             - alert: TCPEndpointStatus
               expr: probe_success{job="probe/monitoring/tcp-probe"} == 0 
-              for: 30s
+              for: 1m
               labels:
                 severity: critical
               annotations:
