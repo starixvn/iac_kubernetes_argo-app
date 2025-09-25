@@ -304,7 +304,7 @@ extraDeploy:
     labels:
       prometheus: main
   spec:
-    interval: 30s
+    interval: 60s
     module: icmp_cdn
     prober:
       url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
