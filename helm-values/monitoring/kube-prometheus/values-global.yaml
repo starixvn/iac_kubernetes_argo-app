@@ -534,7 +534,7 @@ prometheus:
               labels:
                 severity: critical
               annotations:
-                problem: 'Connect failed (TCP unreachable)'
+                problem: 'Connect failed (TCP Unreachable)'
                 status: '{{ $value }}'
     
     - name: haproxyingress.rules
@@ -597,12 +597,12 @@ prometheus:
 
             - alert: CDNUnreachable
               expr: probe_success{job="probe/monitoring/cdn-probe"} == 0 
-              for: 5m
+              for: 10m
               labels:
                 severity: warning
               annotations:
-                summary: "CDN unreachable"
-                problem: "CDN unreachable"
+                summary: "CDN Unreachable"
+                problem: "CDN Unreachable"
                 status: '{{ $value }}'
 
 

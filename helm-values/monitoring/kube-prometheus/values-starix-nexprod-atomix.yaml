@@ -304,7 +304,7 @@ extraDeploy:
     labels:
       prometheus: main
   spec:
-    interval: 30s
+    interval: 10s
     module: icmp_cdn
     prober:
       url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
@@ -337,7 +337,6 @@ blackboxExporter:
 
       icmp_cdn:
         prober: icmp
-        timeout: 60s
 
   domains: 
     - https://intp22.focapts.com/main/health/
