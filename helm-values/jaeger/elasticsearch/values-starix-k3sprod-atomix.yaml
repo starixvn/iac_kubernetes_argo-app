@@ -1,5 +1,5 @@
 image:
-  registry: docker.io
+  registry: lumhub.ops-klprod.gamora.prod/kbt/base
   repository: bitnami/elasticsearch
   tag: 8.14.3-debian-12-r4
 
