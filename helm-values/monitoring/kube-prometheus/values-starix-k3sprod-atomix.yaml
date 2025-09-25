@@ -97,7 +97,7 @@ alertmanager:
       routes:
       - receiver: 'null'
         match_re:
-          pod: "c-.*|.*snapshot-.*|.*clean.*|.*-cron-.*|.*-update-.*|.*consumer.*|.*trim.*|.*blackbox.*|.*backup.*"
+          pod: "c-.*|.*snapshot-.*|.*clean.*|.*-cron-.*|.*-update-.*|.*consumer.*|.*trim.*|.*blackbox.*|.*backup.*|.*test.*"
       - receiver: 'null'
         match_re:
           cronjob: ".*trim.*"

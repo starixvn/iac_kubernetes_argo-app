@@ -273,6 +273,7 @@ extraDeploy:
                     - {{ . | quote }}
           {{- end }}
 
+- |
   ### TCP Monitor
   kind: Probe
   apiVersion: monitoring.coreos.com/v1
