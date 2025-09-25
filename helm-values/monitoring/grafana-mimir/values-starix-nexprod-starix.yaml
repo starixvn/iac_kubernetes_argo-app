@@ -66,11 +66,11 @@ ingester:
     repository: hub.nexdev.net/base/grafana/mimir
     # tag: 2.16.0
   replicas: 3
-  resources:
-    limits:
-      memory: 2Gi
-    requests:
-      memory: 2Gi
+  # resources:
+  #   limits:
+  #     memory: 2Gi
+  #   requests:
+  #     memory: 2Gi
   persistentVolume:
     enabled: true
     size: 20Gi  # Sufficient for 1.5M series
