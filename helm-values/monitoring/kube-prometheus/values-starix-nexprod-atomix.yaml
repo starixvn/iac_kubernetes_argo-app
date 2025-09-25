@@ -304,7 +304,7 @@ extraDeploy:
     labels:
       prometheus: main
   spec:
-    interval: 60s
+    interval: 30s
     module: icmp_cdn
     prober:
       url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
@@ -1107,5 +1107,5 @@ blackboxExporter:
     - www.sabagame.com
     - www.vgaming.win
     - www.vgames88.com
-    - www.fina88.com
+    - hrm-lexfin.nexdev.net
     
