@@ -21,7 +21,7 @@ service:
   nodePort: 30020
 
 ingress:
-  enabled: true
+  enabled: false
   ingressClassName: haproxy
   hosts:
   - host: flb.ops-klprod.gamora.prod
