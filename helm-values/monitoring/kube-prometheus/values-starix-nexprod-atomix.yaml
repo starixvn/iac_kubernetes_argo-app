@@ -1087,24 +1087,24 @@ blackboxExporter:
     - starix-k3ssit-api.playonesit.com:16443
 
   cdn:
-    - keno.gamesaba.com
-    - keno.sabagame.com
-    - keno.vgaming.win
-    - keno2.vgaming.win
-    - m.gamesaba.com
-    - m.sabagame.com
-    - m.vgaming.win
-    - m2.vgaming.win
-    - mini.gamesaba.com
-    - mini.sabagame.com
-    - mini.vgaming.win
-    - mini2.vgaming.win
-    - w2.numberx.win
-    - w2.vgaming.win
-    - www.gamesaba.com
-    - www.numberx.win
-    - www.sabagame.com
-    - www.vgaming.win
-    - www.vgames88.com
-    - hrm-lexfin.nexdev.net
+    - https://keno.gamesaba.com
+    - https://keno.sabagame.com
+    - https://keno.vgaming.win
+    - https://keno2.vgaming.win
+    - https://m.gamesaba.com
+    - https://m.sabagame.com
+    - https://m.vgaming.win
+    - https://m2.vgaming.win
+    - https://mini.gamesaba.com
+    - https://mini.sabagame.com
+    - https://mini.vgaming.win
+    - https://mini2.vgaming.win
+    - https://w2.numberx.win
+    - https://w2.vgaming.win
+    - https://www.gamesaba.com
+    - https://www.numberx.win
+    - https://www.sabagame.com
+    - https://www.vgaming.win
+    - https://www.vgames88.com
+    - https://hrm-lexfin.nexdev.net
     
