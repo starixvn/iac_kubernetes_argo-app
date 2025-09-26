@@ -36,7 +36,7 @@ argo_applications_by_team = {
       kubescape-op = {
         namespace     = "kubescape"
         helm_path     = "kubescape/kubescape-operator"
-        chart_version = "1.29.0"
+        chart_version = "1.29.6"
       }
 
       fluent-bit = {
