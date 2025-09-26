@@ -66,10 +66,10 @@ alertmanager:
         match:
           service: "OpenSearch"
         group_by: ['alertname', 'job']
-      - receiver: kubescape-notify
-        match:
-          alertname: "KubescapeRuleViolated"
-        group_by: ['namespace', 'container_name', 'rule_name']
+      # - receiver: kubescape-notify
+      #   match:
+      #     alertname: "KubescapeRuleViolated"
+      #   group_by: ['namespace', 'container_name', 'rule_name']
       group_by: ["alertname", "cluster", "namespace", "pod", "description", 'instance']
       group_wait: 30s
       group_interval: 5m
@@ -130,16 +130,16 @@ alertmanager:
         title: '{{ template "sre.slack.title" . }}'
         text: '{{ template "sre.slack.body" . }}'
 
-    - name: kubescape-notify
-      slack_configs:
-      - channel: "#alert-josh-test"
-        color: '{{ template "sre.slack.color" . }}'
-        fallback: '{{ template "sre.slack.fallback" . }}'
-        icon_emoji: '{{ template "sre.slack.iconemoji" . }}'
-        send_resolved: false
-        username: '{{ template "sre.slack.username" . }}🔹ST.LOCAL'
-        title: '{{ template "kubescape.slack.title" . }}'
-        text: '{{ template "sre.slack.body" . }}'
+    # - name: kubescape-notify
+    #   slack_configs:
+    #   - channel: "#alert-josh-test"
+    #     color: '{{ template "sre.slack.color" . }}'
+    #     fallback: '{{ template "sre.slack.fallback" . }}'
+    #     icon_emoji: '{{ template "sre.slack.iconemoji" . }}'
+    #     send_resolved: false
+    #     username: '{{ template "sre.slack.username" . }}🔹ST.LOCAL'
+    #     title: '{{ template "kubescape.slack.title" . }}'
+    #     text: '{{ template "sre.slack.body" . }}'
 
     - name: default-receiver
 
