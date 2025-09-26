@@ -1,0 +1,206 @@
+clusterName: "lumi.prod"
+
+# excludeNamespaces: "kubescape,kube-system,kube-public,kube-node-lease,kubeconfig,gmp-system,gmp-public"
+includeNamespaces: "gn,hd,l1,l2,mg,sk,sp,tg"
+
+capabilities:
+  # ====== configuration scanning related capabilities ======
+  configurationScan: disable
+  nodeScan: disable
+  
+  # ====== Image vulnerabilities scanning related capabilities ======
+  nodeSbomGeneration: disable
+  vulnerabilityScan: disable
+  relevancy: disable
+
+  # ====== Runtime related capabilities ======
+  runtimeObservability: enable
+  networkPolicyService: enable
+  networkEventsStreaming: enable
+  runtimeDetection: enable
+  malwareDetection: disable
+  nodeProfileService: enable
+  admissionController: enable
+  httpDetection: enable
+  seccompProfileService: enable
+  manageWorkloads: disable
+  syncSBOM: disable
+
+  # ====== Other capabilities ======
+  #
+  # This is an experimental capability with an elevated security risk. Read the
+  # matching docs before enabling.
+  autoUpgrading: disable
+  kubescapeOffline: enable
+  prometheusExporter: disable
+  # seccompGenerator: disable
+
+  testing:
+    nodeAgentMultiplication:
+      enabled: false
+      replicas: 5
+
+serviceScanConfig:
+  enabled: false
+  interval: 1h
+
+alertCRD:
+  installDefault: true
+  scopeClustered: true
+  scopeNamespaced: false
+
+persistence:
+  storageClass: "local-path"
+  accessMode: ReadWriteOnce
+  size:
+    backingStorage: 20Gi
+    kubevuln: 5Gi
+
+global:
+  httpsProxy: "http://iusqd.gamora.prod:8088"
+  noProxy: "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,127.0.0.1,localhost,.svc,.lumi.prod"
+
+kubescape:
+  name: kubescape
+  image:
+    repository: lumhub.ops-klprod.gamora.prod/kbt/base/kubescape/kubescape
+    tag: v3.0.37
+    pullPolicy: IfNotPresent
+
+  nodeSelector:
+    kubernetes.io/os: linux
+
+  downloadArtifacts: false
+  skipUpdateCheck: true
+
+  serviceMonitor:
+    enabled: false
+    namespace: monitoring
+
+operator:
+  name: operator
+  image:
+    repository: lumhub.ops-klprod.gamora.prod/kbt/base/kubescape/operator
+    tag: v0.2.97
+    pullPolicy: IfNotPresent
+
+  nodeSelector:
+    kubernetes.io/os: linux
+
+  podScanGuardTime: "1h"
+
+kubevuln:
+  image:
+    repository: lumhub.ops-klprod.gamora.prod/kbt/base/kubescape/kubevuln
+    tag: v0.3.82
+    pullPolicy: IfNotPresent
+
+  nodeSelector:
+    kubernetes.io/os: linux
+    nexops-tools: "yes"
+
+  replicaCount: 1
+
+  config:
+    maxImageSize: 5368709120 # set the maximum image size for scanning. This refers to the size of the zipped image. If the size of the non-zipped image is larger, increase the ephemeral-storage limits. It is recommended to use the same size as the requested ephemeral-storage
+    maxSBOMSize: 20971520
+    scanTimeout: 5m # set timeout for scanning an image
+    grypeDbListingURL: "" # set the URL for the grype db listing, if empty the default URL will be used
+    grypeDbPersistence: true # use a persistent volume for the grype db files
+    useDefaultMatchers: false # set to true to use the default matchers
+    storeFilteredSboms: false
+
+storage:
+  image:
+    repository: lumhub.ops-klprod.gamora.prod/kbt/base/kubescape/storage
+    tag: v0.0.206
+    pullPolicy: IfNotPresent
+
+  nodeSelector:
+    kubernetes.io/os: linux
+    nexops-tools: "yes"
+
+  cleanupInterval: "168h"
+
+nodeAgent:
+  name: node-agent
+  image:
+    repository: lumhub.ops-klprod.gamora.prod/kbt/base/kubescape/node-agent
+    tag: v0.2.357
+    pullPolicy: IfNotPresent
+
+  config:
+    maxLearningPeriod: 48h # duration string
+    learningPeriod: 24h # duration string
+    updatePeriod: 10m # duration string
+    nodeProfileInterval: 10m # duration string
+    networkStreamingInterval: 2m # duration string
+    prometheusExporter: disable
+    httpExporterConfig:
+      url: http://synchronizer:8089/apis/v1/kubescape.io
+      maxAlertsPerMinute: 1000
+      method: POST
+    alertManagerExporterUrls: [prometheus-atx-prod-kube-p-alertmanager.monitoring:9093]
+    stdoutExporter: true
+    syslogExporterURL: 10.143.58.51:30970
+    skipKernelVersionCheck: false
+    malwareScanAllFiles: false
+    hostMalwareSensor: disable
+    hostNetworkSensor: disable
+    ruleCooldown:
+      ruleCooldownDuration: 1h # duration string
+      ruleCooldownAfterCount: 1
+      ruleCooldownOnProfileFailure: true
+      ruleCooldownMaxSize: 20000
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1000Mi
+    limits:
+      cpu: 1000m
+      memory: 1000Mi
+
+synchronizer:
+  name: synchronizer
+  image:
+    repository: lumhub.ops-klprod.gamora.prod/kbt/base/kubescape/synchronizer
+    tag: v0.0.114
+    pullPolicy: IfNotPresent
+  nodeSelector:
+    kubernetes.io/os: linux
+
+kubescapeScheduler:
+  scanSchedule: "0 8 * * *"
+  image:
+    # -- source code: https://github.com/kubescape/http-request (public repo)
+    repository: lumhub.ops-klprod.gamora.prod/kbt/base/kubescape/http-request
+    tag: v0.2.12
+    pullPolicy: IfNotPresent
+
+  nodeSelector:
+    kubernetes.io/os: linux
+
+kubevulnScheduler:
+  scanSchedule: "0 0 * * *"
+  image:
+    # source code - https://github.com/kubescape/http-request
+    repository: lumhub.ops-klprod.gamora.prod/kbt/base/kubescape/http-request
+    tag: v0.2.12
+    pullPolicy: IfNotPresent
+  nodeSelector:
+    kubernetes.io/os: linux
+
+
+# Prometheus exporter
+prometheusExporter:
+  name: "prometheus-exporter"
+  image:
+    repository: lumhub.ops-klprod.gamora.prod/kbt/base/kubescape/prometheus-exporter
+    tag: v0.2.5
+    pullPolicy: IfNotPresent
+
+  nodeSelector:
+    kubernetes.io/os: linux
+
+  enableWorkloadMetrics: false

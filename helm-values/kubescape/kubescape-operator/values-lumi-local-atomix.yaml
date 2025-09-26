@@ -16,14 +16,14 @@ capabilities:
 
   # ====== Runtime related capabilities ======
   runtimeObservability: enable
-  networkPolicyService: enable
+  networkPolicyService: disable
   networkEventsStreaming: enable
   runtimeDetection: enable
   malwareDetection: disable
   nodeProfileService: enable
   admissionController: enable
   httpDetection: enable
-  seccompProfileService: enable
+  seccompProfileService: disable
   manageWorkloads: disable
   syncSBOM: disable
 
