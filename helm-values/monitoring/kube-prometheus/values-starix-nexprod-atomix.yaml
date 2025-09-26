@@ -112,7 +112,7 @@ alertmanager:
             alertname: "SSLCertificate.*|StatusCodeUnexpected|TCPEndpointStatus"
         - receiver: "alerts-test"
           match_re:
-            alertname: "CDNUnreachable"
+            alertname: "CDNUnreachable|HTTPConnectFailed"
         - receiver: dev-services
           matchers:
           - service="OpenSearch"
@@ -181,7 +181,6 @@ alertmanager:
               *Summary:* `{{ .CommonLabels.alertname }}`
               *Description:* `{{ .CommonAnnotations.description }}`
             color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
-
 
       - name: "nexpe-services-alert"
         slack_configs:

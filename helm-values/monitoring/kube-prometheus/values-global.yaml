@@ -576,8 +576,8 @@ prometheus:
                 status: 'Remaining {{ $value | printf "%.0f" }} days.'
 
             - alert: SSLCertificateExpired
-              expr: round((last_over_time(probe_ssl_earliest_cert_expiry[10m]) - time()) / 86400, 0.1) < 0
-              for: 5m
+              expr: round((last_over_time(probe_ssl_earliest_cert_expiry[1m]) - time()) / 86400, 0.1) < 0
+              for: 1m
               labels:
                 severity: critical
               annotations:
@@ -605,16 +605,15 @@ prometheus:
                 problem: "CDN Unreachable"
                 status: '{{ $value }}'
 
-
-            # - alert: HTTPConnectFailed
-            #   expr: probe_http_connect_success{job="probe/monitoring/domain-check-http"} != 1
-            #   for: 1m
-            #   labels:
-            #     severity: critical
-            #   annotations:
-            #     summary: "HTTP connect failed"
-            #     problem: "The domain {{ $labels.instance }} failed to establish HTTP connection"
-            #     status: '{{ $value }}'
+            - alert: HTTPConnectFailed
+              expr: probe_http_connect_success{job="probe/monitoring/domain-check"} != 1
+              for: 10m
+              labels:
+                severity: critical
+              annotations:
+                summary: "HTTP connect failed"
+                problem: "The domain {{ $labels.instance }} failed to establish HTTP connection"
+                status: '{{ $value }}'
 
     - name: cronjob.rules
       groups:
