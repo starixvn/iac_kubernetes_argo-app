@@ -597,7 +597,7 @@ prometheus:
 
             - alert: CDNUnreachable
               expr: probe_success{job="probe/monitoring/cdn-probe"} == 0 
-              for: 20m
+              for: 30m
               labels:
                 severity: warning
               annotations:
@@ -605,14 +605,14 @@ prometheus:
                 problem: "CDN Unreachable"
                 status: '{{ $value }}'
 
-            - alert: HTTPConnectFailed
-              expr: probe_success{job="probe/monitoring/domain-check"} == 0
-              for: 10m
+            - alert: DNSLookupFailed
+              expr: probe_success{job="probe/monitoring/dns-probe"} == 0
+              for: 5m
               labels:
                 severity: critical
               annotations:
-                summary: "HTTP connect failed"
-                problem: "The domain {{ $labels.instance }} failed to establish HTTP connection"
+                summary: "DNS Lookup Failed"
+                problem: "DNS Lookup Failed"
                 status: '{{ $value }}'
 
     - name: cronjob.rules
