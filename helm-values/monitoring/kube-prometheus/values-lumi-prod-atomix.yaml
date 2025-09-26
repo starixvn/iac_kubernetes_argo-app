@@ -85,6 +85,11 @@ alertmanager:
       - receiver: "alert-velero-backups"
         match:
           alertname: "Velero.*"
+      - receiver: kubescape-notify
+        matchers:
+        - alertname="KubescapeRuleViolated"
+        - severity!="low"
+        group_by: ['container_name', 'rule_name']
       group_by: ['alertname', 'cluster', 'namespace', 'pod', 'description', 'instance']
       group_wait: 30s
       group_interval: 5m
@@ -156,6 +161,22 @@ alertmanager:
               *Cluster:* `Kubernetes-SC-KLPROD`
               ❗ *{{ .CommonLabels.severity }}*
               📝 *{{ .CommonAnnotations.message }}*
+
+      - name: kubescape-notify
+        slack_configs:
+        - channel: "#dev-services"
+          color: '{{ template "sre.slack.color" . }}'
+          fallback: '{{ template "sre.slack.fallback" . }}'
+          icon_emoji: '{{ template "sre.slack.iconemoji" . }}'
+          send_resolved: false
+          username: '{{ template "sre.slack.username" . }}🔹SC.PROD'
+          title: '{{ template "kubescape.slack.title" . }}'
+          text: '{{ template "sre.slack.body" . }}'
+          actions: 
+          - type: "button"
+            text: ":opensearch-ico: Logs"
+            url: "https://ops-klp.starixplay.com/app/data-explorer/discover/?security_tenant=private#/view/da533070-81a4-11f0-941a-9d0249d23087?_g=%28filters%3A%21%28%29%2CrefreshInterval%3A%28pause%3A%21t%2Cvalue%3A0%29%2Ctime%3A%28from%3Anow-15m%2Cto%3Anow%29%29"
+
 
       - name: default-receiver
 
