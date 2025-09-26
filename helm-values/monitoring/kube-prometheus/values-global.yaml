@@ -606,7 +606,7 @@ prometheus:
                 status: '{{ $value }}'
 
             - alert: HTTPConnectFailed
-              expr: probe_http_connect_success{job="probe/monitoring/domain-check"} != 1
+              expr: probe_success{job="probe/monitoring/domain-check"} == 0
               for: 10m
               labels:
                 severity: critical
