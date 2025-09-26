@@ -112,7 +112,7 @@ alertmanager:
             alertname: "SSLCertificate.*|StatusCodeUnexpected|TCPEndpointStatus"
         - receiver: "alerts-test"
           match_re:
-            alertname: "CDNUnreachable|HTTPConnectFailed"
+            alertname: "CDNUnreachable|DNSLookupFailed"
         - receiver: dev-services
           matchers:
           - service="OpenSearch"
