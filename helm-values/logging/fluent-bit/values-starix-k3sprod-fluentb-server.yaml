@@ -29,41 +29,50 @@ ingress:
 flush: 20
 
 extraPorts:
-- port: 24224
-  containerPort: 24224
-  protocol: TCP
-  name: forward
-  nodePort: 32224
+- port: 5270
+  containerPort: 5270
+  protocol: UDP
+  name: scpt1-kubescape
+  nodePort: 31270
 
 config:
   inputs: |
+    # [INPUT]
+    #   Name forward
+    #   Tag forward.haproxy.sc.t1prod
+    #   Listen 0.0.0.0
+    #   Port 24224
+    #   Buffer_Chunk_Size 1M
+    #   Buffer_Max_Size 6M
+    #   Security.Users fluentbit 29a2VG8BnWXsr3hX
+    #   Self_Hostname flb-klp.server.local
+
     [INPUT]
-      Name forward
-      Tag forward.haproxy.sc.t1prod
+      Name syslog
+      Tag scpt1.syslog.kubescape
       Listen 0.0.0.0
-      Port 24224
-      Buffer_Chunk_Size 1M
-      Buffer_Max_Size 6M
-      Security.Users fluentbit 29a2VG8BnWXsr3hX
-      Self_Hostname flb-klp.server.local
+      Port 5270
+      Mode udp
+      Parser syslog-rfc5424
+      Source_Address_Key host
       
   filters: |
     [FILTER]
       Name modify
-      Match *
-      Add env unknown
-      Add region unknown
-      Add engine unknown
+      Match scpt1.*
+      Add env prod
+      Add region kl
+      Add org lumi
 
   outputs: |
     [OUTPUT]
       Name opensearch
-      Match forward.haproxy.sc.t1prod
+      Match scpt1.syslog.kubescape
       Host opsearch-atx-k3sprod.logging
       tls On
       tls.verify Off
       HTTP_User logstash
       HTTP_Passwd logstash
       Suppress_Type_Name On
-      Index logstash-haproxy-ing-sc-t1prod
+      Index logstash-kubescape-scpt1
       Replace_Dots On
