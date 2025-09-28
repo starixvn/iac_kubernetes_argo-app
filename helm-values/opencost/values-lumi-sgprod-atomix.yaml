@@ -38,7 +38,7 @@ rbac:
   enabled: true
 
 opencost:
-  cloudIntegrationSecret: ""
+  cloudIntegrationSecret: "cloud-aws"
   exporter:
     apiPort: 9003
     cloudProviderApiKey: ""
