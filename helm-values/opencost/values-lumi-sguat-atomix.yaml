@@ -62,11 +62,11 @@ opencost:
       CLUSTER_ID: "lumi.sguat"
       AWS_REGION: "ap-southeast-1"
     extraArgs:
-      - "--aws-cloud-costs=true"
-      - "--aws-athena-database=athenacurcfn_nx_opencost_cur"
-      - "--aws-athena-table=nx_opencost_cur"
-      - "--aws-athena-workgroup=primary"
-      - "--aws-athena-region=ap-southeast-1"
+      - "aws-cloud-costs=true"
+      - "aws-athena-database=athenacurcfn_nx_opencost_cur"
+      - "aws-athena-table=nx_opencost_cur"
+      - "aws-athena-workgroup=primary"
+      - "aws-athena-region=ap-southeast-1"
     command: []
     replicas: 1
     resources:
