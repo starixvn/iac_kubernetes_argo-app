@@ -51,6 +51,14 @@ opencost:
       fullImageName: null
     extraEnv:
       CLUSTER_ID: "lumi.sguat"
+      CLOUD_PROVIDER: "AWS"
+      AWS_REGION: "ap-southeast-1"                          
+      ATHENA_WORKGROUP: "primary"                            
+      ATHENA_DATABASE: "athenacurcfn_nx_opencost_cur"               
+      ATHENA_TABLE: "nx_opencost_cur"                            
+      ATHENA_OUTPUT_LOCATION: "s3://vn-lumi-starix-tf-state/opencost-cur-results/"  
+      CUR_BUCKET: "vn-lumi-starix-tf-state"                   
+      CUR_PREFIX: "opencost-cur-reports"        
     extraArgs: []
     command: []
     replicas: 1
