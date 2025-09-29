@@ -38,7 +38,7 @@ rbac:
   enabled: true
 
 opencost:
-  cloudIntegrationSecret: "cloud-aws"
+  #cloudIntegrationSecret: "cloud-aws"
   aws:
     enabled: true
     cloudCosts:
