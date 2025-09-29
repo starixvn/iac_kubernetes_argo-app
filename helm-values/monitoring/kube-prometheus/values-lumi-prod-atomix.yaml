@@ -77,8 +77,9 @@ alertmanager:
         match_re:
           cronjob: ".*trim.*"
       - receiver: 'alert-nx-pentagon'
-        match_re:
-          namespace: "l1|l2|gn|hd|sk|sp|tg|mg"
+        matchers:
+        - namespace=~"l1|l2|gn|hd|sk|sp|tg|mg"
+        - component="kubernetes"
       - receiver: 'alert-nx-atomix'
         match_re:
           alertname: "Kubernetes.*|HAProxy.*"
