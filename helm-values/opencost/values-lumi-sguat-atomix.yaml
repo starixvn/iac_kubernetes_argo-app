@@ -38,7 +38,7 @@ rbac:
   enabled: true
 
 opencost:
-  #cloudIntegrationSecret: "cloud-aws"
+  cloudIntegrationSecret: "cloud-costs"
   aws:
     enabled: true
     cloudCosts:
@@ -123,7 +123,7 @@ opencost:
       tls: []
 
   customPricing:
-    enabled: true
+    enabled: false
     configmapName: custom-pricing-model
     configPath: /tmp/custom-config
     createConfigmap: true
