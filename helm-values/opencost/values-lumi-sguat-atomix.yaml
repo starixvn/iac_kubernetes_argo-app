@@ -39,6 +39,15 @@ rbac:
 
 opencost:
   cloudIntegrationSecret: "cloud-aws"
+  aws:
+    enabled: true
+    cloudCosts:
+      enabled: true
+      athenaBucketName: "vn-lumi-starix-tf-state"  # UPDATE THIS
+      athenaRegion: "ap-southeast-1"
+      athenaDatabase: "athenacurcfn_nx_opencost_cur"    # UPDATE THIS
+      athenaTable: "nx_opencost_cur"       # UPDATE THIS
+      athenaWorkgroup: "primary"
   exporter:
     apiPort: 9003
     cloudProviderApiKey: ""
@@ -51,15 +60,13 @@ opencost:
       fullImageName: null
     extraEnv:
       CLUSTER_ID: "lumi.sguat"
-      CLOUD_PROVIDER: "AWS"
-      AWS_REGION: "ap-southeast-1"                          
-      ATHENA_WORKGROUP: "primary"                            
-      ATHENA_DATABASE: "athenacurcfn_nx_opencost_cur"               
-      ATHENA_TABLE: "nx_opencost_cur"                            
-      ATHENA_OUTPUT_LOCATION: "s3://vn-lumi-starix-tf-state/opencost-cur-results/"  
-      CUR_BUCKET: "vn-lumi-starix-tf-state"                   
-      CUR_PREFIX: "opencost-cur-reports"        
-    extraArgs: []
+      AWS_REGION: "ap-southeast-1"
+    extraArgs:
+      - "--aws-cloud-costs=true"
+      - "--aws-athena-database=athenacurcfn_nx_opencost_cur"
+      - "--aws-athena-table=nx_opencost_cur"
+      - "--aws-athena-workgroup=primary"
+      - "--aws-athena-region=ap-southeast-1"
     command: []
     replicas: 1
     resources:
@@ -122,7 +129,7 @@ opencost:
       tls: []
 
   customPricing:
-    enabled: true
+    enabled: false
     configmapName: custom-pricing-model
     configPath: /tmp/custom-config
     createConfigmap: true
