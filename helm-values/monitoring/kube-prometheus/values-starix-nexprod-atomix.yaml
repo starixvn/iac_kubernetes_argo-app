@@ -39,7 +39,7 @@ prometheus:
           scrape_timeout: 5s
           scheme: "https"
           static_configs:
-            - targets: ["rocketor-test.nexdev.net"]
+            - targets: ["rocketor.nexdev.net"]
 
 node-exporter:
   extraVolumes:

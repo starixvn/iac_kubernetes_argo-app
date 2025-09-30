@@ -597,7 +597,7 @@ prometheus:
 
             - alert: CDNUnreachable
               expr: probe_success{job="probe/monitoring/cdn-probe"} == 0 
-              for: 30m
+              for: 60m
               labels:
                 severity: warning
               annotations:
