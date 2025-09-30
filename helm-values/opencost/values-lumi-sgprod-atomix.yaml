@@ -38,7 +38,7 @@ rbac:
   enabled: true
 
 opencost:
-  cloudIntegrationSecret: "cloud-costs"
+  cloudIntegrationSecret: ""
   exporter:
     apiPort: 9003
     cloudProviderApiKey: ""
@@ -114,7 +114,7 @@ opencost:
       tls: []
 
   customPricing:
-    enabled: false
+    enabled: true
     configmapName: custom-pricing-model
     configPath: /tmp/custom-config
     createConfigmap: true
@@ -123,13 +123,13 @@ opencost:
       description: "Custom pricing configuration for lumi.sgprod environment"
       region: "ap-southeast-1"
       zone: "default-zone"
-      CPU: 0.008333      # USD / vCPU / h
-      RAM: 0.002778      # USD / GB RAM / h
-      storage: 0.019444  # USD / GB disk / h
-      LoadBalancerCost: 0.0
-      LBIngressDataCost: 0.00
-      FirstFiveForwardingRulesCost: 0.0
-      AdditionalForwardingRuleCost: 0.0
+      # CPU: 0.008333      # USD / vCPU / h
+      # RAM: 0.002778      # USD / GB RAM / h
+      # storage: 0.019444  # USD / GB disk / h
+      # LoadBalancerCost: 0.0
+      # LBIngressDataCost: 0.00
+      # FirstFiveForwardingRulesCost: 0.0
+      # AdditionalForwardingRuleCost: 0.0
 
       athenaBucketName: "s3://vn-nx-opencost-cur-results"
       athenaDatabase: "athenacurcfn_nx_opencost_cur"
