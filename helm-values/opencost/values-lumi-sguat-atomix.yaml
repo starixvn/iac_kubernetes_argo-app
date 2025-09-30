@@ -52,16 +52,15 @@ opencost:
     extraEnv:
       CLUSTER_ID: "lumi.sguat"
     extraArgs:
-      - "--aws-cloud-costs=true"
-      - "--aws-athena-bucket=vn-nx-opencost-cur-results"
-      - "--aws-athena-database=athenacurcfn_nx_opencost_cur"
-      - "--aws-athena-table=nx_opencost_cur"
-      - "--aws-athena-workgroup=primary"
-      - "--aws-athena-region=ap-southeast-1"
-      - "--emit-cloud-cost-metrics=true"
-      - "--metric-resolution=1m"
-      - "/bin/opencost"
-      - "--enable-cloud-cost=true"
+      aws-cloud-costs: true
+      aws-athena-bucket: "vn-nx-opencost-cur-results"
+      aws-athena-database: "athenacurcfn_nx_opencost_cur"
+      aws-athena-table: "nx_opencost_cur"
+      aws-athena-workgroup: "primary"
+      aws-athena-region: "ap-southeast-1"
+      emit-cloud-cost-metrics: true
+      metric-resolution: "1m"
+      enable-cloud-cost: true
     command: []
     replicas: 1
     resources:
