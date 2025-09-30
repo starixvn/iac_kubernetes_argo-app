@@ -36,8 +36,18 @@ prometheus:
   additionalScrapeConfigs:
     enabled: true
     type: internal
+    external:
+      name: ""
+      key: ""
     internal:
-      jobList: []
+      jobList:
+        - job_name: "gitlab-metrics"
+          metrics_path: "/gitlab-metrics"
+          scrape_interval: 15s
+          scrape_timeout: 5s
+          scheme: "https"
+          static_configs:
+            - targets: ["deploy.lumigame.com"]
 
   # additionalPrometheusRules: []
 
