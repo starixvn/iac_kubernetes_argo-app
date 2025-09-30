@@ -8,7 +8,7 @@ loglevel: info
 imagePullSecrets: []
 
 serviceAccount:
-  create: false
+  create: true
   annotations: 
   eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:role/OpenCostSpotFeedRole
   automountServiceAccountToken: true
