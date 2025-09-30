@@ -77,9 +77,9 @@ alertmanager:
         match_re:
           cronjob: ".*trim.*"
       - receiver: 'alert-nx-pentagon'
-        matchers:
-        - namespace=~"l1|l2|gn|hd|sk|sp|tg|mg"
-        - component="kubernetes"
+        match_re:
+          namespace: "l1|l2|gn|hd|sk|sp|tg|mg"
+          alertname: "Kubernetes.*"
       - receiver: 'alert-nx-atomix'
         match_re:
           alertname: "Kubernetes.*|HAProxy.*"
@@ -120,7 +120,7 @@ alertmanager:
               {{ if eq .Status "firing" }} PROBLEM :fire:{{ else }} RESOLVED :white_check_mark:{{ end }}
             text: |
               *Cluster:* `Kubernetes-SC-KLPROD`
-              *Summary:* `{{ .CommonLabels.alertname }}`
+              *Problem:* `{{ .CommonLabels.alertname }}`
               *Description:* `{{ .CommonAnnotations.description }}`
             color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
 
@@ -147,7 +147,7 @@ alertmanager:
               {{ if eq .Status "firing" }}:fire:{{ else }}:white_check_mark:{{ end }}
             text: |
               *Cluster:* `Kubernetes-SC-KLPROD`
-              *Summary:* `{{ .CommonLabels.alertname }}`
+              *Problem:* `{{ .CommonLabels.alertname }}`
               *Description:* `{{ .CommonAnnotations.description }}`
             color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
 

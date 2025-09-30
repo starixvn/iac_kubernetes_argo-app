@@ -142,7 +142,7 @@ alertmanager:
             {{ if eq .Status "firing" }} PROBLEM :fire:{{ else }} RESOLVED :white_check_mark:{{ end }}
           text: |
             *Cluster:* `Kubernetes-DevOps-SIT`
-            *Summary:* `{{ .CommonLabels.alertname }}`
+            *Problem:* `{{ .CommonLabels.alertname }}`
             *Description:* `{{ .CommonAnnotations.description }}`
           color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
     
@@ -155,7 +155,7 @@ alertmanager:
           title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
           text: |
             *Cluster:* `Kubernetes-DevOps-SIT`
-            *Summary:* `{{ .CommonLabels.alertname }}`
+            *Problem:* `{{ .CommonLabels.alertname }}`
             *Description:* `{{ .CommonAnnotations.description }}`
           color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
 
@@ -169,7 +169,7 @@ alertmanager:
           title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
           text: |
             *Cluster:* `Kubernetes-DevOps-SIT`
-            *Summary:* `{{ .CommonLabels.alertname }}`
+            *Problem:* `{{ .CommonLabels.alertname }}`
             *Description:* `{{ .CommonAnnotations.description }}`
           color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
     
