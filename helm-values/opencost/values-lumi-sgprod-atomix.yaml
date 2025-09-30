@@ -131,7 +131,7 @@ opencost:
       # FirstFiveForwardingRulesCost: 0.0
       # AdditionalForwardingRuleCost: 0.0
 
-      athenaBucketName: "s3://vn-nx-opencost-cur-results"
+      athenaBucketName: "s3://vn-lumi-starix-tf-state/opencost-cur-results/"
       athenaDatabase: "athenacurcfn_nx_opencost_cur"
       athenaProjectID: "014999276089"
       athenaRegion: "ap-southeast-1"
