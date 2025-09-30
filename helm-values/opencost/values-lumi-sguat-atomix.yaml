@@ -160,10 +160,10 @@ opencost:
 
   metrics:
     kubeStateMetrics:
-      emitPodAnnotations: ~
-      emitNamespaceAnnotations: ~
-      emitKsmV1Metrics: ~
-      emitKsmV1MetricsOnly: ~
+      emitPodAnnotations: true
+      emitNamespaceAnnotations: true
+      emitKsmV1Metrics: true
+      emitKsmV1MetricsOnly: false
 
     serviceMonitor:
       enabled: true
