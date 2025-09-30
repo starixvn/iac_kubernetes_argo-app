@@ -38,7 +38,7 @@ rbac:
   enabled: true
 
 opencost:
-  cloudIntegrationSecret: ""
+  cloudIntegrationSecret: "cloud-costs"
   exporter:
     apiPort: 9003
     cloudProviderApiKey: ""
@@ -114,7 +114,7 @@ opencost:
       tls: []
 
   customPricing:
-    enabled: true
+    enabled: false
     configmapName: custom-pricing-model
     configPath: /tmp/custom-config
     createConfigmap: true
