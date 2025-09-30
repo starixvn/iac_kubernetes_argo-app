@@ -38,7 +38,7 @@ rbac:
   enabled: true
 
 opencost:
-  cloudIntegrationSecret: "cloud-costs"
+  cloudIntegrationSecret: ""
   exporter:
     apiPort: 9003
     cloudProviderApiKey: ""
@@ -134,6 +134,13 @@ opencost:
       awsSpotDataBucket: "vn-lumi-starix-tf-state"
       awsSpotDataPrefix: "opencost-eks-uat-spot-data"
       projectID: "014999276089"
+
+      athenaBucketName: "s3://vn-lumi-starix-tf-state/opencost-cur-results"
+      athenaDatabase: "athenacurcfn_nx_opencost_cur"
+      athenaProjectID: "014999276089"
+      athenaRegion: "ap-southeast-1"
+      athenaTable: "nx_opencost_cur"
+      athenaWorkgroup: primary
 
   dataRetention:
     dailyResolutionDays: 15
