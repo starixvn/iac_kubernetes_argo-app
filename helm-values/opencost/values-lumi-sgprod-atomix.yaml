@@ -10,7 +10,7 @@ imagePullSecrets: []
 serviceAccount:
   create: true
   annotations: 
-  eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:role/nx-pentagon-t1prod-v1-cluster-20250606070513750200000006
+  eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:role/OpenCostSpotFeedRole
   automountServiceAccountToken: true
   name: opencost-atx-sgprod
 
@@ -118,10 +118,10 @@ opencost:
     configmapName: custom-pricing-model
     configPath: /tmp/custom-config
     createConfigmap: true
-    provider: custom
+    provider: aws
     costModel:
       description: "Custom pricing configuration for lumi.sgprod environment"
-      region: "aws"
+      region: "ap-southeast-1"
       zone: "default-zone"
       CPU: 0.008333      # USD / vCPU / h
       RAM: 0.002778      # USD / GB RAM / h
