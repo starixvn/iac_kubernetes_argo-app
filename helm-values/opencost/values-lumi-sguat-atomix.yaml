@@ -38,7 +38,7 @@ rbac:
   enabled: true
 
 opencost:
-  cloudIntegrationSecret: "cloud-cost"
+  cloudIntegrationSecret: "cloud-costs"
   exporter:
     apiPort: 9003
     cloudProviderApiKey: ""
