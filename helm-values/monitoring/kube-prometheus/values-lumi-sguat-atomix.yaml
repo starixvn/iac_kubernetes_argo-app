@@ -55,10 +55,14 @@ prometheus:
       jobList: []
   ###
   additionalScrapeConfigs:
-    enabled: false
+    enabled: true
     type: internal
     internal:
-      jobList: []
+      jobList:
+        - job_name: "opencost-cloudcost"
+          scrape_interval: 30s
+          static_configs:
+            - targets: ["opencost-atx-sguat.tf-atx-opencost.svc.cluster.local:9003"]
 
 kube-state-metrics:
   resourcesPreset: "none"
