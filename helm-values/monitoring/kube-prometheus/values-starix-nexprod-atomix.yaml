@@ -288,7 +288,7 @@ extraDeploy:
     targets:
       staticConfig:
         static:
-          {{- range .Values.blackboxExporter.tcp }}
+          {{- range .Values.blackboxExporter.cdn }}
                     - {{ . | quote }}
           {{- end }}
 
