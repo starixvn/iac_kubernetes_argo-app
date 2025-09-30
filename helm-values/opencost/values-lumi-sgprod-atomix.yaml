@@ -12,7 +12,7 @@ serviceAccount:
   annotations: 
   eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:role/OpenCostSpotFeedRole
   automountServiceAccountToken: true
-  name: opencost-atx-sgprod
+  name: "opencost-atx-sgprod"
 
 networkPolicies:
   enabled: true
@@ -145,7 +145,7 @@ opencost:
     # -- Enable cloud cost ingestion and querying, dependant on valid integration credentials
     enabled: true
     # -- Number of hours between each run of the Cloud Cost pipeline
-    refreshRateHours: 6
+    refreshRateHours: 1
     # -- Number of days into the past that a Cloud Cost standard run will query for
     runWindowDays: 3
     # -- The number of standard runs before a Month-to-Date run occurs
