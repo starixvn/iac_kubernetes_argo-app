@@ -35,7 +35,7 @@ argo_applications_by_team = {
       rancher = {
         namespace     = "rancher"
         helm_path     = "rancher"
-        chart_version = "2.10.2"
+        chart_version = "2.12.2"
       }
     }
   }
