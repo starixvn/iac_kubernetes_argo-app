@@ -32,11 +32,11 @@ argo_applications_by_team = {
         value_files   = ["values-starix-k3ssit-atomix.yaml"]
         ### trigger
       }
-      rancher = {
-        namespace     = "rancher"
-        helm_path     = "rancher"
-        chart_version = "2.12.2"
-      }
+      # rancher = {
+      #   namespace     = "rancher"
+      #   helm_path     = "rancher"
+      #   chart_version = "2.12.2"
+      # }
     }
   }
   stx = {
