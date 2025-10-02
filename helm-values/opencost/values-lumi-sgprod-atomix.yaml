@@ -10,7 +10,7 @@ imagePullSecrets: []
 serviceAccount:
   create: true
   annotations: 
-  eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:role/vn-nx-opencost
+  #eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:role/vn-nx-opencost
   automountServiceAccountToken: true
   name: "opencost-atx-sgprod"
 
@@ -38,17 +38,11 @@ rbac:
   enabled: true
 
 opencost:
-  aws:
+  opencost:
+   cloudIntegrationSecret: "cloud-costs"
+   cloudCost:
     enabled: true
-    cloudCosts:
-      enabled: true
-      athenaBucketName: "s3://vn-nx-opencost-cur-results"
-      athenaRegion: "ap-southeast-1"
-      athenaDatabase: "athenacurcfn_nx_opencost_cur"
-      athenaTable: "nx_opencost_cur"
-      athenaProjectID: "014999276089"
-      athenaWorkgroup: "primary"
-  cloudIntegrationSecret: ""
+  #cloudIntegrationSecret: ""
   exporter:
     apiPort: 9003
     cloudProviderApiKey: ""
