@@ -207,6 +207,12 @@ config:
       script /fluent-bit/scripts/enrich.lua
       call merge_geoip
 
+    [FILTER]
+      Name lua
+      Match_Regex ^(dopt2|dout2).haproxy
+      script /fluent-bit/scripts/drop.lua
+      call drop_success
+
   outputs: |
     [OUTPUT]
       Name opensearch
