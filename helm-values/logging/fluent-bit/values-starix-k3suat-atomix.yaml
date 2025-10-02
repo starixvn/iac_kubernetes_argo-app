@@ -2,13 +2,7 @@ image:
   repository: nexhub.ops-klprod.gamora.prod/kbt/base/fluent/fluent-bit
   tag: 4.0.3-geoip
 
-extraPorts:
-- port: 5170
-  containerPort: 5170
-  protocol: UDP
-  name: syslog
-
-flush: 20
+# flush: 20
 
 config:
   inputs: |
@@ -33,14 +27,6 @@ config:
       Tag host.all
       Read_From_Tail On
       Strip_Underscores On
-
-    [INPUT]
-      Name syslog
-      Tag syslog.haproxy
-      Listen 0.0.0.0
-      Port 5170
-      Mode udp
-      Source_Address_Key host
       
   filters: |
     [FILTER]
@@ -51,12 +37,6 @@ config:
       Add org devops
       Add engine k3s
 
-    [FILTER] # Trim port from the host field
-      Name lua
-      Match syslog.*
-      script /fluent-bit/scripts/enrich.lua
-      call strip_port
-
     [FILTER]
       Name kubernetes
       Match kube.*
@@ -65,65 +45,6 @@ config:
       Keep_Log Off
       K8S-Logging.Parser On
       K8S-Logging.Exclude On
-
-    [FILTER]
-      Name parser
-      Match syslog.haproxy
-      Key_name message
-      Parser haproxy
-      Preserve_Key On
-      Reserve_Data On
-
-    [FILTER]
-      Name   modify
-      Match  syslog.haproxy
-      Remove Tc
-      Remove Tq
-      Remove Tw
-      Remove actconn
-      Remove backend_queue
-      Remove beconn
-      Remove captured_request_cookie
-      Remove captured_response_cookie
-      Remove extradata
-      Remove feconn
-      Remove pid
-      Remove pri
-      Remove msgid
-      Remove retries
-      Remove srv_conn
-      Remove srv_queue
-      Remove termination_state
-
-    [FILTER]
-      Name lua
-      Match syslog.haproxy
-      script /fluent-bit/scripts/enrich.lua
-      call waf_headers_enrich
-
-    [FILTER]
-      Name   geoip2
-      Match  syslog.haproxy
-      Database /fluent-bit/etc/geoip/GeoLite2-City.mmdb
-      Lookup_key http_xff
-      Record geoip_country_name http_xff %{country.names.en}
-      Record geoip_country_iso http_xff %{country.iso_code}
-      Record geoip_city_name http_xff %{city.names.en}
-      Record geoip_latitude http_xff %{location.latitude}
-      Record geoip_longitude http_xff %{location.longitude}
-      Log_Level error
-
-    [FILTER]
-      Name lua
-      Match syslog.haproxy
-      script /fluent-bit/scripts/enrich.lua
-      call merge_geoip
-
-    [FILTER]
-      Name lua
-      Match syslog.haproxy
-      script /fluent-bit/scripts/drop.lua
-      call drop_success
 
   outputs: |
     [OUTPUT]
@@ -164,29 +85,3 @@ config:
       Suppress_Type_Name On
       Index logstash-kubesystem-container-log
       Replace_Dots On
-
-    [OUTPUT]
-      Name opensearch
-      Match syslog.haproxy
-      Host opsi.ops-klprod.gamora.prod
-      Port 443
-      tls On
-      tls.verify Off
-      HTTP_User logstash
-      HTTP_Passwd logstash
-      Suppress_Type_Name On
-      Index logstash-haproxy-ing-k3suat-uat
-      Replace_Dots On
-
-    # [OUTPUT]
-    #   Name forward
-    #   Match syslog.haproxy
-    #   Host flb-fwd.ops-klprod.gamora.prod
-    #   Port 32224
-    #   Username fluentbit 
-    #   Password 29a2VG8BnWXsr3hX
-    #   Self_Hostname flb-ap.client.local
-    #   Compress gzip
-    #   Require_ack_response true
-    #   # tls on
-    #   # tls.verify off
