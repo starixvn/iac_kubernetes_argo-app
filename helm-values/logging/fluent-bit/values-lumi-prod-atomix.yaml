@@ -28,6 +28,14 @@ config:
       Skip_Long_Lines On
 
     [INPUT]
+      Name tail
+      Tag kube.kubescape
+      Path /var/log/containers/node-agent-*.log
+      multiline.parser docker, cri
+      Mem_Buf_Limit 10MB
+      Skip_Long_Lines On
+
+    [INPUT]
       Name systemd
       Tag host.kubesystem
       Systemd_Filter _SYSTEMD_UNIT=containerd.service
@@ -54,12 +62,33 @@ config:
 
     [FILTER]
       Name kubernetes
-      Match kube.*
+      Match kube.kubesystem*
       Kube_Tag_Prefix kube.kubesystem.
       Merge_Log On
       Keep_Log Off
       K8S-Logging.Parser On
       K8S-Logging.Exclude On
+
+    [FILTER]
+      Name kubernetes
+      Match kube.kubescape*
+      Kube_Tag_Prefix kube.kubescape.
+      Merge_Log On
+      Keep_Log Off
+      K8S-Logging.Parser On
+      K8S-Logging.Exclude On
+
+    [FILTER]
+      Name grep
+      Match kube.kubescape*
+      Regex log BaseRuntimeMetadata
+
+    [FILTER]
+      Name parser
+      Match kube.kubescape*
+      Key_Name log
+      Parser json_parser
+      Reserve_Data On
 
   outputs: |
     [OUTPUT]
@@ -99,4 +128,17 @@ config:
       HTTP_Passwd logstash
       Suppress_Type_Name On
       Index logstash-kubesystem-container-log
+      Replace_Dots On
+
+    [OUTPUT]
+      Name opensearch
+      Match kube.kubescape*
+      Host opsi.ops-klprod.gamora.prod
+      Port 443
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-kubescape-scpt2
       Replace_Dots On
