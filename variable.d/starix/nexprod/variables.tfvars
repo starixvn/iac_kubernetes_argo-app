@@ -207,6 +207,17 @@ argo_projects = {
     ]
   }
 
+  tf-starix-k3sawx = {
+    src_repo = ["*"]
+    destinations = [
+      {
+        name      = "k3s-awx"
+        server    = "https://10.18.200.78:6443"
+        namespace = "*"
+      }
+    ]
+  }
+
 }
 
 # REQUIRED VARIABLE SET [git_helm_source,git_helm_value]
