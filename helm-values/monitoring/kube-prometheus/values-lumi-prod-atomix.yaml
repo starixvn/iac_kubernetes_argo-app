@@ -71,8 +71,8 @@ alertmanager:
           pod: ".*website1.*|opencost.*"
       - receiver: 'null'
         match_re:
-         namespace: "logging"
-         alertname: "Kubernetes Pod Restart"
+         namespace: "logging|kubescape"
+         alertname: "Kubernetes Pod Restart|.*resource limit"
       - receiver: 'null'
         match_re:
           cronjob: ".*trim.*"
