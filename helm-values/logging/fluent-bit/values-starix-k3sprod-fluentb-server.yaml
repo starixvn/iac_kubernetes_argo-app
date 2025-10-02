@@ -32,13 +32,13 @@ extraPorts:
 - port: 5270
   containerPort: 5270
   protocol: UDP
-  name: scpt2.kubescape
+  name: scpt2-kubescape
   nodePort: 31270
 
 - port: 5170
   containerPort: 5170
   protocol: UDP
-  name: scpt2.haproxy
+  name: scpt2-haproxy
   nodePort: 31170
 
 
@@ -56,7 +56,7 @@ config:
 
     [INPUT]
       Name syslog
-      Tag scpt2.syslog.kubescape
+      Tag scpt2.kubescape
       Listen 0.0.0.0
       Port 5270
       Mode udp
@@ -143,7 +143,7 @@ config:
   outputs: |
     [OUTPUT]
       Name opensearch
-      Match scpt2.syslog.kubescape
+      Match scpt2.kubescape
       Host opsi.ops-klprod.gamora.prod
       Port 443
       tls On
