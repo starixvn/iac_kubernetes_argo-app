@@ -70,15 +70,6 @@ config:
       K8S-Logging.Exclude On
 
     [FILTER]
-      Name kubernetes
-      Match kube.kubescape*
-      Kube_Tag_Prefix kube.kubescape.
-      Merge_Log On
-      Keep_Log Off
-      K8S-Logging.Parser On
-      K8S-Logging.Exclude On
-
-    [FILTER]
       Name grep
       Match kube.kubescape*
       Regex log BaseRuntimeMetadata
