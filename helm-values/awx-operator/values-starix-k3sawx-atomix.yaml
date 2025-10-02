@@ -25,6 +25,22 @@ AWX:
       value:
         - https://awx-k3s.nexdev.net
 
+extraDeploy:
+- |
+  apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: static-data-pvc
+    namespace: awx
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    storageClassName: local-path
+    resources:
+      requests:
+        storage: 5Gi
+
+
 
 
 
