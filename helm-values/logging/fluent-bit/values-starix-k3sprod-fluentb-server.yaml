@@ -32,7 +32,7 @@ extraPorts:
 - port: 5270
   containerPort: 5270
   protocol: UDP
-  name: scpt2-kubescape
+  name: scpt2-kubescape # SC - Prod - Tier2
   nodePort: 31270
 
 - port: 5170
@@ -46,6 +46,18 @@ extraPorts:
   protocol: UDP
   name: scut2-haproxy
   nodePort: 31171
+
+- port: 5178
+  containerPort: 5178
+  protocol: UDP
+  name: dopt2-haproxy # DevOps - Prod - Tier2
+  nodePort: 31178
+
+- port: 5179
+  containerPort: 5179
+  protocol: UDP
+  name: dout2-haproxy # DevOps - UAT - Tier2
+  nodePort: 31179
 
 
 config:
@@ -84,6 +96,22 @@ config:
       Port 5171
       Mode udp
       Source_Address_Key host
+
+    [INPUT]
+      Name syslog
+      Tag dopt2.haproxy
+      Listen 0.0.0.0
+      Port 5170
+      Mode udp
+      Source_Address_Key host
+
+    [INPUT]
+      Name syslog
+      Tag dout2.haproxy
+      Listen 0.0.0.0
+      Port 5171
+      Mode udp
+      Source_Address_Key host
       
   filters: |
     [FILTER]
@@ -103,6 +131,22 @@ config:
       Add org lumi
       Add team pentagon
       Add engine k8s
+
+    [FILTER]
+      Name modify
+      Match dopt2.*
+      Add env prod
+      Add region kl
+      Add org devops
+      Add engine k3s
+
+    [FILTER]
+      Name modify
+      Match dout2.*
+      Add env uat
+      Add region kl
+      Add org devops
+      Add engine k3s
 
     [FILTER]
       Name lua
@@ -201,4 +245,30 @@ config:
       HTTP_Passwd logstash
       Suppress_Type_Name On
       Index logstash-haproxy-ing-sc-uat
+      Replace_Dots On
+
+    [OUTPUT]
+      Name opensearch
+      Match dopt2.haproxy
+      Host opsi.ops-klprod.gamora.prod
+      Port 443
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-haproxy-ing-k3sprod-prod
+      Replace_Dots On
+
+    [OUTPUT]
+      Name opensearch
+      Match dout2.haproxy
+      Host opsi.ops-klprod.gamora.prod
+      Port 443
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-haproxy-ing-k3suat-uat
       Replace_Dots On
