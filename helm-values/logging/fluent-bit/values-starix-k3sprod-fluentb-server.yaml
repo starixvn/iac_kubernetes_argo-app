@@ -29,22 +29,16 @@ ingress:
 # flush: 20
 
 extraPorts:
-- port: 5270
-  containerPort: 5270
-  protocol: UDP
-  name: scpt2-kubescape # SC - Prod - Tier2
-  nodePort: 31270
-
 - port: 5170
   containerPort: 5170
   protocol: UDP
-  name: scpt2-haproxy
+  name: scpt2-haproxy # SC - Prod - Tier2
   nodePort: 31170
 
 - port: 5171
   containerPort: 5171
   protocol: UDP
-  name: scut2-haproxy
+  name: scut2-haproxy # SC - UAT - Tier2
   nodePort: 31171
 
 - port: 5178
@@ -71,15 +65,6 @@ config:
     #   Buffer_Max_Size 6M
     #   Security.Users fluentbit 29a2VG8BnWXsr3hX
     #   Self_Hostname flb-klp.server.local
-
-    [INPUT]
-      Name syslog
-      Tag scpt2.kubescape
-      Listen 0.0.0.0
-      Port 5270
-      Mode udp
-      Parser syslog-rfc5424
-      Source_Address_Key host
 
     [INPUT]
       Name syslog
@@ -214,19 +199,6 @@ config:
       call drop_success
 
   outputs: |
-    [OUTPUT]
-      Name opensearch
-      Match scpt2.kubescape
-      Host opsi.ops-klprod.gamora.prod
-      Port 443
-      tls On
-      tls.verify Off
-      HTTP_User logstash
-      HTTP_Passwd logstash
-      Suppress_Type_Name On
-      Index logstash-kubescape-scpt2
-      Replace_Dots On
-
     [OUTPUT]
       Name opensearch
       Match scpt2.haproxy
