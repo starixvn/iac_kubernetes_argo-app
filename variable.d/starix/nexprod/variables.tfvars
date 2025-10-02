@@ -214,6 +214,7 @@ argo_projects = {
         name      = "k3s-awx"
         server    = "https://10.18.200.78:6443"
         namespace = "*"
+        # trigger
       }
     ]
   }
