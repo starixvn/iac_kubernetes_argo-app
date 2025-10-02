@@ -38,13 +38,15 @@ rbac:
   enabled: true
 
 opencost:
+  aws:
+    enabled: false
     # athenaBucketName: "s3://vn-nx-opencost-cur-results"
     # athenaRegion: "ap-southeast-1"
     # athenaDatabase: "athenacurcfn_nx_opencost_cur"
     # athenaTable: "nx_opencost_cur"
     # athenaWorkgroup: "primary"
-  cloudCosts:
-    enabled: true
+    cloudCosts:
+      enabled: false
       # athenaBucketName: "s3://vn-nx-opencost-cur-results"
       # athenaRegion: "ap-southeast-1"
       # athenaDatabase: "athenacurcfn_nx_opencost_cur"
