@@ -1,0 +1,30 @@
+AWX:
+  # enable use of awx-deploy template
+  enabled: true
+  name: awx
+  spec:
+    ipv6_disabled: true
+    postgres_data_volume_init: true
+    ingress_type: "ingress"
+    projects_persistence: true
+    ingress_class_name: "traefik"
+    ingress_hosts:
+    - hostname: "awx-k3s.nexdev.net"
+    csrf_cookie_secure: "False"
+    session_cookie_secure: "False"
+    web_extra_volume_mounts: |
+      - name: static-data
+        mountPath: /var/lib/projects
+    extra_volumes: |
+      - name: static-data
+        persistentVolumeClaim:
+          claimName: static-data-pvc
+    extra_settings:
+    - setting: CSRF_TRUSTED_ORIGINS
+      value:
+        - https://awx-k3s.nexdev.net
+
+
+
+
+
