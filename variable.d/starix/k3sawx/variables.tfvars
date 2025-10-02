@@ -17,6 +17,7 @@ argo_applications_by_team = {
         value_files = [
           "values-starix-k3sawx-atomix.yaml"
         ]
+        # trigger
       }
     }
   }
