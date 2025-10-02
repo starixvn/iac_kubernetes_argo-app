@@ -58,8 +58,8 @@ controller:
     #   format: "rfc3164"
     #   facility: "local5"
     traffic:
-      address: "fluent-bit-atx-uat.logging.svc"
-      port: "5170"
+      address: "flb.ops-klprod.gamora.prod"
+      port: "31171"
       format: "rfc5424"
       facility: "local1"
 
