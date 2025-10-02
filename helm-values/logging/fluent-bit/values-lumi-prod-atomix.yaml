@@ -81,6 +81,19 @@ config:
       Parser json_kubescape
       Reserve_Data On
 
+    [FILTER]
+      Name nest
+      Match kube.kubescape*
+      Operation lift
+      Nested_under BaseRuntimeMetadata
+      Remove_prefix NESTED
+
+    [FILTER]
+      Name lua
+      Match kube.kubescape*
+      Script kubescape_handler.lua
+      call parser
+
   outputs: |
     [OUTPUT]
       Name opensearch

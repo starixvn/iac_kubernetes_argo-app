@@ -123,6 +123,57 @@ luaScripts:
       return 1, ts, record
     end
 
+  kubescape_handler.lua: |
+    function parser(tag, timestamp, record)
+      local out = {}
+      ---------------------------------------------------------
+      -- BaseRuntimeMetadata
+      local brm = record["BaseRuntimeMetadata"]
+      if type(brm) == "table" then
+        out["alertName"]   = brm["alertName"]
+        out["severity"]    = brm["severity"]
+        out["timestamp"]   = brm["timestamp"]
+        out["arguments"]   = brm["arguments"]
+        out["identifiers"] = brm["identifiers"]
+
+        -- Profile Metadata (optional)
+        local pm = brm["profileMetadata"]
+        if type(pm) == "table" then
+          out["profileName"]   = pm["name"]
+          out["profileStatus"] = pm["status"]
+          -- out["profileType"]  = pm["type"]
+        end
+      end
+
+      ---------------------------------------------------------
+      -- RuntimeK8sDetails
+      local k8s = record["RuntimeK8sDetails"]
+      if type(k8s) == "table" then
+        out["clusterName"]   = k8s["clusterName"]
+        out["namespace"]     = k8s["namespace"]
+        out["podName"]       = k8s["podName"]
+        out["containerName"] = k8s["containerName"]
+        out["image"]         = k8s["image"]
+      end
+
+      ---------------------------------------------------------
+      -- RuntimeProcessDetails
+      local rpd = record["RuntimeProcessDetails"]
+      if type(rpd) == "table" then
+        out["processTree"]   = rpd["processTree"]
+      end
+
+      ---------------------------------------------------------
+      -- Root-level fields
+      out["ruleID"]  = record["RuleID"]
+      out["level"]   = record["level"]
+      out["message"] = record["message"] or record["msg"]
+      out["time"]    = record["time"]
+
+      ---------------------------------------------------------
+      -- Return transformed record
+      return 1, timestamp, out
+    end
 
 config:
   service: |
