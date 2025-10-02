@@ -89,7 +89,7 @@ argo_applications_by_team = {
 
       redis-standalone = {
         helm_path     = "redis-standalone"
-        chart_version = "18.17.0"
+        chart_version = "21.0.0"
         value_files   = ["values-starix-nexprod-wabisabi.yaml"]
       }
 
