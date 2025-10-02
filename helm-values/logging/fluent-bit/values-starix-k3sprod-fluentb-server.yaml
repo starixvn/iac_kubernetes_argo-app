@@ -81,7 +81,7 @@ config:
       Name syslog
       Tag scut2.haproxy
       Listen 0.0.0.0
-      Port 5170
+      Port 5171
       Mode udp
       Source_Address_Key host
       
