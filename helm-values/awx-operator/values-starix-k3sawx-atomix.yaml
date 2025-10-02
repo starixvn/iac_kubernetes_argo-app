@@ -7,6 +7,7 @@ AWX:
     postgres_data_volume_init: true
     ingress_type: "ingress"
     projects_persistence: true
+    projects_storage_access_mode: ReadWriteOnce
     ingress_class_name: "traefik"
     ingress_hosts:
     - hostname: "awx-k3s.nexdev.net"
@@ -23,6 +24,22 @@ AWX:
     - setting: CSRF_TRUSTED_ORIGINS
       value:
         - https://awx-k3s.nexdev.net
+
+extraDeploy:
+- |
+  apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: static-data-pvc
+    namespace: awx
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    storageClassName: local-path
+    resources:
+      requests:
+        storage: 5Gi
+
 
 
 
