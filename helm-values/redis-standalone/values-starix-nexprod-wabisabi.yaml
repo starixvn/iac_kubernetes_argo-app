@@ -17,7 +17,8 @@ architecture: standalone
 
 
 auth:
-  password: "foo1@bared"
+  enaabled: false
+  # password: "foo1@bared"
 
 volumePermissions:
   enabled: true
