@@ -84,7 +84,7 @@ config:
     [FILTER]
       Name lua
       Match kube.kubescape*
-      Script kubescape_handler.lua
+      Script /fluent-bit/scripts/kubescape_handler.lua
       call parser
 
   outputs: |
