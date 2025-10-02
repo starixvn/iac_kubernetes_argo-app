@@ -87,7 +87,7 @@ config:
       Name parser
       Match kube.kubescape*
       Key_Name log
-      Parser json_parser
+      Parser json_kubescape
       Reserve_Data On
 
   outputs: |
