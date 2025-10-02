@@ -38,7 +38,17 @@ rbac:
   enabled: true
 
 opencost:
-  cloudIntegrationSecret: "cloud-costs"
+  aws:
+    enabled: true
+    cloudCosts:
+      enabled: true
+      athenaBucketName: "s3://vn-nx-opencost-cur-results"
+      athenaRegion: "ap-southeast-1"
+      athenaDatabase: "athenacurcfn_nx_opencost_cur"
+      athenaTable: "nx_opencost_cur"
+      athenaProjectID: "014999276089"
+      athenaWorkgroup: "primary"
+  cloudIntegrationSecret: ""
   exporter:
     apiPort: 9003
     cloudProviderApiKey: ""
