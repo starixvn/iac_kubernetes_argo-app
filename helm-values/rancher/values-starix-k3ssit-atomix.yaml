@@ -19,7 +19,7 @@ auditLog:
     repository: nexhub.ops-sit.nebula.sit/kbt/base/rancher/mirrored-bci-micro
 
 rancherImage: nexhub.ops-sit.nebula.sit/kbt/base/rancher/rancher
-rancherImageTag: v2.10.10
+# rancherImageTag: v2.10.10
 
 postDelete:
   image:
