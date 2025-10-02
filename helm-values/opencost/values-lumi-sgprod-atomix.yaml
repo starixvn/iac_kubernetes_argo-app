@@ -42,7 +42,7 @@ opencost:
     enabled: true
     cloudCosts:
       enabled: true
-      athenaBucketName: "vn-nx-opencost-cur-results"
+      athenaBucketName: "s3://vn-nx-opencost-cur-results"
       athenaRegion: "ap-southeast-1"
       athenaDatabase: "athenacurcfn_nx_opencost_cur"
       athenaTable: "nx_opencost_cur"
