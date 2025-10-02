@@ -24,7 +24,7 @@ config:
       Path /var/log/containers/calico*.log,/var/log/containers/dns*.log,/var/log/containers/kube*.log,/var/log/containers/nodelocaldns*.log
       multiline.parser docker, cri
       Tag kube.kubesystem.*
-      Mem_Buf_Limit 64MB
+      Mem_Buf_Limit 10MB
       Skip_Long_Lines On
 
     [INPUT]
