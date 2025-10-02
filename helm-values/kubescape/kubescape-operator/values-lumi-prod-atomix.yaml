@@ -142,7 +142,7 @@ nodeAgent:
       method: POST
     alertManagerExporterUrls: [prometheus-atx-prod-kube-p-alertmanager.monitoring:9093]
     stdoutExporter: true
-    syslogExporterURL: flb.ops-klprod.gamora.prod:31270
+    syslogExporterURL: 10.143.58.203:31270
     skipKernelVersionCheck: false
     malwareScanAllFiles: false
     hostMalwareSensor: disable
