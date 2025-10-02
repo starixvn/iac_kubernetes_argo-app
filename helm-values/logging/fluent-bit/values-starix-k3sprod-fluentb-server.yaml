@@ -26,14 +26,27 @@ ingress:
   hosts:
   - host: flb.ops-klprod.gamora.prod
 
-flush: 20
+# flush: 20
 
 extraPorts:
 - port: 5270
   containerPort: 5270
   protocol: UDP
-  name: scpt1-kubescape
+  name: scpt2-kubescape
   nodePort: 31270
+
+- port: 5170
+  containerPort: 5170
+  protocol: UDP
+  name: scpt2-haproxy
+  nodePort: 31170
+
+- port: 5171
+  containerPort: 5171
+  protocol: UDP
+  name: scut2-haproxy
+  nodePort: 31171
+
 
 config:
   inputs: |
@@ -49,30 +62,143 @@ config:
 
     [INPUT]
       Name syslog
-      Tag scpt1.syslog.kubescape
+      Tag scpt2.kubescape
       Listen 0.0.0.0
       Port 5270
       Mode udp
       Parser syslog-rfc5424
       Source_Address_Key host
+
+    [INPUT]
+      Name syslog
+      Tag scpt2.haproxy
+      Listen 0.0.0.0
+      Port 5170
+      Mode udp
+      Source_Address_Key host
+
+    [INPUT]
+      Name syslog
+      Tag scut2.haproxy
+      Listen 0.0.0.0
+      Port 5171
+      Mode udp
+      Source_Address_Key host
       
   filters: |
     [FILTER]
       Name modify
-      Match scpt1.*
+      Match_Regex scpt2.*
       Add env prod
       Add region kl
       Add org lumi
+      Add team pentagon
+      Add engine k8s
+
+    [FILTER]
+      Name modify
+      Match_Regex scut2.*
+      Add env uat
+      Add region kl
+      Add org lumi
+      Add team pentagon
+      Add engine k8s
+
+    [FILTER]
+      Name lua
+      Match *
+      script /fluent-bit/scripts/enrich.lua
+      call strip_port
+
+    [FILTER]
+      Name parser
+      Match *haproxy*
+      Key_name message
+      Parser haproxy
+      Preserve_Key On
+      Reserve_Data On
+
+    [FILTER]
+      Name   modify
+      Match  *haproxy*
+      Remove Tc
+      Remove Tq
+      Remove Tw
+      Remove actconn
+      Remove backend_queue
+      Remove beconn
+      Remove captured_request_cookie
+      Remove captured_response_cookie
+      Remove extradata
+      Remove feconn
+      Remove pid
+      Remove pri
+      Remove msgid
+      Remove retries
+      Remove srv_conn
+      Remove srv_queue
+      Remove termination_state
+
+    [FILTER]
+      Name lua
+      Match *haproxy*
+      script /fluent-bit/scripts/enrich.lua
+      call waf_headers_enrich
+
+    [FILTER]
+      Name   geoip2
+      Match  *haproxy*
+      Database /fluent-bit/etc/geoip/GeoLite2-City.mmdb
+      Lookup_key http_xff
+      Record geoip_country_name http_xff %{country.names.en}
+      Record geoip_country_iso http_xff %{country.iso_code}
+      Record geoip_city_name http_xff %{city.names.en}
+      Record geoip_latitude http_xff %{location.latitude}
+      Record geoip_longitude http_xff %{location.longitude}
+      Log_Level error
+
+    [FILTER]
+      Name lua
+      Match *haproxy*
+      script /fluent-bit/scripts/enrich.lua
+      call merge_geoip
 
   outputs: |
     [OUTPUT]
       Name opensearch
-      Match scpt1.syslog.kubescape
-      Host opsearch-atx-k3sprod.logging
+      Match scpt2.kubescape
+      Host opsi.ops-klprod.gamora.prod
+      Port 443
       tls On
       tls.verify Off
       HTTP_User logstash
       HTTP_Passwd logstash
       Suppress_Type_Name On
-      Index logstash-kubescape-scpt1
+      Index logstash-kubescape-scpt2
+      Replace_Dots On
+
+    [OUTPUT]
+      Name opensearch
+      Match scpt2.haproxy
+      Host opsi.ops-klprod.gamora.prod
+      Port 443
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-haproxy-ing-sc-klprod
+      Replace_Dots On
+
+    [OUTPUT]
+      Name opensearch
+      Match scut2.haproxy
+      Host opsi.ops-klprod.gamora.prod
+      Port 443
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-haproxy-ing-sc-uat
       Replace_Dots On
