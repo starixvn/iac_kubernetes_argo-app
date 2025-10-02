@@ -40,20 +40,20 @@ rbac:
 opencost:
   aws:
     enabled: true
-    athenaBucketName: "s3://vn-nx-opencost-cur-results"
-    athenaRegion: "ap-southeast-1"
-    athenaDatabase: "athenacurcfn_nx_opencost_cur"
-    athenaTable: "nx_opencost_cur"
-    athenaWorkgroup: "primary"
+    # athenaBucketName: "s3://vn-nx-opencost-cur-results"
+    # athenaRegion: "ap-southeast-1"
+    # athenaDatabase: "athenacurcfn_nx_opencost_cur"
+    # athenaTable: "nx_opencost_cur"
+    # athenaWorkgroup: "primary"
     cloudCosts:
       enabled: true
-      athenaBucketName: "s3://vn-nx-opencost-cur-results"
-      athenaRegion: "ap-southeast-1"
-      athenaDatabase: "athenacurcfn_nx_opencost_cur"
-      athenaTable: "nx_opencost_cur"
-      athenaProjectID: "014999276089"
-      athenaWorkgroup: "primary"
-  cloudIntegrationSecret: ""
+      # athenaBucketName: "s3://vn-nx-opencost-cur-results"
+      # athenaRegion: "ap-southeast-1"
+      # athenaDatabase: "athenacurcfn_nx_opencost_cur"
+      # athenaTable: "nx_opencost_cur"
+      # athenaProjectID: "014999276089"
+      # athenaWorkgroup: "primary"
+  cloudIntegrationSecret: cloud-costs
   exporter:
     apiPort: 9003
     cloudProviderApiKey: ""
