@@ -38,9 +38,8 @@ rbac:
   enabled: true
 
 opencost:
-  opencost:
-   cloudIntegrationSecret: "cloud-costs"
-   cloudCost:
+  cloudIntegrationSecret: "cloud-costs"
+  cloudCost:
     enabled: true
   #cloudIntegrationSecret: ""
   exporter:
