@@ -10,7 +10,7 @@ imagePullSecrets: []
 serviceAccount:
   create: true
   annotations: 
-  eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:role/OpenCostSpotFeedRole
+  eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:role/vn-nx-opencost
   automountServiceAccountToken: true
   name: "opencost-atx-sgprod"
 
