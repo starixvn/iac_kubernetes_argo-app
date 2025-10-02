@@ -109,10 +109,10 @@ alertmanager:
             service: "Velero.*"
         - receiver: "alert-nx-atomix-domains"
           match_re:
-            alertname: "SSLCertificate.*|StatusCodeUnexpected|TCPEndpointStatus"
+            alertname: "SSLCertificate.*|StatusCodeUnexpected|TCPEndpointStatus|CDNUnreachable"
         - receiver: "alerts-test"
           match_re:
-            alertname: "CDNUnreachable|DNSLookupFailed"
+            alertname: "DNSLookupFailed"
         - receiver: dev-services
           matchers:
           - service="OpenSearch"
