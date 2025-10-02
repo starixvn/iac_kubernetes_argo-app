@@ -101,7 +101,7 @@ config:
       Name syslog
       Tag dopt2.haproxy
       Listen 0.0.0.0
-      Port 5170
+      Port 5178
       Mode udp
       Source_Address_Key host
 
@@ -109,7 +109,7 @@ config:
       Name syslog
       Tag dout2.haproxy
       Listen 0.0.0.0
-      Port 5171
+      Port 5179
       Mode udp
       Source_Address_Key host
       
