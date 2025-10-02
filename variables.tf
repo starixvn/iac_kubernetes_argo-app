@@ -38,6 +38,7 @@ variable "kube_cluster_api" {
       backup  = "https://10.10.50.136:6443"
       testlab = "https://kubernetes.default.svc"
       kc      = "https://10.70.70.220:6443"
+      k3sawx  = "https://10.18.200.78:6443"
 
     }
     lumi = {
