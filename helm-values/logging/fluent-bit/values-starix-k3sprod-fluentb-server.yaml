@@ -41,6 +41,12 @@ extraPorts:
   name: scpt2-haproxy
   nodePort: 31170
 
+- port: 5171
+  containerPort: 5171
+  protocol: UDP
+  name: scut2-haproxy
+  nodePort: 31171
+
 
 config:
   inputs: |
@@ -70,12 +76,29 @@ config:
       Port 5170
       Mode udp
       Source_Address_Key host
+
+    [INPUT]
+      Name syslog
+      Tag scut2.haproxy
+      Listen 0.0.0.0
+      Port 5170
+      Mode udp
+      Source_Address_Key host
       
   filters: |
     [FILTER]
       Name modify
       Match_Regex scpt2.*
       Add env prod
+      Add region kl
+      Add org lumi
+      Add team pentagon
+      Add engine k8s
+
+    [FILTER]
+      Name modify
+      Match_Regex scut2.*
+      Add env uat
       Add region kl
       Add org lumi
       Add team pentagon
@@ -165,4 +188,17 @@ config:
       HTTP_Passwd logstash
       Suppress_Type_Name On
       Index logstash-haproxy-ing-sc-klprod
+      Replace_Dots On
+
+    [OUTPUT]
+      Name opensearch
+      Match scut2.haproxy
+      Host opsi.ops-klprod.gamora.prod
+      Port 443
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-haproxy-ing-sc-uat
       Replace_Dots On
