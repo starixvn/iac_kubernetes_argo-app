@@ -101,6 +101,11 @@ config:
       script /fluent-bit/scripts/enrich.lua
       call merge_geoip
 
+    [FILTER]
+      Name grep
+      Match *haproxy*
+      Exclude $user_agent Infra Monitor
+
   outputs: |
     # [OUTPUT]
     #   Name forward
