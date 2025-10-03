@@ -41,11 +41,11 @@ prometheus:
           static_configs:
             - targets: ["rocketor.nexdev.net"]
 
-  remoteWrite:
-    - url: http://nginx-mimir.nexdev.net/api/v1/push
-      headers:
-        X-Scope-OrgID: "k3s-starix-nexprod"
-      retry_on_http_429: true
+  # remoteWrite:
+  #   - url: http://nginx-mimir.nexdev.net/api/v1/push
+  #     headers:
+  #       X-Scope-OrgID: "k3s-starix-nexprod"
+  #     retry_on_http_429: true
 
 node-exporter:
   extraVolumes:
