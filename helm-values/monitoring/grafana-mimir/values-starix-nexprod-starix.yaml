@@ -123,7 +123,7 @@ store_gateway:
     limits:
       memory: 4Gi
     requests:
-      memory: 4Gi
+      memory: 2Gi
   tolerations:
   - effect: "NoSchedule"
     key: "cattle.io/os"
@@ -185,7 +185,7 @@ memcached:
 
 admin-cache:
   enabled: true
-  replicas: 3
+  replicas: 2
   tolerations:
   - effect: "NoSchedule"
     key: "cattle.io/os"
@@ -202,11 +202,11 @@ chunks-cache:
     value: "mimir"
   nodeSelector:
     node-role.kubernetes.io/mimir: "yes"
-  allocatedMemory: 4096
+  allocatedMemory: 2048
 
 index-cache:
   enabled: true
-  replicas: 3
+  replicas: 2
   tolerations:
   - effect: "NoSchedule"
     key: "cattle.io/os"
@@ -216,7 +216,7 @@ index-cache:
 
 metadata-cache:
   enabled: true
-  replicas: 3
+  replicas: 2
   tolerations:
   - effect: "NoSchedule"
     key: "cattle.io/os"
