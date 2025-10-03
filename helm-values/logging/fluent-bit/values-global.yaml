@@ -199,7 +199,7 @@ config:
     [PARSER]
       Name haproxy
       Format regex
-      Regex ^(?<client_ip>\S+):(?<client_port>\d+)\s+\[(?<accept_date>[^\]]+)\]\s+(?<frontend>\S+)\s+(?<backend>[^\/]+)\/(?<server>\S+)\s+(?<Tq>-?\d+)\/(?<Tw>-?\d+)\/(?<Tc>-?\d+)\/(?<Tr>-?\d+)\/(?<Tt>-?\d+)\s+(?<status_code>\d+)\s+(?<bytes_read>\d+)\s+(?<captured_request_cookie>\S+)\s+(?<captured_response_cookie>\S+)\s+(?<termination_state>\S+)\s+(?<actconn>\d+)\/(?<feconn>\d+)\/(?<beconn>\d+)\/(?<srv_conn>\d+)\/(?<retries>\d+)\s+(?<srv_queue>\d+)\/(?<backend_queue>\d+)\s+\{(?<http_headers_raw>[^\}]*)\}\s+"(?<http_method>[A-Z]+)\s+(?<request_host>[^\/\s]+)(?<request_path>\/[^ ]*)?\s+(?<http_version>HTTP\/\d\.\d)"$
+      Regex ^(?<client_ip>\S+):(?<client_port>\d+)\s+\[(?<accept_date>[^\]]+)\]\s+(?<frontend>\S+)\s+(?<backend>[^\/]+)\/(?<server>\S+)\s+(?<Tq>-?\d+)\/(?<Tw>-?\d+)\/(?<Tc>-?\d+)\/(?<Tr>-?\d+)\/(?<Tt>-?\d+)\s+(?<status_code>\d+)\s+(?<bytes_read>\d+)\s+(?<captured_request_cookie>\S+)\s+(?<captured_response_cookie>\S+)\s+(?<termination_state>\S+)\s+(?<actconn>\d+)\/(?<feconn>\d+)\/(?<beconn>\d+)\/(?<srv_conn>\d+)\/(?<retries>\d+)\s+(?<srv_queue>\d+)\/(?<backend_queue>\d+)\s+\{(?<http_headers_raw>[^\}]*)\}\s+"(?<http_method>[A-Z]+)\s+(?:(?<request_host>[^\/\s]+))?(?<request_path>\/[^ ]*)?\s+(?<http_version>HTTP\/\d\.\d)"$
 
     [PARSER]
       Name json_kubescape
