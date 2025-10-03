@@ -183,6 +183,57 @@ memcached:
     node-role.kubernetes.io/mimir: "yes"
 
 
+admin-cache:
+  enabled: true
+  replicas: 3
+  tolerations:
+  - effect: "NoSchedule"
+    key: "cattle.io/os"
+    value: "mimir"
+  nodeSelector:
+    node-role.kubernetes.io/mimir: "yes"
+
+chunks-cache:
+  enabled: true
+  replicas: 3
+  tolerations:
+  - effect: "NoSchedule"
+    key: "cattle.io/os"
+    value: "mimir"
+  nodeSelector:
+    node-role.kubernetes.io/mimir: "yes"
+
+index-cache:
+  enabled: true
+  replicas: 3
+  tolerations:
+  - effect: "NoSchedule"
+    key: "cattle.io/os"
+    value: "mimir"
+  nodeSelector:
+    node-role.kubernetes.io/mimir: "yes"
+
+metadata-cache:
+  enabled: true
+  replicas: 3
+  tolerations:
+  - effect: "NoSchedule"
+    key: "cattle.io/os"
+    value: "mimir"
+  nodeSelector:
+    node-role.kubernetes.io/mimir: "yes"
+
+results-cache:
+  enabled: true
+  replicas: 3
+  tolerations:
+  - effect: "NoSchedule"
+    key: "cattle.io/os"
+    value: "mimir"
+  nodeSelector:
+    node-role.kubernetes.io/mimir: "yes"
+
+
 
 # Enable metrics and monitoring
 metrics:
