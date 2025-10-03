@@ -155,7 +155,6 @@ config:
       Source_Address_Key host
       
   filters: |
-    
 
     [FILTER]
       Name lua
@@ -357,7 +356,7 @@ config:
       HTTP_User logstash
       HTTP_Passwd logstash
       Suppress_Type_Name On
-      Index logstash-haproxy-swarm-starix-uat
+      Index logstash-haproxy-swarm-fpsklprod-klprod
       Replace_Dots On
 
     [OUTPUT]
