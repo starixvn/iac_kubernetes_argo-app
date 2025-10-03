@@ -44,7 +44,7 @@ prometheus:
   remoteWrite:
     - url: http://nginx-mimir.nexdev.net/api/v1/push
       headers:
-        X-Scope-OrgID: "starix-nexprod"
+        X-Scope-OrgID: "k3s-starix-nexprod"
       retry_on_http_429: true
 
 node-exporter:
