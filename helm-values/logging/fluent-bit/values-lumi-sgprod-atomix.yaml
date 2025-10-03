@@ -103,7 +103,7 @@ config:
 
     [FILTER]
       Name grep
-      Match *haproxy*
+      Match syslog.haproxy
       Exclude $user_agent Infra Monitor
 
   outputs: |
