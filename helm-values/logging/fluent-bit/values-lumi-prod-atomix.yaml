@@ -52,15 +52,6 @@ config:
       
   filters: |
     [FILTER]
-      Name modify
-      Match *
-      Add env prod
-      Add region kl
-      Add org lumi
-      Add team pentagon
-      Add engine k8s
-
-    [FILTER]
       Name kubernetes
       Match kube.kubesystem*
       Kube_Tag_Prefix kube.kubesystem.
@@ -80,6 +71,21 @@ config:
       Key_Name log
       Parser json_kubescape
       Reserve_Data On
+
+    [FILTER]
+      Name lua
+      Match kube.kubescape*
+      Script /fluent-bit/scripts/kubescape_handler.lua
+      call parser
+
+    [FILTER]
+      Name modify
+      Match *
+      Add env prod
+      Add region kl
+      Add org lumi
+      Add team pentagon
+      Add engine k8s
 
   outputs: |
     [OUTPUT]

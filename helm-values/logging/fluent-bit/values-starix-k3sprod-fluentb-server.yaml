@@ -41,6 +41,30 @@ extraPorts:
   name: scut2-haproxy # SC - UAT - Tier2
   nodePort: 31171
 
+- port: 5172
+  containerPort: 5172
+  protocol: UDP
+  name: stpt2-haproxy # ST - PROD - Tier2
+  nodePort: 31172
+
+- port: 5173
+  containerPort: 5173
+  protocol: UDP
+  name: alpt2-haproxy # Alpha - PROD - Tier2
+  nodePort: 31173
+
+- port: 5174
+  containerPort: 5174
+  protocol: UDP
+  name: wspt2-haproxy # Wasa - Prod - Tier2
+  nodePort: 31174
+
+- port: 5175
+  containerPort: 5175
+  protocol: UDP
+  name: stut2-haproxy # ST - UAT - Tier2
+  nodePort: 31175
+
 - port: 5178
   containerPort: 5178
   protocol: UDP
@@ -84,6 +108,38 @@ config:
 
     [INPUT]
       Name syslog
+      Tag stpt2.haproxy
+      Listen 0.0.0.0
+      Port 5172
+      Mode udp
+      Source_Address_Key host
+
+    [INPUT]
+      Name syslog
+      Tag alpt2.haproxy
+      Listen 0.0.0.0
+      Port 5173
+      Mode udp
+      Source_Address_Key host
+
+    [INPUT]
+      Name syslog
+      Tag wspt2.haproxy
+      Listen 0.0.0.0
+      Port 5174
+      Mode udp
+      Source_Address_Key host
+
+    [INPUT]
+      Name syslog
+      Tag stut2.haproxy
+      Listen 0.0.0.0
+      Port 5175
+      Mode udp
+      Source_Address_Key host
+
+    [INPUT]
+      Name syslog
       Tag dopt2.haproxy
       Listen 0.0.0.0
       Port 5178
@@ -99,39 +155,7 @@ config:
       Source_Address_Key host
       
   filters: |
-    [FILTER]
-      Name modify
-      Match_Regex scpt2.*
-      Add env prod
-      Add region kl
-      Add org lumi
-      Add team pentagon
-      Add engine k8s
-
-    [FILTER]
-      Name modify
-      Match_Regex scut2.*
-      Add env uat
-      Add region kl
-      Add org lumi
-      Add team pentagon
-      Add engine k8s
-
-    [FILTER]
-      Name modify
-      Match dopt2.*
-      Add env prod
-      Add region kl
-      Add org devops
-      Add engine k3s
-
-    [FILTER]
-      Name modify
-      Match dout2.*
-      Add env uat
-      Add region kl
-      Add org devops
-      Add engine k3s
+    
 
     [FILTER]
       Name lua
@@ -198,6 +222,78 @@ config:
       script /fluent-bit/scripts/drop.lua
       call drop_success
 
+    ##########################
+    #### ENV Field EnRich ####
+    [FILTER]
+      Name modify
+      Match_Regex scpt2.*
+      Add env prod
+      Add region kl
+      Add org lumi
+      Add team pentagon
+      Add engine k8s
+
+    [FILTER]
+      Name modify
+      Match_Regex scut2.*
+      Add env uat
+      Add region kl
+      Add org lumi
+      Add team pentagon
+      Add engine k8s
+
+    [FILTER]
+      Name modify
+      Match_Regex stpt2.*
+      Add env prod
+      Add region kl
+      Add org starix
+      Add team starix
+      Add engine k8s
+
+    [FILTER]
+      Name modify
+      Match_Regex alpt2.*
+      Add env prod
+      Add region kl
+      Add org starix
+      Add team alpha
+      Add engine k8s
+
+    [FILTER]
+      Name modify
+      Match_Regex wspt2.*
+      Add env prod
+      Add region kl
+      Add org starix
+      Add team wabisabi
+      Add engine k8s
+
+    [FILTER]
+      Name modify
+      Match_Regex stut2.*
+      Add env uat
+      Add region kl
+      Add org starix
+      Add team starix
+      Add engine k8s
+
+    [FILTER]
+      Name modify
+      Match dopt2.*
+      Add env prod
+      Add region kl
+      Add org devops
+      Add engine k3s
+
+    [FILTER]
+      Name modify
+      Match dout2.*
+      Add env uat
+      Add region kl
+      Add org devops
+      Add engine k3s
+
   outputs: |
     [OUTPUT]
       Name opensearch
@@ -215,6 +311,58 @@ config:
     [OUTPUT]
       Name opensearch
       Match scut2.haproxy
+      Host opsi.ops-klprod.gamora.prod
+      Port 443
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-haproxy-ing-sc-uat
+      Replace_Dots On
+
+    [OUTPUT]
+      Name opensearch
+      Match stpt2.haproxy
+      Host opsi.ops-klprod.gamora.prod
+      Port 443
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-haproxy-swarm-starix-klprod
+      Replace_Dots On
+
+    [OUTPUT]
+      Name opensearch
+      Match alpt2.haproxy
+      Host opsi.ops-klprod.gamora.prod
+      Port 443
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-haproxy-swarm-starix-alphaklprod
+      Replace_Dots On
+
+    [OUTPUT]
+      Name opensearch
+      Match wspt2.haproxy
+      Host opsi.ops-klprod.gamora.prod
+      Port 443
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-haproxy-swarm-starix-uat
+      Replace_Dots On
+
+    [OUTPUT]
+      Name opensearch
+      Match stut2.haproxy
       Host opsi.ops-klprod.gamora.prod
       Port 443
       tls On
