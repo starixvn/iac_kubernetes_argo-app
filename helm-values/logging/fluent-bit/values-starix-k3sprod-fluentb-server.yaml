@@ -216,6 +216,11 @@ config:
       call merge_geoip
 
     [FILTER]
+      Name grep
+      Match *haproxy*
+      Exclude $user_agent Infra Monitor
+
+    [FILTER]
       Name lua
       Match_Regex ^(dopt2|dout2).haproxy
       script /fluent-bit/scripts/drop.lua
