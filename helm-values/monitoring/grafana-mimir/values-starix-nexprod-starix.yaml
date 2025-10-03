@@ -202,7 +202,7 @@ chunks-cache:
     value: "mimir"
   nodeSelector:
     node-role.kubernetes.io/mimir: "yes"
-  allocatedMemory: 4096
+  allocatedMemory: 2048
 
 index-cache:
   enabled: true
