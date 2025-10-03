@@ -31,11 +31,11 @@ prometheus:
     storageClass: "local-path"
     size: 100Gi
 
-  remoteWrite:
-    - url: http://nginx-mimir.nexdev.net/api/v1/push
-      headers:
-        X-Scope-OrgID: "sc-lumprod"
-      retry_on_http_429: true
+  # remoteWrite:
+  #   - url: http://nginx-mimir.nexdev.net/api/v1/push
+  #     headers:
+  #       X-Scope-OrgID: "sc-lumprod"
+  #     retry_on_http_429: true
 
 
   resourcesPreset: "2xlarge"
