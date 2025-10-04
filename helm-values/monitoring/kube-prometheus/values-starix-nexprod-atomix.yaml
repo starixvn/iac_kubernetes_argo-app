@@ -115,10 +115,10 @@ alertmanager:
             service: "Velero.*"
         - receiver: "alert-nx-atomix-domains"
           match_re:
-            alertname: "SSLCertificate.*|StatusCodeUnexpected|TCPEndpointStatus|CDNUnreachable"
+            alertname: "SSLCertificate.*|StatusCodeUnexpected|TCPEndpointStatus"
         - receiver: "alerts-test"
           match_re:
-            alertname: "DNSLookupFailed"
+            alertname: "DNSLookupFailed|CDNUnreachable"
         - receiver: dev-services
           matchers:
           - service="OpenSearch"
@@ -329,7 +329,7 @@ extraDeploy:
     labels:
       prometheus: main
   spec:
-    interval: 10s
+    interval: 5s
     module: icmp_cdn
     prober:
       url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
