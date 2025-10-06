@@ -63,7 +63,8 @@ opencost:
       ATHENA_TABLE: "nx_opencost_cur"
       ATHENA_WORKGROUP: "primary"
       ATHENA_PROJECT_ID: "014999276089"
-      EMIT_KUBECOST_METRICS: "true"
+      EMIT_KUBECOST_METRICS: true
+      EMIT_CLOUD_COST_METRICS: true
       METRIC_RESOLUTION: "1m"
 
     extraArgs: []
