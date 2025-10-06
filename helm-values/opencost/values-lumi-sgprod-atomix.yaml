@@ -53,10 +53,10 @@ opencost:
       fullImageName: null
     extraEnv:
       CLUSTER_ID: "lumi.sgprod"
-      CLOUD_COST_ENABLED: "true"
-      AWS_CUR_INTEGRATION: "athena"
-      AWS_CUR_PATH: "s3://vn-lumi-starix-tf-state/opencost-cur-results/"
-      CLOUD_PROVIDER: "AWS"
+      # CLOUD_COST_ENABLED: "true"
+      # AWS_CUR_INTEGRATION: "athena"
+      # AWS_CUR_PATH: "s3://vn-lumi-starix-tf-state/opencost-cur-results/"
+      # CLOUD_PROVIDER: "AWS"
 
     extraArgs: []
     command: []
@@ -121,7 +121,7 @@ opencost:
       tls: []
 
   customPricing:
-    enabled: false
+    enabled: true
     configmapName: custom-pricing-model
     configPath: /tmp/custom-config
     createConfigmap: true
@@ -148,17 +148,17 @@ opencost:
   dataRetention:
     dailyResolutionDays: 15
 
-  # cloudCost:
-  #   # -- Enable cloud cost ingestion and querying, dependant on valid integration credentials
-  #   enabled: true
-  #   # -- Number of hours between each run of the Cloud Cost pipeline
-  #   refreshRateHours: 1
-  #   # -- Number of days into the past that a Cloud Cost standard run will query for
-  #   runWindowDays: 3
-  #   # -- The number of standard runs before a Month-to-Date run occurs
-  #   monthToDateInterval: 6
-  #   # -- The max number of days that any single query will be made to construct Cloud Costs
-  #   queryWindowDays: 7
+  cloudCost:
+    # -- Enable cloud cost ingestion and querying, dependant on valid integration credentials
+    enabled: true
+    # -- Number of hours between each run of the Cloud Cost pipeline
+    refreshRateHours: 1
+    # -- Number of days into the past that a Cloud Cost standard run will query for
+    runWindowDays: 3
+    # -- The number of standard runs before a Month-to-Date run occurs
+    monthToDateInterval: 6
+    # -- The max number of days that any single query will be made to construct Cloud Costs
+    queryWindowDays: 7
 
   metrics:
     kubeStateMetrics:
