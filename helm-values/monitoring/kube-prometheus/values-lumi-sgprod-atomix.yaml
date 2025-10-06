@@ -60,12 +60,12 @@ prometheus:
     internal:
       jobList:
         - job_name: "opencost_cloud"
-          metrics_path: "/cloudCost?window=2d"
+          metrics_path: "/cloudcost?window=2d"
           scrape_interval: 15s
           scrape_timeout: 5s
           scheme: "http"
           static_configs:
-            - targets: ["opencost-atx-sgprod.tf-atx-opencost:9003"]
+            - targets: ["opencost-atx-sgprod.tf-atx-opencost.svc:9003"]
 
   #additionalPrometheusRules: []
 
