@@ -53,6 +53,11 @@ opencost:
       fullImageName: null
     extraEnv:
       CLUSTER_ID: "lumi.sgprod"
+      CLOUD_PROVIDER: "AWS"
+      AWS_CUR_PATH: "s3://vn-lumi-starix-tf-state/opencost-cur-results/"
+      AWS_CUR_INTEGRATION: "athena"
+      LOG_LEVEL: "debug"
+
     extraArgs: []
     command: []
     replicas: 1
