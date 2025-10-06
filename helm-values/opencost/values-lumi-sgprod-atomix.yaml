@@ -3,7 +3,7 @@ fullnameOverride: ""
 namespaceOverride: ""
 clusterName: "cluster.local"
 
-loglevel: info
+loglevel: debug
 
 imagePullSecrets: []
 
