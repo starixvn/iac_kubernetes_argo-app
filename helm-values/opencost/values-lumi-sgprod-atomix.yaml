@@ -53,11 +53,10 @@ opencost:
       fullImageName: null
     extraEnv:
       CLUSTER_ID: "lumi.sgprod"
-      CLOUD_PROVIDER: "AWS"
-      AWS_CUR_PATH: "s3://vn-lumi-starix-tf-state/opencost-cur-results/"
-      AWS_CUR_INTEGRATION: "athena"
       LOG_LEVEL: "debug"
-
+      AWS_CUR_INTEGRATION: "athena"
+      AWS_CUR_PATH: "s3://vn-lumi-starix-tf-state/opencost-cur-results/"
+      CLOUD_PROVIDER: "AWS"
     extraArgs: []
     command: []
     replicas: 1
@@ -121,7 +120,7 @@ opencost:
       tls: []
 
   customPricing:
-    enabled: false
+    enabled: true
     configmapName: custom-pricing-model
     configPath: /tmp/custom-config
     createConfigmap: true
@@ -150,7 +149,7 @@ opencost:
 
   cloudCost:
     # -- Enable cloud cost ingestion and querying, dependant on valid integration credentials
-    enabled: true
+    enabled: false
     # -- Number of hours between each run of the Cloud Cost pipeline
     refreshRateHours: 1
     # -- Number of days into the past that a Cloud Cost standard run will query for
@@ -159,13 +158,6 @@ opencost:
     monthToDateInterval: 6
     # -- The max number of days that any single query will be made to construct Cloud Costs
     queryWindowDays: 7
-    athenaBucketName: "s3://vn-lumi-starix-tf-state/opencost-cur-results/"
-    athenaDatabase: "athenacurcfn_nx_opencost_cur"
-    athenaProjectID: "014999276089"
-    athenaRegion: "ap-southeast-1"
-    athenaTable: "nx_opencost_cur"
-    athenaWorkgroup: primary
-
 
   metrics:
     kubeStateMetrics:
