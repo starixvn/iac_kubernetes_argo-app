@@ -149,7 +149,7 @@ opencost:
 
   cloudCost:
     # -- Enable cloud cost ingestion and querying, dependant on valid integration credentials
-    enabled: false
+    enabled: true
     # -- Number of hours between each run of the Cloud Cost pipeline
     refreshRateHours: 1
     # -- Number of days into the past that a Cloud Cost standard run will query for
