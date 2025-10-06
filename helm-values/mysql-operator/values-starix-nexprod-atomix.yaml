@@ -28,3 +28,38 @@ orchestrator:
       memory: 500Mi
 
 
+### Mysql for Grafana
+extraObjects:
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: starix-nexprod-mysql-secret
+  type: Opaque
+  data:
+    ROOT_PASSWORD: "ZklAYWRES20xTXl0QVNnWko=" # FK@dXDsL1MytASgZk
+    USER: "bXlzcWwtdXNlcg==" #mysql-user
+    PASSWORD: "UGx+VWxoNFlnZlc=" #Pl+Ulh4YgeW
+    DATABASE: "bXlzcWwtZGI=" #mysql-db
+
+- apiVersion: mysql.presslabs.org/v1alpha1
+  kind: MysqlCluster
+  metadata:
+    name: starix-nexprod-mysql-cluster
+  spec:
+    replicas: 1
+    secretName: starix-nexprod-mysql-secret
+    volumeSpec:
+      persistentVolumeClaim:
+        storageClassName: "longhorn-effort"
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 20Gi
+    podSpec:
+      resources:
+        requests:
+          memory: 1Gi
+          cpu:    200m
+        limits:
+          memory: 4Gi
+
