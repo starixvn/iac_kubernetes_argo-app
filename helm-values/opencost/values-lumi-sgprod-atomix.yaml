@@ -52,11 +52,12 @@ opencost:
       pullPolicy: IfNotPresent
       fullImageName: null
     extraEnv:
-      LOG_LEVEL: "debug"
       CLUSTER_ID: "lumi.sgprod"
       AWS_CUR_INTEGRATION: "athena"
       AWS_CUR_PATH: "s3://vn-lumi-starix-tf-state/opencost-cur-results/"
       CLOUD_PROVIDER: "AWS"
+      CONFIG_PATH: "/tmp/custom-config"
+      CLOUD_COST_ENABLED: "true" 
     extraArgs: []
     command: []
     replicas: 1
