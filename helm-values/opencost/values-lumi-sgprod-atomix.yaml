@@ -67,7 +67,10 @@ opencost:
       METRIC_RESOLUTION: "1m"
 
     extraArgs: []
-    command: []
+    command:
+      - "/bin/opencost"
+      - "--aws-cloud-costs=true"
+      - "--emit-kubecost-metrics=true"
     replicas: 1
     resources:
       requests:
