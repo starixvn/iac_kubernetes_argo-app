@@ -65,7 +65,7 @@ prometheus:
           scrape_timeout: 5s
           scheme: "http"
           static_configs:
-            - targets: ["opencost-atx-prod.tf-atx-opencost.svc:9003"]
+            - targets: ["opencost-atx-prod.tf-atx-opencost.svc.cluster.local:9003"]
 
   #additionalPrometheusRules: []
 
