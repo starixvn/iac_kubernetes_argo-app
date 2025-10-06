@@ -63,9 +63,9 @@ prometheus:
           metrics_path: "/cloudCost?window=7d"
           scrape_interval: 15s
           scrape_timeout: 5s
-          scheme: "http"
+          scheme: "https"
           static_configs:
-            - targets: ["opencost-atx-sgprod.tf-atx-opencost.svc:9003"]
+            - targets: ["opencost-atx-sgprod.tf-atx-opencost.svc.cluster.local:9003"]
 
   #additionalPrometheusRules: []
 
