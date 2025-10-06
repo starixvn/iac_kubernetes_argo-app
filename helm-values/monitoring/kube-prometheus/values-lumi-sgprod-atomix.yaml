@@ -60,7 +60,7 @@ prometheus:
     internal:
       jobList:
         - job_name: "opencost_cloud"
-          metrics_path: "/cloudCost?window=7d"
+          metrics_path: "/cloudCost?window=2d"
           scrape_interval: 15s
           scrape_timeout: 5s
           scheme: "http"
