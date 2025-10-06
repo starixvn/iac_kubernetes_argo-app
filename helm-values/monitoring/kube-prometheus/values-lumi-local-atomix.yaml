@@ -116,11 +116,11 @@ alertmanager:
       - receiver: "velero_alerts"
         match:
           service: "Velero.*"
-      # - receiver: kubescape-notify
-      #   matchers:
-      #   - alertname="KubescapeRuleViolated"
-      #   - severity!="low"
-      #   group_by: ['container_name', 'rule_name']
+      - receiver: kubescape-notify
+        matchers:
+        - alertname="KubescapeRuleViolated"
+        - severity!="low"
+        group_by: ['uid']
       group_by: ['alertname', 'cluster', 'namespace', 'pod', 'description', 'instance']
       group_wait: 30s
       group_interval: 5m
@@ -181,19 +181,19 @@ alertmanager:
           ❗ Severity: `{{ .CommonLabels.severity }}`
           📝 {{ .CommonAnnotations.description }}
 
-    # - name: kubescape-notify
-    #   slack_configs:
-    #   - channel: "#alert-josh-test"
-    #     color: '{{ template "sre.slack.color" . }}'
-    #     fallback: '{{ template "sre.slack.fallback" . }}'
-    #     icon_emoji: '{{ template "sre.slack.iconemoji" . }}'
-    #     send_resolved: false
-    #     username: '{{ template "sre.slack.username" . }}🔹SC.LOCAL'
-    #     title: '{{ template "kubescape.slack.title" . }}'
-    #     text: '{{ template "sre.slack.body" . }}'
-    #     actions: 
-    #     - type: "button"
-    #       text: ":opensearch-ico: Logs"
-    #       url: "https://logs.nexdev.net/app/data-explorer/discover/?security_tenant=private#/view/ae4836f0-77f0-11f0-98b6-dd570b75d8b6?_g=%28filters%3A%21%28%29%2CrefreshInterval%3A%28pause%3A%21t%2Cvalue%3A0%29%2Ctime%3A%28from%3Anow-15m%2Cto%3Anow%29%29"
+    - name: kubescape-notify
+      slack_configs:
+      - channel: "#alert-josh-test"
+        color: '{{ template "sre.slack.color" . }}'
+        fallback: '{{ template "sre.slack.fallback" . }}'
+        icon_emoji: '{{ template "sre.slack.iconemoji" . }}'
+        send_resolved: false
+        username: '{{ template "sre.slack.username" . }}🔹SC.LOCAL'
+        title: '{{ template "kubescape.slack.title" . }}'
+        text: '{{ template "sre.slack.body" . }}'
+        actions: 
+        - type: "button"
+          text: ":opensearch-ico: Logs"
+          url: "https://logs.nexdev.net/app/data-explorer/discover/?security_tenant=private#/view/ae4836f0-77f0-11f0-98b6-dd570b75d8b6?_g=%28filters%3A%21%28%29%2CrefreshInterval%3A%28pause%3A%21t%2Cvalue%3A0%29%2Ctime%3A%28from%3Anow-15m%2Cto%3Anow%29%29"
 
     - name: default-receiver
