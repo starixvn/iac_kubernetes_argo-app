@@ -39,8 +39,8 @@ rbac:
 
 opencost:
   cloudIntegrationSecret: ""
-  # cloudCost:
-  #   enabled: true
+  cloudCost:
+    enabled: true
   exporter:
     apiPort: 9003
     cloudProviderApiKey: ""
@@ -53,10 +53,10 @@ opencost:
       fullImageName: null
     extraEnv:
       CLUSTER_ID: "lumi.sgprod"
-      # CLOUD_COST_ENABLED: "true"
-      # AWS_CUR_INTEGRATION: "athena"
-      # AWS_CUR_PATH: "s3://vn-lumi-starix-tf-state/opencost-cur-results/"
-      # CLOUD_PROVIDER: "AWS"
+      CLOUD_COST_ENABLED: "true"
+      AWS_CUR_INTEGRATION: "athena"
+      AWS_CUR_PATH: "s3://vn-lumi-starix-tf-state/opencost-cur-results/"
+      CLOUD_PROVIDER: "AWS"
 
     extraArgs: []
     command: []
@@ -121,7 +121,7 @@ opencost:
       tls: []
 
   customPricing:
-    enabled: true
+    enabled: false
     configmapName: custom-pricing-model
     configPath: /tmp/custom-config
     createConfigmap: true
