@@ -107,6 +107,17 @@ argo_applications_by_team = {
         value_files   = ["values-starix-nexprod-atomix.yaml"]
         # trigger
       }
+
+      mysql-operator = {
+        helm_path     = "mysql-operator"
+        chart_version = "0.6.3"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-starix-nexprod-atomix.yaml"
+        ]
+      }
+
     }
   }
   stx = {
