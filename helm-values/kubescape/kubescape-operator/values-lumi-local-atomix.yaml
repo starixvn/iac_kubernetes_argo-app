@@ -126,8 +126,8 @@ nodeAgent:
     pullPolicy: IfNotPresent
 
   config:
-    maxLearningPeriod: 48h # duration string
-    learningPeriod: 24h # duration string
+    maxLearningPeriod: 2h # duration string
+    learningPeriod: 1h # duration string
     updatePeriod: 10m # duration string
     nodeProfileInterval: 10m # duration string
     networkStreamingInterval: 2m # duration string
