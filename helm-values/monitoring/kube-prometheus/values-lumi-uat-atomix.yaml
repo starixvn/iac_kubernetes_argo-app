@@ -72,7 +72,7 @@ alertmanager:
          alertname: "Kubernetes Pod Restart"
       - receiver: 'null'
         matchers:
-        - namespace=~"l1|l2|gn|hd|sk|sp|tg|mg|cattle-system"
+        - namespace=~"l1|l2|gn|hd|sk|sp|tg|mg|cattle-system|tf-atx-opencost"
         - component="kubernetes"
       - receiver: 'null'
         match_re:
