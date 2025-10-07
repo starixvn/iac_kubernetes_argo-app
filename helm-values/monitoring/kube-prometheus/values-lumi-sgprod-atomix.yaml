@@ -60,7 +60,7 @@ prometheus:
     internal:
       jobList:
         - job_name: "cloud-costs-exporter"
-          metrics_path: "/" #/cloudcost?window=2d"
+          metrics_path: "/metrics" #/cloudcost?window=2d"
           scrape_interval: 30s
           scrape_timeout: 10s
           scheme: "http"
