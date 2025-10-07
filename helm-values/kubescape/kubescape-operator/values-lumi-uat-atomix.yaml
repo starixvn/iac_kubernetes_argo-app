@@ -140,7 +140,7 @@ nodeAgent:
       url: http://synchronizer:8089/apis/v1/kubescape.io
       maxAlertsPerMinute: 1000
       method: POST
-    alertManagerExporterUrls: [prometheus-atx-uat-kube-pr-alertmanager.monitoring:9093]
+    # alertManagerExporterUrls: [prometheus-atx-uat-kube-pr-alertmanager.monitoring:9093]
     stdoutExporter: true
     # syslogExporterURL: 10.148.58.162:30970
     skipKernelVersionCheck: false
