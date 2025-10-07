@@ -339,7 +339,7 @@ logstashPipeline:
           }
         }
 
-        ### LEGION TEAM
+        ### SUBARASHI TEAM
         if [Properties][Team] == "Legion" or
            [Properties][Team] == "Subarashi" {
           mutate {
@@ -348,7 +348,7 @@ logstashPipeline:
           }
         }
 
-        ### ROME TEAM
+        ### ALPHA TEAM
         if [Properties][Team] == "Rome" {
           mutate {
             # remove_field => ["[Renderings]", "[Properties][HttpLog]", "MessageTemplate", "[Properties][Elapsed]", "[Properties][SourceContext]"]
@@ -413,6 +413,17 @@ logstashPipeline:
               ssl => true
               ssl_certificate_verification => false
               index => "logstash-subarashi-deposit-api-local"
+              action => "create"
+            }
+          }
+          if [Properties][Application] == "AFF" {
+            opensearch {
+              hosts => ["https://opensearch-cluster-master.logging:9200"]
+              user => "logstash"
+              password => "logstash"
+              ssl => true
+              ssl_certificate_verification => false
+              index => "logstash-subarashi-aff-landing-page-local"
               action => "create"
             }
           }
