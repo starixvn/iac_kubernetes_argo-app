@@ -16,6 +16,15 @@ argo_applications_by_team = {
         auto_sync     = false
         value_files = ["values-starix-k3skc-atomix.yaml"]
       }
+
+      redis-operator = {
+        namespace     = "redis-operator"
+        helm_path     = "redis-operator/operator"
+        chart_version = "0.22.1"
+        auto_sync     = false
+        value_files = ["values-starix-k3skc-atomix.yaml"]
+      }
+
     }
   }
 }
