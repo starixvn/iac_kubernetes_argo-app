@@ -30,7 +30,6 @@ service:
   labels: {}
   type: ClusterIP
   port: 9003
-  # nodePort: 30093
   extraPorts: []
   loadBalancerSourceRanges: []
 
@@ -38,16 +37,6 @@ rbac:
   enabled: true
 
 opencost:
-  # aws:
-  #   enabled: true
-  #   cloudCosts:
-  #     enabled: true
-  #     athenaBucketName: "s3://vn-nx-opencost-cur-results"
-  #     athenaRegion: "ap-southeast-1"
-  #     athenaDatabase: "athenacurcfn_nx_opencost_cur"
-  #     athenaTable: "nx_opencost_cur"
-  #     athenaProjectID: "014999276089"
-  #     athenaWorkgroup: "primary"
   cloudIntegrationSecret: ""
   exporter:
     apiPort: 9003
@@ -144,13 +133,6 @@ opencost:
       awsSpotDataBucket: "vn-lumi-starix-tf-state"
       awsSpotDataPrefix: "opencost-eks-uat-spot-data"
       projectID: "014999276089"
-
-      athenaBucketName: "s3://vn-lumi-starix-tf-state/opencost-cur-results/"
-      athenaDatabase: "athenacurcfn_nx_opencost_cur"
-      athenaProjectID: "014999276089"
-      athenaRegion: "ap-southeast-1"
-      athenaTable: "nx_opencost_cur"
-      athenaWorkgroup: primary
 
   dataRetention:
     dailyResolutionDays: 15
