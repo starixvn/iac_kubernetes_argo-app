@@ -90,7 +90,7 @@ extraManifests:
   kind: Secret
   metadata:
     name: "redis-kc-secret"
-    namespace: {{ .Release.Namespace }}
+    namespace: "redis-kc"
   type: Opaque
   data:
     redis-password: cmVkaXNQYXNzd29yZDEyMyE= # redisPassword123!
