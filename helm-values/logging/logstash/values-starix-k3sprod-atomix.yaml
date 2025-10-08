@@ -746,9 +746,3 @@ service:
     port: 6970
     protocol: TCP
     targetPort: tcp-dev
-
-  - name: kubescape-sc-u
-    nodePort: 30970
-    port: 6970
-    protocol: TCP
-    targetPort: kubescape-sc-u
