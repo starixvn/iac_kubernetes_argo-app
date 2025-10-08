@@ -230,6 +230,18 @@ argo_projects = {
     ]
   }
 
+  tf-starix-k3skc = {
+    src_repo = ["*"]
+    destinations = [
+      {
+        name      = "k3s-kc-testlab"
+        server    = "https://10.70.70.70:6443"
+        namespace = "*"
+        # trigger
+      }
+    ]
+  }
+
 }
 
 # REQUIRED VARIABLE SET [git_helm_source,git_helm_value]
