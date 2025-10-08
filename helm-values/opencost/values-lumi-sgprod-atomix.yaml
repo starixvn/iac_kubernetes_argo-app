@@ -10,7 +10,7 @@ imagePullSecrets: []
 serviceAccount:
   create: true
   annotations: 
-  #eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:role/vn-nx-opencost
+  eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:role/vn-nx-opencost
   automountServiceAccountToken: true
   name: "opencost-atx-sgprod"
 
@@ -30,7 +30,6 @@ service:
   labels: {}
   type: ClusterIP
   port: 9003
-  # nodePort: 30093
   extraPorts: []
   loadBalancerSourceRanges: []
 
@@ -39,8 +38,6 @@ rbac:
 
 opencost:
   cloudIntegrationSecret: ""
-  cloudCost:
-    enabled: true
   exporter:
     apiPort: 9003
     cloudProviderApiKey: ""
@@ -130,7 +127,7 @@ opencost:
       tls: []
 
   customPricing:
-    enabled: true
+    enabled: false
     configmapName: custom-pricing-model
     configPath: /tmp/custom-config
     createConfigmap: true
@@ -157,17 +154,17 @@ opencost:
   dataRetention:
     dailyResolutionDays: 15
 
-  # cloudCost:
-  #   # -- Enable cloud cost ingestion and querying, dependant on valid integration credentials
-  #   enabled: true
-  #   # -- Number of hours between each run of the Cloud Cost pipeline
-  #   refreshRateHours: 1
-  #   # -- Number of days into the past that a Cloud Cost standard run will query for
-  #   runWindowDays: 3
-  #   # -- The number of standard runs before a Month-to-Date run occurs
-  #   monthToDateInterval: 6
-  #   # -- The max number of days that any single query will be made to construct Cloud Costs
-  #   queryWindowDays: 7
+  cloudCost:
+    # -- Enable cloud cost ingestion and querying, dependant on valid integration credentials
+    enabled: true
+    # -- Number of hours between each run of the Cloud Cost pipeline
+    refreshRateHours: 6
+    # -- Number of days into the past that a Cloud Cost standard run will query for
+    runWindowDays: 3
+    # -- The number of standard runs before a Month-to-Date run occurs
+    monthToDateInterval: 6
+    # -- The max number of days that any single query will be made to construct Cloud Costs
+    queryWindowDays: 7
 
   metrics:
     kubeStateMetrics:

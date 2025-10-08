@@ -44,15 +44,20 @@ prometheus:
   #     memory: 4Gi
 
   additionalScrapeConfigs:
-    enabled: false
-    type: external
+    enabled: true
+    type: internal
     external:
-      ## Name of the secret that Prometheus should use for the additional scrape configuration
       name: ""
-      ## Name of the key inside the secret to be used for the additional scrape configuration.
       key: ""
     internal:
-      jobList: []
+      jobList:
+        - job_name: "cloud-costs-exporter"
+          metrics_path: "/metrics"
+          scrape_interval: 30s
+          scrape_timeout: 10s
+          scheme: "http"
+          static_configs:
+            - targets: ["cloud-costs-exporter.tf-atx-opencost.svc:8080"]
   ###
 
 kube-state-metrics:

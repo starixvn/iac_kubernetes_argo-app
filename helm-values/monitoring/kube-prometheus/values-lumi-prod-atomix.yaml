@@ -68,7 +68,7 @@ alertmanager:
       routes:
       - receiver: 'null'
         match_re:
-          pod: ".*website1.*|opencost.*"
+          pod: ".*website1.*|.*cost.*"
       - receiver: 'null'
         match_re:
          namespace: "logging|kubescape"
@@ -96,7 +96,7 @@ alertmanager:
         matchers:
         - alertname="KubescapeRuleViolated"
         - severity!="low"
-        group_by: ['uid']
+        group_by: ['uid', 'pid']
       group_by: ['alertname', 'cluster', 'namespace', 'pod', 'description', 'instance']
       group_wait: 30s
       group_interval: 5m

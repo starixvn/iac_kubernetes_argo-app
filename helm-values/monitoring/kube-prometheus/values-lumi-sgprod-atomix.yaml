@@ -35,16 +35,6 @@ prometheus:
   ##
   resourcesPreset: "xlarge"
 
-  # additionalScrapeConfigs:
-  #   enabled: false
-  #   type: external
-  #   external:
-  #     ## Name of the secret that Prometheus should use for the additional scrape configuration
-  #     name: ""
-  #     ## Name of the key inside the secret to be used for the additional scrape configuration.
-  #     key: ""
-  #   internal:
-  #     jobList: []
   ##
   additionalScrapeConfigsExternal:
     enabled: false
@@ -59,19 +49,13 @@ prometheus:
       key: ""
     internal:
       jobList:
-        - job_name: "opencost_cloud"
-          metrics_path: "/metrics" #/cloudcost?window=2d"
+        - job_name: "cloud-costs-exporter"
+          metrics_path: "/metrics"
           scrape_interval: 30s
           scrape_timeout: 10s
           scheme: "http"
           static_configs:
-            - targets: ["opencost-atx-sgprod.tf-atx-opencost.svc:9003"]
-          metric_relabel_configs:
-            - source_labels: [__name__]
-              regex: "(kubecost_cloud_cost_.*)"
-              action: keep
-
-  #additionalPrometheusRules: []
+            - targets: ["cloud-costs-exporter.tf-atx-opencost.svc:8080"]
 
 kube-state-metrics:
   resourcesPreset: "none"
@@ -94,7 +78,7 @@ alertmanager:
       routes:
       - receiver: 'null'
         match_re:
-          pod: ".*website1.*|opencost.*"
+          pod: ".*website1.*|.*cost.*"
       - receiver: 'null'
         match_re:
          namespace: "logging"
