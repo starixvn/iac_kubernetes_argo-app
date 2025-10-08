@@ -25,7 +25,16 @@ argo_applications_by_team = {
         skip_crds     = false
         value_files = ["values-starix-k3skc-atomix.yaml"]
       }
-    
+
+      redis-kc-replication = {
+        namespace     = "redis-kc"
+        helm_path     = "redis-operator/replication"
+        chart_version = "0.16.9"
+        auto_sync     = false
+        skip_crds     = true
+        value_files = ["values-starix-k3skc-atomix.yaml"]
+      }
+
     }
   }
 }
