@@ -33,10 +33,17 @@ logstashPipeline:
         tags => ["uat","pioneers"]
       }
 
-      syslog {
+      tcp {
         port => 6970
-        type => "kubescape"
-        tags => ["uat", "sc"]
+        type => "dev-logs"
+        tags => ["tcp"]
+      }
+    }
+
+  global_filter.conf: |
+    filter {
+      mutate {
+        add_field => { "env" => "uat" }
       }
     }
 
@@ -263,45 +270,18 @@ logstashPipeline:
       }
     }
 
-  kubescape_filter.conf: |
+  dev_filter.conf: |
     filter {
-      if [type] == "kubescape" {
-        grok {
-          match => {
-            "message" => "<%{NONNEGINT:syslog_pri}>%{NONNEGINT:version}%{SPACE}(?:-|%{TIMESTAMP_ISO8601:syslog_timestamp})%{SPACE}(?:-|%{IPORHOST:hostname})%{SPACE}(?:%{SYSLOG5424PRINTASCII:program}|-)%{SPACE}(?:-|%{SYSLOG5424PRINTASCII:process_id})%{SPACE}(?:-|%{SYSLOG5424PRINTASCII:message_id})%{SPACE}(?:-|(?<structured_data>(\[.*?[^\\]\])+))(?:%{SPACE}%{GREEDYDATA:syslog_message}|)"
-          }
-          add_tag => [ "match" ]
+      if [type] == "dev-logs"{
+        json {
+          source => "message"
         }
-        if "match" in [tags] {
-          syslog_pri {
-            remove_field => "syslog_pri"
-          }
-          date {
-            match => [ "syslog_timestamp", "ISO8601", "MMM dd HH:mm:ss", "MMM dd HH:mm:ss.SSS" ]
-            remove_field => "syslog_timestamp"
-          }
-          if [structured_data] {
-            ruby {
-              code => '
-                # https://github.com/logstash-plugins/logstash-input-syslog/issues/15#issuecomment-270367033
-                def extract_syslog5424_sd(syslog5424_sd)
-                  sd = {}
-                  syslog5424_sd.scan(/\[(?<element>.*?[^\\])\]/) do |element|
-                    data = element[0].match(/(?<sd_id>[^\ ]+)(?<sd_params> .*)?/)
-                    sd_id = data[:sd_id].split("@", 2)[0]
-                    sd[sd_id] = {}
-                    next if data.nil? || data[:sd_params].nil?
-                    data[:sd_params].scan(/ (.*?[=](?:""|".*?[^\\]"))/) do |set|
-                      set = set[0].match(/(?<param_name>.*?)[=]\"(?<param_value>.*)\"/)
-                      sd[sd_id][set[:param_name]] = set[:param_value]
-                    end
-                  end
-                  sd
-                end
-                event.set("[sd]", extract_syslog5424_sd(event.get("[structured_data]")))
-              '
-              remove_field => "structured_data"
-            }
+
+        ### SUBARASHI TEAM
+        if [Properties][Team] == "Subarashi" {
+          mutate {
+            remove_field => ["[Renderings][HttpLog]", "[Properties][HttpLog]" ]
+            add_tag => ["subarashi"]
           }
         }
       }
@@ -443,18 +423,31 @@ logstashPipeline:
       }
     }
 
-  kubescape_output.conf: |
+  dev_output.conf: |
     output {
-      if [type] == "kubescape" {
-        if "sc" in [tags] and "uat" in [tags] {
-          opensearch {
-            hosts => ["https://opsi.ops-klprod.gamora.prod:443"]
-            user => "logstash"
-            password => "logstash"
-            ssl => true
-            ssl_certificate_verification => false
-            index => "logstash-kubescape-uat"
-            action => "create"
+      if [type] == "dev-logs" {
+        if "subarashi" in [tags] {
+          if [Properties][Application] == "AFF" {
+            opensearch {
+              hosts => ["https://opsi.ops-klprod.gamora.prod:443"]
+              user => "logstash"
+              password => "logstash"
+              ssl => true
+              ssl_certificate_verification => false
+              index => "logstash-subarashi-aff-landing-page"
+              action => "create"
+            }
+          }
+          else {
+            opensearch {
+              hosts => ["https://opsi.ops-klprod.gamora.prod:443"]
+              user => "logstash"
+              password => "logstash"
+              ssl => true
+              ssl_certificate_verification => false
+              index => "logstash-subarashi-uat-default"
+              action => "create"
+            }
           }
         }
         else {
@@ -466,7 +459,7 @@ logstashPipeline:
             ssl_certificate_verification => false
             index => "logstash-unknown"
             action => "create"
-          } 
+          }
         }
       }
     }
@@ -517,13 +510,9 @@ extraPorts:
   - name: http-pier
     containerPort: 6969
     protocol: TCP
-
-  - name: kubescape-sc-t
+  - name: tcp-dev
     containerPort: 6970
     protocol: TCP
-  - name: kubescape-sc-u
-    containerPort: 6970
-    protocol: UDP
 
 
 service:
@@ -561,14 +550,8 @@ service:
     port: 6969
     protocol: TCP
     targetPort: http-pier
-
-  - name: kubescape-sc-t
+  - name: tcp-dev
     nodePort: 30970
     port: 6970
     protocol: TCP
-    targetPort: kubescape-sc-t
-  - name: kubescape-sc-u
-    nodePort: 30970
-    port: 6970
-    protocol: UDP
-    targetPort: kubescape-sc-u
+    targetPort: tcp-dev
