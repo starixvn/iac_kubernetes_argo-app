@@ -121,7 +121,7 @@ alertmanager:
         match:
           service: "Velero.*"
         group_by: ['alertname', 'job', 'pvc']
-      - receiver: dev-services
+      - receiver: nexops-services
         matchers:
         - service="OpenSearch"
         - alertname!="OpensearchClusterYellow"
@@ -214,9 +214,9 @@ alertmanager:
             ❗ Severity: `{{ .CommonLabels.severity }}`
             📝 {{ .CommonAnnotations.description }}
 
-    - name: dev-services
+    - name: nexops-services
       slack_configs:
-        - channel: "#dev-services"
+        - channel: "#alert-nx-atomix"
           color: '{{ template "sre.slack.color" . }}'
           fallback: '{{ template "sre.slack.fallback" . }}'
           icon_emoji: ":opensearch-ico:"

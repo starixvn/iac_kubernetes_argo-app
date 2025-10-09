@@ -119,7 +119,7 @@ alertmanager:
         - receiver: "alerts-test"
           match_re:
             alertname: "DNSLookupFailed|CDNUnreachable"
-        - receiver: dev-services
+        - receiver: nexops-services
           matchers:
           - service="OpenSearch"
           - alertname!="OpensearchClusterYellow"
@@ -243,9 +243,9 @@ alertmanager:
             color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
             send_resolved: true
 
-      - name: dev-services
+      - name: nexops-services
         slack_configs:
-          - channel: "#dev-services"
+          - channel: "#alert-nx-atomix"
             color: '{{ template "sre.slack.color" . }}'
             fallback: '{{ template "sre.slack.fallback" . }}'
             icon_emoji: ":opensearch-ico:"

@@ -129,7 +129,7 @@ alertmanager:
       - receiver: "alert-velero-backups"
         match_re:
           alertname: "Velero.*"
-      - receiver: dev-services
+      - receiver: nexops-services
         match:
           service: "OpenSearch"
         group_by: ['alertname', 'job']
@@ -209,9 +209,9 @@ alertmanager:
             ❗ *{{ .CommonLabels.severity }}*
             📝 *{{ .CommonAnnotations.message }}*
 
-    - name: dev-services
+    - name: nexops-services
       slack_configs:
-      - channel: '#dev-services'
+      - channel: '#alert-nx-atomix'
         color: '{{ template "sre.slack.color" . }}'
         fallback: '{{ template "sre.slack.fallback" . }}'
         icon_emoji: ":opensearch-ico:"
