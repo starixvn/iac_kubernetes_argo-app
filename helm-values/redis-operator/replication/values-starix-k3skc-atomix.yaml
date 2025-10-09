@@ -3,7 +3,7 @@ redisReplication:
   name: "redis-kc-testlab-rep"
   clusterSize: 3
   image: hub.nexdev.net/base/opstree/redis
-  tag: v7.0.15
+  tag: v8.2.1
   imagePullPolicy: IfNotPresent
   redisSecret:
     secretName: "redis-kc-secret"
