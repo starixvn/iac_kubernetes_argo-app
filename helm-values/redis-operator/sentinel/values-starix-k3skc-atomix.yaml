@@ -24,6 +24,9 @@ redisSentinelConfig:
   redisReplicationPassword:
     secretName: "redis-kc-secret"
     secretKey: "redis-password"
+  parallelSyncs: "2"
+  downAfterMilliseconds: "15000"
+
 
 serviceMonitor:
   enabled: false
