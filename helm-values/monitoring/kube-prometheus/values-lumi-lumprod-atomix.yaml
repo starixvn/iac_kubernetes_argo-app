@@ -90,7 +90,7 @@ alertmanager:
           namespace: "gitlab-runner|zabbix-proxy-lumprod|fleet-default|sentry-lumi|trivy-operator-lumi|sample|gitlab-server"
       - receiver: 'null'
         match_re:
-          pod: "scan-vulnerabilityreport-.*|c-.*|.*-rollover-.*|.*cleaner.*|.*cleanup.*|.*node-exporter.*|.*packagebuider.*|.*trim.*"
+          pod: "scan-vulnerabilityreport-.*|c-.*|.*-rollover-.*|.*cleaner.*|.*cleanup.*|.*node-exporter.*|.*packagebuider.*|.*trim.*|.*backup.*"
       - receiver: "null" #ignore Runner alert (CPU/Memory)
         match_re:
           instance: "10.10.50.91.*|10.10.50.90.*|10.10.50.43.*|10.10.50.88.*|10.10.50.29.*|10.10.50.30.*|10.10.50.84.*"
