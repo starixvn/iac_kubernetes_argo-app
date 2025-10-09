@@ -100,7 +100,7 @@ configuration: |
 
     server redis-2 redis-kc-testlab-rep-2.redis-kc-testlab-rep-headless.redis-kc.svc.kc-starix.testlab:6379 check inter 1s resolvers k8s init-addr none
 
-  frontend redis_nap_master_fe
+  frontend redis_nap_rep_fe
     bind :16778
     default_backend redis_nap_rep_be
 
