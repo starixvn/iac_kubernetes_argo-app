@@ -20,8 +20,29 @@ updateStrategy:
 service:
   type: LoadBalancer
   loadBalancerIP: "10.70.70.72"
+  ports:
+
+#NAP
+  - name: redis-nap-m
+    protocol: TCP
+    port: 16777
+    targetPort: redis-nap-m
+
+  - name: redis-nap-r
+    protocol: TCP
+    port: 16778
+    targetPort: redis-nap-r
 
 
+containerPorts:
+  - name: redis-nap-m
+    containerPort: 16777
+
+  - name: redis-nap-r
+    containerPort: 16778
+
+  - name: http
+    containerPort: 8080
 
 
 configuration: |
@@ -57,4 +78,47 @@ configuration: |
   backend default_backend_nodes
     mode http
     http-request return status 503 content-type "text/plain"  lf-string "503 Service Unavailable ! Pls contact NexOps if you think this is a mistake... K3s KC Testlab"
+
+  frontend redis_nap_master_fe
+    bind :16777
+    default_backend redis_nap_master_be
+
+  backend redis_nap_master_be
+    option tcp-check
+    tcp-check send AUTH\ redisPassword123!\r\n
+    tcp-check expect string +OK
+    tcp-check send PING\r\n
+    tcp-check expect string PONG
+    tcp-check send info\ replication\r\n
+    tcp-check expect string role:master
+    tcp-check send QUIT\r\n
+    tcp-check expect string +OK
+
+    server redis-0 redis-kc-testlab-rep-0.redis-kc-testlab-rep-headless.redis-kc.svc.kc-starix.testlab:6379 check inter 1s resolvers k8s init-addr none
+
+    server redis-1 redis-kc-testlab-rep-1.redis-kc-testlab-rep-headless.redis-kc.svc.kc-starix.testlab:6379 check inter 1s resolvers k8s init-addr none
+
+    server redis-2 redis-kc-testlab-rep-2.redis-kc-testlab-rep-headless.redis-kc.svc.kc-starix.testlab:6379 check inter 1s resolvers k8s init-addr none
+
+  frontend redis_nap_master_fe
+    bind :16778
+    default_backend redis_nap_rep_be
+
+  backend redis_nap_rep_be
+    option tcp-check
+    tcp-check send AUTH\ redisPassword123!\r\n
+    tcp-check expect string +OK
+    tcp-check send PING\r\n
+    tcp-check expect string PONG
+    tcp-check send QUIT\r\n
+    tcp-check expect string +OK
+
+    server redis-0 redis-kc-testlab-rep-0.redis-kc-testlab-rep-headless.redis-kc.svc.kc-starix.testlab:6379 check inter 1s resolvers k8s init-addr none
+
+    server redis-1 redis-kc-testlab-rep-1.redis-kc-testlab-rep-headless.redis-kc.svc.kc-starix.testlab:6379 check inter 1s resolvers k8s init-addr none
+
+    server redis-2 redis-kc-testlab-rep-2.redis-kc-testlab-rep-headless.redis-kc.svc.kc-starix.testlab:6379 check inter 1s resolvers k8s init-addr none
+
+
+
 
