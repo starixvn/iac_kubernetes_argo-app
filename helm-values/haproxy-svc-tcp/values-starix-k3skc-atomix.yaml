@@ -33,6 +33,9 @@ service:
     port: 16778
     targetPort: redis-nap-r
 
+  - name: http
+    port: 8080
+    targetPort: http
 
 containerPorts:
   - name: redis-nap-m
