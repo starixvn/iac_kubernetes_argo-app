@@ -35,6 +35,16 @@ argo_applications_by_team = {
         value_files = ["values-starix-k3skc-atomix.yaml"]
       }
 
+      redis-kc-sentinel = {
+        namespace     = "redis-kc"
+        helm_path     = "redis-operator/sentinel"
+        chart_version = "0.16.10"
+        auto_sync     = false
+        skip_crds     = true
+        value_files = ["values-starix-k3skc-atomix.yaml"]
+      }
+
+
     }
   }
 }
