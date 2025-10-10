@@ -43,13 +43,13 @@ initContainer:
 
 
 serviceMonitor:
-  enabled: false
+  enabled: true
   interval: 30s
   scrapeTimeout: 10s
 
 
 redisExporter:
-  enabled: false
+  enabled: true
   image: hub.nexdev.net/base/opstree/redis-exporter
   tag: "v1.44.0"
   imagePullPolicy: IfNotPresent

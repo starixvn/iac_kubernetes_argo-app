@@ -28,7 +28,7 @@ externalConfig:
 
 
 serviceMonitor:
-  enabled: false
+  enabled: true
   interval: 30s
   scrapeTimeout: 10s
   # -- Namespace where servicemonitor resource will be created, if empty it will be created in the same namespace as the redis-replication
@@ -39,7 +39,7 @@ serviceMonitor:
     # team: devops
 
 redisExporter:
-  enabled: false
+  enabled: true
   image: hub.nexdev.net/base/opstree/redis-exporter
   tag: "v1.44.0"
   imagePullPolicy: IfNotPresent
