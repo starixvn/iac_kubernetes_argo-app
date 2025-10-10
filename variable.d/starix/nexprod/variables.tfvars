@@ -137,6 +137,18 @@ argo_applications_by_team = {
           #trigger
         ]
       }
+      # 
+
+      redis-alpha = {
+        helm_path     = "redis-operator/replication-sentinel"
+        chart_version = "1.0.0"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-starix-nexprod-pioneers.yaml"
+          #trigger
+        ]
+      }
 
     }
   }
