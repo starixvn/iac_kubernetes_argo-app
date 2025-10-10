@@ -119,6 +119,9 @@ alertmanager:
       - receiver: 'nexpe-services-alert'
         match_re:
           namespace: "nexpe|gosql|tw|nexops|rabbitmq.*"
+      - receiver: 'nexpe-services-alert'
+        match_re:
+          instance: "10.148.58.130.*|10.148.58.131.*|10.148.58.145.*|10.148.58.146.*"
       - receiver: 'alert-nx-atomix'
         match_re:
           alertname: "Kubernetes.*|HAProxy.*"
