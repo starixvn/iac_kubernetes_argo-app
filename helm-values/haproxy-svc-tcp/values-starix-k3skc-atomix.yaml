@@ -97,11 +97,9 @@ configuration: |
     tcp-check send QUIT\r\n
     tcp-check expect string +OK
 
-    server redis-0 redis-kc-testlab-rep-0.redis-kc-testlab-rep-headless.redis-kc.svc.kc-starix.testlab:6379 check inter 1s resolvers k8s init-addr none
-
-    server redis-1 redis-kc-testlab-rep-1.redis-kc-testlab-rep-headless.redis-kc.svc.kc-starix.testlab:6379 check inter 1s resolvers k8s init-addr none
-
-    server redis-2 redis-kc-testlab-rep-2.redis-kc-testlab-rep-headless.redis-kc.svc.kc-starix.testlab:6379 check inter 1s resolvers k8s init-addr none
+    server redis-0 redis-nap-repl-0.redis-nap-repl-headless.redis-kc.svc.kc-starix.testlab:6379 check inter 1s resolvers k8s init-addr none
+    server redis-1 redis-nap-repl-1.redis-nap-repl-headless.redis-kc.svc.kc-starix.testlab:6379 check inter 1s resolvers k8s init-addr none
+    server redis-2 redis-nap-repl-2.redis-nap-repl-headless.redis-kc.svc.kc-starix.testlab:6379 check inter 1s resolvers k8s init-addr none
 
   frontend redis_nap_rep_fe
     bind :16778
@@ -116,11 +114,9 @@ configuration: |
     tcp-check send QUIT\r\n
     tcp-check expect string +OK
 
-    server redis-0 redis-kc-testlab-rep-0.redis-kc-testlab-rep-headless.redis-kc.svc.kc-starix.testlab:6379 check inter 1s resolvers k8s init-addr none
-
-    server redis-1 redis-kc-testlab-rep-1.redis-kc-testlab-rep-headless.redis-kc.svc.kc-starix.testlab:6379 check inter 1s resolvers k8s init-addr none
-
-    server redis-2 redis-kc-testlab-rep-2.redis-kc-testlab-rep-headless.redis-kc.svc.kc-starix.testlab:6379 check inter 1s resolvers k8s init-addr none
+    server redis-0 redis-nap-repl-0.redis-nap-repl-headless.redis-kc.svc.kc-starix.testlab:6379 check inter 1s resolvers k8s init-addr none
+    server redis-1 redis-nap-repl-1.redis-nap-repl-headless.redis-kc.svc.kc-starix.testlab:6379 check inter 1s resolvers k8s init-addr none
+    server redis-2 redis-nap-repl-2.redis-nap-repl-headless.redis-kc.svc.kc-starix.testlab:6379 check inter 1s resolvers k8s init-addr none
 
 
 
