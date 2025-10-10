@@ -44,6 +44,14 @@ argo_applications_by_team = {
         value_files = ["values-starix-k3skc-atomix.yaml"]
       }
 
+      prometheus = {
+        namespace     = "monitoring"
+        helm_path     = "monitoring/kube-prometheus"
+        chart_version = "9.5.11"
+        skip_crds     = false
+        value_files = ["values-starix-k3skc-atomix.yaml"]
+      }
+
 
     }
   }
