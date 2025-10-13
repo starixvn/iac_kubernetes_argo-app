@@ -149,7 +149,16 @@ argo_applications_by_team = {
           #trigger
         ]
       }
-
+      #
+      redis-nexpe = {
+        helm_path     = "redis-operator/replication-sentinel"
+        chart_version = "1.0.0"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-starix-nexprod-atomix.yaml"
+        ]
+      }
     }
   }
   stx = {
