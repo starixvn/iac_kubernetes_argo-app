@@ -1,7 +1,7 @@
 clusterName: "lumi.local"
 
 # excludeNamespaces: "kubescape,kube-system,kube-public,kube-node-lease,kubeconfig,gmp-system,gmp-public"
-includeNamespaces: "gn,hd,l1,l2,mg,sk,sp,tg"
+includeNamespaces: "gn,hd,l1,l2,mg,sk,sp,tg,default"
 
 capabilities:
   # ====== configuration scanning related capabilities ======
@@ -16,14 +16,14 @@ capabilities:
 
   # ====== Runtime related capabilities ======
   runtimeObservability: enable
-  networkPolicyService: enable
+  networkPolicyService: disable
   networkEventsStreaming: enable
   runtimeDetection: enable
   malwareDetection: disable
   nodeProfileService: enable
   admissionController: enable
   httpDetection: enable
-  seccompProfileService: enable
+  seccompProfileService: disable
   manageWorkloads: disable
   syncSBOM: disable
 
@@ -126,8 +126,8 @@ nodeAgent:
     pullPolicy: IfNotPresent
 
   config:
-    maxLearningPeriod: 48h # duration string
-    learningPeriod: 24h # duration string
+    maxLearningPeriod: 2h # duration string
+    learningPeriod: 1h # duration string
     updatePeriod: 10m # duration string
     nodeProfileInterval: 10m # duration string
     networkStreamingInterval: 2m # duration string

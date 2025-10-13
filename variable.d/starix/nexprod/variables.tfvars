@@ -87,11 +87,11 @@ argo_applications_by_team = {
         value_files   = ["values-starix-nexprod-vaultdev.yaml", ]
       }
 
-      # redis-standalone = {
-      #   helm_path     = "redis-standalone"
-      #   chart_version = "18.17.0"
-      #   value_files   = ["values-starix-nexprod-wabisabi.yaml"]
-      # }
+      redis-standalone = {
+        helm_path     = "redis-standalone"
+        chart_version = "21.0.0"
+        value_files   = ["values-starix-nexprod-wabisabi.yaml"]
+      }
 
       redis-was-custom = {
         helm_path     = "redis-was-custom"
@@ -107,6 +107,49 @@ argo_applications_by_team = {
         value_files   = ["values-starix-nexprod-atomix.yaml"]
         # trigger
       }
+
+      mysql-operator = {
+        helm_path     = "mysql-operator"
+        chart_version = "0.6.3"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-starix-nexprod-atomix.yaml"
+        ]
+      }
+
+      redis-operator = {
+        namespace     = "redis-operator"
+        helm_path     = "redis-operator/operator"
+        chart_version = "0.22.1"
+        auto_sync     = false
+        skip_crds     = false
+        value_files = ["values-starix-nexprod-atomix.yaml"]
+      }
+
+      redis-nap = {
+        helm_path     = "redis-operator/replication-sentinel"
+        chart_version = "1.0.0"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-starix-nexprod-omniflow.yaml"
+          #trigger
+        ]
+      }
+      # 
+
+      redis-alpha = {
+        helm_path     = "redis-operator/replication-sentinel"
+        chart_version = "1.0.0"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-starix-nexprod-pioneers.yaml"
+          #trigger
+        ]
+      }
+
     }
   }
   stx = {
@@ -138,7 +181,7 @@ argo_applications_by_team = {
         chart_version = "5.8.0"
         skip_crds     = false
         value_files = ["values-starix-nexprod-starix.yaml"]
-        # trigger
+        ### trigger
       }
     }
   }
@@ -203,6 +246,30 @@ argo_projects = {
         name      = "starix-local"
         server    = "https://10.17.200.90:6443"
         namespace = "*"
+      }
+    ]
+  }
+
+  tf-starix-k3sawx = {
+    src_repo = ["*"]
+    destinations = [
+      {
+        name      = "k3s-awx"
+        server    = "https://10.18.200.78:6443"
+        namespace = "*"
+        # trigger
+      }
+    ]
+  }
+
+  tf-starix-k3skc = {
+    src_repo = ["*"]
+    destinations = [
+      {
+        name      = "k3s-kc-testlab"
+        server    = "https://10.70.70.70:6443"
+        namespace = "*"
+        # trigger
       }
     ]
   }

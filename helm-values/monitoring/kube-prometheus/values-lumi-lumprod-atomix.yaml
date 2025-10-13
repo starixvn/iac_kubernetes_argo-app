@@ -31,13 +31,30 @@ prometheus:
     storageClass: "local-path"
     size: 100Gi
 
+  # remoteWrite:
+  #   - url: http://nginx-mimir.nexdev.net/api/v1/push
+  #     headers:
+  #       X-Scope-OrgID: "sc-lumprod"
+  #     retry_on_http_429: true
+
+
   resourcesPreset: "2xlarge"
 
   additionalScrapeConfigs:
     enabled: true
     type: internal
+    external:
+      name: ""
+      key: ""
     internal:
-      jobList: []
+      jobList:
+        - job_name: "gitlab-metrics"
+          metrics_path: "/gitlab-metrics"
+          scrape_interval: 15s
+          scrape_timeout: 5s
+          scheme: "https"
+          static_configs:
+            - targets: ["deploy.lumigame.com"]
 
   # additionalPrometheusRules: []
 
@@ -73,7 +90,7 @@ alertmanager:
           namespace: "gitlab-runner|zabbix-proxy-lumprod|fleet-default|sentry-lumi|trivy-operator-lumi|sample|gitlab-server"
       - receiver: 'null'
         match_re:
-          pod: "scan-vulnerabilityreport-.*|c-.*|.*-rollover-.*|.*cleaner.*|.*cleanup.*|.*node-exporter.*|.*packagebuider.*|.*trim.*"
+          pod: "scan-vulnerabilityreport-.*|c-.*|.*-rollover-.*|.*cleaner.*|.*cleanup.*|.*node-exporter.*|.*packagebuider.*|.*trim.*|.*backup.*"
       - receiver: "null" #ignore Runner alert (CPU/Memory)
         match_re:
           instance: "10.10.50.91.*|10.10.50.90.*|10.10.50.43.*|10.10.50.88.*|10.10.50.29.*|10.10.50.30.*|10.10.50.84.*"
@@ -104,7 +121,7 @@ alertmanager:
         match:
           service: "Velero.*"
         group_by: ['alertname', 'job', 'pvc']
-      - receiver: dev-services
+      - receiver: nexops-services
         matchers:
         - service="OpenSearch"
         - alertname!="OpensearchClusterYellow"
@@ -153,7 +170,7 @@ alertmanager:
             {{ if eq .Status "firing" }} PROBLEM :fire:{{ else }} RESOLVED :white_check_mark:{{ end }}
           text: |
             *Cluster:* `Kubernetes-LumProd`
-            *Summary:* `{{ .CommonLabels.alertname }}`
+            *Problem:* `{{ .CommonLabels.alertname }}`
             *Description:* `{{ .CommonAnnotations.description }}`
           color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
 
@@ -166,7 +183,7 @@ alertmanager:
           title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
           text: |
             *Cluster:* `Kubernetes-LumProd`
-            *Summary:* `{{ .CommonLabels.alertname }}`
+            *Problem:* `{{ .CommonLabels.alertname }}`
             *Description:* `{{ .CommonAnnotations.description }}`
           color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
 
@@ -179,7 +196,7 @@ alertmanager:
           title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
           text: |
             *Cluster:* `Kubernetes-LumProd`
-            *Summary:* `{{ .CommonLabels.alertname }}`
+            *Problem:* `{{ .CommonLabels.alertname }}`
             *Description:* `{{ .CommonAnnotations.description }}`
           color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
 
@@ -197,9 +214,9 @@ alertmanager:
             ❗ Severity: `{{ .CommonLabels.severity }}`
             📝 {{ .CommonAnnotations.description }}
 
-    - name: dev-services
+    - name: nexops-services
       slack_configs:
-        - channel: "#dev-services"
+        - channel: "#alert-nx-atomix"
           color: '{{ template "sre.slack.color" . }}'
           fallback: '{{ template "sre.slack.fallback" . }}'
           icon_emoji: ":opensearch-ico:"

@@ -25,12 +25,14 @@ luaScripts:
       end
 
       local headers = {}
-      local names = {"Host", "User-agent", "Referer", "X-Forwarded-For"}
+      local names = {"Host", "User-Agent", "Referer", "X-Forwarded-For"}
       for i, name in ipairs(names) do
         local val = parts[i]
         if val and val ~= "-" and val ~= "" then
           table.insert(headers, { name = name, value = val })
-          if name == "User-agent" then
+          if name == "Host" then
+            record["request_host"] = val
+          elseif name == "User-Agent" then
             record["user_agent"] = val
           elseif name == "X-Forwarded-For" then
             record["http_xff"] = val
@@ -104,8 +106,6 @@ luaScripts:
       return record
     end
 
-
-
   drop.lua: |
     function drop_success(tag, ts, record)
       -- Defensive checks
@@ -125,6 +125,57 @@ luaScripts:
       return 1, ts, record
     end
 
+  kubescape_handler.lua: |
+    function parser(tag, timestamp, record)
+      local out = {}
+      ---------------------------------------------------------
+      -- BaseRuntimeMetadata
+      local brm = record["BaseRuntimeMetadata"]
+      if type(brm) == "table" then
+        out["alertName"]   = brm["alertName"]
+        out["severity"]    = brm["severity"]
+        out["timestamp"]   = brm["timestamp"]
+        out["arguments"]   = brm["arguments"]
+        out["identifiers"] = brm["identifiers"]
+
+        -- Profile Metadata (optional)
+        local pm = brm["profileMetadata"]
+        if type(pm) == "table" then
+          out["profileName"]   = pm["name"]
+          out["profileStatus"] = pm["status"]
+          -- out["profileType"]  = pm["type"]
+        end
+      end
+
+      ---------------------------------------------------------
+      -- RuntimeK8sDetails
+      local k8s = record["RuntimeK8sDetails"]
+      if type(k8s) == "table" then
+        out["clusterName"]   = k8s["clusterName"]
+        out["namespace"]     = k8s["namespace"]
+        out["podName"]       = k8s["podName"]
+        out["containerName"] = k8s["containerName"]
+        out["image"]         = k8s["image"]
+      end
+
+      ---------------------------------------------------------
+      -- RuntimeProcessDetails
+      local rpd = record["RuntimeProcessDetails"]
+      if type(rpd) == "table" then
+        out["processTree"]   = rpd["processTree"]
+      end
+
+      ---------------------------------------------------------
+      -- Root-level fields
+      out["ruleID"]  = record["RuleID"]
+      out["level"]   = record["level"]
+      out["message"] = record["message"] or record["msg"]
+      out["time"]    = record["time"]
+
+      ---------------------------------------------------------
+      -- Return transformed record
+      return 1, timestamp, out
+    end
 
 config:
   service: |
@@ -148,7 +199,13 @@ config:
       Time_Format %Y-%m-%dT%H:%M:%S.%L
 
     [PARSER]
-      Name  haproxy
-      Format  regex
-      Regex ^(?<client_ip>\S+):(?<client_port>\d+)\s+\[(?<accept_date>[^\]]+)\]\s+(?<frontend>\S+)\s+(?<backend>[^\/]+)\/(?<server>\S+)\s+(?<Tq>-?\d+)\/(?<Tw>-?\d+)\/(?<Tc>-?\d+)\/(?<Tr>-?\d+)\/(?<Tt>-?\d+)\s+(?<status_code>\d+)\s+(?<bytes_read>\d+)\s+(?<captured_request_cookie>\S+)\s+(?<captured_response_cookie>\S+)\s+(?<termination_state>\S+)\s+(?<actconn>\d+)\/(?<feconn>\d+)\/(?<beconn>\d+)\/(?<srv_conn>\d+)\/(?<retries>\d+)\s+(?<srv_queue>\d+)\/(?<backend_queue>\d+)\s+\{(?<http_headers_raw>[^\}]*)\}\s+"(?<http_method>[A-Z]+)\s+(?<request_host>[^\/\s]+)(?<request_path>\/[^ ]*)?\s+(?<http_version>HTTP\/\d\.\d)"$
+      Name haproxy
+      Format regex
+      Regex ^(?<client_ip>\S+):(?<client_port>\d+)\s+\[(?<accept_date>[^\]]+)\]\s+(?<frontend>\S+)\s+(?<backend>[^\/]+)\/(?<server>\S+)\s+(?<Tq>-?\d+)\/(?<Tw>-?\d+)\/(?<Tc>-?\d+)\/(?<Tr>-?\d+)\/(?<Tt>-?\d+)\s+(?<status_code>\d+)\s+(?<bytes_read>\d+)\s+(?<captured_request_cookie>\S+)\s+(?<captured_response_cookie>\S+)\s+(?<termination_state>\S+)\s+(?<actconn>\d+)\/(?<feconn>\d+)\/(?<beconn>\d+)\/(?<srv_conn>\d+)\/(?<retries>\d+)\s+(?<srv_queue>\d+)\/(?<backend_queue>\d+)\s+\{(?<http_headers_raw>[^\}]*)\}\s+"(?<http_method>[A-Z]+)\s+(?:(?<request_host>[^\/\s]+))?(?<request_path>\/[^ ]*)?\s+(?<http_version>HTTP\/\d\.\d)"$
 
+    [PARSER]
+      Name json_kubescape
+      Format json
+      Time_Keep Off
+      Time_Key time
+      Time_Format %Y-%m-%dT%H:%M:%S %z

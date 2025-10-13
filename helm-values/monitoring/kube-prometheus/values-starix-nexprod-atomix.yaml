@@ -33,13 +33,19 @@ prometheus:
       key: ""
     internal:
       jobList:
-        - job_name: "n8n_gcp_metrics"
-          metrics_path: "/webhook/gcp-metrics"
+        - job_name: "gitlab-metrics"
+          metrics_path: "/gitlab-metrics"
           scrape_interval: 15s
           scrape_timeout: 5s
           scheme: "https"
           static_configs:
-            - targets: ["n8n.nexdev.net"]
+            - targets: ["rocketor.nexdev.net"]
+
+  # remoteWrite:
+  #   - url: http://nginx-mimir.nexdev.net/api/v1/push
+  #     headers:
+  #       X-Scope-OrgID: "k3s-starix-nexprod"
+  #     retry_on_http_429: true
 
 node-exporter:
   extraVolumes:
@@ -73,7 +79,7 @@ alertmanager:
             namespace: "gitlab-runner|zabbix-proxy-nexprod|cert-manager|trivy-operator-starix|sample|sentry-starix"
         - receiver: "null"
           match_re:
-            pod: "scan-vulnerabilityreport-.*|c-.*|.*-rollover-.*|.*-cleaner-.*|.*-cleanup-.*|.*-nodesclean-.*|.*-snapshot-.*|.*-zabbix-server-.*|.*ken.*|.*test.*|.*worker.*|.*opencost.*|.*trim.*"
+            pod: "scan-vulnerabilityreport-.*|c-.*|.*-rollover-.*|.*-cleaner-.*|.*-cleanup-.*|.*-nodesclean-.*|.*-snapshot-.*|.*-zabbix-server-.*|.*ken.*|.*test.*|.*worker.*|.*opencost.*|.*trim.*|.*backup.*|automation-job.*"
         - receiver: "kubernetes_nexprod_lumprod" #Runner CI alert (AVG Memory)
           match_re:
             alertname: "Runner High Average Node Memory Usage"
@@ -109,11 +115,15 @@ alertmanager:
             service: "Velero.*"
         - receiver: "alert-nx-atomix-domains"
           match_re:
+            alertname: "SSLCertificate.*|StatusCodeUnexpected|TCPEndpointStatus"
+        - receiver: "nexpe-services-alert-domains"
+          match_re:
             alertname: "SSLCertificate.*|StatusCodeUnexpected"
-        # - receiver: "alert-nx-atomix-domains"
-        #   match_re:
-        #     alertname: "HTTPConnectFailed"
-        - receiver: dev-services
+            instance: "https://deploy.lumigame.com|https://rocketor.nexdev.net|https://jenkins.nexdev.net/login|https://ndict-api.nexdev.net|https://ndict.nexdev.net|https://nuget.nexdev.net|https://sonarqube.lumigame.com|https://sonarqube.nexdev.net|https://rocketor-proxy-klp.starixplay.com|https://qlandkl.starixplay.com|https://skynexapi-kl.starixplay.com|https://gosqlproxy-dr.starixplay.com"
+        - receiver: "alerts-test"
+          match_re:
+            alertname: "DNSLookupFailed|CDNUnreachable"
+        - receiver: nexops-services
           matchers:
           - service="OpenSearch"
           - alertname!="OpensearchClusterYellow"
@@ -165,7 +175,7 @@ alertmanager:
               {{ if eq .Status "firing" }} PROBLEM :fire:{{ else }} RESOLVED :white_check_mark:{{ end }}
             text: |
               *Cluster:* `Kubernetes-NexProd`
-              *Summary:* `{{ .CommonLabels.alertname }}`
+              *Problem:* `{{ .CommonLabels.alertname }}`
               *Description:* `{{ .CommonAnnotations.description }}`
             color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
 
@@ -178,10 +188,9 @@ alertmanager:
             title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
             text: |
               *Cluster:* `Kubernetes-NexProd`
-              *Summary:* `{{ .CommonLabels.alertname }}`
+              *Problem:* `{{ .CommonLabels.alertname }}`
               *Description:* `{{ .CommonAnnotations.description }}`
             color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
-
 
       - name: "nexpe-services-alert"
         slack_configs:
@@ -192,9 +201,22 @@ alertmanager:
             title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
             text: |
               *Cluster:* `Kubernetes-NexProd`
-              *Summary:* `{{ .CommonLabels.alertname }}`
+              *Problem:* `{{ .CommonLabels.alertname }}`
               *Description:* `{{ .CommonAnnotations.description }}`
             color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+
+      - name: "nexpe-services-alert-domains"
+        slack_configs:
+          - api_url: "https://hooks.slack.com/services/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"
+            channel: "#nexpe-services-alert-domains"
+            title: '{{ if eq .Status "firing" }} 🔥 :globe_with_meridians: DOMAIN PROBLEM 🔥 {{ else }} ✅ :globe_with_meridians: DOMAIN RESOLVED ✅ {{ end }}'
+            text: |
+              *URL:* {{ .CommonLabels.instance }}
+              *Severity:* `{{ .CommonLabels.severity | toUpper }}`
+              *Problem:* {{ .CommonAnnotations.problem }}
+              *Status:* {{ .CommonAnnotations.status }}
+            color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+            send_resolved: true
 
       - name: "velero_alerts"
         slack_configs:
@@ -212,11 +234,11 @@ alertmanager:
 
       - name: "alert-nx-atomix-domains"
         slack_configs:
-          - api_url: "https://hooks.slack.com/services/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" #"https://hooks.slack.com/services/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"
+          - api_url: "https://hooks.slack.com/services/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"
             channel: "#alert-nx-atomix-domains"
             title: '{{ if eq .Status "firing" }} 🔥 :globe_with_meridians: DOMAIN PROBLEM 🔥 {{ else }} ✅ :globe_with_meridians: DOMAIN RESOLVED ✅ {{ end }}'
             text: |
-              *Domain:* {{ .CommonLabels.instance }}
+              *URL:* {{ .CommonLabels.instance }}
               *Severity:* `{{ .CommonLabels.severity | toUpper }}`
               *Problem:* {{ .CommonAnnotations.problem }}
               *Status:* {{ .CommonAnnotations.status }}
@@ -229,16 +251,18 @@ alertmanager:
             channel: "#alerts-test"
             send_resolved: true
             icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
-            title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
+            title: '{{ if eq .Status "firing" }} 🔥 :globe_with_meridians: DOMAIN PROBLEM 🔥 {{ else }} ✅ :globe_with_meridians: DOMAIN RESOLVED ✅ {{ end }}'
             text: |
-              *Cluster:* `Kubernetes-NexProd`
-              *Problem:* `{{ .CommonAnnotations.description }}`
-              *Value:* `{{ .CommonAnnotations.value }}`
+              *URL:* {{ .CommonLabels.instance }}
+              *Severity:* `{{ .CommonLabels.severity | toUpper }}`
+              *Problem:* {{ .CommonAnnotations.problem }}
+              *Status:* {{ .CommonAnnotations.status }}
             color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+            send_resolved: true
 
-      - name: dev-services
+      - name: nexops-services
         slack_configs:
-          - channel: "#dev-services"
+          - channel: "#alert-nx-atomix"
             color: '{{ template "sre.slack.color" . }}'
             fallback: '{{ template "sre.slack.fallback" . }}'
             icon_emoji: ":opensearch-ico:"
@@ -249,7 +273,121 @@ alertmanager:
 
       - name: default-receiver
 
+extraDeploy:
+- |
+  ### Domain Monitor
+  kind: Probe
+  apiVersion: monitoring.coreos.com/v1
+  metadata:
+    name: domain-check
+    namespace: monitoring
+    labels:
+      prometheus: main
+  spec:
+    interval: 30s
+    module: http_2xx
+    prober:
+      url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
+    targets:
+      staticConfig:
+        static:
+          {{- range .Values.blackboxExporter.domains }}
+                    - {{ . | quote }}
+          {{- end }}
+
+- |
+  apiVersion: monitoring.coreos.com/v1
+  kind: Probe
+  metadata:
+    name: dns-probe
+    namespace: monitoring
+    labels:
+      prometheus: main
+  spec:
+    interval: 60s
+    module: dns_check
+    prober:
+      url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
+    targets:
+      staticConfig:
+        static:
+          {{- range .Values.blackboxExporter.cdn }}
+                    - {{ . | quote }}
+          {{- end }}
+
+- |
+  ### TCP Monitor
+  kind: Probe
+  apiVersion: monitoring.coreos.com/v1
+  metadata:
+    name: tcp-probe
+    namespace: monitoring
+    labels:
+      prometheus: main
+  spec:
+    interval: 30s
+    module: tcp_connect
+    prober:
+      url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
+    targets:
+      staticConfig:
+        static:
+          {{- range .Values.blackboxExporter.tcp }}
+                    - {{ . | quote }}
+          {{- end }}
+
+- |
+  ### CDN Monitor
+  kind: Probe
+  apiVersion: monitoring.coreos.com/v1
+  metadata:
+    name: cdn-probe
+    namespace: monitoring
+    labels:
+      prometheus: main
+  spec:
+    interval: 5s
+    module: icmp_cdn
+    prober:
+      url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
+    targets:
+      staticConfig:
+        static:
+          {{- range .Values.blackboxExporter.cdn }}
+                    - {{ . | quote }}
+          {{- end }}
+
 blackboxExporter:
+  configuration: |
+    modules:
+      http_2xx:
+        prober: http
+        timeout: 60s
+        http:
+          method: GET
+          valid_http_versions: [ "HTTP/1.1", "HTTP/2" ]
+          follow_redirects: true
+          fail_if_ssl: false
+          #fail_if_not_ssl: false
+          tls_config:
+            insecure_skip_verify: false
+      
+      tcp_connect:
+        prober: tcp
+        tcp:
+          preferred_ip_protocol: "ip4"
+
+      icmp_cdn:
+        prober: icmp
+
+      dns_check:
+        prober: dns
+        timeout: 5s
+        dns:
+          query_name: "nexdev.net"
+          query_type: "A"
+          valid_rcodes: ["NOERROR"]
+
   domains: 
     - https://intp22.focapts.com/main/health/
     - https://mb.ec88ag.com/main/health/
@@ -711,7 +849,6 @@ blackboxExporter:
     - https://cts.oneops.net
     - https://m.sabagame.com
     - https://logifun.com
-    - https://portainer.lumigame.com
     - https://fika88.com
     - https://www.saki88.com
     - https://intp32.focapts.com/main/health
@@ -984,66 +1121,38 @@ blackboxExporter:
     - https://www.bong88ag.com
     - https://hrm-api.lumiplus.vn/whoami
 
-  configuration: |
-    modules:
-      http_2xx:
-        prober: http
-        timeout: 60s
-        http:
-          method: GET
-          valid_http_versions: [ "HTTP/1.1", "HTTP/2" ]
-          follow_redirects: true
-          fail_if_ssl: false
-          fail_if_not_ssl: false
-          tls_config:
-            insecure_skip_verify: false
+  tcp:
+    - 10.10.50.136:6443
+    - 10.10.50.144:6443
+    - 10.17.200.90:6443
+    - e6191eebbb4840436e79dd857495912f.yl4.ap-southeast-1.eks.amazonaws.com:443
+    - f74006ca89d990c1b0baf42607b51b47.gr7.ap-southeast-1.eks.amazonaws.com:443
+    - sc-api-klprod.starixplay.com:16443
+    - sc-api-kluat.starixplay.com:16443
+    - sc-sit-apiserver.playonesit.com:16444
+    - st-api-k3sklprod.starixplay.com:26443
+    - st-api-k3skluat.starixuat.com:26443
+    - st-hrm-apiserver.starixplay.com:16445
+    - starix-k3ssit-api.playonesit.com:16443
 
-      http_connect:
-        prober: http
-        timeout: 60s
-        http:
-          method: GET
-          preferred_ip_protocol: "ip4"
-
-extraDeploy:
-- |
-  kind: Probe
-  apiVersion: monitoring.coreos.com/v1
-  metadata:
-    name: domain-check
-    namespace: monitoring
-    labels:
-      prometheus: main
-  spec:
-    interval: 60s
-    module: http_2xx
-    prober:
-      url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
-    targets:
-      staticConfig:
-        static:
-          {{- range .Values.blackboxExporter.domains }}
-                    - {{ . | quote }}
-          {{- end }}
-          
-- |
-  kind: Probe
-  apiVersion: monitoring.coreos.com/v1
-  metadata:
-    name: domain-check-http
-    namespace: monitoring
-    labels:
-      prometheus: main
-  spec:
-    interval: 60s
-    module: http_connect
-    prober:
-      url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
-    targets:
-      staticConfig:
-        static:
-          {{- range .Values.blackboxExporter.domains }}
-                    - {{ . | quote }}
-          {{- end }}
-
-        
+  cdn:
+    - keno.gamesaba.com
+    - keno.sabagame.com
+    - keno.vgaming.win
+    - keno2.vgaming.win
+    - m.gamesaba.com
+    - m.sabagame.com
+    - m.vgaming.win
+    - m2.vgaming.win
+    - mini.gamesaba.com
+    - mini.sabagame.com
+    - mini.vgaming.win
+    - mini2.vgaming.win
+    - w2.numberx.win
+    - w2.vgaming.win
+    - www.gamesaba.com
+    - www.numberx.win
+    - www.sabagame.com
+    - www.vgaming.win
+    - www.vgames88.com
+    

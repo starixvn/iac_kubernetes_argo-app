@@ -22,11 +22,11 @@ prometheus:
     enabled: true
     size: 20Gi
 
-  # remoteWrite:
-  #   - url: http://nginx-mimir.nexdev.net/api/v1/push
-  #     headers:
-  #       X-Scope-OrgID: "starix-local"
-  #     retry_on_http_429: true
+  remoteWrite:
+    - url: http://nginx-mimir.nexdev.net/api/v1/push
+      headers:
+        X-Scope-OrgID: "starix-local"
+      retry_on_http_429: true
 
   ## @param prometheus.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if prometheus.resources is set (prometheus.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
@@ -66,10 +66,10 @@ alertmanager:
         match:
           service: "OpenSearch"
         group_by: ['alertname', 'job']
-      - receiver: kubescape-notify
-        match:
-          alertname: "KubescapeRuleViolated"
-        group_by: ['namespace', 'container_name', 'rule_name']
+      # - receiver: kubescape-notify
+      #   match:
+      #     alertname: "KubescapeRuleViolated"
+      #   group_by: ['namespace', 'container_name', 'rule_name']
       group_by: ["alertname", "cluster", "namespace", "pod", "description", 'instance']
       group_wait: 30s
       group_interval: 5m
@@ -99,7 +99,7 @@ alertmanager:
           {{ if eq .Status "firing" }} PROBLEM :fire:{{ else }} RESOLVED :white_check_mark:{{ end }}
         text: |
           *Cluster:* `Kubernetes-ST-Local`
-          *Summary:* `{{ .CommonLabels.alertname }}`
+          *Problem:* `{{ .CommonLabels.alertname }}`
           *Description:* `{{ .CommonAnnotations.description }}`
         color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
 
@@ -112,7 +112,7 @@ alertmanager:
         title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
         text: |
           *Cluster:* `Kubernetes-ST-Local`
-          *Summary:* `{{ .CommonLabels.alertname }}`
+          *Problem:* `{{ .CommonLabels.alertname }}`
           *Description:* `{{ .CommonAnnotations.description }}`
         color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
 
@@ -130,16 +130,16 @@ alertmanager:
         title: '{{ template "sre.slack.title" . }}'
         text: '{{ template "sre.slack.body" . }}'
 
-    - name: kubescape-notify
-      slack_configs:
-      - channel: "#alert-josh-test"
-        color: '{{ template "sre.slack.color" . }}'
-        fallback: '{{ template "sre.slack.fallback" . }}'
-        icon_emoji: '{{ template "sre.slack.iconemoji" . }}'
-        send_resolved: false
-        username: '{{ template "sre.slack.username" . }}🔹ST.LOCAL'
-        title: '{{ template "kubescape.slack.title" . }}'
-        text: '{{ template "sre.slack.body" . }}'
+    # - name: kubescape-notify
+    #   slack_configs:
+    #   - channel: "#alert-josh-test"
+    #     color: '{{ template "sre.slack.color" . }}'
+    #     fallback: '{{ template "sre.slack.fallback" . }}'
+    #     icon_emoji: '{{ template "sre.slack.iconemoji" . }}'
+    #     send_resolved: false
+    #     username: '{{ template "sre.slack.username" . }}🔹ST.LOCAL'
+    #     title: '{{ template "kubescape.slack.title" . }}'
+    #     text: '{{ template "sre.slack.body" . }}'
 
     - name: default-receiver
 

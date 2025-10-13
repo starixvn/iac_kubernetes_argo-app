@@ -114,7 +114,23 @@ prometheus:
 
             - alert: Kubernetes Cluster Pod Usage Above 80%
               expr: |
-                (sum(kube_pod_info{node=~".*"}) / sum(kube_node_status_allocatable{resource="pods", node=~".*"})) * 100 > 80
+                (
+                  sum(
+                    kube_pod_info{node=~".*"}
+                    * on(node) group_left()
+                    (
+                      max by (node) (kube_node_role{role!="control-plane", node=~".*"})
+                    )
+                  )
+                /
+                  sum(
+                    kube_node_status_allocatable{resource="pods", node=~".*"}
+                    * on(node) group_left()
+                    (
+                      max by (node) (kube_node_role{role!="control-plane", node=~".*"})
+                    )
+                  )
+                ) * 100 > 80
               for: 5m
               labels:
                 severity: warning
@@ -168,45 +184,45 @@ prometheus:
             #     summary: "Critical 5xx error rate on service {{$labels.service}}"
             #     description: "HAProxy frontend service {{$labels.service}} on proxy {{$labels.proxy}} has >5% HTTP 5xx errors for over 10 minutes (current: {{ printf \"%.2f\" $value }}%)"
             
-            - alert: HAProxy Backend High 5xx
-              expr: |
-                (
-                  (
-                    sum by (proxy) (
-                      rate(haproxy_server_http_responses_total{code=~"5xx", proxy!~".*default.*"}[1m])
-                    )
-                    /
-                    sum by (proxy) (
-                      rate(haproxy_server_http_responses_total{proxy!~".*default.*"}[1m])
-                    )
-                  ) * 100
-                ) > 2
-              for: 10m
-              labels:
-                severity: warning
-              annotations:
-                summary: "High 5xx error rate on backend {{$labels.proxy}}"
-                description: 'HAProxy backend {{$labels.proxy}} has {{ printf "%.0f" $value }}% 5xx errors for over 10 minutes.'
+            # - alert: HAProxy Backend High 5xx
+            #   expr: |
+            #     (
+            #       (
+            #         sum by (proxy) (
+            #           rate(haproxy_server_http_responses_total{code=~"5xx", proxy!~".*default.*"}[1m])
+            #         )
+            #         /
+            #         sum by (proxy) (
+            #           rate(haproxy_server_http_responses_total{proxy!~".*default.*"}[1m])
+            #         )
+            #       ) * 100
+            #     ) > 2
+            #   for: 10m
+            #   labels:
+            #     severity: warning
+            #   annotations:
+            #     summary: "High 5xx error rate on backend {{$labels.proxy}}"
+            #     description: 'HAProxy backend {{$labels.proxy}} has {{ printf "%.0f" $value }}% 5xx errors for over 10 minutes.'
 
-            - alert: HAProxy Backend High 4xx
-              expr: |
-                (
-                  (
-                    sum by (proxy) (
-                      rate(haproxy_server_http_responses_total{code=~"4xx", proxy!~".*default.*"}[1m])
-                    )
-                    /
-                    sum by (proxy) (
-                      rate(haproxy_server_http_responses_total{proxy!~".*default.*"}[1m])
-                    )
-                  ) * 100
-                ) > 2
-              for: 15m
-              labels:
-                severity: warning
-              annotations:
-                summary: "High 4xx error rate on backend {{$labels.proxy}}"
-                description: 'HAProxy backend {{$labels.proxy}} has {{ printf "%.0f" $value }}% 4xx errors for over 15 minutes.'
+            # - alert: HAProxy Backend High 4xx
+            #   expr: |
+            #     (
+            #       (
+            #         sum by (proxy) (
+            #           rate(haproxy_server_http_responses_total{code=~"4xx", proxy!~".*default.*"}[1m])
+            #         )
+            #         /
+            #         sum by (proxy) (
+            #           rate(haproxy_server_http_responses_total{proxy!~".*default.*"}[1m])
+            #         )
+            #       ) * 100
+            #     ) > 2
+            #   for: 15m
+            #   labels:
+            #     severity: warning
+            #   annotations:
+            #     summary: "High 4xx error rate on backend {{$labels.proxy}}"
+            #     description: 'HAProxy backend {{$labels.proxy}} has {{ printf "%.0f" $value }}% 4xx errors for over 15 minutes.'
             
             #Disk latency is growing (write operations > 100ms)
             - alert: Kubernetes Disk latency is growing (write operations > 100ms)
@@ -514,11 +530,12 @@ prometheus:
           rules:
             - alert: TCPEndpointStatus
               expr: probe_success{job="probe/monitoring/tcp-probe"} == 0 
-              for: 30s
+              for: 1m
               labels:
                 severity: critical
               annotations:
-                problem: 'Connect failed (TCP unreachable)'
+                problem: 'Connect failed (TCP Unreachable)'
+                status: '{{ $value }}'
     
     - name: haproxyingress.rules
       groups:
@@ -559,8 +576,8 @@ prometheus:
                 status: 'Remaining {{ $value | printf "%.0f" }} days.'
 
             - alert: SSLCertificateExpired
-              expr: round((last_over_time(probe_ssl_earliest_cert_expiry[10m]) - time()) / 86400, 0.1) < 0
-              for: 5m
+              expr: round((last_over_time(probe_ssl_earliest_cert_expiry[1m]) - time()) / 86400, 0.1) < 0
+              for: 1m
               labels:
                 severity: critical
               annotations:
@@ -569,7 +586,7 @@ prometheus:
                 status: 'Remaining {{ $value | printf "%.0f" }} days.'
 
             - alert: StatusCodeUnexpected
-              expr: probe_http_status_code{job="probe/monitoring/domain-check"} != 200 and probe_http_status_code{job="probe/monitoring/domain-check"} != 0
+              expr: probe_http_status_code{job="probe/monitoring/domain-check"} != 200 and probe_http_status_code{job="probe/monitoring/domain-check"} != 0 and probe_http_status_code{job="probe/monitoring/domain-check"} != 429
               for: 1m
               labels:
                 severity: critical
@@ -578,14 +595,24 @@ prometheus:
                 problem: "Unexpected HTTP status code"
                 status: '{{ $value }}'
 
-            - alert: HTTPConnectFailed
-              expr: probe_http_connect_success{job="probe/monitoring/domain-check-http"} != 1
-              for: 1m
+            - alert: CDNUnreachable
+              expr: probe_success{job="probe/monitoring/cdn-probe"} == 0 
+              for: 60m
+              labels:
+                severity: warning
+              annotations:
+                summary: "CDN Unreachable"
+                problem: "CDN Unreachable"
+                status: '{{ $value }}'
+
+            - alert: DNSLookupFailed
+              expr: probe_success{job="probe/monitoring/dns-probe"} == 0
+              for: 5m
               labels:
                 severity: critical
               annotations:
-                summary: "HTTP connect failed"
-                problem: "The domain {{ $labels.instance }} failed to establish HTTP connection"
+                summary: "DNS Lookup Failed"
+                problem: "DNS Lookup Failed"
                 status: '{{ $value }}'
 
     - name: cronjob.rules

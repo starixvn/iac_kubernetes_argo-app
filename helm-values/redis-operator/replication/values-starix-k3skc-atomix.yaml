@@ -1,0 +1,97 @@
+---
+redisReplication:
+  name: "redis-kc-testlab-rep"
+  clusterSize: 3
+  image: hub.nexdev.net/base/opstree/redis
+  tag: v8.2.1
+  imagePullPolicy: IfNotPresent
+  redisSecret:
+    secretName: "redis-kc-secret"
+    secretKey: "redis-password"
+  serviceType: ClusterIP
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+labels:
+  app: redis-kc-testlab-rep
+
+
+externalConfig:
+  enabled: true
+  data: |
+    appendonly yes
+    appendfilename "appendonly.aof"
+    appendfsync everysec
+    notify-keyspace-events Kx
+
+
+serviceMonitor:
+  enabled: true
+  interval: 30s
+  scrapeTimeout: 10s
+  # -- Namespace where servicemonitor resource will be created, if empty it will be created in the same namespace as the redis-replication
+  namespace: ""
+  # -- extraLabels are added to the servicemonitor when enabled set to true
+  extraLabels: {}
+    # foo: bar
+    # team: devops
+
+redisExporter:
+  enabled: true
+  image: hub.nexdev.net/base/opstree/redis-exporter
+  tag: "v1.44.0"
+  imagePullPolicy: IfNotPresent
+  resources: {}
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+  env: []
+    # - name: VAR_NAME
+    #   value: "value1"
+  securityContext: {}
+
+
+nodeSelector:
+  redis-node: "yes"
+
+tolerations:
+  - key: "node-role.kubernetes.io/master"
+    operator: "Exists"
+    effect: "NoSchedule"
+
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+            - key: app
+              operator: In
+              values:
+                - redis-kc-testlab-rep
+        topologyKey: "kubernetes.io/hostname"
+
+storageSpec:
+  volumeClaimTemplate:
+    spec:
+      storageClassName: local-path
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 5Gi
+
+
+extraManifests:
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: "redis-kc-secret"
+    namespace: "redis-kc"
+  type: Opaque
+  data:
+    redis-password: cmVkaXNQYXNzd29yZDEyMyE= # redisPassword123!
+

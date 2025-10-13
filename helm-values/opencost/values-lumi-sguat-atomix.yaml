@@ -3,7 +3,7 @@ fullnameOverride: ""
 namespaceOverride: ""
 clusterName: "cluster.local"
 
-loglevel: info
+loglevel: debug
 
 imagePullSecrets: []
 
@@ -12,7 +12,7 @@ serviceAccount:
   annotations: 
   eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:role/OpenCostSpotFeedRole
   automountServiceAccountToken: true
-  #name: "opencost-atx-sguat"
+  name: "opencost-atx-sguat"
 
 networkPolicies:
   enabled: true
@@ -30,7 +30,6 @@ service:
   labels: {}
   type: ClusterIP
   port: 9003
-  # nodePort: 30093
   extraPorts: []
   loadBalancerSourceRanges: []
 
@@ -51,6 +50,19 @@ opencost:
       fullImageName: null
     extraEnv:
       CLUSTER_ID: "lumi.sguat"
+      CLOUD_COST_ENABLED: "true"
+      AWS_CUR_INTEGRATION: "athena"
+      AWS_CUR_PATH: "s3://vn-lumi-starix-tf-state/opencost-cur-reports/"
+      CLOUD_PROVIDER: "AWS"
+      ATHENA_BUCKET_NAME: "s3://vn-lumi-starix-tf-state/opencost-cur-results/"
+      ATHENA_DATABASE: "athenacurcfn_nx_opencost_cur"
+      ATHENA_REGION: "ap-southeast-1"
+      ATHENA_TABLE: "nx_opencost_cur"
+      ATHENA_WORKGROUP: "primary"
+      ATHENA_PROJECT_ID: "014999276089"
+      EMIT_KUBECOST_METRICS: true
+      EMIT_CLOUD_COST_METRICS: true
+      METRIC_RESOLUTION: "1m"
     extraArgs: []
     command: []
     replicas: 1
@@ -134,6 +146,14 @@ opencost:
       awsSpotDataBucket: "vn-lumi-starix-tf-state"
       awsSpotDataPrefix: "opencost-eks-uat-spot-data"
       projectID: "014999276089"
+
+      athenaBucketName: "s3://vn-lumi-starix-tf-state/opencost-cur-results/"
+      athenaDatabase: "athenacurcfn_nx_opencost_cur"
+      athenaProjectID: "014999276089"
+      athenaRegion: "ap-southeast-1"
+      athenaTable: "nx_opencost_cur"
+      athenaWorkgroup: primary
+
 
   dataRetention:
     dailyResolutionDays: 15

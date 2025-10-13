@@ -26,6 +26,15 @@ prometheus:
     enabled: true
     storageClass: ""
     size: 30Gi
+  
+  # externalLabels:
+  #   cluster: "k8s-sc-local"
+
+  # remoteWrite:
+  #   - url: http://nginx-mimir.nexdev.net/api/v1/push
+  #     headers:
+  #       X-Scope-OrgID: "k8s-sc-local"
+  #     retry_on_http_429: true
 
   ## @param prometheus.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if prometheus.resources is set (prometheus.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
@@ -111,7 +120,7 @@ alertmanager:
         matchers:
         - alertname="KubescapeRuleViolated"
         - severity!="low"
-        group_by: ['container_name', 'rule_name']
+        group_by: ['uid']
       group_by: ['alertname', 'cluster', 'namespace', 'pod', 'description', 'instance']
       group_wait: 30s
       group_interval: 5m
@@ -141,7 +150,7 @@ alertmanager:
           {{ if eq .Status "firing" }} PROBLEM :fire:{{ else }} RESOLVED :white_check_mark:{{ end }}
         text: |
           *Cluster:* `Kubernetes-SC-Local`
-          *Summary:* `{{ .CommonLabels.alertname }}`
+          *Problem:* `{{ .CommonLabels.alertname }}`
           *Description:* `{{ .CommonAnnotations.description }}`
         color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
 
@@ -154,7 +163,7 @@ alertmanager:
         title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
         text: |
           *Cluster:* `Kubernetes-SC-Local`
-          *Summary:* `{{ .CommonLabels.alertname }}`
+          *Problem:* `{{ .CommonLabels.alertname }}`
           *Description:* `{{ .CommonAnnotations.description }}`
         color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
 

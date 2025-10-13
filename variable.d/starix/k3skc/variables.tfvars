@@ -1,0 +1,69 @@
+#####
+cluster_org = "starix"
+cluster_env = "k3skc"
+
+default_project = "tf-starix-k3skc"
+
+# ARGO APPLICATIONS
+argo_applications_by_team = {
+  atx = {
+    team_name = "atomix"
+    applications = {
+      haproxy-service = {
+        namespace     = "haproxy-service-core"
+        helm_path     = "haproxy-svc-tcp"
+        chart_version = "2.1.4"
+        auto_sync     = false
+        value_files = ["values-starix-k3skc-atomix.yaml"]
+      }
+
+      redis-operator = {
+        namespace     = "redis-operator"
+        helm_path     = "redis-operator/operator"
+        chart_version = "0.22.1"
+        auto_sync     = false
+        skip_crds     = false
+        value_files = ["values-starix-k3skc-atomix.yaml"]
+      }
+
+      redis-kc-replication = {
+        namespace     = "redis-kc"
+        helm_path     = "redis-operator/replication"
+        chart_version = "0.16.9"
+        auto_sync     = false
+        skip_crds     = true
+        value_files = ["values-starix-k3skc-atomix.yaml"]
+      }
+
+      redis-kc-sentinel = {
+        namespace     = "redis-kc"
+        helm_path     = "redis-operator/sentinel"
+        chart_version = "0.16.10"
+        auto_sync     = false
+        skip_crds     = true
+        value_files = ["values-starix-k3skc-atomix.yaml"]
+      }
+
+      prometheus = {
+        namespace     = "monitoring"
+        helm_path     = "monitoring/kube-prometheus"
+        chart_version = "9.5.11"
+        skip_crds     = true
+        value_files = ["values-starix-k3skc-atomix.yaml"]
+      }
+
+
+    }
+  }
+}
+
+
+# REQUIRED VARIABLE SET [argo_token]
+vault_secrets = {
+  argo_token = {
+    mount = "nexops"
+    path  = "automation/Kubernetes/argo-app/starix"
+    field = "ARGOCD_AUTH_TOKEN"
+  }
+}
+

@@ -58,10 +58,11 @@ controller:
     #   format: "rfc3164"
     #   facility: "local7"
     traffic:
-      address: "fluent-bit-atx-prod.logging.svc"
-      port: "5170"
+      address: "flb.ops-klprod.gamora.prod"
+      port: "31170"
       format: "rfc5424"
       facility: "local1"
+      length: "65535"
 
   nodeSelector:
     node-role.kubernetes.io/ingress: ""

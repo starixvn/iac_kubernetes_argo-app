@@ -3,16 +3,16 @@ fullnameOverride: ""
 namespaceOverride: ""
 clusterName: "cluster.local"
 
-loglevel: info
+loglevel: debug
 
 imagePullSecrets: []
 
 serviceAccount:
   create: true
   annotations: 
-  eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:role/nx-pentagon-t1prod-v1-cluster-20250606070513750200000006
+  eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:role/vn-nx-opencost
   automountServiceAccountToken: true
-  name: opencost-atx-sgprod
+  name: "opencost-atx-sgprod"
 
 networkPolicies:
   enabled: true
@@ -30,7 +30,6 @@ service:
   labels: {}
   type: ClusterIP
   port: 9003
-  # nodePort: 30093
   extraPorts: []
   loadBalancerSourceRanges: []
 
@@ -51,6 +50,20 @@ opencost:
       fullImageName: null
     extraEnv:
       CLUSTER_ID: "lumi.sgprod"
+      CLOUD_COST_ENABLED: "true"
+      AWS_CUR_INTEGRATION: "athena"
+      AWS_CUR_PATH: "s3://vn-lumi-starix-tf-state/opencost-cur-reports/"
+      CLOUD_PROVIDER: "AWS"
+      ATHENA_BUCKET_NAME: "s3://vn-lumi-starix-tf-state/opencost-cur-results/"
+      ATHENA_DATABASE: "athenacurcfn_nx_opencost_cur"
+      ATHENA_REGION: "ap-southeast-1"
+      ATHENA_TABLE: "nx_opencost_cur"
+      ATHENA_WORKGROUP: "primary"
+      ATHENA_PROJECT_ID: "014999276089"
+      EMIT_KUBECOST_METRICS: true
+      EMIT_CLOUD_COST_METRICS: true
+      METRIC_RESOLUTION: "1m"
+
     extraArgs: []
     command: []
     replicas: 1
@@ -118,18 +131,25 @@ opencost:
     configmapName: custom-pricing-model
     configPath: /tmp/custom-config
     createConfigmap: true
-    provider: custom
+    provider: aws
     costModel:
       description: "Custom pricing configuration for lumi.sgprod environment"
-      region: "aws"
+      region: "ap-southeast-1"
       zone: "default-zone"
-      CPU: 0.008333      # USD / vCPU / h
-      RAM: 0.002778      # USD / GB RAM / h
-      storage: 0.019444  # USD / GB disk / h
-      LoadBalancerCost: 0.0
-      LBIngressDataCost: 0.00
-      FirstFiveForwardingRulesCost: 0.0
-      AdditionalForwardingRuleCost: 0.0
+      # CPU: 0.008333      # USD / vCPU / h
+      # RAM: 0.002778      # USD / GB RAM / h
+      # storage: 0.019444  # USD / GB disk / h
+      # LoadBalancerCost: 0.0
+      # LBIngressDataCost: 0.00
+      # FirstFiveForwardingRulesCost: 0.0
+      # AdditionalForwardingRuleCost: 0.0
+
+      athenaBucketName: "s3://vn-lumi-starix-tf-state/opencost-cur-results/"
+      athenaDatabase: "athenacurcfn_nx_opencost_cur"
+      athenaProjectID: "014999276089"
+      athenaRegion: "ap-southeast-1"
+      athenaTable: "nx_opencost_cur"
+      athenaWorkgroup: primary
 
   dataRetention:
     dailyResolutionDays: 15
@@ -145,7 +165,6 @@ opencost:
     monthToDateInterval: 6
     # -- The max number of days that any single query will be made to construct Cloud Costs
     queryWindowDays: 7
-
 
   metrics:
     kubeStateMetrics:

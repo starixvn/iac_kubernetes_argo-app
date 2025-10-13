@@ -68,23 +68,35 @@ alertmanager:
       routes:
       - receiver: 'null'
         match_re:
-          pod: ".*website1.*|opencost.*"
+          pod: ".*website1.*|.*cost.*"
       - receiver: 'null'
         match_re:
-         namespace: "logging"
-         alertname: "Kubernetes Pod Restart"
+         namespace: "logging|kubescape"
+         alertname: "Kubernetes Pod Restart|.*resource limit"
       - receiver: 'null'
         match_re:
           cronjob: ".*trim.*"
       - receiver: 'alert-nx-pentagon'
         match_re:
           namespace: "l1|l2|gn|hd|sk|sp|tg|mg"
+          alertname: "Kubernetes.*"
       - receiver: 'alert-nx-atomix'
         match_re:
           alertname: "Kubernetes.*|HAProxy.*"
       - receiver: "alert-velero-backups"
         match:
           alertname: "Velero.*"
+      - receiver: kubescape-test
+        matchers:
+        - alertname="KubescapeRuleViolated"
+        - severity!="low"
+        - rule_name="Unexpected domain request"
+        group_by: ['container_name', 'rule_name']
+      - receiver: kubescape-notify
+        matchers:
+        - alertname="KubescapeRuleViolated"
+        - severity!="low"
+        group_by: ['uid', 'pid']
       group_by: ['alertname', 'cluster', 'namespace', 'pod', 'description', 'instance']
       group_wait: 30s
       group_interval: 5m
@@ -114,7 +126,7 @@ alertmanager:
               {{ if eq .Status "firing" }} PROBLEM :fire:{{ else }} RESOLVED :white_check_mark:{{ end }}
             text: |
               *Cluster:* `Kubernetes-SC-KLPROD`
-              *Summary:* `{{ .CommonLabels.alertname }}`
+              *Problem:* `{{ .CommonLabels.alertname }}`
               *Description:* `{{ .CommonAnnotations.description }}`
             color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
 
@@ -141,7 +153,7 @@ alertmanager:
               {{ if eq .Status "firing" }}:fire:{{ else }}:white_check_mark:{{ end }}
             text: |
               *Cluster:* `Kubernetes-SC-KLPROD`
-              *Summary:* `{{ .CommonLabels.alertname }}`
+              *Problem:* `{{ .CommonLabels.alertname }}`
               *Description:* `{{ .CommonAnnotations.description }}`
             color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
 
@@ -156,6 +168,36 @@ alertmanager:
               *Cluster:* `Kubernetes-SC-KLPROD`
               ❗ *{{ .CommonLabels.severity }}*
               📝 *{{ .CommonAnnotations.message }}*
+
+      - name: kubescape-test
+        slack_configs:
+        - channel: "#alert-josh-test"
+          color: '{{ template "sre.slack.color" . }}'
+          fallback: '{{ template "sre.slack.fallback" . }}'
+          icon_emoji: '{{ template "sre.slack.iconemoji" . }}'
+          send_resolved: false
+          username: '{{ template "sre.slack.username" . }}🔹SC.PROD'
+          title: '{{ template "kubescape.slack.title" . }}'
+          text: '{{ template "sre.slack.body" . }}'
+          actions: 
+          - type: "button"
+            text: ":opensearch-ico: Logs"
+            url: "https://ops-klp.starixplay.com/app/data-explorer/discover/?security_tenant=private#/view/da533070-81a4-11f0-941a-9d0249d23087?_g=%28filters%3A%21%28%29%2CrefreshInterval%3A%28pause%3A%21t%2Cvalue%3A0%29%2Ctime%3A%28from%3Anow-15m%2Cto%3Anow%29%29"
+      - name: kubescape-notify
+        slack_configs:
+        - channel: "#security-analyst"
+          color: '{{ template "sre.slack.color" . }}'
+          fallback: '{{ template "sre.slack.fallback" . }}'
+          icon_emoji: '{{ template "sre.slack.iconemoji" . }}'
+          send_resolved: false
+          username: '{{ template "sre.slack.username" . }}🔹SC.PROD'
+          title: '{{ template "kubescape.slack.title" . }}'
+          text: '{{ template "sre.slack.body" . }}'
+          actions: 
+          - type: "button"
+            text: ":opensearch-ico: Logs"
+            url: "https://ops-klp.starixplay.com/app/data-explorer/discover/?security_tenant=private#/view/da533070-81a4-11f0-941a-9d0249d23087?_g=%28filters%3A%21%28%29%2CrefreshInterval%3A%28pause%3A%21t%2Cvalue%3A0%29%2Ctime%3A%28from%3Anow-15m%2Cto%3Anow%29%29"
+
 
       - name: default-receiver
 

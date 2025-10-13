@@ -44,21 +44,21 @@ prometheus:
   #     memory: 4Gi
 
   additionalScrapeConfigs:
-    enabled: false
-    type: external
+    enabled: true
+    type: internal
     external:
-      ## Name of the secret that Prometheus should use for the additional scrape configuration
       name: ""
-      ## Name of the key inside the secret to be used for the additional scrape configuration.
       key: ""
     internal:
-      jobList: []
+      jobList:
+        - job_name: "cloud-costs-exporter"
+          metrics_path: "/metrics"
+          scrape_interval: 30s
+          scrape_timeout: 10s
+          scheme: "http"
+          static_configs:
+            - targets: ["cloud-costs-exporter.tf-atx-opencost.svc:8080"]
   ###
-  additionalScrapeConfigs:
-    enabled: false
-    type: internal
-    internal:
-      jobList: []
 
 kube-state-metrics:
   resourcesPreset: "none"
@@ -127,7 +127,7 @@ alertmanager:
               {{ if eq .Status "firing" }} PROBLEM :fire:{{ else }} RESOLVED :white_check_mark:{{ end }}
             text: |
               *Cluster:* `EKS-SC-UAT`
-              *Summary:* `{{ .CommonLabels.alertname }}`
+              *Problem:* `{{ .CommonLabels.alertname }}`
               *Description:* `{{ .CommonAnnotations.description }}`
             color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
       
@@ -140,7 +140,7 @@ alertmanager:
             title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
             text: |
               *Cluster:* `EKS-SC-UAT`
-              *Summary:* `{{ .CommonLabels.alertname }}`
+              *Problem:* `{{ .CommonLabels.alertname }}`
               *Description:* `{{ .CommonAnnotations.description }}`
             color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
 
