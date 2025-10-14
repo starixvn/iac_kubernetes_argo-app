@@ -1,0 +1,72 @@
+backup:
+  subdir: "/"
+  dirname: "+etcd-backup-%FT%T%:z"
+  expiretype: "days"
+  keepdays: "3"
+  keepcount: "5"
+  schedule: "0 0 * * *"
+  umask: "0027"
+
+etcdConfiguration:
+  endpoint: "127.0.0.1"
+  insecureSkipTlsVerify: false
+
+etcdCertification:
+  etcdPeerTlsName: "etcd-tls-secrets"
+  etcdServerCaName: "etcd-ca-secret"
+
+persistence:
+  reclaimPolicy: Retain
+  capacity: 2Gi
+  nfs:
+    enabled: false
+  provisioning:
+    enabled: false
+    storageClass: ""
+  existingClaim: ""
+  s3:
+    enabled: true
+    name: etcd-backup
+    host: http://s3-api.nexdev.net
+    bucket: etcd-backups
+    accessKey: etcd-backupper
+    secretKey: h9giyAwIk6I7nUBh
+    existingSecret: ""
+    ca:
+      enabled: false
+
+image:
+  repository: ghcr.io/adfinis/kubernetes-etcd-backup
+  pullPolicy: Always
+  tag: ""
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+extraVolumes:
+  - name: etcd-ca
+    secret:
+      secretName: etcd-ca-secret
+      defaultMode: 0400
+  - name: etcd-certs
+    secret:
+      secretName: etcd-tls-secrets
+      defaultMode: 0400
+
+extraVolumeMounts:
+  - name: etcd-ca
+    mountPath: /etc/etcd/ssl
+    readOnly: true
+  - name: etcd-certs
+    mountPath: /etc/etcd/certs
+    readOnly: true
+
+podSecurityContext:
+  runAsUser: 0               
+  fsGroup: 0
+  runAsGroup: 0
