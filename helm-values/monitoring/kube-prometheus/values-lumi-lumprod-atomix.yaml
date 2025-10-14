@@ -38,6 +38,27 @@ prometheus:
       retry_on_http_429: true
 
 
+  resourcesPreset: "2xlarge"
+
+  additionalScrapeConfigs:
+    enabled: true
+    type: internal
+    external:
+      name: ""
+      key: ""
+    internal:
+      jobList:
+        - job_name: "gitlab-metrics"
+          metrics_path: "/gitlab-metrics"
+          scrape_interval: 15s
+          scrape_timeout: 5s
+          scheme: "https"
+          static_configs:
+            - targets: ["deploy.lumigame.com"]
+
+  # additionalPrometheusRules: []
+
+
 kubelet:
   serviceMonitor:
     metricRelabelings:
@@ -72,27 +93,6 @@ kubelet:
       - __name__
 
 
-
-
-  resourcesPreset: "2xlarge"
-
-  additionalScrapeConfigs:
-    enabled: true
-    type: internal
-    external:
-      name: ""
-      key: ""
-    internal:
-      jobList:
-        - job_name: "gitlab-metrics"
-          metrics_path: "/gitlab-metrics"
-          scrape_interval: 15s
-          scrape_timeout: 5s
-          scheme: "https"
-          static_configs:
-            - targets: ["deploy.lumigame.com"]
-
-  # additionalPrometheusRules: []
 
 node-exporter:
   extraVolumes:
