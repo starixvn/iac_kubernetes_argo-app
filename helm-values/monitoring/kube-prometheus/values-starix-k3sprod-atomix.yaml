@@ -214,7 +214,7 @@ alertmanager:
 
     - name: nexops-services
       slack_configs:
-      - channel: '#alert-nx-atomix'
+      - channel: '#test-alert'
         color: '{{ template "sre.slack.color" . }}'
         fallback: '{{ template "sre.slack.fallback" . }}'
         icon_emoji: ":opensearch-ico:"
