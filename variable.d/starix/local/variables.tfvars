@@ -19,6 +19,13 @@ argo_applications_by_team = {
           "values-starix-local-atomix.yaml",
         ]
       }
+      kubernetes-etcd-backup = {
+        namespace     = "monitoring"
+        helm_path     = "kubernetes-etcd-backup"
+        chart_version = "1.6.2"
+        skip_crds     = true
+        value_files = ["values-starix-local-atomix.yaml"]
+      }
       falco = {
         helm_path     = "falco"
         chart_version = "6.0.2"
