@@ -116,19 +116,13 @@ prometheus:
               expr: |
                 (
                   sum(
-                    kube_pod_info{node=~".*"}
-                    * on(node) group_left()
-                    (
-                      max by (node) (kube_node_role{role!="control-plane", node=~".*"})
-                    )
+                    (kube_pod_status_phase{phase="Running"} == 1)
+                    + on(uid, instance) group_left(node)
+                    (0 * kube_pod_info{pod_template_hash="", node!~"control-plane|master"})
                   )
-                /
+                  /
                   sum(
-                    kube_node_status_allocatable{resource="pods", node=~".*"}
-                    * on(node) group_left()
-                    (
-                      max by (node) (kube_node_role{role!="control-plane", node=~".*"})
-                    )
+                    kube_node_status_allocatable{resource="pods", node!~"control-plane|master"}
                   )
                 ) * 100 > 80
               for: 5m
