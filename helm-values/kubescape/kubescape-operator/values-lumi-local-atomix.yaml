@@ -138,7 +138,7 @@ nodeAgent:
       method: POST
     alertManagerExporterUrls: [prometheus-atx-local-kube-alertmanager.monitoring:9093]
     stdoutExporter: true
-    syslogExporterURL: 10.18.200.193:30078
+    # syslogExporterURL: 10.18.200.193:30078
     skipKernelVersionCheck: false
     malwareScanAllFiles: false
     hostMalwareSensor: disable
