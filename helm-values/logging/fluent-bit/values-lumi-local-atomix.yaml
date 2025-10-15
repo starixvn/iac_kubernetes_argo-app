@@ -6,6 +6,8 @@ image:
 #   node-role.kubernetes.io/control-plane: ""
 #   node-role.kubernetes.io/master: ""
 
+flush: 30
+
 resources:
   limits:
     cpu: 100m
@@ -100,6 +102,7 @@ config:
       Suppress_Type_Name On
       Index logstash-kubesystem-systemd
       Replace_Dots On
+      Compress gzip
 
     # [OUTPUT]
     #   Name opensearch
@@ -126,6 +129,7 @@ config:
       Suppress_Type_Name On
       Index logstash-kubesystem-container-log
       Replace_Dots On
+      Compress gzip
 
     [OUTPUT]
       Name opensearch
@@ -139,3 +143,4 @@ config:
       Suppress_Type_Name On
       Index logstash-kubescape
       Replace_Dots On
+      Compress gzip
