@@ -20,7 +20,7 @@ argo_applications_by_team = {
         ]
       }
       kubernetes-etcd-backup = {
-        namespace     = "monitoring"
+        namespace     = "etcd-backup"
         helm_path     = "kubernetes-etcd-backup"
         chart_version = "1.6.2"
         skip_crds     = true
