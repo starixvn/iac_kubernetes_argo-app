@@ -48,16 +48,6 @@ resources:
     cpu: 100m
     memory: 128Mi
 
-env:
-  - name: ETCDCTL_ENDPOINTS
-    value: "https://127.0.0.1:2379"
-  - name: ETCDCTL_CACERT
-    value: "/etc/etcd/pki/ca.crt"
-  - name: ETCDCTL_CERT
-    value: "/etc/etcd/pki/tls.crt"
-  - name: ETCDCTL_KEY
-    value: "/etc/etcd/pki/tls.key"
-
 # extraVolumes:
 #   - name: etcd-ca
 #     secret:
@@ -80,3 +70,10 @@ podSecurityContext:
   runAsUser: 0               
   fsGroup: 0
   runAsGroup: 0
+
+nodeSelector:
+  node-role.kubernetes.io/control-plane: ""
+tolerations:
+  - key: "node-role.kubernetes.io/control-plane"
+    operator: "Exists"
+    effect: "NoSchedule"
