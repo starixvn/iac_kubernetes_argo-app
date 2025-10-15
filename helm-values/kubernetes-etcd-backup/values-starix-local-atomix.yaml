@@ -48,23 +48,23 @@ resources:
     cpu: 100m
     memory: 128Mi
 
-extraVolumes:
-  - name: etcd-ca
-    secret:
-      secretName: etcd-ca-secret
-      defaultMode: 0400
-  - name: etcd-certs
-    secret:
-      secretName: etcd-tls-secrets
-      defaultMode: 0400
+# extraVolumes:
+#   - name: etcd-ca
+#     secret:
+#       secretName: etcd-ca-secret
+#       defaultMode: 0400
+#   - name: etcd-certs
+#     secret:
+#       secretName: etcd-tls-secrets
+#       defaultMode: 0400
 
-extraVolumeMounts:
-  - name: etcd-ca
-    mountPath: /etc/etcd/ssl
-    readOnly: true
-  - name: etcd-certs
-    mountPath: /etc/etcd/certs
-    readOnly: true
+# extraVolumeMounts:
+#   - name: etcd-ca
+#     mountPath: /etc/etcd/ssl
+#     readOnly: true
+#   - name: etcd-certs
+#     mountPath: /etc/etcd/certs
+#     readOnly: true
 
 podSecurityContext:
   runAsUser: 0               
