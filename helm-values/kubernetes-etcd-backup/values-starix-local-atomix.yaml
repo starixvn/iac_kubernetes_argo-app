@@ -1,5 +1,5 @@
 backup:
-  subdir: "/"
+  subdir: "/starix/local"
   dirname: "+etcd-backup-%FT%T%:z"
   expiretype: "days"
   keepdays: "3"
@@ -27,7 +27,7 @@ persistence:
   s3:
     enabled: true
     name: etcd-backup
-    host: http://s3-api.nexdev.net
+    host: http://s3-api.starixsoft.com
     bucket: etcd-backups
     accessKey: etcd-backupper
     secretKey: h9giyAwIk6I7nUBh
