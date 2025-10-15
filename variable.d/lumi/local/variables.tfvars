@@ -30,6 +30,17 @@ argo_applications_by_team = {
         helm_path     = "vault/vault-secrets-operator"
         chart_version = "0.10.0"
       }
+
+      fluent-bit = {
+        namespace     = "logging"
+        helm_path     = "logging/fluent-bit"
+        chart_version = "0.50.0"
+        value_files = [
+          "values-global.yaml",
+          "values-lumi-local-atomix.yaml",
+        ]
+      }
+
       # trivy-op = {
       #   namespace     = "trivy"
       #   helm_path     = "trivy-stack/trivy-operator"
