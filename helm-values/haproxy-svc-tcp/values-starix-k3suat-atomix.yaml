@@ -1,5 +1,14 @@
 clusterDomain: "starix.k3suat"
 
+
+image:
+  registry: nexhub.ops-klprod.gamora.prod
+  repository: kbt/base/bitnamilegacy/haproxy
+  tag: 3.0.4-debian-12-r2
+
+
+
+
 # setting HA for service
 replicaCount: 3
 podAntiAffinityPreset: hard
