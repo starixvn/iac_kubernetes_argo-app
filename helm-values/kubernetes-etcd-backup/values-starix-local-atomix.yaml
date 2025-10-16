@@ -8,7 +8,7 @@ backup:
   umask: "0027"
 
 etcdConfiguration:
-  endpoint: "127.0.0.1"
+  endpoint: "10.17.200.80"
   insecureSkipTlsVerify: false
 
 etcdCertification:
@@ -48,34 +48,14 @@ resources:
     cpu: 100m
     memory: 128Mi
 
-# extraVolumes:
-#   - name: etcd-ca
-#     secret:
-#       secretName: etcd-ca-secret
-#       defaultMode: 0400
-#   - name: etcd-certs
-#     secret:
-#       secretName: etcd-tls-secrets
-#       defaultMode: 0400
-
-# extraVolumeMounts:
-#   - name: etcd-ca
-#     mountPath: /etc/ssl/etcd/ssl
-#     readOnly: true
-#   - name: etcd-certs
-#     mountPath: /etc/ssl/etcd/ssl
-#     readOnly: true
-
 podSecurityContext:
   runAsUser: 0               
   fsGroup: 0
   runAsGroup: 0
 
 nodeSelector:
-  etcd-backup: "true"
+  etcd-backup: true
 
 tolerations:
-  - effect: NoSchedule
-    key: node-role.kubernetes.io/master
   - effect: NoSchedule
     key: node-role.kubernetes.io/control-plane
