@@ -93,6 +93,28 @@ argo_applications_by_team = {
         auto_sync     = false
         value_files   = ["values-starix-k3suat-pioneers-state.yaml"]
       }
+
+      redis-alpha-pier-cache = {
+        helm_path     = "redis-operator/replication-sentinel"
+        chart_version = "1.0.0"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-starix-k3suat-pioneers-cache.yaml"
+        ]
+      }
+
+      redis-alpha-pier-state = {
+        helm_path     = "redis-operator/replication-sentinel"
+        chart_version = "1.0.0"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-starix-k3suat-pioneers-state.yaml"
+        ]
+      }
+
+
     }
   }
 
