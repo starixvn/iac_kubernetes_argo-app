@@ -60,3 +60,27 @@ tolerations:
   - key: "node-role.kubernetes.io/control-plane"
     operator: "Exists"
     effect: "NoSchedule"
+
+volumes:
+  - name: etcd-certs
+    hostPath:
+      path: /etc/ssl/etcd/ssl
+      type: DirectoryOrCreate
+
+volumeMounts:
+  - name: etcd-certs
+    mountPath: /etc/ssl/etcd/ssl
+    readOnly: true
+
+# --- etcd connection config ---
+extraArgs:
+  - "--endpoints=https://10.17.200.80:2379"
+  - "--cacert=/etc/ssl/etcd/ssl/ca.pem"
+  - "--cert=/etc/ssl/etcd/ssl/admin-k8snode-17-80.spvn.local.pem"
+  - "--key=/etc/ssl/etcd/ssl/admin-k8snode-17-80.spvn.local-key.pem"
+
+extraArgs:
+  - "--endpoints=https://10.17.200.80:2379"
+  - "--cacert=/etc/ssl/etcd/ssl/ca.pem"
+  - "--cert=/etc/ssl/etcd/ssl/admin-k8snode-17-80.spvn.local.pem"
+  - "--key=/etc/ssl/etcd/ssl/admin-k8snode-17-80.spvn.local-key.pem"
