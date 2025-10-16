@@ -152,6 +152,17 @@ argo_applications_by_team = {
         value_files   = ["values-starix-k3suat-subarashi-cache.yaml"]
         ###
       }
+
+      redis-oddfeed = {
+        helm_path     = "redis-operator/replication-sentinel"
+        chart_version = "1.0.0"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-starix-k3suat-subarashi.yaml"
+        ]
+      }
+
     }
   }
 
@@ -165,6 +176,17 @@ argo_applications_by_team = {
         value_files   = ["values-starix-k3suat-wabisabi-cache.yaml"]
         ####
       }
+
+      redis-fps = {
+        helm_path     = "redis-operator/replication-sentinel"
+        chart_version = "1.0.0"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-starix-k3suat-wabisabi.yaml"
+        ]
+      }
+
     }
   }
 
