@@ -53,9 +53,17 @@ podSecurityContext:
   fsGroup: 0
   runAsGroup: 0
 
-nodeSelector:
-  etcd-backup: true
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: etcd-backup
+              operator: In
+              values:
+                - "true"
 
 tolerations:
-  - effect: NoSchedule
-    key: node-role.kubernetes.io/control-plane
+  - key: "node-role.kubernetes.io/control-plane"
+    operator: "Exists"
+    effect: "NoSchedule"
