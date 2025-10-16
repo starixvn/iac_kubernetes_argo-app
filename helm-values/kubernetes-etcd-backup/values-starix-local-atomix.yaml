@@ -72,7 +72,7 @@ podSecurityContext:
   runAsGroup: 0
 
 nodeSelector:
-  node-role.kubernetes.io/control-plane: ""
+  etcd-backup: "true"
 
 tolerations:
   - effect: NoSchedule
