@@ -8,14 +8,12 @@ backup:
   umask: "0027"
 
 etcdConfiguration:
-  endpoints: "https://10.17.200.80:2379"
-  caCert: "/etc/etcd/ssl/ca.pem"
-  cert: "/etc/etcd/ssl/node-k8snode-17-80.spvn.local.pem"
-  key: "/etc/etcd/ssl/node-k8snode-17-80.spvn.local-key.pem"
+  endpoint: "127.0.0.1"
+  insecureSkipTlsVerify: false
 
-# etcdCertification:
-#   etcdPeerTlsName: "etcd-peer-tls"
-#   etcdServerCaName: "etcd-server-ca"
+etcdCertification:
+  etcdPeerTlsName: "etcd-peer-tls"
+  etcdServerCaName: "etcd-server-ca"
 
 persistence:
   reclaimPolicy: Retain
