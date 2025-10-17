@@ -88,11 +88,11 @@ extraVolumeMounts:
 env:
   - name: ETCDCTL_API
     value: "3"
-  - name: ETCDCTL_ENDPOINTS
-    value: "https://10.17.200.80:2379"
-  - name: ETCDCTL_CACERT
-    value: "/etc/ssl/etcd/ssl/ca.pem"
-  - name: ETCDCTL_CERT
-    value: "/etc/ssl/etcd/ssl/member-k8snode-17-80.spvn.local.pem"
-  - name: ETCDCTL_KEY
-    value: "/etc/ssl/etcd/ssl/member-k8snode-17-80.spvn.local-key.pem"
+  # - name: ETCDCTL_ENDPOINTS
+  #   value: "https://10.17.200.80:2379"
+  # - name: ETCDCTL_CACERT
+  #   value: "/etc/ssl/etcd/ssl/ca.pem"
+  # - name: ETCDCTL_CERT
+  #   value: "/etc/ssl/etcd/ssl/member-k8snode-17-80.spvn.local.pem"
+  # - name: ETCDCTL_KEY
+  #   value: "/etc/ssl/etcd/ssl/member-k8snode-17-80.spvn.local-key.pem"
