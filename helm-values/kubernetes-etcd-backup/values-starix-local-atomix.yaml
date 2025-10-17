@@ -9,6 +9,9 @@ backup:
 
 etcdConfiguration:
   endpoint: "10.17.200.80"
+  cacert: "/etc/ssl/etcd/ssl/ca.pem"
+  cert: "/etc/ssl/etcd/ssl/member-k8snode-17-80.spvn.local.pem"
+  key: "/etc/ssl/etcd/ssl/member-k8snode-17-80.spvn.local-key.pem"
   insecureSkipTlsVerify: false
 
 etcdCertification:
