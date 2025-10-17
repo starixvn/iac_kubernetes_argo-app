@@ -9,10 +9,6 @@ backup:
 
 etcdConfiguration:
   endpoint: "10.17.200.80"
-  # apiVersion: "3"
-  # cacert: "/etc/ssl/etcd/ssl/ca.pem"
-  # cert: "/etc/ssl/etcd/ssl/member-k8snode-17-80.spvn.local.pem"
-  # key: "/etc/ssl/etcd/ssl/member-k8snode-17-80.spvn.local-key.pem"
   insecureSkipTlsVerify: false
 
 etcdCertification:
@@ -64,24 +60,4 @@ tolerations:
   - key: "node-role.kubernetes.io/control-plane"
     operator: "Exists"
     effect: "NoSchedule"
-
-# disableDefaultEtcdMounts: true
-
-# extraVolumes:
-#   - name: etcd-backup-script
-#     configMap:
-#       name: etcd-backup-script
-#   - name: etcd-certs
-#     hostPath:
-#       path: /etc/ssl/etcd/ssl
-#       type: Directory
-
-# extraVolumeMounts:
-#   - name: etcd-backup-script
-#     mountPath: /usr/local/bin/backup.sh
-#     subPath: backup.sh
-#     readOnly: true
-#   - name: etcd-certs
-#     mountPath: /etc/ssl/etcd/ssl
-#     readOnly: true
 
