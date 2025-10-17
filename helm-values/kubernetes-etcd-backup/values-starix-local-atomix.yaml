@@ -81,7 +81,7 @@ extraVolumeMounts:
     mountPath: /etc/ssl/etcd/ssl
     readOnly: true
 
-extraEnv:
+env:
   - name: ETCDCTL_API
     value: "3"
   - name: ETCDCTL_ENDPOINTS
