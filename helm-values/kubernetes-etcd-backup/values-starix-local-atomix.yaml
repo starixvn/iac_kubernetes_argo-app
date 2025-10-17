@@ -64,25 +64,25 @@ tolerations:
 disableDefaultEtcdMounts: true
 
 extraVolumes:
-  - name: etcd-member-certs
-    secret:
-      secretName: etcd-member-certs
+  - name: etcd-backup-script
+    configMap:
+      name: etcd-backup-script
+  - name: etcd-certs
+    hostPath:
+      path: /etc/ssl/etcd/ssl
+      type: Directory
 
 extraVolumeMounts:
-  - name: etcd-member-certs
-    mountPath: /etc/ssl/etcd/ssl/ca.pem
-    subPath: ca.pem
-    readOnly: true
-  - name: etcd-member-certs
-    mountPath: /etc/ssl/etcd/ssl/member-k8snode-17-80.spvn.local.pem
-    subPath: member.pem
-    readOnly: true
-  - name: etcd-member-certs
-    mountPath: /etc/ssl/etcd/ssl/member-k8snode-17-80.spvn.local-key.pem
-    subPath: member-key.pem
+  - name: etcd-backup-script
+    mountPath: /usr/local/bin/backup.sh
+    subPath: backup.sh
     readOnly: true
 
-env:
+  - name: etcd-certs
+    mountPath: /etc/ssl/etcd/ssl
+    readOnly: true
+
+extraEnv:
   - name: ETCDCTL_API
     value: "3"
   - name: ETCDCTL_ENDPOINTS
