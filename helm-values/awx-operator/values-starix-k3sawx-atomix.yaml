@@ -25,6 +25,8 @@ AWX:
     - setting: CSRF_TRUSTED_ORIGINS
       value:
         - https://awx-k3s.nexdev.net
+    security_context_settings:
+      runAsUser: 0
 
 extraDeploy:
 - |
