@@ -129,14 +129,14 @@ backstage:
         port: 7007
       cors:
         origin: https://backstage.lumigame.com
-      database:
-        client: pg
-        connection:
-          host: backstage-postgresql
-          port: 5432
-          user: backstage
-          password: backstage1qaz@WSX
-          database: backstage
+      # database:
+      #   client: pg
+      #   connection:
+      #     host: backstage-postgresql
+      #     port: 5432
+      #     user: backstage
+      #     password: backstage1qaz@WSX
+      #     database: backstage
 
     integrations:
       gitlab:
@@ -169,7 +169,7 @@ postgresql:
     repository: base/bitnami/postgresql
     pullPolicy: IfNotPresent
     tag: "15.4.0-debian-11-r45"
-  enabled: true
+  enabled: false
   auth:
     username: bn_backstage
     password: "backstage1qaz@WSX"
