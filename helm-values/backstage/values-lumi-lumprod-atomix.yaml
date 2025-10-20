@@ -88,8 +88,7 @@ backstage:
 
   extraEnvVarsCM: []
 
-  extraEnvVarsSecrets:
-    - test-backstage-secrets
+  extraEnvVarsSecrets: []
 
   extraPorts: []
 
