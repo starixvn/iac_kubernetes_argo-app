@@ -125,7 +125,7 @@ backstage:
   tolerations: []
 
 service:
-  type: nodePorts #ClusterIP
+  type: NodePort #ClusterIP
   ports:
     backend: 7007
     name: http-backend
