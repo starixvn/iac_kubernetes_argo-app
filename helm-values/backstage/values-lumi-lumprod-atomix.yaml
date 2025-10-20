@@ -76,12 +76,12 @@ backstage:
     - name: GITLAB_CLIENT_ID
       valueFrom:
         secretKeyRef:
-          name: backstage-secrets
+          name: gitlab-backstage-secrets
           key: gitlab-client-id
     - name: GITLAB_CLIENT_SECRET
       valueFrom:
         secretKeyRef:
-          name: backstage-secrets
+          name: gitlab-backstage-secrets
           key: gitlab-client-secret
 
   extraEnvVarsCM: []
@@ -130,7 +130,7 @@ backstage:
 
   appConfig:
     app:
-      title: Lumigame Developer Portal
+      title: SC Developer Portal
       baseUrl: https://backstage.lumigame.com
 
     backend:
