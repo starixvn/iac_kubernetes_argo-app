@@ -17,6 +17,7 @@ AWX:
     web_extra_volume_mounts: |
       - name: static-data
         mountPath: /var/lib/projects
+    task_extra_volume_mounts: |
       - name: k8s-caching
         mountPath: /k8s-caching
     extra_volumes: |
