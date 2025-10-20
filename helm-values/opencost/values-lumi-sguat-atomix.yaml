@@ -162,13 +162,13 @@ opencost:
     # -- Enable cloud cost ingestion and querying, dependant on valid integration credentials
     enabled: true
     # -- Number of hours between each run of the Cloud Cost pipeline
-    refreshRateHours: 24
+    refreshRateHours: 12
     # -- Number of days into the past that a Cloud Cost standard run will query for
-    runWindowDays: 1
+    runWindowDays: 30
     # -- The number of standard runs before a Month-to-Date run occurs
-    monthToDateInterval: 6
+    monthToDateInterval: 0
     # -- The max number of days that any single query will be made to construct Cloud Costs
-    queryWindowDays: 7
+    queryWindowDays: 30
 
 
   metrics:
