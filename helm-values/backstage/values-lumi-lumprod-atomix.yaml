@@ -223,7 +223,7 @@ postgresql:
     storageClass: "longhorn"
 
 serviceAccount:
-  create: true
+  create: false
   name: ""
   labels: {}
   annotations: {}
