@@ -68,10 +68,12 @@ backstage:
   extraContainers: []
 
   extraEnvVars:
+    - name: APP_CONFIG_backend_cache_store
+      value: memory
     - name: GITLAB_TOKEN
       valueFrom:
         secretKeyRef:
-          name: backstage-secrets
+          name: gitlab-backstage-secrets
           key: gitlab-token
     - name: GITLAB_CLIENT_ID
       valueFrom:
@@ -86,7 +88,8 @@ backstage:
 
   extraEnvVarsCM: []
 
-  extraEnvVarsSecrets: []
+  extraEnvVarsSecrets:
+    - test-backstage-secrets
 
   extraPorts: []
 
@@ -166,11 +169,23 @@ backstage:
             callbackUrl: https://backstage.lumigame.com/api/auth/gitlab/handler/frame
 
     techdocs:
-      builder: 'local'     
+      builder: 'local'
       generator:
-        runIn: 'docker'  
+        runIn: 'local'
       publisher:
-        type: 'local' 
+        type: 'local'
+
+    kubernetes:
+      serviceLocatorMethod:
+        type: 'multiTenant'
+      clusterLocatorMethods:
+        - type: 'config'
+          clusters:
+            - url: kubernetes.default.svc.cluster.local:443
+              name: local
+              authProvider: 'serviceAccount'
+              skipTLSVerify: false
+              skipMetricsLookup: true
     
 
   affinity: {}
@@ -212,22 +227,9 @@ postgresql:
     size: "5Gi"
     storageClass: "longhorn"
 
-# -- Service Account Configuration
-# @default -- See below
 serviceAccount:
-
-  # -- Enable the creation of a ServiceAccount for Backstage pods
-  create: false
-
-  # -- Name of the ServiceAccount to use
-  # If not set and `serviceAccount.create` is true, a name is generated
+  create: true
   name: ""
-
-  # -- Additional custom labels to the service ServiceAccount.
   labels: {}
-
-  # -- Additional custom annotations for the ServiceAccount.
   annotations: {}
-
-  # -- Auto-mount the service account token in the pod
   automountServiceAccountToken: true
