@@ -36,6 +36,8 @@ luaScripts:
             record["user_agent"] = val
           elseif name == "X-Forwarded-For" then
             record["http_xff"] = val
+          elseif name == "X-Actual-Ip" then
+            record["http_xff"] = val
           elseif name == "Referer" then
             record["http_referer"] = val
           end
