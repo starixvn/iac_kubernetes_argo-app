@@ -73,6 +73,16 @@ backstage:
         secretKeyRef:
           name: backstage-secrets
           key: gitlab-token
+    - name: GITLAB_CLIENT_ID
+      valueFrom:
+        secretKeyRef:
+          name: backstage-secrets
+          key: gitlab-client-id
+    - name: GITLAB_CLIENT_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: backstage-secrets
+          key: gitlab-client-secret
 
   extraEnvVarsCM: []
 
@@ -146,10 +156,14 @@ backstage:
             $env: GITLAB_TOKEN
 
     auth:
-      environment: development
+      environment: production
       providers:
-        guest:
-          enabled: true
+        gitlab:
+          production:
+            clientId: ${GITLAB_CLIENT_ID}
+            clientSecret: ${GITLAB_CLIENT_SECRET}
+            audience: https://git3-bk.nexdev.net
+            callbackUrl: https://backstage.lumigame.com/api/auth/gitlab/handler/frame
 
     techdocs:
       builder: 'local'     
