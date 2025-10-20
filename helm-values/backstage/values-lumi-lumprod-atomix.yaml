@@ -144,6 +144,13 @@ backstage:
           apiBaseUrl: https://git3-bk.nexdev.net/api/v4
           token:
             $env: GITLAB_TOKEN
+
+    techdocs:
+      builder: 'local'     
+      generator:
+        runIn: 'docker'  
+      publisher:
+        type: 'local' 
     
 
   affinity: {}
