@@ -161,6 +161,11 @@ service:
   #  backend: 32707
 
 postgresql:
+  image:
+    registry: hub.lumigame.com
+    repository: base/bitnami/postgresql
+    pullPolicy: IfNotPresent
+    tag: "15.4.0-debian-11-r45"
   enabled: true
   auth:
     username: bn_backstage
