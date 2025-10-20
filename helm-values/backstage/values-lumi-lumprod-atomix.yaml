@@ -119,29 +119,29 @@ backstage:
 
   containerSecurityContext: {}
 
-  appConfig:
-    app:
-      baseUrl: "https://backstage.lumigame.com"
-      title: "Backstage"
+  # appConfig:
+  #   app:
+  #     baseUrl: "https://backstage.lumigame.com"
+  #     title: "Backstage"
     
-    backend:
-      baseUrl: "https://backstage.lumigame.com"
-      listen:
-        port: 7007
-        host: "0.0.0.0"
-      cors:
-        origin: "https://backstage.lumigame.com"
-      csp:
-        connect-src: ["'self'", "http:", "https:"]
+  #   backend:
+  #     baseUrl: "https://backstage.lumigame.com"
+  #     listen:
+  #       port: 7007
+  #       host: "0.0.0.0"
+  #     cors:
+  #       origin: "https://backstage.lumigame.com"
+  #     csp:
+  #       connect-src: ["'self'", "http:", "https:"]
 
-    database:
-      client: "pg"
-      connection:
-        host: "postgresql"
-        port: 5432
-        user: "bn_backstage"
-        password: "password"
-        database: "backstage"
+  #   database:
+  #     client: "pg"
+  #     connection:
+  #       host: "postgresql"
+  #       port: 5432
+  #       user: "bn_backstage"
+  #       password: "password"
+  #       database: "backstage"
 
   affinity: {}
 
