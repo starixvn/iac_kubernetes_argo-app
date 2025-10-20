@@ -166,7 +166,7 @@ opencost:
     # -- Number of days into the past that a Cloud Cost standard run will query for
     runWindowDays: 30
     # -- The number of standard runs before a Month-to-Date run occurs
-    monthToDateInterval: 0
+    monthToDateInterval: ""
     # -- The max number of days that any single query will be made to construct Cloud Costs
     queryWindowDays: 30
 
