@@ -199,8 +199,6 @@ service:
     backend: 7007
     name: http-backend
     targetPort: backend
-  #nodePorts:
-  #  backend: 32707
 
 postgresql:
   image:
