@@ -137,7 +137,12 @@ argo_applications_by_team = {
           "values-starix-lumprod-atomix.yaml"
         ]
       }
-
+      backstage = {
+        namespace     = "backstage"
+        helm_path     = "backstage"
+        chart_version = "2.6.1"
+        value_files   = ["values-lumi-lumprod-atomix.yaml"]
+      }
     }
   }
 }
