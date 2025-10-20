@@ -14,12 +14,12 @@ AWX:
       tls_secret: awx-k3s-tls-secret
     csrf_cookie_secure: "False"
     session_cookie_secure: "False"
+    ee_extra_volume_mounts: |
+      - name: k8s-caching
+        mountPath: /caching-k8s-dir
     web_extra_volume_mounts: |
       - name: static-data
         mountPath: /var/lib/projects
-    ee_extra_volume_mounts: |
-      - name: k8s-caching
-        mountPath: /k8s-caching
     extra_volumes: |
       - name: static-data
         persistentVolumeClaim:
