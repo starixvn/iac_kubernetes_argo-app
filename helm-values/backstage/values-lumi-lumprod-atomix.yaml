@@ -145,6 +145,12 @@ backstage:
           token:
             $env: GITLAB_TOKEN
 
+    auth:
+      environment: development
+      providers:
+        guest:
+          enabled: true
+
     techdocs:
       builder: 'local'     
       generator:
