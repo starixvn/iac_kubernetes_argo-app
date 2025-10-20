@@ -67,13 +67,12 @@ backstage:
 
   extraContainers: []
 
-  extraEnvVars: []
-    # - name: APP_CONFIG_app_baseUrl
-    #   value: "https://backstage.lumigame.com"
-    # - name: APP_CONFIG_backend_baseUrl
-    #   value: "https://backstage.lumigame.com"
-    # - name: APP_CONFIG_backend_cors_origin
-    #   value: "https://backstage.lumigame.com"
+  extraEnvVars:
+    - name: GITLAB_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: backstage-secrets
+          key: gitlab-token
 
   extraEnvVarsCM: []
 
@@ -119,29 +118,33 @@ backstage:
 
   containerSecurityContext: {}
 
-  # appConfig:
-  #   app:
-  #     baseUrl: "https://backstage.lumigame.com"
-  #     title: "Backstage"
-    
-  #   backend:
-  #     baseUrl: "https://backstage.lumigame.com"
-  #     listen:
-  #       port: 7007
-  #       host: "0.0.0.0"
-  #     cors:
-  #       origin: "https://backstage.lumigame.com"
-  #     csp:
-  #       connect-src: ["'self'", "http:", "https:"]
+  appConfig:
+    app:
+      title: Lumigame Developer Portal
+      baseUrl: https://backstage.lumigame.com
 
-  #   database:
-  #     client: "pg"
-  #     connection:
-  #       host: "postgresql"
-  #       port: 5432
-  #       user: "bn_backstage"
-  #       password: "password"
-  #       database: "backstage"
+    backend:
+      baseUrl: https://backstage.lumigame.com
+      listen:
+        port: 7007
+      cors:
+        origin: https://backstage.lumigame.com
+      database:
+        client: pg
+        connection:
+          host: backstage-postgresql
+          port: 5432
+          user: backstage
+          password: backstage1qaz@WSX
+          database: backstage
+
+    integrations:
+      gitlab:
+        - host: git3-bk.nexdev.net
+          apiBaseUrl: https://git3-bk.nexdev.net/api/v4
+          token:
+            $env: GITLAB_TOKEN
+    
 
   affinity: {}
 
@@ -169,7 +172,7 @@ postgresql:
   enabled: true
   auth:
     username: bn_backstage
-    password: "password"
+    password: "backstage1qaz@WSX"
     database: "backstage"
     existingSecret: ""
     secretKeys:
@@ -179,7 +182,7 @@ postgresql:
   architecture: standalone
   persistence:
     enabled: true
-    size: "8Gi"
+    size: "5Gi"
     storageClass: "longhorn"
 
 # -- Service Account Configuration
