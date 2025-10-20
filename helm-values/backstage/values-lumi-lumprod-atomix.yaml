@@ -67,7 +67,13 @@ backstage:
 
   extraContainers: []
 
-  extraEnvVars: []
+  extraEnvVars:
+    - name: APP_CONFIG_app_baseUrl
+      value: "https://backstage.lumigame.com"
+    - name: APP_CONFIG_backend_baseUrl
+      value: "https://backstage.lumigame.com"
+    - name: APP_CONFIG_backend_cors_origin
+      value: "https://backstage.lumigame.com"
 
   extraEnvVarsCM: []
 
@@ -125,13 +131,13 @@ backstage:
   tolerations: []
 
 service:
-  type: NodePort #ClusterIP
+  type: ClusterIP
   ports:
     backend: 7007
     name: http-backend
     targetPort: backend
-  nodePorts:
-    backend: 32707
+  #nodePorts:
+  #  backend: 32707
 
 postgresql:
   enabled: false
