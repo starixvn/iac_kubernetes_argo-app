@@ -67,13 +67,13 @@ backstage:
 
   extraContainers: []
 
-  extraEnvVars:
-    - name: APP_CONFIG_app_baseUrl
-      value: "https://backstage.lumigame.com"
-    - name: APP_CONFIG_backend_baseUrl
-      value: "https://backstage.lumigame.com"
-    - name: APP_CONFIG_backend_cors_origin
-      value: "https://backstage.lumigame.com"
+  extraEnvVars: []
+    # - name: APP_CONFIG_app_baseUrl
+    #   value: "https://backstage.lumigame.com"
+    # - name: APP_CONFIG_backend_baseUrl
+    #   value: "https://backstage.lumigame.com"
+    # - name: APP_CONFIG_backend_cors_origin
+    #   value: "https://backstage.lumigame.com"
 
   extraEnvVarsCM: []
 
@@ -96,7 +96,6 @@ backstage:
     requests:
       memory: 250Mi
       cpu: 100m
-  #resources: {}
 
   readinessProbe:
     httpGet:
@@ -120,7 +119,29 @@ backstage:
 
   containerSecurityContext: {}
 
-  appConfig: {}
+  appConfig:
+    app:
+      baseUrl: "https://backstage.lumigame.com"
+      title: "Backstage"
+    
+    backend:
+      baseUrl: "https://backstage.lumigame.com"
+      listen:
+        port: 7007
+        host: "0.0.0.0"
+      cors:
+        origin: "https://backstage.lumigame.com"
+      csp:
+        connect-src: ["'self'", "http:", "https:"]
+
+    database:
+      client: "pg"
+      connection:
+        host: "postgresql"
+        port: 5432
+        user: "bn_backstage"
+        password: "password"
+        database: "backstage"
 
   affinity: {}
 
@@ -140,34 +161,21 @@ service:
   #  backend: 32707
 
 postgresql:
-  enabled: false
-
-  # -- The authentication details of the Postgres database
+  enabled: true
   auth:
-
-    # -- Name for a custom user to create
     username: bn_backstage
-
-    # -- Password for the custom user to create
-    password: ""
-
-    # -- Name of existing secret to use for PostgreSQL credentials
+    password: "password"
+    database: "backstage"
     existingSecret: ""
-
-    # -- The secret keys Postgres will look for to retrieve the relevant password
     secretKeys:
-
-      # -- The key in which Postgres will look for, for the admin password, in the existing Secret
       adminPasswordKey: admin-password
-
-      # -- The key in which Postgres will look for, for the user password, in the existing Secret
       userPasswordKey: user-password
-
-      # -- The key in which Postgres will look for, for the replication password, in the existing Secret
       replicationPasswordKey: replication-password
-
-  # -- PostgreSQL architecture (`standalone` or `replication`)
   architecture: standalone
+  persistence:
+    enabled: true
+    size: "8Gi"
+    storageClass: "longhorn"
 
 # -- Service Account Configuration
 # @default -- See below
