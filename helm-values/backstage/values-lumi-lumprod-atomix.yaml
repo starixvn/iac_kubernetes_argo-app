@@ -71,17 +71,17 @@ backstage:
     - name: GITLAB_TOKEN
       valueFrom:
         secretKeyRef:
-          name: backstage-secrets
+          name: gitlab-backstage-secrets
           key: gitlab-token
     - name: GITLAB_CLIENT_ID
       valueFrom:
         secretKeyRef:
-          name: backstage-secrets
+          name: gitlab-backstage-secrets
           key: gitlab-client-id
     - name: GITLAB_CLIENT_SECRET
       valueFrom:
         secretKeyRef:
-          name: backstage-secrets
+          name: gitlab-backstage-secrets
           key: gitlab-client-secret
 
   extraEnvVarsCM: []
@@ -166,11 +166,23 @@ backstage:
             callbackUrl: https://backstage.lumigame.com/api/auth/gitlab/handler/frame
 
     techdocs:
-      builder: 'local'     
+      builder: 'local'
       generator:
-        runIn: 'docker'  
+        runIn: 'local'
       publisher:
-        type: 'local' 
+        type: 'local'
+
+    kubernetes:
+      serviceLocatorMethod:
+        type: 'multiTenant'
+      clusterLocatorMethods:
+        - type: 'config'
+          clusters:
+            - url: kubernetes.default.svc.cluster.local:443
+              name: local
+              authProvider: 'serviceAccount'
+              skipTLSVerify: false
+              skipMetricsLookup: true
     
 
   affinity: {}
@@ -211,7 +223,7 @@ postgresql:
     storageClass: "longhorn"
 
 serviceAccount:
-  create: false
+  create: true
   name: ""
   labels: {}
   annotations: {}
