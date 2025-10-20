@@ -166,23 +166,11 @@ backstage:
             callbackUrl: https://backstage.lumigame.com/api/auth/gitlab/handler/frame
 
     techdocs:
-      builder: 'local'
+      builder: 'local'     
       generator:
-        runIn: 'local'
+        runIn: 'docker'  
       publisher:
-        type: 'local'
-
-    # kubernetes:
-    #   serviceLocatorMethod:
-    #     type: 'multiTenant'
-    #   clusterLocatorMethods:
-    #     - type: 'config'
-    #       clusters:
-    #         - url: kubernetes.default.svc.cluster.local:443
-    #           name: local
-    #           authProvider: 'serviceAccount'
-    #           skipTLSVerify: false
-    #           skipMetricsLookup: true
+        type: 'local' 
     
 
   affinity: {}
@@ -199,6 +187,8 @@ service:
     backend: 7007
     name: http-backend
     targetPort: backend
+  #nodePorts:
+  #  backend: 32707
 
 postgresql:
   image:
