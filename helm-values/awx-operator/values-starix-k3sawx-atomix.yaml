@@ -17,16 +17,19 @@ AWX:
     web_extra_volume_mounts: |
       - name: static-data
         mountPath: /var/lib/projects
+      - name: k8s-caching
+        mountPath: /k8s-caching
     extra_volumes: |
       - name: static-data
         persistentVolumeClaim:
           claimName: static-data-pvc
+      - name: k8s-caching
+        persistentVolumeClaim:
+          claimName: k8s-caching-pvc
     extra_settings:
     - setting: CSRF_TRUSTED_ORIGINS
       value:
         - https://awx-k3s.nexdev.net
-    security_context_settings:
-      runAsUser: 0
 
 extraDeploy:
 - |
@@ -42,6 +45,19 @@ extraDeploy:
     resources:
       requests:
         storage: 5Gi
+- |
+  apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: k8s-caching-pvc
+    namespace: awx
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    storageClassName: local-path
+    resources:
+      requests:
+        storage: 10Gi
 - |
   # Create a TLS secret named `awx-k3s-tls-secret` in the `awx` namespace before deploying AWX.
   apiVersion: v1
