@@ -25,9 +25,9 @@ luaScripts:
       end
 
       local headers = {}
-      local names = {"Host", "User-Agent", "Referer", "X-Forwarded-For"}
+      local names = {"Host", "User-Agent", "Referer", "X-Forwarded-For", "X-Actual-Ip"}
       for i, name in ipairs(names) do
-        local val = parts[i]
+        local val = parts[i] or ""
         if val and val ~= "-" and val ~= "" then
           table.insert(headers, { name = name, value = val })
           if name == "Host" then
@@ -35,6 +35,8 @@ luaScripts:
           elseif name == "User-Agent" then
             record["user_agent"] = val
           elseif name == "X-Forwarded-For" then
+            record["http_xff"] = val
+          elseif name == "X-Actual-Ip" then
             record["http_xff"] = val
           elseif name == "Referer" then
             record["http_referer"] = val
