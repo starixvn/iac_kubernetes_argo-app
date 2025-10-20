@@ -132,7 +132,7 @@ backstage:
       database:
         client: pg
         connection:
-          host: backstage-postgresql
+          host: backstage-atx-lumprod-postgresql.backstage.svc
           port: 5432
           user: bn_backstage
           password: backstage1qaz@WSX
