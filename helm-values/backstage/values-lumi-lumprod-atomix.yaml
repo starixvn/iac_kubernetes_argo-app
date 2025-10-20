@@ -68,8 +68,6 @@ backstage:
   extraContainers: []
 
   extraEnvVars:
-    - name: APP_CONFIG_backend_cache_store
-      value: memory
     - name: GITLAB_TOKEN
       valueFrom:
         secretKeyRef:
