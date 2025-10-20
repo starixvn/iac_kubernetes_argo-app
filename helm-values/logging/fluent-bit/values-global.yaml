@@ -25,9 +25,9 @@ luaScripts:
       end
 
       local headers = {}
-      local names = {"Host", "User-Agent", "Referer", "X-Forwarded-For"}
+      local names = {"Host", "User-Agent", "Referer", "X-Forwarded-For", "X-Actual-Ip"}
       for i, name in ipairs(names) do
-        local val = parts[i]
+        local val = parts[i] or ""
         if val and val ~= "-" and val ~= "" then
           table.insert(headers, { name = name, value = val })
           if name == "Host" then
