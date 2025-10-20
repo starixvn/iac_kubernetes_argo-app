@@ -71,17 +71,17 @@ backstage:
     - name: GITLAB_TOKEN
       valueFrom:
         secretKeyRef:
-          name: gitlab-backstage-secrets
+          name: backstage-secrets
           key: gitlab-token
     - name: GITLAB_CLIENT_ID
       valueFrom:
         secretKeyRef:
-          name: gitlab-backstage-secrets
+          name: backstage-secrets
           key: gitlab-client-id
     - name: GITLAB_CLIENT_SECRET
       valueFrom:
         secretKeyRef:
-          name: gitlab-backstage-secrets
+          name: backstage-secrets
           key: gitlab-client-secret
 
   extraEnvVarsCM: []
@@ -187,8 +187,6 @@ service:
     backend: 7007
     name: http-backend
     targetPort: backend
-  #nodePorts:
-  #  backend: 32707
 
 postgresql:
   image:
