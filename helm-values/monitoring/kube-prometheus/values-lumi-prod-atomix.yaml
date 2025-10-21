@@ -75,7 +75,7 @@ alertmanager:
          alertname: "Kubernetes Pod Restart|.*resource limit"
       - receiver: 'null'
         match_re:
-          cronjob: ".*trim.*"
+          cronjob: ".*trim.*|.*etcd-backup.*"
       - receiver: 'alert-nx-pentagon'
         match_re:
           namespace: "l1|l2|gn|hd|sk|sp|tg|mg"

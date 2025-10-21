@@ -76,7 +76,7 @@ alertmanager:
         - component="kubernetes"
       - receiver: 'null'
         match_re:
-          cronjob: ".*trim.*"
+          cronjob: ".*trim.*|.*etcd-backup.*"
       - receiver: 'alert-nx-atomix'
         match_re:
           alertname: "Kubernetes Cluster Pod Usage Above 80%"

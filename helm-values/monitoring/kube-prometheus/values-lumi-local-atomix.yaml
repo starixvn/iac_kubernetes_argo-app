@@ -102,7 +102,7 @@ alertmanager:
          alertname: "Kubernetes Container CPU usage exceeds 90% of the resource limit|Kubernetes Container memory usage exceeds 90% of the resource limit|HAProxy.*"
       - receiver: 'null'
         match_re:
-          cronjob: ".*trim.*"
+          cronjob: ".*trim.*|.*etcd-backup.*"
       - receiver: 'null'
         matchers:
         - namespace=~"l1|l2|gn|hd|sk|sp|tg|mg"
