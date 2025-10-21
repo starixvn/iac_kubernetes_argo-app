@@ -5,7 +5,7 @@ cluster:
     image: nexhub.ops-klprod.gamora.prod/kbt/base/opensearchproject/opensearch
     drainDataNodes: false
     monitoring:
-      enable: true
+      enable: false
       pluginUrl: "https://s3-api.starixsoft.com:9000/awx-install/prometheus-exporter-2.19.2.zip"
       scrapeInterval: 30s
       tlsConfig:
@@ -77,10 +77,9 @@ cluster:
       value: "opsearch"
       operator: Equal
       effect: NoSchedule
-
     probes:
       liveness:
-        timeoutSeconds: 1
+        timeoutSeconds: 10
 
   - component: nodes-cold
     diskSize: "4800Gi"
