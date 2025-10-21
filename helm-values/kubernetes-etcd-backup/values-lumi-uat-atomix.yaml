@@ -19,7 +19,7 @@ volumes:
   backupPath: /backup
 
 minio:
-  endpoint: http://s3-api.starixsoft.com:9000
+  endpoint: https://s3-api.starixsoft.com:9000
   bucket: etcd-backup/lumi/uat
   secretName: etcd-backup-lumi-uat
 
@@ -29,4 +29,4 @@ proxy:
   enabled: true
   http: "http://iusqd.gamora.prod:8801"
   https: "http://iusqd.gamora.prod:8801"
-  #noProxy: "127.0.0.1,localhost,.svc,.cluster.local"
+  #noProxy: "127.0.0.1,localhost,.svc,.cluster.local,s3-api.starixsoft.com"
