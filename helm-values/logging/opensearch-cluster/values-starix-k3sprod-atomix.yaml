@@ -78,6 +78,10 @@ cluster:
       operator: Equal
       effect: NoSchedule
 
+    probes:
+      liveness:
+        timeoutSeconds: 1
+
   - component: nodes-cold
     diskSize: "4800Gi"
     replicas: 1
