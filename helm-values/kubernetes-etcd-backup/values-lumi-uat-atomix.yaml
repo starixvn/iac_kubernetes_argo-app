@@ -29,4 +29,4 @@ proxy:
   enabled: true
   http: "http://iusqd.gamora.prod:8801"
   https: "http://iusqd.gamora.prod:8801"
-  noProxy: "127.0.0.1,localhost,.svc,.cluster.local"
+  #noProxy: "127.0.0.1,localhost,.svc,.cluster.local"
