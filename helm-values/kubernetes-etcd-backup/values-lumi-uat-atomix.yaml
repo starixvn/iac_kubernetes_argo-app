@@ -19,7 +19,7 @@ volumes:
   backupPath: /backup
 
 minio:
-  endpoint: https://s3-api.starixsoft.com:9000
+  endpoint: http://s3-api.starixsoft.com:9000
   bucket: etcd-backup/lumi/uat
   secretName: etcd-backup-lumi-uat
 
