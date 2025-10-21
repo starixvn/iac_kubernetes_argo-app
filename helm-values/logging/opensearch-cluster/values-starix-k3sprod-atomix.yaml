@@ -77,10 +77,9 @@ cluster:
       value: "opsearch"
       operator: Equal
       effect: NoSchedule
-
     probes:
       liveness:
-        timeoutSeconds: 1
+        timeoutSeconds: 10
 
   - component: nodes-cold
     diskSize: "4800Gi"
