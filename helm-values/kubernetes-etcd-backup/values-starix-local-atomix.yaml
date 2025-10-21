@@ -1,60 +1,9 @@
-backup:
-  subdir: "/starix/local"
-  dirname: "+etcd-backup-%FT%T%:z"
-  expiretype: "days"
-  keepdays: "3"
-  keepcount: "5"
-  schedule: "0 0 * * *"
-  umask: "0027"
-
-etcdConfiguration:
-  endpoint: "10.17.200.80"
-  cacert: "/etc/ssl/etcd/ssl/ca.pem"
-  cert: "/etc/ssl/etcd/ssl/member-k8snode-17-80.spvn.local.pem"
-  key: "/etc/ssl/etcd/ssl/member-k8snode-17-80.spvn.local-key.pem"
-  insecureSkipTlsVerify: false
-
-# etcdCertification:
-#   etcdPeerTlsName: "etcd-peer-tls"
-#   etcdServerCaName: "etcd-server-ca"
-
-persistence:
-  reclaimPolicy: Retain
-  capacity: 2Gi
-  nfs:
-    enabled: false
-  provisioning:
-    enabled: false
-    storageClass: ""
-  existingClaim: ""
-  s3:
-    enabled: true
-    name: etcd-backup
-    host: http://s3-api.starixsoft.com
-    bucket: etcd-backups
-    accessKey: etcd-backupper
-    secretKey: h9giyAwIk6I7nUBh
-    existingSecret: ""
-    ca:
-      enabled: false
+schedule: "0 2 * * *"
 
 image:
-  repository: ghcr.io/adfinis/kubernetes-etcd-backup
-  pullPolicy: Always
-  tag: ""
-
-resources:
-  limits:
-    cpu: 200m
-    memory: 256Mi
-  requests:
-    cpu: 100m
-    memory: 128Mi
-
-podSecurityContext:
-  runAsUser: 0               
-  fsGroup: 0
-  runAsGroup: 0
+  repository: hub.nexdev.net/base/etcd-backup-mc
+  tag: v3.5.7
+  pullPolicy: IfNotPresent
 
 nodeSelector:
   etcd-backup: "true"
@@ -64,3 +13,14 @@ tolerations:
     operator: "Exists"
     effect: "NoSchedule"
 
+volumes:
+  etcdEnvPath: /etc/etcd.env
+  etcdCertsPath: /etc/ssl/etcd
+  backupPath: /backup
+
+minio:
+  endpoint: http://s3-api.starixsoft.com
+  bucket: etcd-backup/starix/local
+  secretName: etcd-backup-starix-local
+
+retentionDays: 3

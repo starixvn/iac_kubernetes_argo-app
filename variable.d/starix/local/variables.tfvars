@@ -22,7 +22,7 @@ argo_applications_by_team = {
       kubernetes-etcd-backup = {
         namespace     = "etcd-backup"
         helm_path     = "kubernetes-etcd-backup"
-        chart_version = "1.6.2"
+        chart_version = "1.0.0"
         skip_crds     = true
         value_files = ["values-starix-local-atomix.yaml"]
       }
