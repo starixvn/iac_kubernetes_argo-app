@@ -19,6 +19,13 @@ argo_applications_by_team = {
           "values-lumi-local-atomix.yaml",
         ]
       }
+      kubernetes-etcd-backup = {
+        namespace     = "etcd-backup"
+        helm_path     = "kubernetes-etcd-backup"
+        chart_version = "1.0.0"
+        skip_crds     = true
+        value_files = ["values-lumi-local-atomix.yaml"]
+      }
       kubescape-op = {
         namespace     = "kubescape"
         helm_path     = "kubescape/kubescape-operator"
