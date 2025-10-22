@@ -49,7 +49,7 @@ alertmanager:
       routes:
       - receiver: "null"
         match_re:
-          alertname: "Kubernetes Pod Restart|.*Pod.*|HAProxy.*"
+          alertname: "Kubernetes Pod Restart|.*Pod.*|HAProxy.*|.*usage exceeds.*"
       - receiver: 'null'
         match_re:
           cronjob: ".*trim.*"

@@ -68,12 +68,8 @@ alertmanager:
       routes:
       - receiver: 'null'
         match_re:
-         namespace: "l1|l2|gn|hd|sk|sp|tg|mg|cattle-system|logging|etcd-backup"
-         alertname: "Kubernetes Pod Restart|Kubernetes High Pod Restart Count"
-      - receiver: 'null'
-        matchers:
-        - namespace=~"l1|l2|gn|hd|sk|sp|tg|mg|cattle-system|tf-atx-opencost"
-        - component="kubernetes"
+         namespace: "l1|l2|gn|hd|sk|sp|tg|mg|cattle-system|logging|kubescape|etcd-backup"
+         alertname: "Kubernetes Pod Restart|Kubernetes High Pod Restart Count|Kubernetes Container memory usage exceeds.*"
       - receiver: 'null'
         match_re:
           cronjob: ".*trim.*"
