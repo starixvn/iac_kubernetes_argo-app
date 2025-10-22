@@ -71,9 +71,9 @@ alertmanager:
          namespace: "l1|l2|gn|hd|sk|sp|tg|mg|cattle-system|logging|etcd-backup"
          alertname: "Kubernetes Pod Restart|Kubernetes High Pod Restart Count"
       - receiver: 'null'
-        matcher_re:
-          namespace: "l1|l2|gn|hd|sk|sp|tg|mg|cattle-system|tf-atx-opencost"
-          alertname: "Kubernetes.*"
+        matchers:
+        - namespace=~"l1|l2|gn|hd|sk|sp|tg|mg|cattle-system|tf-atx-opencost"
+        - component="kubernetes"
       - receiver: 'null'
         match_re:
           cronjob: ".*trim.*"
