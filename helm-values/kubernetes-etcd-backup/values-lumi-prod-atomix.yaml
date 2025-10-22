@@ -1,0 +1,32 @@
+schedule: "0 2 * * *"
+
+image:
+  repository: nexhub.ops-klprod.gamora.prod/kbt/base/etcd-backup-mc
+  tag: v3.5.7
+  pullPolicy: IfNotPresent
+
+nodeSelector:
+  etcd-backup: "true"
+
+tolerations:
+  - key: "node-role.kubernetes.io/control-plane"
+    operator: "Exists"
+    effect: "NoSchedule"
+
+volumes:
+  etcdEnvPath: /etc/etcd.env
+  etcdCertsPath: /etc/ssl/etcd
+  backupPath: /backup
+
+minio:
+  endpoint: https://s3-api.starixsoft.com:9000
+  bucket: etcd-backup/lumi/prod
+  secretName: etcd-backup-lumi-prod
+
+retentionDays: 3
+
+proxy:
+  enabled: true
+  http: "iusqd.gamora.prod:8801"
+  https: "iusqd.gamora.prod:8801"
+  noProxy: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.svc,cluster.local"
