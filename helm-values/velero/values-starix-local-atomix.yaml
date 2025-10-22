@@ -1,0 +1,72 @@
+image:
+  repository: hub.nexdev.net/base/velero
+  tag: v1.14.1
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+  prometheusRule:
+    autodetect: true
+    enabled: true
+
+kubectl:
+  image:
+    repository: hub.nexdev.net/base/kubectl
+    tag: "1.16.15"
+
+# AWS backend plugin configuration
+initContainers:
+  - name: velero-plugin-for-aws
+    image: hub.nexdev.net/base/velero/velero-plugin-for-aws:v1.10.0
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
+
+# Minio storage configuration
+configuration:
+  backupStorageLocation:
+    - provider: aws
+      bucket: k8sstarix-local-backup
+      config:
+        region: minio
+        s3ForcePathStyle: true
+        s3Url: https://s3-api.starixsoft.com
+credentials:
+  existingSecret: velero-secret
+# Disable VolumeSnapshotLocation CRD. It is not needed for CSI integration
+snapshotsEnabled: false
+
+
+schedules:
+  web:
+    disabled: false
+    labels:
+      env: local
+      org: starix
+    schedule: "0 19 * * *"
+    useOwnerReferencesInBackup: false
+    paused: false
+    template:
+      ttl: "168h"
+      excludedNamespaces:
+      - cattle-fleet-system
+      - cattle-impersonation-system
+      - cattle-system
+      - haproxy-ingress
+      - kube-node-lease
+      - kube-public
+      - kube-system
+      - kubescape
+      - local
+      - local-path-storage
+      - monitoring
+      - vault
+      - velero
+      - sample
+      - sample1
+      - sample2
+      - sample-test
+      - trivy-operator-starix
+      - nv

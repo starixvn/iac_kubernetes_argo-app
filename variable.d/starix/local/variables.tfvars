@@ -31,7 +31,7 @@ argo_applications_by_team = {
       #   chart_version = "6.0.2"
       #   value_files   = ["values-starix-local-atomix.yaml"]
       # }
-      
+
       kubescape-op = {
         namespace     = "kubescape"
         helm_path     = "kubescape/kubescape-operator"
@@ -42,6 +42,15 @@ argo_applications_by_team = {
         helm_path     = "vault/vault-secrets-operator"
         chart_version = "0.10.0"
       }
+
+      velero = {
+        namespace     = "velero"
+        helm_path     = "velero"
+        chart_version = "1.14.1"
+        skip_crds     = false
+        value_files   = ["values-starix-local-atomix.yaml"]
+      }
+
     }
   }
 }
