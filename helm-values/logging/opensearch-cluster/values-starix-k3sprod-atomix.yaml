@@ -5,7 +5,7 @@ cluster:
     image: nexhub.ops-klprod.gamora.prod/kbt/base/opensearchproject/opensearch
     drainDataNodes: false
     monitoring:
-      enable: false
+      enable: true
       pluginUrl: "https://s3-api.starixsoft.com:9000/awx-install/prometheus-exporter-2.19.2.zip"
       scrapeInterval: 30s
       tlsConfig:
