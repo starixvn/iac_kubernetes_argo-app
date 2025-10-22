@@ -95,14 +95,14 @@ alertmanager:
       routes:
       - receiver: 'null'
         match_re:
-         namespace: "l1|l2|gn|hd|sk|sp|tg|mg"
+         namespace: "l1|l2|gn|hd|sk|sp|tg|mg|etcd-backup"
          alertname: "Kubernetes Pod Restart|Kubernetes High Pod Restart Count|Kubernetes Pod Not Running"
       - receiver: 'null'
         match_re:
          alertname: "Kubernetes Container CPU usage exceeds 90% of the resource limit|Kubernetes Container memory usage exceeds 90% of the resource limit|HAProxy.*"
       - receiver: 'null'
         match_re:
-          cronjob: ".*trim.*|.*etcd-backup.*"
+          cronjob: ".*trim.*"
       - receiver: 'null'
         matchers:
         - namespace=~"l1|l2|gn|hd|sk|sp|tg|mg"

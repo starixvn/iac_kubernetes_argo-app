@@ -71,11 +71,11 @@ alertmanager:
           pod: ".*website1.*|.*cost.*|calico.*"
       - receiver: 'null'
         match_re:
-         namespace: "logging|kubescape"
+         namespace: "logging|kubescape|etcd-backup"
          alertname: "Kubernetes Pod Restart|.*resource limit"
       - receiver: 'null'
         match_re:
-          cronjob: ".*trim.*|.*etcd-backup.*"
+          cronjob: ".*trim.*"
       - receiver: 'alert-nx-pentagon'
         match_re:
           namespace: "l1|l2|gn|hd|sk|sp|tg|mg"

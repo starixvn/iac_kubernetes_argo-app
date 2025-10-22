@@ -72,11 +72,11 @@ alertmanager:
          alertname: "Kubernetes Pod Restart"
       - receiver: 'null'
         matchers:
-        - namespace=~"l1|l2|gn|hd|sk|sp|tg|mg|cattle-system|tf-atx-opencost"
+        - namespace=~"l1|l2|gn|hd|sk|sp|tg|mg|cattle-system|tf-atx-opencost|etcd-backup"
         - component="kubernetes"
       - receiver: 'null'
         match_re:
-          cronjob: ".*trim.*|.*etcd-backup.*"
+          cronjob: ".*trim.*"
       - receiver: 'alert-nx-atomix'
         match_re:
           alertname: "Kubernetes Cluster Pod Usage Above 80%"
