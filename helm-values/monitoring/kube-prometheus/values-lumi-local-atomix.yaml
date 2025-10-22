@@ -103,10 +103,6 @@ alertmanager:
       - receiver: 'null'
         match_re:
           cronjob: ".*trim.*"
-      - receiver: 'null'
-        matchers:
-        - namespace=~"l1|l2|gn|hd|sk|sp|tg|mg"
-        - component="kubernetes"
       - receiver: 'alert-nx-atomix'
         match_re:
           alertname: "Kubernetes Cluster Pod Usage Above 80%"
