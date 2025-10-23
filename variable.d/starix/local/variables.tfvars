@@ -26,11 +26,7 @@ argo_applications_by_team = {
         skip_crds     = true
         value_files = ["values-starix-local-atomix.yaml"]
       }
-      # falco = {
-      #   helm_path     = "falco"
-      #   chart_version = "6.0.2"
-      #   value_files   = ["values-starix-local-atomix.yaml"]
-      # }
+
 
       kubescape-op = {
         namespace     = "kubescape"
