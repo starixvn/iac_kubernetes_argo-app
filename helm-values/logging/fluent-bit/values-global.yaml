@@ -119,7 +119,7 @@ luaScripts:
       if status == "200" and tr ~= nil then
         local tr_num = tonumber(tr)
         if tr_num and tr_num < 5000 then
-          return -1, ts, record -- drop this record
+          return -1, ts, record
         end
       end
 
@@ -127,7 +127,7 @@ luaScripts:
       return 1, ts, record
     end
 
-    funtion drop_pentagon_custom(tag, ts, record)
+    function drop_pentagon_custom(tag, ts, record)
       -- Defensive checks
       local status = record["status_code"]
       local uri    = record["request_path"]
