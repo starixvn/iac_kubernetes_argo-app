@@ -31,6 +31,7 @@ variable "kube_cluster_api" {
     starix = {
       nexprod = "https://kubernetes.default.svc"
       local   = "https://10.17.200.90:6443"
+      sit     = "https://st-api-sit.playonesit.com:16445"
       hrm     = "https://st-hrm-apiserver.starixplay.com:16445"
       k3ssit  = "https://starix-k3ssit-api.playonesit.com:16443"
       k3suat  = "https://st-api-k3skluat.starixuat.com:26443"
