@@ -1,0 +1,55 @@
+image:
+  repository: nexhub.ops-sit.nebula.sit/kbt/base/velero
+  tag: v1.14.1
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+  prometheusRule:
+    autodetect: true
+    enabled: true
+
+kubectl:
+  image:
+    repository: nexhub.ops-sit.nebula.sit/kbt/base/kubectl
+    tag: "1.16.15"
+
+# AWS backend plugin configuration
+initContainers:
+  - name: velero-plugin-for-aws
+    image: nexhub.ops-sit.nebula.sit/kbt/base/velero/velero-plugin-for-aws:v1.10.0
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
+
+# Minio storage configuration
+configuration:
+  backupStorageLocation:
+    - provider: aws
+      bucket: k8sstarix-sit-backup
+      config:
+        region: minio
+        s3ForcePathStyle: true
+        s3Url: https://s3-api.starixsoft.com:9000
+credentials:
+  existingSecret: velero-secret
+# Disable VolumeSnapshotLocation CRD. It is not needed for CSI integration
+snapshotsEnabled: false
+
+
+schedules:
+  web:
+    disabled: false
+    labels:
+      env: sit
+      org: starix
+    schedule: "0 19 * * *"
+    useOwnerReferencesInBackup: false
+    paused: false
+    template:
+      ttl: "168h"
+      excludedNamespaces:
+      - local
+      - default
