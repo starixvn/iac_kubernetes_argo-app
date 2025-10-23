@@ -67,8 +67,7 @@ backstage:
 
   extraContainers: []
 
-  extraEnvVars: []
-  env:
+  extraEnvVars:
     - name: GITLAB_CLIENT_ID
       valueFrom:
         secretKeyRef:
