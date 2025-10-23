@@ -124,7 +124,7 @@ argo_applications_by_team = {
         chart_version = "0.22.1"
         auto_sync     = false
         skip_crds     = false
-        value_files = ["values-starix-nexprod-atomix.yaml"]
+        value_files   = ["values-starix-nexprod-atomix.yaml"]
       }
 
       redis-nap = {
@@ -189,7 +189,7 @@ argo_applications_by_team = {
         helm_path     = "monitoring/grafana-mimir"
         chart_version = "5.8.0"
         skip_crds     = false
-        value_files = ["values-starix-nexprod-starix.yaml"]
+        value_files   = ["values-starix-nexprod-starix.yaml"]
         ### trigger
       }
     }
@@ -254,6 +254,17 @@ argo_projects = {
       {
         name      = "starix-local"
         server    = "https://10.17.200.90:6443"
+        namespace = "*"
+      }
+    ]
+  }
+
+  tf-starix-sit = {
+    src_repo = ["*"]
+    destinations = [
+      {
+        name      = "starix-sit"
+        server    = "https://st-api-sit.playonesit.com:16445"
         namespace = "*"
       }
     ]

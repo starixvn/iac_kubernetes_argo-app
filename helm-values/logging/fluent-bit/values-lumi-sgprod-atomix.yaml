@@ -106,6 +106,12 @@ config:
       Match syslog.haproxy
       Exclude $user_agent Infra Monitor
 
+    [FILTER]
+      Name lua
+      Match syslog.haproxy
+      script /fluent-bit/scripts/drop.lua
+      call drop_pentagon_custom
+
   outputs: |
     # [OUTPUT]
     #   Name forward

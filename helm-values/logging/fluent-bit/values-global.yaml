@@ -119,7 +119,32 @@ luaScripts:
       if status == "200" and tr ~= nil then
         local tr_num = tonumber(tr)
         if tr_num and tr_num < 5000 then
-          return -1, ts, record -- drop this record
+          return -1, ts, record
+        end
+      end
+
+      -- Keep everything else
+      return 1, ts, record
+    end
+
+    function drop_pentagon_custom(tag, ts, record)
+      -- Defensive checks
+      local status = record["status_code"]
+      local uri    = record["request_path"]
+
+      local drop_rules = {
+        ["404"] = {
+          "^/favicon.ico$"
+        }
+      }
+
+      -- Drop logic: exact match check
+      local rules = drop_rules[status]
+      if rules then
+        for _, pattern in ipairs(rules) do
+          if uri:match(pattern) then
+            return -1, timestamp, record
+          end
         end
       end
 
