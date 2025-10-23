@@ -127,6 +127,31 @@ luaScripts:
       return 1, ts, record
     end
 
+    funtion drop_pentagon_custom(tag, ts, record)
+      -- Defensive checks
+      local status = record["status_code"]
+      local uri    = record["request_path"]
+
+      local drop_rules = {
+        ["404"] = {
+          "^/favicon.ico$"
+        }
+      }
+
+      -- Drop logic: exact match check
+      local rules = drop_rules[status]
+      if rules then
+        for _, pattern in ipairs(rules) do
+          if uri:match(pattern) then
+            return -1, timestamp, record
+          end
+        end
+      end
+
+      -- Keep everything else
+      return 1, ts, record
+    end
+
   kubescape_handler.lua: |
     function parser(tag, timestamp, record)
       local out = {}

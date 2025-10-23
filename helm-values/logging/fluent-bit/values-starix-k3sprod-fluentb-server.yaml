@@ -226,6 +226,12 @@ config:
       script /fluent-bit/scripts/drop.lua
       call drop_success
 
+    [FILTER]
+      Name lua
+      Match_Regex ^(scpt1|scpt2|scut2).haproxy
+      script /fluent-bit/scripts/drop.lua
+      call drop_pentagon_custom
+
     ##########################
     #### ENV Field EnRich ####
     [FILTER]
