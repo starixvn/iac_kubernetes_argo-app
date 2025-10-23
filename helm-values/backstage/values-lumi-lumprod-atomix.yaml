@@ -98,13 +98,13 @@ backstage:
 
   installDir: /app
 
-  resources:
-    limits:
-      memory: 1Gi
-      cpu: 1000m
-    requests:
-      memory: 250Mi
-      cpu: 100m
+  # resources:
+  #   limits:
+  #     memory: 1Gi
+  #     cpu: 1000m
+  #   requests:
+  #     memory: 250Mi
+  #     cpu: 100m
 
   readinessProbe:
     httpGet:
@@ -163,14 +163,14 @@ backstage:
           production:
             clientId: ${GITLAB_CLIENT_ID}
             clientSecret: ${GITLAB_CLIENT_SECRET}
-            audience: https://git3-bk.nexdev.net
-            callbackUrl: https://backstage.lumigame.com/api/auth/gitlab/handler/frame
+            audience: "https://git3-bk.nexdev.net"
+            callbackUrl: "https://backstage.lumigame.com/api/auth/gitlab/handler/frame"
             authorizationUrl: "https://git3-bk.nexdev.net/oauth/authorize"
             tokenUrl: "https://git3-bk.nexdev.net/oauth/token"
             signIn:
               resolvers:
                 # See https://backstage.io/docs/auth/gitlab/provider#resolvers for more resolvers
-                - resolver: usernameMatchingUserEntityName
+                - resolver: "usernameMatchingUserEntityName"
           
 
     techdocs:
