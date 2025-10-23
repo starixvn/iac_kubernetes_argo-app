@@ -155,7 +155,7 @@ backstage:
           token: ${GITLAB_TOKEN}
 
     auth:
-      environment: production
+      environment: development
       providers:
         gitlab:
           development:
@@ -163,11 +163,11 @@ backstage:
             clientSecret: ${GITLAB_CLIENT_SECRET}
             audience: https://git3-bk.nexdev.net
             callbackUrl: https://backstage.lumigame.com/api/auth/gitlab/handler/frame
-          production:
-            clientId: ${GITLAB_CLIENT_ID}
-            clientSecret: ${GITLAB_CLIENT_SECRET}
-            audience: https://git3-bk.nexdev.net
-            callbackUrl: https://backstage.lumigame.com/api/auth/gitlab/handler/frame
+            signIn:
+              resolvers:
+                # See https://backstage.io/docs/auth/gitlab/provider#resolvers for more resolvers
+                - resolver: usernameMatchingUserEntityName
+          
 
     techdocs:
       builder: 'local'
