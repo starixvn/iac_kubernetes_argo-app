@@ -160,7 +160,7 @@ backstage:
       environment: production
       providers:
         gitlab:
-          development:
+          production:
             clientId: ${GITLAB_CLIENT_ID}
             clientSecret: ${GITLAB_CLIENT_SECRET}
             audience: https://git3-bk.nexdev.net
