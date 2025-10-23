@@ -137,32 +137,36 @@ backstage:
       baseUrl: https://backstage.lumigame.com
       listen:
         port: 7007
+        host: "0.0.0.0"
       cors:
         origin: https://backstage.lumigame.com
-      database:
-        client: pg
-        connection:
-          host: backstage-atx-lumprod-postgresql.backstage.svc
-          port: 5432
-          user: bn_backstage
-          password: backstage1qaz@WSX
-          database: backstage
+    database:
+      client: pg
+      connection:
+        host: backstage-atx-lumprod-postgresql.backstage.svc
+        port: 5432
+        user: bn_backstage
+        password: backstage1qaz@WSX
+        database: backstage
 
     integrations:
       gitlab:
-        - host: git3-bk.nexdev.net
-          apiBaseUrl: https://git3-bk.nexdev.net/api/v4
+        - host: "git3-bk.nexdev.net"
+          apiBaseUrl: "https://git3-bk.nexdev.net/api/v4"
           token: ${GITLAB_TOKEN}
+          baseUrl: "https://git3-bk.nexdev.net"
 
     auth:
-      environment: development
+      environment: production
       providers:
         gitlab:
           development:
-            clientId: "73fc492badc9b1f7c381523356b872187b2e96cb0a05f27f588999a66a0afe29" #${GITLAB_CLIENT_ID}
-            clientSecret: "gloas-b2328e0f18fd221cd7a21c5e4c2debe8368cb36081355da24f8c18b8b6330511" #${GITLAB_CLIENT_SECRET}
+            clientId: ${GITLAB_CLIENT_ID}
+            clientSecret: ${GITLAB_CLIENT_SECRET}
             audience: https://git3-bk.nexdev.net
             callbackUrl: https://backstage.lumigame.com/api/auth/gitlab/handler/frame
+            authorizationUrl: "https://git3-bk.nexdev.net/oauth/authorize"
+            tokenUrl: "https://git3-bk.nexdev.net/oauth/token"
             signIn:
               resolvers:
                 # See https://backstage.io/docs/auth/gitlab/provider#resolvers for more resolvers
@@ -175,6 +179,15 @@ backstage:
         runIn: 'local'
       publisher:
         type: 'local'
+
+    proxy:
+      endpoints:
+        "/api/gitlab":
+          target: "https://git3-bk.nexdev.net/api/v4"
+          allowedMethods: ["GET", "POST", "PUT", "DELETE"]
+          headers:
+            Authorization: "Bearer ${GITLAB_TOKEN}"
+            "PRIVATE-TOKEN": "${GITLAB_TOKEN}"
 
     kubernetes:
       serviceLocatorMethod:
