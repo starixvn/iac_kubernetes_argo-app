@@ -67,21 +67,22 @@ backstage:
 
   extraContainers: []
 
-  extraEnvVars:
+  extraEnvVars: []
+  env:
     - name: GITLAB_CLIENT_ID
       valueFrom:
         secretKeyRef:
-          name: gitlab-backstage-secrets
+          name: backstage-secrets
           key: gitlab-client-id
     - name: GITLAB_CLIENT_SECRET
       valueFrom:
         secretKeyRef:
-          name: gitlab-backstage-secrets
+          name: backstage-secrets
           key: gitlab-client-secret
     - name: GITLAB_TOKEN
       valueFrom:
         secretKeyRef:
-          name: gitlab-backstage-secrets
+          name: backstage-secrets
           key: gitlab-token
 
   extraEnvVarsCM: []
@@ -179,15 +180,6 @@ backstage:
         runIn: 'local'
       publisher:
         type: 'local'
-
-    proxy:
-      endpoints:
-        "/api/gitlab":
-          target: "https://git3-bk.nexdev.net/api/v4"
-          allowedMethods: ["GET", "POST", "PUT", "DELETE"]
-          headers:
-            Authorization: "Bearer ${GITLAB_TOKEN}"
-            "PRIVATE-TOKEN": "${GITLAB_TOKEN}"
 
     kubernetes:
       serviceLocatorMethod:
