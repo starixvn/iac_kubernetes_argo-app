@@ -159,8 +159,8 @@ backstage:
       providers:
         gitlab:
           development:
-            clientId: ${GITLAB_CLIENT_ID}
-            clientSecret: ${GITLAB_CLIENT_SECRET}
+            clientId: "73fc492badc9b1f7c381523356b872187b2e96cb0a05f27f588999a66a0afe29" #${GITLAB_CLIENT_ID}
+            clientSecret: "gloas-b2328e0f18fd221cd7a21c5e4c2debe8368cb36081355da24f8c18b8b6330511" #${GITLAB_CLIENT_SECRET}
             audience: https://git3-bk.nexdev.net
             callbackUrl: https://backstage.lumigame.com/api/auth/gitlab/handler/frame
             signIn:
