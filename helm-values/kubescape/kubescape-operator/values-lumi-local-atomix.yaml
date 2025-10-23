@@ -21,7 +21,7 @@ capabilities:
   runtimeDetection: enable
   malwareDetection: disable
   nodeProfileService: enable
-  admissionController: enable
+  admissionController: disable
   httpDetection: enable
   seccompProfileService: disable
   manageWorkloads: disable
