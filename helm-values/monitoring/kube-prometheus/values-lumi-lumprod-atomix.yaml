@@ -123,7 +123,7 @@ alertmanager:
       routes:
       - receiver: 'null'
         match_re:
-          namespace: "gitlab-runner|zabbix-proxy-lumprod|fleet-default|sentry-lumi|trivy-operator-lumi|sample|gitlab-server"
+          namespace: "gitlab-runner|zabbix-proxy-lumprod|fleet-default|sentry-lumi|trivy-operator-lumi|sample|gitlab-server|backstage"
       - receiver: 'null'
         match_re:
           pod: "scan-vulnerabilityreport-.*|c-.*|.*-rollover-.*|.*cleaner.*|.*cleanup.*|.*node-exporter.*|.*packagebuider.*|.*trim.*|.*backup.*"
