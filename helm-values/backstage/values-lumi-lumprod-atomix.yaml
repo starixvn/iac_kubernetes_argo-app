@@ -41,7 +41,7 @@ backstage:
   image:
     registry: hub.lumigame.com
     repository: base/backstage
-    tag: v6
+    tag: v7
     digest: ""
     pullPolicy: Always
     pullSecrets: []
