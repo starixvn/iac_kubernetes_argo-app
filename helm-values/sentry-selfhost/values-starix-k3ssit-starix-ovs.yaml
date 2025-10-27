@@ -1,7 +1,7 @@
 hooks:
   activeDeadlineSeconds: 2000
   dbInit:
-    enabled: false
+    enabled: true
     resources:
       limits:
         memory: 3200Mi

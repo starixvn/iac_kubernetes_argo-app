@@ -84,7 +84,7 @@ argo_applications_by_team = {
         chart_version = "4.3.3"
         auto_sync     = false
         value_files   = ["values-starix-k3ssit-starix-ovs.yaml"]
-        #####
+        ######
       }
 
 
