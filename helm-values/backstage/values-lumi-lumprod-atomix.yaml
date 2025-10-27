@@ -171,6 +171,12 @@ backstage:
               resolvers:
                 - resolver: "usernameMatchingUserEntityName"
 
+    catalog:
+      locations: []
+      processing:
+        interval:
+          seconds: 30
+
     techdocs:
       builder: 'local'
       generator:
