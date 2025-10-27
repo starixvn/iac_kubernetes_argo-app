@@ -41,7 +41,7 @@ backstage:
   image:
     registry: hub.lumigame.com
     repository: base/backstage
-    tag: v10
+    tag: v11
     digest: ""
     pullPolicy: Always
     pullSecrets: []
@@ -169,9 +169,7 @@ backstage:
             tokenUrl: "https://git3-bk.nexdev.net/oauth/token"
             signIn:
               resolvers:
-                # See https://backstage.io/docs/auth/gitlab/provider#resolvers for more resolvers
                 - resolver: "usernameMatchingUserEntityName"
-          
 
     techdocs:
       builder: 'local'
