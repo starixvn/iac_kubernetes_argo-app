@@ -78,6 +78,15 @@ argo_applications_by_team = {
         ]
       }
 
+      sentry-ovs = {
+        namespace     = "sentry-st-ovs"
+        helm_path     = "sentry-selfhost"
+        chart_version = "4.3.3"
+        auto_sync     = false
+        value_files   = ["values-starix-k3ssit-starix-ovs.yaml"]
+        #####
+      }
+
 
     }
   }
