@@ -68,6 +68,16 @@ argo_applications_by_team = {
         ]
       }
 
+      haproxy-service = {
+        namespace     = "haproxy-service"
+        helm_path     = "haproxy-svc-tcp"
+        chart_version = "2.1.4"
+        auto_sync     = false
+        value_files = [
+          "values-starix-k3ssit-atomix.yaml"
+        ]
+      }
+
 
     }
   }
