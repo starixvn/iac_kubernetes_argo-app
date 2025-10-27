@@ -57,6 +57,28 @@ argo_applications_by_team = {
         helm_path     = "vault/vault-raft-snapshot-agent"
         chart_version = "0.1.0"
       }
+
+      redis-nap = {
+        helm_path     = "redis-operator/replication-sentinel"
+        chart_version = "1.0.0"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-starix-k3ssit-omniflow.yaml"
+        ]
+      }
+
+      haproxy-service = {
+        namespace     = "haproxy-service"
+        helm_path     = "haproxy-svc-tcp"
+        chart_version = "2.1.4"
+        auto_sync     = false
+        value_files = [
+          "values-starix-k3ssit-atomix.yaml"
+        ]
+      }
+
+
     }
   }
   lui = {
@@ -100,6 +122,17 @@ argo_applications_by_team = {
         value_files   = ["values-starix-k3ssit-lumi-ovs.yaml"]
         #####
       }
+
+      redis-operator = {
+        namespace     = "redis-operator"
+        helm_path     = "redis-operator/operator"
+        chart_version = "0.22.1"
+        auto_sync     = false
+        skip_crds     = false
+        value_files = ["values-starix-k3ssit-atomix.yaml"]
+      }
+
+
 
     }
   }

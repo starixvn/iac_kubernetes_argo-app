@@ -1,0 +1,35 @@
+---
+redisOperator:
+  name: redis-operator
+  imageName: nexhub.ops-sit.nebula.sit/kbt/base/opstree/redis-operator
+  imageTag: "v0.22.1"
+  imagePullPolicy: Always
+
+  podLabels:
+    app: redis-operator
+
+replicas: 3
+
+resources:
+  requests:
+    cpu: 500m
+    memory: 500Mi
+
+
+tolerations:
+  - key: "node-role.kubernetes.io/master"
+    operator: "Exists"
+    effect: "NoSchedule"
+
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+            - key: app
+              operator: In
+              values:
+                - redis-operator
+        topologyKey: "kubernetes.io/hostname"
+
+
