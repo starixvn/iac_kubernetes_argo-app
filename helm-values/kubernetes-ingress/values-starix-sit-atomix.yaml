@@ -78,7 +78,7 @@ controller:
 defaultBackend:
   image: "nexhub.ops-sit.nebula.sit/kbt/base/nexops-tools/default-backend-ingress"
 
-clusterInfo: "k8s-sc-uat"
+clusterInfo: "k8s-st-sit"
 
 extraResources:
 ##############################
