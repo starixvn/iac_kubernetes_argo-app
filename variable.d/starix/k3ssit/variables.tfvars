@@ -57,6 +57,18 @@ argo_applications_by_team = {
         helm_path     = "vault/vault-raft-snapshot-agent"
         chart_version = "0.1.0"
       }
+
+      redis-nap = {
+        helm_path     = "redis-operator/replication-sentinel"
+        chart_version = "1.0.0"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-starix-k3ssit-omniflow.yaml"
+        ]
+      }
+
+
     }
   }
   lui = {
