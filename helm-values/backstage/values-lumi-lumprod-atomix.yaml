@@ -41,7 +41,7 @@ backstage:
   image:
     registry: hub.lumigame.com
     repository: base/backstage
-    tag: v11
+    tag: v12
     digest: ""
     pullPolicy: Always
     pullSecrets: []
@@ -157,10 +157,10 @@ backstage:
           baseUrl: "https://gitlab-bk.nexdev.net"
 
     auth:
-      environment: production
+      environment: development
       providers:
         gitlab:
-          production:
+          development:
             clientId: ${GITLAB_CLIENT_ID}
             clientSecret: ${GITLAB_CLIENT_SECRET}
             audience: "https://gitlab-bk.nexdev.net"
