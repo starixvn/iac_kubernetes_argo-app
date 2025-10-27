@@ -17,7 +17,7 @@ resources:
     memory: 2Gi
   limits:
     memory: 2Gi
-priorityClassName: "critical-service"
+# priorityClassName: "critical-service"
 nodeSelector:
   node-role.kubernetes.io/control-plane: "true"
 
