@@ -138,6 +138,12 @@ redis:
       value: "yes"  
       # If change pvc size redis.master.persistence.size: 20Gi
 
+config:
+  configYml: |
+    slack.client-id: 8352731735536.9782073096773
+    slack.client-secret: 77d724dc04a34083d6c85c3297be96fe
+    slack.signing-secret: ba7dd5011ca89f5db48e0601ca20c284
+  sentryConfPy: ""
 
 backups_path:
   alias: "s3b"
