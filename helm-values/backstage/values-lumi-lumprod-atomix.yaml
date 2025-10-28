@@ -171,6 +171,9 @@ backstage:
                 - resolver: "usernameMatchingUserEntityName"
 
     catalog:
+      providers:
+        openapi:
+          enabled: false
       rules:
         - allow: [Component, API, Location, Template]
       locations: 
