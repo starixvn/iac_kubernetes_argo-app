@@ -8,6 +8,8 @@ operator:
   enabled: true
 
 prometheus:
+  nodeSelector:
+    nexops-tools: "yes"
   service:
     type: NodePort
     ports:
@@ -67,7 +69,7 @@ node-exporter:
 kube-state-metrics:
   resourcesPreset: "none"
   nodeSelector:
-    nexops-mon: "yes"
+    nexops-tools: "yes"
 
 alertmanager:
   resourcesPreset: "none"
