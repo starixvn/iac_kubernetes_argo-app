@@ -43,6 +43,11 @@ service:
     port: 8080
     targetPort: http
 
+  #NAP-Session-State
+  - name: session-state
+    protocol: TCP
+    port: 42424
+    targetPort: session-state
 
 containerPorts:
 #NAP
@@ -51,6 +56,9 @@ containerPorts:
 
 - name: http
   containerPort: 8080
+
+- name: session-state
+  containerPort: 42424
 
 configuration: |
   global
@@ -104,5 +112,20 @@ configuration: |
     server redis-0 redis-nap-repl-0.redis-nap-repl-headless.tf-stx-redis-nap.svc.starix.k3ssit:6379 check inter 1s resolvers k8s init-addr none
     server redis-1 redis-nap-repl-1.redis-nap-repl-headless.tf-stx-redis-nap.svc.starix.k3ssit:6379 check inter 1s resolvers k8s init-addr none
     server redis-2 redis-nap-repl-2.redis-nap-repl-headless.tf-stx-redis-nap.svc.starix.k3ssit:6379 check inter 1s resolvers k8s init-addr none
+  
+  #NAP-Session-State
+  frontend nap_session_state_fe
+    bind :42424
+    option tcplog
+    mode tcp
+    default_backend nap_asp_state_be
 
+  backend nap_asp_state_be
+    mode tcp
+    option tcplog
+    option tcp-check
+    default-server inter 2s fall 5 rise 5
+    server state_4_65_42424 172.16.4.65:42424 check
+    server state_4_66_42424 172.16.4.66:42424 check backup
 
+ 
