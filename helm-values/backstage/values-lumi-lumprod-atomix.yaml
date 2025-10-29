@@ -173,7 +173,20 @@ backstage:
     catalog:
       providers:
         openapi:
-          enabled: false
+          internal:
+            targets:
+              - url: http://localhost:7007/api
+                entity:
+                  kind: API
+                  metadata:
+                    name: backstage-internal-api
+                  spec:
+                    type: openapi
+                    lifecycle: experimental
+            schedule:
+              frequency: { minutes: 30 }
+              timeout: { minutes: 3 }
+              initialDelay: { seconds: 15 }
       rules:
         - allow: [Component, API, Location, Template]
       locations: 
