@@ -138,6 +138,9 @@ redis:
       value: "yes"  
       # If change pvc size redis.master.persistence.size: 20Gi
 
+config:
+  configYml: ""
+  sentryConfPy: ""
 
 backups_path:
   alias: "s3b"

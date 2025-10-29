@@ -7,6 +7,7 @@ rabbitCluster:
   password: rabbitadmin!@
   resources:
     maxMemory: 3Gi
+  image: nexhub.ops-klprod.gamora.prod/kbt/base/bitnamilegacy/rabbitmq:3.13.5-debian-12-r1
 
   service:
     amqp:
@@ -30,6 +31,10 @@ clusterOperator:
       operator: "Equal"
       value: "yes"
       effect: "NoSchedule"
+  image:
+    registry: nexhub.ops-klprod.gamora.prod
+    repository: kbt/base/bitnami/rabbitmq-cluster-operator
+    tag: 2.9.0-debian-12-r5
 
 msgTopologyOperator:
   nodeSelector:
@@ -38,3 +43,7 @@ msgTopologyOperator:
     - key: rabbit-deployapi
       operator: "Equal"
       value: "yes"
+  image:
+    registry: nexhub.ops-klprod.gamora.prod
+    repository: kbt/base/bitnami/rmq-messaging-topology-operator
+    tag: 1.14.2-debian-12-r2

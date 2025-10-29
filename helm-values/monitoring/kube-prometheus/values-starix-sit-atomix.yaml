@@ -8,6 +8,8 @@ operator:
   enabled: true
 
 prometheus:
+  nodeSelector:
+    nexops-tools: "yes"
   service:
     type: NodePort
     ports:
@@ -15,10 +17,10 @@ prometheus:
     nodePorts:
       http: "30062"
   ingress:
-    enabled: false
+    enabled: true
     ingressClassName: "haproxy"
     pathType: ImplementationSpecific
-    hostname: prometheus-st.playonesit.com
+    hostname: prometheus.nx-st.playonesit.com
     path: /
 
   retention: 3d
@@ -67,7 +69,7 @@ node-exporter:
 kube-state-metrics:
   resourcesPreset: "none"
   nodeSelector:
-    nexops-mon: "yes"
+    nexops-tools: "yes"
 
 alertmanager:
   resourcesPreset: "none"
