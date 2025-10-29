@@ -163,6 +163,16 @@ argo_applications_by_team = {
         ]
       }
 
+      redis-operator = {
+        namespace     = "redis-operator"
+        helm_path     = "redis-operator/operator"
+        chart_version = "0.22.1"
+        auto_sync     = false
+        skip_crds     = false
+        value_files = ["values-starix-k3sprod-atomix.yaml"]
+      }
+
+
     }
   }
   pier = {
