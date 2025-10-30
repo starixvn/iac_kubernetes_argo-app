@@ -1,0 +1,187 @@
+---
+global:
+  #replication name
+  redis_system: &redis_system "redis-alpha-state-repl"
+  redis_secret: &redis_sec "redis-alpha-state-sec"
+  redis_password: &redis_pass "Zm9vMUBiYXJlZA==" #foo1@bared
+
+  #sentinel name
+  redis_sentinel: &redis_senti "redis-alpha-state-senti"
+
+  # Image define
+  redis_img: &repo "nexhub.ops-klprod.gamora.prod/kbt/base/opstree/redis"
+  senti_img: &repo_senti "nexhub.ops-klprod.gamora.prod/kbt/base/opstree/redis-sentinel"
+  redis_exporter: &exporter_repo "nexhub.ops-klprod.gamora.prod/kbt/base/opstree/redis-exporter"
+  tag_ver: &tag_ver "v8.2.2"
+
+  # Resource requests and limits
+  rs_usage: &rs_usage
+    requests:
+      cpu: "500m"
+      memory: "1024Mi"
+    limits:
+      memory: "3072Mi"
+
+  # Storage
+  storageClass: &storage_class "longhorn-effort-3rep"
+  storage_size: &size "10Gi"
+
+  # Scheduling
+  nodeSelector: &globalNodeSelector
+    redis-node: "yes"
+
+  tolerations: &globalTolerations
+    - effect: NoSchedule
+      key: redis-node
+      value: "yes"
+  
+  # Other
+  labels_redis: &labels_redis
+    app: *redis_system
+    system: alpha-state
+    department: pioneers
+
+  labels_senti: &labels_senti
+    app: *redis_senti
+    system: alpha-state
+    department: pioneers
+
+
+
+############################
+replication:
+  enabled: true
+  redisReplication:
+    name: *redis_system
+    clusterSize: 3
+    image: *repo
+    tag: *tag_ver
+    imagePullPolicy: IfNotPresent
+    redisSecret:
+      secretName: *redis_sec
+      secretKey: "redis-password"
+    serviceType: ClusterIP
+    resources: *rs_usage
+
+  # externalConfig:
+  #   enabled: true
+  #   data: |
+  #     appendonly yes
+  #     appendfilename "appendonly.aof"
+  #     appendfsync everysec
+  #     notify-keyspace-events Kx
+
+  labels: *labels_redis
+
+  serviceMonitor:
+    enabled: true
+    interval: 30s
+    scrapeTimeout: 10s
+
+
+  redisExporter:
+    enabled: true
+    image: *exporter_repo
+    tag: "v1.44.0"
+
+
+  nodeSelector:  *globalNodeSelector
+  tolerations: *globalTolerations
+
+
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - *redis_system
+          topologyKey: "kubernetes.io/hostname"
+
+  storageSpec:
+    volumeClaimTemplate:
+      spec:
+        storageClassName: *storage_class
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: *size
+
+  extraManifests:
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: *redis_sec
+    type: Opaque
+    data:
+      redis-password: *redis_pass
+
+
+#############################
+
+sentinel:
+  enabled: true
+  redisSentinel:
+    name: *redis_senti
+    clusterSize: 3
+    image: *repo_senti
+    tag: *tag_ver
+    redisSecret:
+      secretName: *redis_sec
+      secretKey: "redis-password"
+    serviceType: ClusterIP
+    resources:
+      requests:
+        cpu: 100m
+        memory: 200Mi
+      limits:
+        memory: 500Mi
+
+  redisSentinelConfig:
+    redisReplicationName: *redis_system
+    redisReplicationPassword:
+      secretName: *redis_sec
+      secretKey: "redis-password"
+    parallelSyncs: "1"
+    downAfterMilliseconds: "5000"
+    quorum: "2"
+    failoverTimeout: "10000"
+
+  pdb:
+    enabled: true
+    minAvailable: 2
+
+  initContainer:
+    enabled: true
+    imagePullPolicy: "IfNotPresent"  
+
+  labels: *labels_senti
+
+
+  serviceMonitor:
+    enabled: true
+    interval: 30s
+    scrapeTimeout: 10s
+
+  redisExporter:
+    enabled: true
+    image: *exporter_repo
+    tag: "v1.44.0"
+    imagePullPolicy: IfNotPresent
+
+  nodeSelector:
+    node-role.kubernetes.io/master: "true"
+
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - *redis_senti
+          topologyKey: "kubernetes.io/hostname"
+
