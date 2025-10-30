@@ -1,5 +1,12 @@
 clusterDomain: "starix.k3sprod"
 
+image:
+  registry: nexhub.ops-klprod.gamora.prod
+  repository: kbt/base/bitnamilegacy/haproxy
+  tag: 3.0.4-debian-12-r2
+
+
+
 # setting HA for service
 replicaCount: 3
 podAntiAffinityPreset: hard
@@ -129,9 +136,9 @@ configuration: |
 
   defaults
     log global
-    timeout client 360s
     timeout connect 360s
-    timeout server 360s
+    timeout client 3h
+    timeout server 3h
 
   resolvers k8s
     nameserver dns1 kube-dns.kube-system:53
@@ -160,6 +167,21 @@ configuration: |
     bind :16777
     default_backend redis_nap_master_be
 
+  # backend redis_nap_master_be
+  #   option tcp-check
+  #   tcp-check send AUTH\ foo1@bared\r\n
+  #   tcp-check expect string +OK
+  #   tcp-check send PING\r\n
+  #   tcp-check expect string PONG
+  #   tcp-check send info\ replication\r\n
+  #   tcp-check expect string role:master
+  #   tcp-check send QUIT\r\n
+  #   tcp-check expect string +OK
+  #   server redis-0 redis-omniflow-cache-omfl-k3sprod-node-0.redis-omniflow-cache-omfl-k3sprod-headless.tf-omfl-redis-omniflow-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+  #   server redis-1 redis-omniflow-cache-omfl-k3sprod-node-1.redis-omniflow-cache-omfl-k3sprod-headless.tf-omfl-redis-omniflow-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+  #   server redis-2 redis-omniflow-cache-omfl-k3sprod-node-2.redis-omniflow-cache-omfl-k3sprod-headless.tf-omfl-redis-omniflow-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+
+
   backend redis_nap_master_be
     option tcp-check
     tcp-check send AUTH\ foo1@bared\r\n
@@ -170,9 +192,11 @@ configuration: |
     tcp-check expect string role:master
     tcp-check send QUIT\r\n
     tcp-check expect string +OK
-    server redis-0 redis-omniflow-cache-omfl-k3sprod-node-0.redis-omniflow-cache-omfl-k3sprod-headless.tf-omfl-redis-omniflow-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
-    server redis-1 redis-omniflow-cache-omfl-k3sprod-node-1.redis-omniflow-cache-omfl-k3sprod-headless.tf-omfl-redis-omniflow-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
-    server redis-2 redis-omniflow-cache-omfl-k3sprod-node-2.redis-omniflow-cache-omfl-k3sprod-headless.tf-omfl-redis-omniflow-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-0 redis-nap-repl-0.redis-nap-repl-headless.tf-omfl-rds-opr-nap.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-1 redis-nap-repl-1.redis-nap-repl-headless.tf-omfl-rds-opr-nap.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-2 redis-nap-repl-2.redis-nap-repl-headless.tf-omfl-rds-opr-nap.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+
+
 
 
 
@@ -180,6 +204,21 @@ configuration: |
   frontend redis_alpha_master_fe
     bind :16380
     default_backend redis_alpha_master_be
+
+  # backend redis_alpha_master_be
+  #   option tcp-check
+  #   tcp-check send AUTH\ foo1@bared\r\n
+  #   tcp-check expect string +OK
+  #   tcp-check send PING\r\n
+  #   tcp-check expect string PONG
+  #   tcp-check send info\ replication\r\n
+  #   tcp-check expect string role:master
+  #   tcp-check send QUIT\r\n
+  #   tcp-check expect string +OK
+  #   server redis-0 redis-alpha-cache-pier-k3sprod-node-0.redis-alpha-cache-pier-k3sprod-headless.tf-pier-redis-alpha-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+  #   server redis-1 redis-alpha-cache-pier-k3sprod-node-1.redis-alpha-cache-pier-k3sprod-headless.tf-pier-redis-alpha-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+  #   server redis-2 redis-alpha-cache-pier-k3sprod-node-2.redis-alpha-cache-pier-k3sprod-headless.tf-pier-redis-alpha-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+
 
   backend redis_alpha_master_be
     option tcp-check
@@ -191,9 +230,12 @@ configuration: |
     tcp-check expect string role:master
     tcp-check send QUIT\r\n
     tcp-check expect string +OK
-    server redis-0 redis-alpha-cache-pier-k3sprod-node-0.redis-alpha-cache-pier-k3sprod-headless.tf-pier-redis-alpha-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
-    server redis-1 redis-alpha-cache-pier-k3sprod-node-1.redis-alpha-cache-pier-k3sprod-headless.tf-pier-redis-alpha-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
-    server redis-2 redis-alpha-cache-pier-k3sprod-node-2.redis-alpha-cache-pier-k3sprod-headless.tf-pier-redis-alpha-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-0 redis-alpha-cache-repl-0.redis-alpha-cache-repl-headless.tf-pier-rds-opr-alpha-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-1 redis-alpha-cache-repl-1.redis-alpha-cache-repl-headless.tf-pier-rds-opr-alpha-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-2 redis-alpha-cache-repl-2.redis-alpha-cache-repl-headless.tf-pier-rds-opr-alpha-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+
+
+
 
 
 
@@ -201,6 +243,20 @@ configuration: |
   frontend redis_alpha_state_master_fe
     bind :16383
     default_backend redis_alpha_state_master_be
+
+  # backend redis_alpha_state_master_be
+  #   option tcp-check
+  #   tcp-check send AUTH\ foo1@bared\r\n
+  #   tcp-check expect string +OK
+  #   tcp-check send PING\r\n
+  #   tcp-check expect string PONG
+  #   tcp-check send info\ replication\r\n
+  #   tcp-check expect string role:master
+  #   tcp-check send QUIT\r\n
+  #   tcp-check expect string +OK
+  #   server redis-0 redis-alpha-state-pier-k3sprod-node-0.redis-alpha-state-pier-k3sprod-headless.tf-pier-redis-alpha-state.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+  #   server redis-1 redis-alpha-state-pier-k3sprod-node-1.redis-alpha-state-pier-k3sprod-headless.tf-pier-redis-alpha-state.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+  #   server redis-2 redis-alpha-state-pier-k3sprod-node-2.redis-alpha-state-pier-k3sprod-headless.tf-pier-redis-alpha-state.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
 
   backend redis_alpha_state_master_be
     option tcp-check
@@ -212,15 +268,34 @@ configuration: |
     tcp-check expect string role:master
     tcp-check send QUIT\r\n
     tcp-check expect string +OK
-    server redis-0 redis-alpha-state-pier-k3sprod-node-0.redis-alpha-state-pier-k3sprod-headless.tf-pier-redis-alpha-state.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
-    server redis-1 redis-alpha-state-pier-k3sprod-node-1.redis-alpha-state-pier-k3sprod-headless.tf-pier-redis-alpha-state.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
-    server redis-2 redis-alpha-state-pier-k3sprod-node-2.redis-alpha-state-pier-k3sprod-headless.tf-pier-redis-alpha-state.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-0 redis-alpha-state-repl-0.redis-alpha-state-repl-headless.tf-pier-rds-opr-alpha-state.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-1 redis-alpha-state-repl-1.redis-alpha-state-repl-headless.tf-pier-rds-opr-alpha-state.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-2 redis-alpha-state-repl-2.redis-alpha-state-repl-headless.tf-pier-rds-opr-alpha-state.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+
+
+
+
 
 
   # FPS Redis Master
   frontend redis_fps_master_fe
     bind :16381
     default_backend redis_fps_master_be
+
+  # backend redis_fps_master_be
+  #   option tcp-check
+  #   tcp-check send AUTH\ foo1@bared\r\n
+  #   tcp-check expect string +OK
+  #   tcp-check send PING\r\n
+  #   tcp-check expect string PONG
+  #   tcp-check send info\ replication\r\n
+  #   tcp-check expect string role:master
+  #   tcp-check send QUIT\r\n
+  #   tcp-check expect string +OK
+  #   server redis-0 redis-fps-cache-was-k3sprod-node-0.redis-fps-cache-was-k3sprod-headless.tf-was-redis-fps-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+  #   server redis-1 redis-fps-cache-was-k3sprod-node-1.redis-fps-cache-was-k3sprod-headless.tf-was-redis-fps-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+  #   server redis-2 redis-fps-cache-was-k3sprod-node-2.redis-fps-cache-was-k3sprod-headless.tf-was-redis-fps-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+
 
   backend redis_fps_master_be
     option tcp-check
@@ -232,15 +307,32 @@ configuration: |
     tcp-check expect string role:master
     tcp-check send QUIT\r\n
     tcp-check expect string +OK
-    server redis-0 redis-fps-cache-was-k3sprod-node-0.redis-fps-cache-was-k3sprod-headless.tf-was-redis-fps-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
-    server redis-1 redis-fps-cache-was-k3sprod-node-1.redis-fps-cache-was-k3sprod-headless.tf-was-redis-fps-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
-    server redis-2 redis-fps-cache-was-k3sprod-node-2.redis-fps-cache-was-k3sprod-headless.tf-was-redis-fps-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-0 redis-wabisabi-repl-0.redis-wabisabi-repl-headless.tf-was-rds-opr-fps.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-1 redis-wabisabi-repl-1.redis-wabisabi-repl-headless.tf-was-rds-opr-fps.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-2 redis-wabisabi-repl-2.redis-wabisabi-repl-headless.tf-was-rds-opr-fps.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+
+
 
 
   # Oddfeed Redis Master
   frontend redis_oddfeed_master_fe
     bind :16480
     default_backend redis_oddfeed_master_be
+
+  # backend redis_oddfeed_master_be
+  #   option tcp-check
+  #   tcp-check send AUTH\ foo1@bared\r\n
+  #   tcp-check expect string +OK
+  #   tcp-check send PING\r\n
+  #   tcp-check expect string PONG
+  #   tcp-check send info\ replication\r\n
+  #   tcp-check expect string role:master
+  #   tcp-check send QUIT\r\n
+  #   tcp-check expect string +OK
+  #   server redis-0 redis-oddfeed-cache-suba-k3sprod-node-0.redis-oddfeed-cache-suba-k3sprod-headless.tf-suba-redis-oddfeed-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+  #   server redis-1 redis-oddfeed-cache-suba-k3sprod-node-1.redis-oddfeed-cache-suba-k3sprod-headless.tf-suba-redis-oddfeed-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+  #   server redis-2 redis-oddfeed-cache-suba-k3sprod-node-2.redis-oddfeed-cache-suba-k3sprod-headless.tf-suba-redis-oddfeed-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+
 
   backend redis_oddfeed_master_be
     option tcp-check
@@ -252,9 +344,10 @@ configuration: |
     tcp-check expect string role:master
     tcp-check send QUIT\r\n
     tcp-check expect string +OK
-    server redis-0 redis-oddfeed-cache-suba-k3sprod-node-0.redis-oddfeed-cache-suba-k3sprod-headless.tf-suba-redis-oddfeed-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
-    server redis-1 redis-oddfeed-cache-suba-k3sprod-node-1.redis-oddfeed-cache-suba-k3sprod-headless.tf-suba-redis-oddfeed-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
-    server redis-2 redis-oddfeed-cache-suba-k3sprod-node-2.redis-oddfeed-cache-suba-k3sprod-headless.tf-suba-redis-oddfeed-cache.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-0 redis-suba-repl-0.redis-suba-repl-headless.tf-suba-rds-opr-oddfeed.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-1 redis-suba-repl-1.redis-suba-repl-headless.tf-suba-rds-opr-oddfeed.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+    server redis-2 redis-suba-repl-2.redis-suba-repl-headless.tf-suba-rds-opr-oddfeed.svc.starix.k3sprod:6379 check inter 1s resolvers k8s init-addr none
+
 
   # RabbitMQ
   frontend rabbitmq_fe
