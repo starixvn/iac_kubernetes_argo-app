@@ -17,7 +17,7 @@ global:
   # Resource requests and limits
   rs_usage: &rs_usage
     requests:
-      memory: "50Mi"
+      memory: "10Mi"
     limits:
       memory: "4096Mi"
 
@@ -133,7 +133,7 @@ sentinel:
     serviceType: ClusterIP
     resources:
       requests:
-        memory: 50Mi
+        memory: 10Mi
       limits:
         memory: 500Mi
 
