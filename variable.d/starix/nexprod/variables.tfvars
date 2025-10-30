@@ -192,6 +192,12 @@ argo_applications_by_team = {
         value_files   = ["values-starix-nexprod-starix.yaml"]
         ### trigger
       }
+      influxdb = {
+        namespace     = "influxdb"
+        helm_path     = "influxdb/influxdb2"
+        chart_version = "2.1.2"
+        value_files   = ["values-starix-nexprod-atomix.yaml"]
+      }
     }
   }
 }
