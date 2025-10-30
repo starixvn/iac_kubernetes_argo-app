@@ -17,7 +17,6 @@ global:
   # Resource requests and limits
   rs_usage: &rs_usage
     requests:
-      cpu: "1.0"
       memory: "3072Mi"
     limits:
       memory: "12288Mi"
