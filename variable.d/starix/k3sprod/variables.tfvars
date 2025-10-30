@@ -201,6 +201,16 @@ argo_applications_by_team = {
         ]
       }
 
+      rds-opr-alpha-cache = {
+        helm_path     = "redis-operator/replication-sentinel"
+        chart_version = "1.0.0"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-starix-k3sprod-pioneers-cache.yaml"
+        ]
+      }
+
     }
   }
 
