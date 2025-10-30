@@ -138,7 +138,8 @@ service:
 
 nodeSelector:
   opsearch-master: "yes"
-  kubernetes.io/role: "fps-opsearch"
+  node-role.kubernetes.io/fps-opsearch: ""
+  # kubernetes.io/role: "fps-opsearch"
 tolerations:
 - key: "node.role"
   value: "fps-opsearch"
