@@ -63,13 +63,15 @@ replication:
     serviceType: ClusterIP
     resources: *rs_usage
 
-  # externalConfig:
-  #   enabled: true
-  #   data: |
-  #     appendonly yes
-  #     appendfilename "appendonly.aof"
-  #     appendfsync everysec
-  #     notify-keyspace-events Kx
+  externalConfig:
+    enabled: true
+    data: |
+      save 900 1
+      save 300 10
+      save 60 10000
+      appendonly yes
+      appendfilename "appendonly.aof"
+      appendfsync everysec
 
   labels: *labels_redis
 
