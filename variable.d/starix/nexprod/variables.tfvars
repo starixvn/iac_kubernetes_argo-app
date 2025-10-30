@@ -160,6 +160,7 @@ argo_applications_by_team = {
         ]
       }
       #
+      
       influxdb = {
         namespace     = "influxdb"
         helm_path     = "influxdb/influxdb2"
