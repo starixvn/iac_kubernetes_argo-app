@@ -196,7 +196,6 @@ argo_applications_by_team = {
         namespace     = "influxdb"
         helm_path     = "influxdb/influxdb2"
         chart_version = "2.1.2"
-        auto_sync     = true
         value_files   = ["values-starix-nexprod-atomix.yaml"]
       }
     }
