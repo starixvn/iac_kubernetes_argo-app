@@ -281,6 +281,7 @@ argo_applications_by_team = {
         value_files = [
           "values-starix-k3sprod-wabisabi.yaml"
         ]
+      # trigger
       }
 
     }

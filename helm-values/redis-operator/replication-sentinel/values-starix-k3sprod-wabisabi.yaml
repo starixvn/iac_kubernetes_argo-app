@@ -24,7 +24,7 @@ global:
 
   # Storage
   storageClass: &storage_class "longhorn-effort-3rep"
-  storage_size: &size "50Gi"
+  storage_size: &size "30Gi"
 
   # Scheduling 
   nodeSelector:  &globalNodeSelector
