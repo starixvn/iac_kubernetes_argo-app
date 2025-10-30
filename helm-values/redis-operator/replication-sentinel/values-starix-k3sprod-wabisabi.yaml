@@ -133,7 +133,7 @@ sentinel:
     serviceType: ClusterIP
     resources:
       requests:
-        memory: 100Mi
+        memory: 10Mi
       limits:
         memory: 500Mi
 
