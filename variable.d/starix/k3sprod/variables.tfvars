@@ -203,6 +203,17 @@ argo_applications_by_team = {
         value_files   = ["values-starix-k3sprod-omniflow-cache.yaml"]
         ###
       }
+
+      rds-opr-nap = {
+        helm_path     = "redis-operator/replication-sentinel"
+        chart_version = "1.0.0"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-starix-k3sprod-omniflow.yaml"
+        ]
+      }
+
     }
   }
 
