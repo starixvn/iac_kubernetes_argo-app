@@ -31,11 +31,11 @@ startupProbe:
   enabled: false
 env: {}
 adminUser:
-  organization: "influxdata"
+  organization: "nexdev"
   bucket: "default"
   user: "admin"
   retention_policy: "0s"
-  password: ""
+  password: "JG1NMnyD@jae"
   token: ""
 persistence:
   enabled: true
