@@ -181,7 +181,7 @@ config:
           - "http://10.18.200.90:30086"
         database: "test"
         organization: "nexdev"
-        token: "$INFLUX_TOKEN"
+        token: "YLthpYMMrQK_m9CCKhYDG9IamR7hAMykOqt_nNeDB9TC22NdoKLQV2rCav7MhOa628Z5BQf79qQ1AC1-pbDPNQ=="
         timeout: "5s"
         retention_policy: ""
         user_agent: "telegraf"
