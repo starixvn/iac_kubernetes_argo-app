@@ -35,7 +35,7 @@ adminUser:
   bucket: "default"
   user: "admin"
   retention_policy: "0s"
-  password: "JG1NMnyD@jae"
+  password: ""
   token: ""
 persistence:
   enabled: true
