@@ -160,21 +160,6 @@ argo_applications_by_team = {
         ]
       }
       #
-      
-      influxdb = {
-        namespace     = "influxdb"
-        helm_path     = "influxdb/influxdb2"
-        chart_version = "2.1.2"
-        value_files   = ["values-starix-nexprod-atomix.yaml"]
-      }
-
-
-      influxdb-telegraf-ds = {
-        namespace     = "influxdb"
-        helm_path     = "influxdb/telegraf-ds"
-        chart_version = "1.1.43"
-        value_files   = ["values-starix-nexprod-atomix.yaml"]
-      }
 
     }
   }
