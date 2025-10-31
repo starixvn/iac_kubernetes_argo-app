@@ -35,8 +35,8 @@ adminUser:
   bucket: "test"
   user: "admin"
   retention_policy: "0s"
-  password: "RO5YrPwFsEgmcLzYR5NHJJdeC1qXaqzK"
-  token: "mVOxEhnn1B5ilYbkqdlZr9BiAeFqtpjf"
+  password: ""
+  token: ""
 persistence:
   enabled: true
   storageClass: "longhorn"
