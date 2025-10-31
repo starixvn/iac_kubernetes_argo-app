@@ -176,13 +176,14 @@ config:
     #     password: ""
     #     user_agent: "telegraf"
     #     insecure_skip_verify: false
-    - influxdb_v2:
+    - influxdb:
         urls:
           - "http://10.18.200.90:30086"
-        bucket: "test"
+        database: "test"
         organization: "nexdev"
         token: "YLthpYMMrQK_m9CCKhYDG9IamR7hAMykOqt_nNeDB9TC22NdoKLQV2rCav7MhOa628Z5BQf79qQ1AC1-pbDPNQ=="
         timeout: "5s"
+        retention_policy: ""
         user_agent: "telegraf"
         insecure_skip_verify: false
   monitor_self: false
