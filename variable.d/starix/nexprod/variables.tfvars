@@ -168,6 +168,7 @@ argo_applications_by_team = {
         value_files   = ["values-starix-nexprod-atomix.yaml"]
       }
 
+
       influxdb-telegraf-ds = {
         namespace     = "influxdb"
         helm_path     = "influxdb/telegraf-ds"
