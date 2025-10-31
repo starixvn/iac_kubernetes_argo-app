@@ -32,11 +32,11 @@ startupProbe:
 env: {}
 adminUser:
   organization: "nexdev"
-  bucket: "default"
+  bucket: "test"
   user: "admin"
   retention_policy: "0s"
-  password: ""
-  token: ""
+  password: "RO5YrPwFsEgmcLzYR5NHJJdeC1qXaqzK"
+  token: "mVOxEhnn1B5ilYbkqdlZr9BiAeFqtpjf"
 persistence:
   enabled: true
   storageClass: "longhorn"
