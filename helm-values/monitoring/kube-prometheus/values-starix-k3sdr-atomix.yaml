@@ -1,0 +1,282 @@
+---
+clusterDomain: starix.k3sdr
+
+global:
+  imageRegistry: "nexhub.ops-dr.nebula.prod/kbt/base"
+
+operator:
+  enabled: true
+
+prometheus:
+  service:
+    type: NodePort
+    ports:
+      http: 9090
+    nodePorts:
+      http: "30062"
+
+  retention: 7d
+  retentionSize: "90GiB"
+
+  persistence:
+    enabled: true
+    storageClass: "longhorn"
+    size: 25Gi
+
+  ## @param prometheus.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if prometheus.resources is set (prometheus.resources is recommended for production).
+  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ##
+  resources:
+    requests:
+      memory: "4096Mi"
+    limits:
+      memory: "8192Mi"
+
+  additionalScrapeConfigs:
+    enabled: true
+    type: internal
+    internal:
+      jobList: 
+        - job_name: 'blackbox-dns'
+          metrics_path: /probe/monitoring/dns-probe
+          params:
+            module: [dns_lookup]
+          static_configs:
+            - targets:
+                - '127.0.0.53'
+          relabel_configs:
+             - source_labels: [__address__]
+               target_label: __param_target
+             - source_labels: [__param_target]
+               target_label: instance
+             - target_label: __address__
+               replacement: prometheus-atx-k3sprod-kub-blackbox-exporter.monitoring.svc.starix.k3sprod:19115
+        # - job_name: "rabbitmq"
+        #   static_configs:
+        #     - targets: ["rabbitmq-cluster.rabbitmq-nap-alpha:15692"]
+        #       labels:
+        #         rabbitmq_instance: "nap_alpha"
+        #     - targets: ["rabbitmq-cluster.rabbitmq-fps:15692"]
+        #       labels:
+        #         rabbitmq_instance: "fps"
+
+
+  #additionalPrometheusRules:
+
+node-exporter:
+  extraVolumes:
+  - hostPath:
+      path: /var/lib
+      type: ""
+    name: mnt
+    
+  extraVolumeMounts:
+  - mountPath: /host/root/var/lib
+    mountPropagation: HostToContainer
+    name: mnt
+    readOnly: true
+
+  extraArgs:
+    path.rootfs: "/host/root"
+    collector.filesystem.mount-points-exclude: "^/(dev|proc|sys|var/lib/docker/.+)($|/)"
+    collector.filesystem.fs-types-exclude: "^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs|squashfs|nsfs|tmpfs)$"
+
+
+# alertmanager:
+#   resourcesPreset: "none"
+#   enabled: true
+
+#   config:
+#     global:
+#       resolve_timeout: 15m
+#       http_config:
+#         proxy_url: "http://iusqd.gamora.prod:8801"
+
+#     route:
+#       receiver: 'default-receiver'
+#       routes:
+#       - receiver: 'null'
+#         match_re:
+#           pod: "c-.*|.*snapshot-.*|.*clean.*|.*-cron-.*|.*-update-.*|.*consumer.*|.*trim.*|.*blackbox.*|.*backup.*|.*test.*|.*cost.*"
+#       - receiver: 'null'
+#         match_re:
+#           cronjob: ".*trim.*"
+#       - receiver: "null"
+#         match_re:
+#           instance: "10.148.58.121.*|10.148.58.122.*|10.148.58.123.*|10.148.58.132.*|10.148.58.133.*|10.148.58.134.*"
+#           alertname: ".*[Mm]emory.*|Kubernetes Disk is too busy.*"
+#       - receiver: "null"
+#         match_re:
+#           alertname: ".*memory usage exceeds 90%.*|HAProxy Backend High 4xx"
+#       - receiver: "null"
+#         match_re:
+#           alertname: "LonghornVolumeActualSpaceUsedWarning"
+#           pvc: "data-jaeger.*"
+#       - receiver: 'null'
+#         match_re:
+#          namespace: "logging"
+#          alertname: "Kubernetes Pod Restart"
+#       - receiver: 'nexpe-services-alert'
+#         match_re:
+#           namespace: "nexpe|gosql|tw|nexops|rabbitmq.*"
+#       - receiver: 'nexpe-services-alert'
+#         match_re:
+#           instance: "10.148.58.130.*|10.148.58.131.*|10.148.58.145.*|10.148.58.146.*"
+#       - receiver: 'alert-nx-atomix'
+#         match_re:
+#           alertname: "Kubernetes.*|HAProxy.*"
+#       - receiver: 'longhorn_alerts'
+#         match:
+#           service: "Longhorn"
+#         group_by: ['alertname', 'job', 'pvc']
+#       - receiver: "alert-velero-backups"
+#         match_re:
+#           alertname: "Velero.*"
+#       - receiver: nexops-services
+#         match:
+#           service: "OpenSearch"
+#         group_by: ['alertname', 'job']
+#       - receiver: "null"
+#         match_re:
+#           job: "probe/monitoring/tcp-probe"
+#         group_by: ['instance']
+#       group_by: ['alertname','job','pod', 'description']
+#       group_wait: 30s
+#       group_interval: 5m
+#       repeat_interval: 4h
+
+#     receivers:
+#     - name: 'null'
+#     - name: 'longhorn_alerts'
+#       slack_configs:
+#         - api_url: "https://hooks.slack.com/services/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"
+#           channel: '#longhorn_alerts'
+#           send_resolved: true
+#           icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+#           title: '{{ if eq .Status "firing" }}🔥PROBLEM🔥 {{ else }}✅RESOLVED✅ {{ end }}'
+#           text: |
+#             *Cluster:* `Kubernetes-DevOps-KLPROD`
+#             *Severity:* `{{ .CommonLabels.severity }}`{{ if .CommonLabels.pvc }}
+#             *PVC:* `{{ .CommonLabels.pvc }}`{{ end }}{{ if .CommonLabels.pvc_namespace }}
+#             *Namespace:* `{{ .CommonLabels.pvc_namespace }}`{{ end }}{{ if .CommonAnnotations.description }}
+#             *Description:* `{{ .CommonAnnotations.description }}`{{ end }}
+
+#     - name: 'alert-nx-atomix'
+#       slack_configs:
+#         - api_url: "https://hooks.slack.com/services/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"
+#           channel: '#alert-nx-atomix'
+#           send_resolved: true
+#           icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+#           title: >-
+#             {{ if eq .Status "firing" }}:fire:{{ else }}:white_check_mark:{{ end }}
+#             {{- if match "(?i)cpu" .CommonLabels.alertname }} :cpu_1: CPU
+#             {{- else if match "(?i)memory" .CommonLabels.alertname }} :memory_1: MEMORY
+#             {{- else if match "(?i)disk" .CommonLabels.alertname }} :disk: DISK
+#             {{- else if match "(?i)node" .CommonLabels.alertname }} :server: NODE
+#             {{- else if match "(?i)pod" .CommonLabels.alertname }} :pod: POD
+#             {{- else if match "(?i)service" .CommonLabels.alertname }} ⚙️ SERVICE
+#             {{- else if match "(?i)http" .CommonLabels.alertname }} 🌐 HTTP
+#             {{- else if match "(?i)bandwidth" .CommonLabels.alertname }} 🌐 BANDWIDTH
+#             {{- else if match "(?i)haproxy" .CommonLabels.alertname }} 🌐 HAPROXY
+#             {{- else if match "(?i)api" .CommonLabels.alertname }} :kubernetes-api: KUBERNETES API
+#             {{ end }}
+#             {{ if eq .Status "firing" }} PROBLEM :fire:{{ else }} RESOLVED :white_check_mark:{{ end }}
+#           text: |
+#             *Cluster:* `Kubernetes-DevOps-KLPROD`
+#             *Problem:* `{{ .CommonLabels.alertname }}`
+#             *Description:* `{{ .CommonAnnotations.description }}`
+#           color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+
+#     - name: 'nexpe-services-alert'
+#       slack_configs:
+#         - api_url: "https://hooks.slack.com/services/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"
+#           channel: '#nexpe-services-alert'
+#           send_resolved: true
+#           icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+#           title: '{{ if eq .Status "firing" }} 🔥 PROBLEM 🔥 {{ else }} ✅ RESOLVED ✅ {{ end }}'
+#           text: |
+#             *Cluster:* `Kubernetes-DevOps-KLPROD`
+#             *Problem:* `{{ .CommonLabels.alertname }}`
+#             *Description:* `{{ .CommonAnnotations.description }}`
+#           color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+    
+#     - name: "alert-velero-backups"
+#       slack_configs:
+#         - api_url: "https://hooks.slack.com/services/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"
+#           channel: "#alert-velero-backups"
+#           send_resolved: true
+#           icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+#           title: '{{ if eq .Status "firing" }}🔥 PROBLEM 🔥 {{ .CommonLabels.alertname }}{{ else }}✅ RESOLVED ✅ {{ .CommonLabels.alertname }}{{ end }}'
+#           text: |
+#             *Cluster:* `Kubernetes-DevOps-KLPROD`
+#             ❗ *{{ .CommonLabels.severity }}*
+#             📝 *{{ .CommonAnnotations.message }}*
+
+#     - name: nexops-services
+#       slack_configs:
+#       - channel: '#test-alert'
+#         color: '{{ template "sre.slack.color" . }}'
+#         fallback: '{{ template "sre.slack.fallback" . }}'
+#         icon_emoji: ":opensearch-ico:"
+#         send_resolved: true
+#         username: "FPS OpenSearch - PROD"
+#         title: '{{ template "sre.slack.title" . }}'
+#         text: '{{ template "sre.slack.body" . }}'
+
+#     - name: "domains"
+#       slack_configs:
+#         - api_url: "https://hooks.slack.com/services/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"
+#           channel: "#domains"
+#           title: '{{ if eq .Status "firing" }} 🔥 Core-Service KLPROD PROBLEM 🔥 {{ else }} ✅ Core-Service KLPROD RESOLVED ✅ {{ end }}'
+#           text: |
+#             *Severity:* `{{ .CommonLabels.severity | toUpper }}`
+#             *URL:* `{{ .CommonLabels.instance }}`
+#             *Problem:* `{{ .CommonAnnotations.problem }}`
+#           color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+#           send_resolved: true
+
+#     - name: default-receiver
+
+# blackboxExporter:
+#   configuration: |
+#     modules:
+#       tcp_connect:
+#         prober: tcp
+#         tcp:
+#           preferred_ip_protocol: "ip4"
+
+# extraDeploy:
+# - |
+#   ### TCP Monitor
+#   kind: Probe
+#   apiVersion: monitoring.coreos.com/v1
+#   metadata:
+#     name: tcp-probe
+#     namespace: monitoring
+#     labels:
+#       prometheus: main
+#   spec:
+#     interval: 5s
+#     module: tcp_connect
+#     prober:
+#       url: prometheus-atx-k3sprod-kub-blackbox-exporter.monitoring.svc.starix.k3sprod:19115
+#     targets:
+#       staticConfig:
+#         static:
+#         - vn-nap777.gamora.prod:16777 #Redis NAP/LAP
+#         - vn-alpha-state383.gamora.prod:16383 #Redis Alpha state
+#         - vn-alpha-cache380.gamora.prod:16380 #Redis Alpha cache
+#         - vn-fps381.gamora.prod:16381 #Redis FPS
+#         - vn-oddfeed480.gamora.prod:16480 #Redis Oddsfeed
+#         - vn-core-service.gamora.prod:42424 #Windows Session State
+#         - iusqd.gamora.prod:8801 #Proxy
+#         - 10.143.58.203:5672 #RabbitMQ NAP/ALPHA
+#         - 10.143.58.202:30572 #RabbitMQ FPS
+#         - 10.111.51.11:25 #SMTP
+#         - vault-stx.ops-klprod.gamora.prod:80
+#         - vn-vault-s.ops-klprod.gamora.prod:80
+#         - sentry-stklprod-ovs.ops-klprod.gamora.prod:80 #Sentry Starix
+#         - sentrypro-sc.ops-klprod.gamora.prod:80 #Sentry SC
+#         - jaeger-collector-sc.ops-klprod.gamora.prod:32317 #otlp-grpc
+#         - jaeger-collector-sc.ops-klprod.gamora.prod:32318 #otlp-http
+#         - vn-sc-nats-prod.gamora.prod:80 #NATS

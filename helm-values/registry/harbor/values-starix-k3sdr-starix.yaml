@@ -1,0 +1,101 @@
+expose:
+  tls:
+    enabled: false
+  ingress:
+    className: "haproxy"
+    hosts:
+      core: nexhub.ops-dr.nebula.prod
+externalURL: https://nexhub.ops-dr.nebula.prod
+
+persistence:
+  persistentVolumeClaim:
+    registry:
+      storageClass: "local-path"
+      size: 40Gi
+    jobservice:
+      jobLog:
+        storageClass: "local-path"
+        size: 5Gi
+    database:
+      storageClass: "local-path"
+      size: 10Gi
+    redis:
+      storageClass: "local-path"
+      size: 10Gi
+
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true  
+
+proxy:
+  httpProxy: "http://lisasqd.nebula.prod:8801"
+  httpsProxy: "http://lisasqd.nebula.prod:8801"
+  noProxy: "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,nebula.prod"
+  components:
+    - core
+    - jobservice
+    - trivy
+
+
+cache:
+  enabled: true
+  expireHours: 48
+
+
+portal:
+  nodeSelector:
+    st-hub: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: cattle.io/os
+    value: st-hub
+core:
+  nodeSelector:
+    st-hub: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: cattle.io/os
+    value: st-hub
+jobservice:
+  nodeSelector:
+    st-hub: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: cattle.io/os
+    value: st-hub
+registry:
+  nodeSelector:
+    st-hub: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: cattle.io/os
+    value: st-hub
+trivy:
+  enabled: false
+
+database:
+  internal:
+    nodeSelector:
+      st-hub: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: cattle.io/os
+      value: st-hub
+redis:
+  internal:
+    nodeSelector:
+      st-hub: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: cattle.io/os
+      value: st-hub
+exporter:
+  nodeSelector:
+    st-hub: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: cattle.io/os
+    value: st-hub
+

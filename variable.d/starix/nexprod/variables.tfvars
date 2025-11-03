@@ -296,6 +296,18 @@ argo_projects = {
     ]
   }
 
+  tf-starix-k3sdr = {
+    src_repo = ["*"]
+    destinations = [
+      {
+        name      = "starix-k3sdr"
+        server    = "https://st-api-k3sdr.starixplay.com:26443"
+        namespace = "*"
+        # trigger
+      }
+    ]
+  }
+
 }
 
 # REQUIRED VARIABLE SET [git_helm_source,git_helm_value]
