@@ -71,18 +71,18 @@ backstage:
     - name: GITLAB_CLIENT_ID
       valueFrom:
         secretKeyRef:
-          name: backstage-secrets
-          key: gitlab-client-id
+          name: git3-backstage-secrets
+          key: git3-client-id
     - name: GITLAB_CLIENT_SECRET
       valueFrom:
         secretKeyRef:
-          name: backstage-secrets
-          key: gitlab-client-secret
+          name: git3-backstage-secrets
+          key: git3-client-secret
     - name: GITLAB_TOKEN
       valueFrom:
         secretKeyRef:
-          name: backstage-secrets
-          key: gitlab-token
+          name: git3-backstage-secrets
+          key: git3-token
 
   extraEnvVarsCM: []
 
