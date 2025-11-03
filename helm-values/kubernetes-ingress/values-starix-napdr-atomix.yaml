@@ -162,7 +162,7 @@ extraResources:
   kind: ConfigMap
   metadata:
     name: errorfile
-    namespace: haproxy-ingress
+    namespace: {{ include "kubernetes-ingress.namespace" . }}
   data:
     503: |-
       HTTP/1.1 503 Service Unavailable
