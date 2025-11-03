@@ -308,6 +308,19 @@ argo_projects = {
     ]
   }
 
+  tf-starix-dr = {
+    src_repo = ["*"]
+    destinations = [
+      {
+        name      = "starix-dr"
+        server    = "https://st-api-dr.starixplay.com:16444"
+        namespace = "*"
+        # trigger
+      }
+    ]
+  }
+
+
 }
 
 # REQUIRED VARIABLE SET [git_helm_source,git_helm_value]
