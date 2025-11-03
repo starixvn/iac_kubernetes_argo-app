@@ -44,7 +44,7 @@ env:
   HTTPS_PROXY: "iusqd.gamora.prod:8801"
   NO_PROXY: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.gamora.prod,.svc,.starix.k3sprod"
   GF_SERVER_ROOT_URL: "https://grafana-klp.starixplay.com/"
-  GF_INSTALL_PLUGINS: "alexanderzobnin-zabbix-app,redis-datasource"
+  GF_INSTALL_PLUGINS: "alexanderzobnin-zabbix-app,redis-datasource,yesoreyeram-infinity-datasource"
 
 
 ### Mysql for Grafana
