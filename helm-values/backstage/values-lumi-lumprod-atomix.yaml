@@ -152,6 +152,7 @@ backstage:
     integrations:
       gitlab:
         - host: "gitlab.nexdev.net"
+          baseUrl: https://gitlab.nexdev.net/
           apiBaseUrl: "https://gitlab.nexdev.net/api/v4"
           token: ${GITLAB_TOKEN}
 
@@ -166,26 +167,22 @@ backstage:
             callbackUrl: "https://backstage.lumigame.com/api/auth/gitlab/handler/frame"
             authorizationUrl: "https://gitlab.nexdev.net/oauth/authorize"
             tokenUrl: "https://gitlab.nexdev.net/oauth/token"
-            # signIn:
-            #   resolvers:
-            #     - resolver: "usernameMatchingUserEntityName"
-
+            signIn:
+              resolvers:
+                - resolver: emailMatchingUserEntityProfileEmail
+                - resolver: usernameMatchingUserEntityName
     catalog:
       providers:
-        backstageOpenapi:
-          plugins:
-            - catalog
-            - search
-      rules:
-        - allow: [Component, API, Location, Template]
-      locations: 
-        - type: url
-          target: https://gitlab.nexdev.net/dennis.le/backstage/-/blob/main/packages/catalog-model/examples/components/artist-lookup-component.yaml
-          rules:
-            - allow: [Group]
-      processing:
-        interval:
-          seconds: 30
+        gitlab:
+          yourProviderId:
+            host: gitlab.nexdev.net
+            orgEnabled: true
+            #group: dennis.le/backstage
+            allowInherited: true
+            groupPattern: '[\s\S]*'
+            schedule:
+              frequency: { minutes: 3 }
+              timeout: { minutes: 3 }
 
     techdocs:
       builder: 'local'
