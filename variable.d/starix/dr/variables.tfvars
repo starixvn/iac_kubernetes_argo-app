@@ -10,12 +10,13 @@ argo_applications_by_team = {
     team_name = "atomix"
     applications = {
 
-      ingress = {
-        namespace     = "haproxy-ingress"
+      ingress-nap = {
+        namespace     = "ingress-nap"
         helm_path     = "kubernetes-ingress"
         chart_version = "1.43.0"
         auto_sync     = false
         skip_crds     = true
+        value_files = ["values-starix-napdr-atomix.yaml"]
       }
     }
   }
