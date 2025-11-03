@@ -70,6 +70,21 @@ argo_applications_by_team = {
 
     }
   }
+
+  lui = {
+    team_name = "lumi"
+    applications = {
+      harbor = {
+        helm_path     = "registry/harbor"
+        chart_version = "2.11.0"
+        auto_sync     = false
+        value_files   = ["values-starix-k3sdr-lumi.yaml"]
+      }
+    }
+  }
+
+
+
 }
 
 
