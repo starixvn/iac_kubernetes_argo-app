@@ -320,6 +320,18 @@ argo_projects = {
     ]
   }
 
+  tf-starix-alphadr = {
+    src_repo = ["*"]
+    destinations = [
+      {
+        name      = "alpha-dr"
+        server    = "https://alp-api-dr.starixplay.com:16445"
+        namespace = "*"
+        # trigger
+      }
+    ]
+  }
+
 
 }
 
