@@ -9,16 +9,16 @@ argo_applications_by_team = {
   atx = {
     team_name = "atomix"
     applications = {
-      # prometheus = {
-      #   namespace     = "monitoring"
-      #   helm_path     = "monitoring/kube-prometheus"
-      #   chart_version = "9.5.11"
-      #   skip_crds     = true
-      #   value_files = [
-      #     "values-global.yaml",
-      #     "values-lumi-local-atomix.yaml",
-      #   ]
-      # }
+      prometheus = {
+        namespace     = "monitoring"
+        helm_path     = "monitoring/kube-prometheus"
+        chart_version = "9.5.11"
+        skip_crds     = true
+        value_files = [
+          "values-global.yaml",
+          "values-lumi-dr-atomix.yaml",
+         ]
+       }
       # kubernetes-etcd-backup = {
       #   namespace     = "etcd-backup"
       #   helm_path     = "kubernetes-etcd-backup"
