@@ -58,7 +58,7 @@ alertmanager:
     global:
       resolve_timeout: 15m
       http_config:
-        proxy_url: "http://iusqd.gamora.prod:8801"
+        proxy_url: "http://lisasqd.nebula.prod:8801"
 
     # route:
     #   receiver: default-receiver

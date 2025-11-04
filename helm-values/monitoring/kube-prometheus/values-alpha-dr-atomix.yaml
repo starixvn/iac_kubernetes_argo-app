@@ -1,0 +1,201 @@
+---
+clusterDomain: alpha.dr
+
+global:
+  imageRegistry: "nexhub.ops-dr.nebula.prod/kbt/base"
+
+operator:
+  enabled: true
+
+prometheus:
+  nodeSelector:
+    tools: "yes"
+  service:
+    type: NodePort
+    ports:
+      http: 9090
+    nodePorts:
+      http: "30062"
+
+  retention: 7d
+  retentionSize: "50GB"
+
+  persistence:
+    enabled: true
+    size: 20Gi
+
+  resourcesPreset: "xlarge"
+
+  additionalScrapeConfigs:
+    enabled: false
+    type: external
+    external:
+      name: ""
+      key: ""
+    internal:
+      jobList: []
+  ##
+  additionalScrapeConfigsExternal:
+    enabled: false
+    name: ""
+    key: ""
+  
+  #additionalPrometheusRules: []
+
+kube-state-metrics:
+  resourcesPreset: "none"
+  nodeSelector:
+    tools: "yes"
+
+alertmanager:
+  nodeSelector:
+    tools: "yes"
+  resourcesPreset: "none"
+  enabled: true
+  config:
+    global:
+      resolve_timeout: 15m
+      http_config:
+        proxy_url: "http://lisasqd.nebula.prod:8801"
+
+    # route:
+    #   receiver: default-receiver
+    #   routes:
+    #   - receiver: 'null'
+    #     match_re:
+    #       pod: ".*website1.*|.*cost.*|calico.*"
+    #   - receiver: 'null'
+    #     match_re:
+    #      namespace: "logging|kubescape|etcd-backup"
+    #      alertname: "Kubernetes Pod Restart|.*resource limit"
+    #   - receiver: 'null'
+    #     match_re:
+    #       cronjob: ".*trim.*"
+    #   - receiver: 'alert-nx-pentagon'
+    #     match_re:
+    #       namespace: "l1|l2|gn|hd|sk|sp|tg|mg"
+    #       alertname: "Kubernetes.*"
+    #   - receiver: 'alert-nx-atomix'
+    #     match_re:
+    #       alertname: "Kubernetes.*|HAProxy.*"
+    #   - receiver: "alert-velero-backups"
+    #     match:
+    #       alertname: "Velero.*"
+    #   - receiver: kubescape-test
+    #     matchers:
+    #     - alertname="KubescapeRuleViolated"
+    #     - severity!="low"
+    #     - rule_name="Unexpected domain request"
+    #     group_by: ['container_name', 'rule_name']
+    #   - receiver: kubescape-notify
+    #     matchers:
+    #     - alertname="KubescapeRuleViolated"
+    #     - severity!="low"
+    #     group_by: ['uid', 'pid']
+    #   group_by: ['alertname', 'cluster', 'namespace', 'pod', 'description', 'instance']
+    #   group_wait: 30s
+    #   group_interval: 5m
+    #   repeat_interval: 12h
+
+    # receivers:
+    #   - name: 'null'
+    #   - name: 'alert-nx-atomix'
+    #     slack_configs:
+    #       - api_url: "https://hooks.slack.com/services/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"
+    #         channel: '#alert-nx-atomix'
+    #         send_resolved: true
+    #         icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+    #         title: >-
+    #           {{ if eq .Status "firing" }}:fire:{{ else }}:white_check_mark:{{ end }}
+    #           {{- if match "(?i)cpu" .CommonLabels.alertname }} :cpu_1: CPU
+    #           {{- else if match "(?i)memory" .CommonLabels.alertname }} :memory_1: MEMORY
+    #           {{- else if match "(?i)disk" .CommonLabels.alertname }} :disk: DISK
+    #           {{- else if match "(?i)node" .CommonLabels.alertname }} :server: NODE
+    #           {{- else if match "(?i)pod" .CommonLabels.alertname }} :pod: POD
+    #           {{- else if match "(?i)service" .CommonLabels.alertname }} ⚙️ SERVICE
+    #           {{- else if match "(?i)http" .CommonLabels.alertname }} 🌐 HTTP
+    #           {{- else if match "(?i)bandwidth" .CommonLabels.alertname }} 🌐 BANDWIDTH
+    #           {{- else if match "(?i)haproxy" .CommonLabels.alertname }} 🌐 HAPROXY
+    #           {{- else if match "(?i)api" .CommonLabels.alertname }} :kubernetes-api: KUBERNETES API
+    #           {{ end }}
+    #           {{ if eq .Status "firing" }} PROBLEM :fire:{{ else }} RESOLVED :white_check_mark:{{ end }}
+    #         text: |
+    #           *Cluster:* `Kubernetes-SC-KLPROD`
+    #           *Problem:* `{{ .CommonLabels.alertname }}`
+    #           *Description:* `{{ .CommonAnnotations.description }}`
+    #         color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+
+    #   - name: 'alert-nx-pentagon'
+    #     slack_configs:
+    #       - api_url: "https://hooks.slack.com/services/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"
+    #         channel: '#alert-nx-pentagon'
+    #         send_resolved: true
+    #         icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+    #         title: >-
+    #           {{ if eq .Status "firing" }}:fire:{{ else }}:white_check_mark:{{ end }}
+    #           {{- if match "(?i)cpu" .CommonLabels.alertname }} :cpu_1: CPU PROBLEM
+    #           {{- else if match "(?i)memory" .CommonLabels.alertname }} :memory_1: MEMORY PROBLEM
+    #           {{- else if match "(?i)disk" .CommonLabels.alertname }} :disk: DISK PROBLEM 
+    #           {{- else if match "(?i)node" .CommonLabels.alertname }} :server: NODE PROBLEM
+    #           {{- else if match "(?i)pod" .CommonLabels.alertname }} :pod: POD PROBLEM
+    #           {{- else if match "(?i)service" .CommonLabels.alertname }} ⚙️ SERVICE PROBLEM
+    #           {{- else if match "(?i)http" .CommonLabels.alertname }} 🌐 HTTP PROBLEM
+    #           {{- else if match "(?i)bandwidth" .CommonLabels.alertname }} 🌐 BANDWIDTH PROBLEM
+    #           {{- else if match "(?i)haproxy" .CommonLabels.alertname }} 🌐 HAPROXY PROBLEM
+    #           {{- else if match "(?i)api" .CommonLabels.alertname }} :kubernetes-api: KUBERNETES API PROBLEM
+    #           {{- else }} {{ if eq .Status "firing" }} PROBLEM {{ else }} RESOLVED {{ end }}
+    #           {{ end }}
+    #           {{ if eq .Status "firing" }}:fire:{{ else }}:white_check_mark:{{ end }}
+    #         text: |
+    #           *Cluster:* `Kubernetes-SC-KLPROD`
+    #           *Problem:* `{{ .CommonLabels.alertname }}`
+    #           *Description:* `{{ .CommonAnnotations.description }}`
+    #         color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
+
+    #   - name: "alert-velero-backups"
+    #     slack_configs:
+    #       - api_url: "https://hooks.slack.com/services/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"
+    #         channel: "#alert-velero-backups"
+    #         send_resolved: true
+    #         icon_emoji: '{{ if eq .Status "firing" }}:warning:{{ else }}:white_check_mark:{{ end }}'
+    #         title: '{{ if eq .Status "firing" }}🔥 PROBLEM 🔥 {{ .CommonLabels.alertname }}{{ else }}✅ RESOLVED ✅ {{ .CommonLabels.alertname }}{{ end }}'
+    #         text: |
+    #           *Cluster:* `Kubernetes-SC-KLPROD`
+    #           ❗ *{{ .CommonLabels.severity }}*
+    #           📝 *{{ .CommonAnnotations.message }}*
+
+    #   - name: kubescape-test
+    #     slack_configs:
+    #     - channel: "#alert-josh-test"
+    #       color: '{{ template "sre.slack.color" . }}'
+    #       fallback: '{{ template "sre.slack.fallback" . }}'
+    #       icon_emoji: '{{ template "sre.slack.iconemoji" . }}'
+    #       send_resolved: false
+    #       username: '{{ template "sre.slack.username" . }}🔹SC.PROD'
+    #       title: '{{ template "kubescape.slack.title" . }}'
+    #       text: '{{ template "sre.slack.body" . }}'
+    #       actions: 
+    #       - type: "button"
+    #         text: ":opensearch-ico: Logs"
+    #         url: "https://ops-klp.starixplay.com/app/data-explorer/discover/?security_tenant=private#/view/da533070-81a4-11f0-941a-9d0249d23087?_g=%28filters%3A%21%28%29%2CrefreshInterval%3A%28pause%3A%21t%2Cvalue%3A0%29%2Ctime%3A%28from%3Anow-15m%2Cto%3Anow%29%29"
+    #   - name: kubescape-notify
+    #     slack_configs:
+    #     - channel: "#security-analyst"
+    #       color: '{{ template "sre.slack.color" . }}'
+    #       fallback: '{{ template "sre.slack.fallback" . }}'
+    #       icon_emoji: '{{ template "sre.slack.iconemoji" . }}'
+    #       send_resolved: false
+    #       username: '{{ template "sre.slack.username" . }}🔹SC.PROD'
+    #       title: '{{ template "kubescape.slack.title" . }}'
+    #       text: '{{ template "sre.slack.body" . }}'
+    #       actions: 
+    #       - type: "button"
+    #         text: ":opensearch-ico: Logs"
+    #         url: "https://ops-klp.starixplay.com/app/data-explorer/discover/?security_tenant=private#/view/da533070-81a4-11f0-941a-9d0249d23087?_g=%28filters%3A%21%28%29%2CrefreshInterval%3A%28pause%3A%21t%2Cvalue%3A0%29%2Ctime%3A%28from%3Anow-15m%2Cto%3Anow%29%29"
+
+
+    #   - name: default-receiver
+
+node-exporter:
+  resourcesPreset: "medium"
+
