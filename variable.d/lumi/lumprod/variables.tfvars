@@ -219,6 +219,17 @@ argo_projects = {
     ]
   }
 
+  tf-lumi-dr = {
+    src_repo = ["*"]
+    destinations = [
+      {
+        name      = "lumi-dr"
+        server    = "https://sc-api-dr.starixplay.com:16443"
+        namespace = "*"
+      }
+    ]
+  }
+
 }
 
 # REQUIRED VARIABLE SET [git_helm_source,git_helm_value]
