@@ -35,6 +35,7 @@ argo_applications_by_team = {
           "values-starix-nexprod-atomix.yaml",
         ]
       }
+      
       #defectdojo-exporter
       defectdojo-exporter = {
         namespace     = "defectdojo-starix"
