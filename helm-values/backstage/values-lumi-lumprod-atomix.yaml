@@ -153,8 +153,8 @@ backstage:
       gitlab:
         - host: "git3.nexdev.net"
           baseUrl: https://git3.nexdev.net/
-          apiBaseUrl: "https://git3.nexdev.net/api/v4"
-          token: ${GITLAB_TOKEN}
+          # apiBaseUrl: "https://git3.nexdev.net/api/v4"
+          # token: ${GITLAB_TOKEN}
 
     auth:
       environment: production
@@ -180,7 +180,7 @@ backstage:
             allowInherited: true
             groupPattern: '[\s\S]*'
             schedule:
-              frequency: { minutes: 3 }
+              frequency: { minutes: 30 }
               timeout: { minutes: 3 }
 
     techdocs:
