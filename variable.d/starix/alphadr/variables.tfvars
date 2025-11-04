@@ -9,7 +9,16 @@ argo_applications_by_team = {
   atx = {
     team_name = "atomix"
     applications = {
-
+      prometheus = {
+        namespace     = "monitoring"
+        helm_path     = "monitoring/kube-prometheus"
+        chart_version = "9.5.11"
+        skip_crds     = true
+        value_files = [
+          "values-global.yaml",
+          "values-alpha-dr-atomix.yaml",
+         ]
+       }
       ingress = {
         helm_path     = "kubernetes-ingress"
         chart_version = "1.43.0"
