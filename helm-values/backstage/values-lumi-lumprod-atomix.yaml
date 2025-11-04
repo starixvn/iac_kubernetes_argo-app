@@ -151,10 +151,10 @@ backstage:
 
     integrations:
       gitlab:
-        - host: "git3.nexdev.net"
+        - host: git3.nexdev.net
           baseUrl: https://git3.nexdev.net/
-          # apiBaseUrl: "https://git3.nexdev.net/api/v4"
-          # token: ${GITLAB_TOKEN}
+          apiBaseUrl: https://git3.nexdev.net/api/v4
+          token: ${GITLAB_TOKEN}
 
     auth:
       environment: production
@@ -163,10 +163,10 @@ backstage:
           production:
             clientId: ${GITLAB_CLIENT_ID}
             clientSecret: ${GITLAB_CLIENT_SECRET}
-            audience: "https://git3.nexdev.net"
-            callbackUrl: "https://backstage.lumigame.com/api/auth/gitlab/handler/frame"
-            authorizationUrl: "https://git3.nexdev.net/users/sign_in"
-            tokenUrl: "https://git3.nexdev.net/oauth/token"
+            audience: https://git3.nexdev.net
+            callbackUrl: https://backstage.lumigame.com/api/auth/gitlab/handler/frame
+            authorizationUrl: https://git3.nexdev.net/users/sign_in
+            tokenUrl: https://git3.nexdev.net/oauth/token
             signIn:
               resolvers:
                 - resolver: emailMatchingUserEntityProfileEmail
