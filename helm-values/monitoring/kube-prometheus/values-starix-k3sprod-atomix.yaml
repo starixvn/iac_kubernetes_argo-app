@@ -10,6 +10,10 @@ operator:
 prometheus:
   nodeSelector:
     nexops-tools: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: st-sentry-ovs
+    value: "yes"
   service:
     type: NodePort
     ports:
@@ -86,10 +90,18 @@ node-exporter:
 blackboxExporter:
   nodeSelector:
     nexops-tools: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: st-sentry-ovs
+    value: "yes"
 
 alertmanager:
   nodeSelector:
     nexops-tools: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: st-sentry-ovs
+    value: "yes"
   resourcesPreset: "none"
   enabled: true
 
