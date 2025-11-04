@@ -40,7 +40,6 @@ argo_applications_by_team = {
         namespace     = "defectdojo-starix"
         helm_path     = "defectdojo/defectdojo-exporter"
         chart_version = "0.1.0"
-        skip_crds     = true
         value_files = ["values-starix-nexprod-atomix.yaml",]
       }
 
