@@ -18,6 +18,16 @@ argo_applications_by_team = {
         skip_crds     = true
         value_files = ["values-starix-napdr-atomix.yaml"]
       }
+
+      ingress-fps = {
+        namespace     = "ingress-fps"
+        helm_path     = "kubernetes-ingress"
+        chart_version = "1.43.0"
+        auto_sync     = false
+        skip_crds     = true
+        value_files = ["values-starix-fpsdr-atomix.yaml"]
+      }
+
     }
   }
 }
