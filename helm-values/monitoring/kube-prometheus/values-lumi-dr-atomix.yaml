@@ -9,7 +9,7 @@ operator:
 
 prometheus:
   nodeSelector:
-    tools: "yes"
+    nexops-tools: "yes"
   service:
     type: NodePort
     ports:
@@ -47,11 +47,11 @@ node-exporter:
 kube-state-metrics:
   resourcesPreset: "none"
   nodeSelector:
-    tools: "yes"
+    nexops-tools: "yes"
 
 alertmanager:
   nodeSelector:
-    tools: "yes"
+    nexops-tools: "yes"
   resourcesPreset: "none"
   enabled: true
   config:
