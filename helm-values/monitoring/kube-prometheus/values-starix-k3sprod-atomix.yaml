@@ -8,6 +8,8 @@ operator:
   enabled: true
 
 prometheus:
+  nodeSelector:
+    nexops-tools: "yes"
   service:
     type: NodePort
     ports:
@@ -81,8 +83,13 @@ node-exporter:
     collector.filesystem.mount-points-exclude: "^/(dev|proc|sys|var/lib/docker/.+)($|/)"
     collector.filesystem.fs-types-exclude: "^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs|squashfs|nsfs|tmpfs)$"
 
+blackboxExporter:
+  nodeSelector:
+    nexops-tools: "yes"
 
 alertmanager:
+  nodeSelector:
+    nexops-tools: "yes"
   resourcesPreset: "none"
   enabled: true
 
@@ -280,7 +287,6 @@ extraDeploy:
         - jaeger-collector-sc.ops-klprod.gamora.prod:32317 #otlp-grpc
         - jaeger-collector-sc.ops-klprod.gamora.prod:32318 #otlp-http
         - vn-sc-nats-prod.gamora.prod:80 #NATS
-        #Connect to DB
         - 10.146.33.146:1433
         - 10.146.33.147:1433
         - 10.146.33.61:1433
