@@ -45,7 +45,7 @@ node-exporter:
   resourcesPreset: "medium"
 
 kube-state-metrics:
-  resourcesPreset: "none"
+  #resourcesPreset: "none"
   nodeSelector:
     nexops-tools: "yes"
 
