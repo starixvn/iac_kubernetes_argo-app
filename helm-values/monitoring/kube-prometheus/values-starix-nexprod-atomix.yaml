@@ -42,7 +42,7 @@ prometheus:
             - targets: ["rocketor.nexdev.net"]
         #defectdojo-exporter
         - job_name: "defectdojo-exporter"
-          metrics_path: "/proxy/metrics"
+          metrics_path: "/metrics"
           scrape_interval: 15s
           scrape_timeout: 5s
           scheme: "http"
