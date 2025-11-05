@@ -194,14 +194,14 @@ argo_applications_by_team = {
         value_files   = ["values-starix-nexprod-starix-ovs.yaml"]
       }
 
-      grafana-mimir = {
-        namespace     = "grafana-mimir"
-        helm_path     = "monitoring/grafana-mimir"
-        chart_version = "5.8.0"
-        skip_crds     = false
-        value_files   = ["values-starix-nexprod-starix.yaml"]
-        ### trigger
-      }
+      # grafana-mimir = {
+      #   namespace     = "grafana-mimir"
+      #   helm_path     = "monitoring/grafana-mimir"
+      #   chart_version = "5.8.0"
+      #   skip_crds     = false
+      #   value_files   = ["values-starix-nexprod-starix.yaml"]
+      #   ### trigger
+      # }
     }
   }
 }
