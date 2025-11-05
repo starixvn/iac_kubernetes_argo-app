@@ -40,7 +40,21 @@ prometheus:
           scheme: "https"
           static_configs:
             - targets: ["rocketor.nexdev.net"]
-
+        #defectdojo-exporter
+        - job_name: "defectdojo-exporter"
+          kubernetes_sd_configs:
+            - role: endpoints
+              namespaces:
+                names: ['defectdojo-starix']
+          relabel_configs:
+            - source_labels: [__meta_kubernetes_service_label_app]
+              regex: defectdojo-exporter
+              action: keep
+            - source_labels: [__meta_kubernetes_endpoint_port_number]
+              regex: "8080"
+              action: keep
+          metrics_path: /metrics
+          scheme: http
   # remoteWrite:
   #   - url: http://nginx-mimir.nexdev.net/api/v1/push
   #     headers:
