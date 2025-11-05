@@ -13,7 +13,7 @@ argo_applications_by_team = {
         namespace     = "monitoring"
         helm_path     = "monitoring/kube-prometheus"
         chart_version = "9.5.11"
-        #skip_crds     = true
+        skip_crds     = true
         value_files = [
           "values-global.yaml",
           "values-lumi-dr-atomix.yaml",
