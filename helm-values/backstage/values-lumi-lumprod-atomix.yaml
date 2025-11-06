@@ -140,6 +140,9 @@ backstage:
         host: "0.0.0.0"
       cors:
         origin: https://backstage.lumigame.com
+      reading:
+        allow:
+          - host: demo.backstage.io
     database:
       client: pg
       connection:
