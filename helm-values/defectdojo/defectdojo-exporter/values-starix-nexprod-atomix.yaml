@@ -1,9 +1,8 @@
 image:
   pullPolicy: IfNotPresent
   repository: hub.nexdev.net/base/defectdojo/defectdojo-exporter
-  tag: "v2.1.0"
+  tag: "v2.1.2"
 env:
   create: true
   DD_URL: "https://defectdojo.nexdev.net"
   DD_TOKEN: "3b07af3d524069936fc7384aed57c0c1f9542ccd"
-  INTERVAL: "5m"
