@@ -9,13 +9,6 @@ argo_applications_by_team = {
   atx = {
     team_name = "atomix"
     applications = {
-      # haproxy-service = {
-      #   namespace     = "haproxy-service-core"
-      #   helm_path     = "haproxy-svc-tcp"
-      #   chart_version = "2.1.4"
-      #   auto_sync     = false
-      #   value_files = ["values-starix-k3sdr-atomix.yaml"]
-      # }
 
       redis-operator = {
         namespace     = "redis-operator"
@@ -26,23 +19,12 @@ argo_applications_by_team = {
         value_files = ["values-starix-k3sdr-atomix.yaml"]
       }
 
-      # redis-kc-replication = {
-      #   namespace     = "redis-kc"
-      #   helm_path     = "redis-operator/replication"
-      #   chart_version = "0.16.9"
-      #   auto_sync     = false
-      #   skip_crds     = true
-      #   value_files = ["values-starix-k3skc-atomix.yaml"]
-      # }
-
-      # redis-kc-sentinel = {
-      #   namespace     = "redis-kc"
-      #   helm_path     = "redis-operator/sentinel"
-      #   chart_version = "0.16.10"
-      #   auto_sync     = false
-      #   skip_crds     = true
-      #   value_files = ["values-starix-k3skc-atomix.yaml"]
-      # }
+      haproxy-service = {
+        namespace     = "haproxy-service-core"
+        helm_path     = "haproxy-svc-tcp"
+        chart_version = "2.1.4"
+        auto_sync     = false
+      }
 
       ingress = {
         namespace     = "haproxy-ingress"
