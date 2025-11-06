@@ -71,6 +71,32 @@ argo_applications_by_team = {
     }
   }
 
+  pier = {
+    team_name = "pioneers"
+    applications = {
+      rds-opr-alpha-state = {
+        helm_path     = "redis-operator/replication-sentinel"
+        chart_version = "1.0.0"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-starix-k3sdr-pioneers-state.yaml"
+        ]
+      }
+
+      rds-opr-alpha-cache = {
+        helm_path     = "redis-operator/replication-sentinel"
+        chart_version = "1.0.0"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-starix-k3sdr-pioneers-cache.yaml"
+        ]
+      }
+
+    }
+  }
+
   lui = {
     team_name = "lumi"
     applications = {
