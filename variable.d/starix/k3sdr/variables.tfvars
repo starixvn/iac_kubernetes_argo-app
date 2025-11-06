@@ -97,6 +97,67 @@ argo_applications_by_team = {
     }
   }
 
+  suba = {
+    team_name = "subarashi"
+    applications = {
+      rds-opr-oddfeed = {
+        helm_path     = "redis-operator/replication-sentinel"
+        chart_version = "1.0.0"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-starix-k3sdr-subarashi.yaml"
+        ]
+      # trigger
+      }
+
+    }
+  }
+
+
+  was = {
+    team_name = "wabisabi"
+    applications = {
+
+      # rabbitmq = {
+      #   namespace     = "rabbitmq-fps"
+      #   helm_path     = "rabbitmq-cluster-operator"
+      #   chart_version = "4.3.15"
+      #   auto_sync     = false
+      #   skip_crds     = true
+      #   value_files = [
+      #     "values-fps-k3sprod.yaml"
+      #   ]
+      # }
+      # logstash = {
+      #   namespace     = "logging-fps"
+      #   helm_path     = "logging/logstash"
+      #   chart_version = "8.5.1"
+      #   value_files = [
+      #     "values-global.yaml",
+      #     "values-starix-k3sprod-wabisabi.yaml",
+      #   ]
+      # }
+      # opsearch = {
+      #   namespace     = "logging-fps"
+      #   helm_path     = "logging/opensearch-cluster"
+      #   chart_version = "3.0.0"
+      # }
+
+      rds-opr-fps = {
+        helm_path     = "redis-operator/replication-sentinel"
+        chart_version = "1.0.0"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-starix-k3sdr-wabisabi.yaml"
+        ]
+      }
+
+    }
+  }
+
+
   lui = {
     team_name = "lumi"
     applications = {
