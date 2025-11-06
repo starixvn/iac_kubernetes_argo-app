@@ -46,7 +46,7 @@ extraObjects:
   metadata:
     name: starix-nexprod-mysql-cluster
   spec:
-    replicas: 1
+    replicas: 3
     secretName: starix-nexprod-mysql-secret
     volumeSpec:
       persistentVolumeClaim:
