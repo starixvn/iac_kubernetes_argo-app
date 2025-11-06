@@ -201,6 +201,25 @@ backstage:
               authProvider: 'serviceAccount'
               skipTLSVerify: false
               skipMetricsLookup: true
+
+    search:
+      collators:
+        catalog:
+          schedule: # same options as in SchedulerServiceTaskScheduleDefinition
+            # supports cron, ISO duration, "human duration" as used in code
+            initialDelay: { seconds: 90 }
+            # supports cron, ISO duration, "human duration" as used in code
+            frequency: { hours: 6 }
+            # supports ISO duration, "human duration" as used in code
+            timeout: { minutes: 3 }
+        techdocs:
+          schedule: # same options as in SchedulerServiceTaskScheduleDefinition
+            # supports cron, ISO duration, "human duration" as used in code
+            initialDelay: { seconds: 90 }
+            # supports cron, ISO duration, "human duration" as used in code
+            frequency: { hours: 6 }
+            # supports ISO duration, "human duration" as used in code
+            timeout: { minutes: 3 }
     
 
   affinity: {}
