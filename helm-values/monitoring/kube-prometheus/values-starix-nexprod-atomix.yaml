@@ -40,14 +40,14 @@ prometheus:
           scheme: "https"
           static_configs:
             - targets: ["rocketor.nexdev.net"]
-        # #defectdojo-exporter
-        # - job_name: "defectdojo-exporter"
-        #   metrics_path: "/metrics"
-        #   scrape_interval: 15s
-        #   scrape_timeout: 5s
-        #   scheme: "http"
-        #   static_configs:
-        #     - targets: ["defectdojo-exporter-defectdojo-exporter-atx-nexprod.defectdojo-starix.svc:8080"]
+        #defectdojo-exporter
+        - job_name: "defectdojo-exporter"
+          metrics_path: "/metrics"
+          scrape_interval: 15s
+          scrape_timeout: 5s
+          scheme: "http"
+          static_configs:
+            - targets: ["defectdojo-exporter-defectdojo-exporter-atx-nexprod.defectdojo-starix.svc:8080"]
   # remoteWrite:
   #   - url: http://nginx-mimir.nexdev.net/api/v1/push
   #     headers:
