@@ -1,5 +1,5 @@
 ---
-clusterDomain: lumi.dr
+clusterDomain: sc.dr
 
 global:
   imageRegistry: "lumhub.ops-dr.nebula.prod/kbt/base"
