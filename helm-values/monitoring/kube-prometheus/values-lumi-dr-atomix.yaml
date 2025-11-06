@@ -2,7 +2,7 @@
 clusterDomain: lumi.dr
 
 global:
-  imageRegistry: "lumhub.ops-dr.nebula.prod/kbt/base"
+  imageRegistry: "nexhub.ops-dr.nebula.prod/kbt/base"
 
 operator:
   enabled: true
