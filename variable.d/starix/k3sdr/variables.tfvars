@@ -9,13 +9,6 @@ argo_applications_by_team = {
   atx = {
     team_name = "atomix"
     applications = {
-      # haproxy-service = {
-      #   namespace     = "haproxy-service-core"
-      #   helm_path     = "haproxy-svc-tcp"
-      #   chart_version = "2.1.4"
-      #   auto_sync     = false
-      #   value_files = ["values-starix-k3sdr-atomix.yaml"]
-      # }
 
       redis-operator = {
         namespace     = "redis-operator"
@@ -26,23 +19,12 @@ argo_applications_by_team = {
         value_files = ["values-starix-k3sdr-atomix.yaml"]
       }
 
-      # redis-kc-replication = {
-      #   namespace     = "redis-kc"
-      #   helm_path     = "redis-operator/replication"
-      #   chart_version = "0.16.9"
-      #   auto_sync     = false
-      #   skip_crds     = true
-      #   value_files = ["values-starix-k3skc-atomix.yaml"]
-      # }
-
-      # redis-kc-sentinel = {
-      #   namespace     = "redis-kc"
-      #   helm_path     = "redis-operator/sentinel"
-      #   chart_version = "0.16.10"
-      #   auto_sync     = false
-      #   skip_crds     = true
-      #   value_files = ["values-starix-k3skc-atomix.yaml"]
-      # }
+      haproxy-service = {
+        namespace     = "haproxy-service-core"
+        helm_path     = "haproxy-svc-tcp"
+        chart_version = "2.1.4"
+        auto_sync     = false
+      }
 
       ingress = {
         namespace     = "haproxy-ingress"
@@ -66,6 +48,15 @@ argo_applications_by_team = {
         auto_sync     = false
         value_files   = ["values-starix-k3sdr-starix.yaml"]
       }
+
+      sentry-ovs = {
+        namespace     = "sentry-st-ovs"
+        helm_path     = "sentry-selfhost"
+        chart_version = "4.3.3"
+        auto_sync     = false
+        value_files   = ["values-starix-k3sdr-starix-ovs.yaml"]
+      }
+      #trigger
 
 
     }
@@ -96,6 +87,67 @@ argo_applications_by_team = {
 
     }
   }
+
+  suba = {
+    team_name = "subarashi"
+    applications = {
+      rds-opr-oddfeed = {
+        helm_path     = "redis-operator/replication-sentinel"
+        chart_version = "1.0.0"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-starix-k3sdr-subarashi.yaml"
+        ]
+      # trigger
+      }
+
+    }
+  }
+
+
+  was = {
+    team_name = "wabisabi"
+    applications = {
+
+      # rabbitmq = {
+      #   namespace     = "rabbitmq-fps"
+      #   helm_path     = "rabbitmq-cluster-operator"
+      #   chart_version = "4.3.15"
+      #   auto_sync     = false
+      #   skip_crds     = true
+      #   value_files = [
+      #     "values-fps-k3sprod.yaml"
+      #   ]
+      # }
+      # logstash = {
+      #   namespace     = "logging-fps"
+      #   helm_path     = "logging/logstash"
+      #   chart_version = "8.5.1"
+      #   value_files = [
+      #     "values-global.yaml",
+      #     "values-starix-k3sprod-wabisabi.yaml",
+      #   ]
+      # }
+      # opsearch = {
+      #   namespace     = "logging-fps"
+      #   helm_path     = "logging/opensearch-cluster"
+      #   chart_version = "3.0.0"
+      # }
+
+      rds-opr-fps = {
+        helm_path     = "redis-operator/replication-sentinel"
+        chart_version = "1.0.0"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-starix-k3sdr-wabisabi.yaml"
+        ]
+      }
+
+    }
+  }
+
 
   lui = {
     team_name = "lumi"
