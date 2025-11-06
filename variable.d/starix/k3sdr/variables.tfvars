@@ -56,6 +56,7 @@ argo_applications_by_team = {
         auto_sync     = false
         value_files   = ["values-starix-k3sdr-starix-ovs.yaml"]
       }
+      #trigger
 
 
     }
