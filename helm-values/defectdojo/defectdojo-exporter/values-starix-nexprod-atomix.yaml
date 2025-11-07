@@ -9,6 +9,6 @@ env:
 args:
   port: 8080
   concurrency: 5
-  interval: 1m
-  use-engagement-update-check: false
+  interval: 5m
+  use-engagement-update-check: true
   timeout: 30s
