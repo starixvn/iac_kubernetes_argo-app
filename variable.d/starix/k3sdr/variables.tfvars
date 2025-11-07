@@ -190,6 +190,12 @@ argo_applications_by_team = {
         chart_version = "0.1.3"
       }
 
+      sentry = {
+        helm_path     = "sentry-selfhost"
+        chart_version = "26.6.0"
+        auto_sync     = false
+      }
+
     }
   }
 

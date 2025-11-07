@@ -57,6 +57,7 @@ filestore:
 
 
 relay:
+  replicas: 3
   env:
   - name: HTTP_PROXY
     value: "http://lisasqd.nebula.prod:8801"
@@ -76,6 +77,7 @@ symbolicator:
   enabled: true
 
 nginx:
+  replicas: 3
   clusterDomain: starix.k3sdr
   image:
     registry: nexhub.ops-dr.nebula.prod
