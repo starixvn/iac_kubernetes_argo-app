@@ -4,6 +4,8 @@ cluster_env = "k3sdr"
 
 default_project = "tf-starix-k3sdr"
 
+# Main Image Reg Addr: nexhub.ops-dr.nebula.prod/kbt/base
+
 # ARGO APPLICATIONS
 argo_applications_by_team = {
   atx = {
@@ -16,7 +18,7 @@ argo_applications_by_team = {
         chart_version = "0.22.1"
         auto_sync     = false
         skip_crds     = false
-        value_files = ["values-starix-k3sdr-atomix.yaml"]
+        value_files   = ["values-starix-k3sdr-atomix.yaml"]
       }
 
       haproxy-service = {
@@ -39,7 +41,7 @@ argo_applications_by_team = {
         helm_path     = "monitoring/kube-prometheus"
         chart_version = "9.5.11"
         skip_crds     = false
-        value_files = ["values-starix-k3sdr-atomix.yaml"]
+        value_files   = ["values-starix-k3sdr-atomix.yaml"]
       }
 
       harbor = {
@@ -56,9 +58,16 @@ argo_applications_by_team = {
         auto_sync     = false
         value_files   = ["values-starix-k3sdr-starix-ovs.yaml"]
       }
-      #trigger
 
-
+      nats = {
+        helm_path     = "nats"
+        chart_version = "1.2.10"
+      }
+      nats-nui = {
+        namespace     = "tf-lui-nats"
+        helm_path     = "nats/nats-nui"
+        chart_version = "0.1.3"
+      }
     }
   }
 
@@ -99,7 +108,7 @@ argo_applications_by_team = {
         value_files = [
           "values-starix-k3sdr-subarashi.yaml"
         ]
-      # trigger
+        # trigger
       }
 
     }

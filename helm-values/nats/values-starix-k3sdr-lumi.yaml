@@ -1,0 +1,67 @@
+global:
+  image:
+    registry: "nexhub.ops-dr.nebula.prod/kbt/base"
+
+config:
+  cluster:
+    enabled: true
+    replicas: 3
+
+  jetstream:
+    enabled: true
+    fileStore:
+      pvc:
+        enabled: true
+        size: 4Gi
+        storageClassName: longhorn
+    memoryStore:
+      enabled: true
+      maxSize: 2Gi
+
+container:
+  merge:
+    resources:
+      requests:
+        memory: "2560Mi"
+      limits:
+        memory: "3072Mi"
+
+  patch: []
+
+promExporter:
+  enabled: true
+  podMonitor:
+    enabled: true
+
+extraResources:
+- apiVersion: "ingress.v1.haproxy.org/v1"
+  kind: TCP
+  metadata:
+    name:
+      $tplYaml: >
+        {{ include "nats.fullname" $ | printf "%s-tcp" | quote }}
+    labels: 
+      $tplYaml: |
+        {{ include "nats.labels" $ }}
+    annotations:
+      ingress.class: "sc-ops-ingress"
+  spec:
+    - name:
+        $tplYaml: >
+          {{ include "nats.fullname" $ }}
+      frontend:
+        name: 
+          $tplYaml: >
+            {{ include "nats.fullname" $ | printf "%s-tcp" | quote }}
+        tcplog: true
+        binds:
+        - name:
+            $tplYaml: >
+              {{ include "nats.fullname" $ }}
+          port: 4222
+      service:
+        name:
+          $tplYaml: >
+            {{ include "nats.fullname" $ }}
+        port: 4222
+        
