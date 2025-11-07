@@ -95,7 +95,7 @@ alertmanager:
       routes:
       - receiver: 'null'
         match_re:
-         namespace: "l1|l2|gn|hd|sk|sp|tg|mg|etcd-backup"
+         namespace: "l1|l2|gn|hd|sk|sp|tg|mg|etcd-backup|local"
          alertname: "Kubernetes Pod Restart|Kubernetes High Pod Restart Count|Kubernetes Pod Not Running"
       - receiver: 'null'
         match_re:
