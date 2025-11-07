@@ -302,18 +302,18 @@ configuration: |
   #   http-check expect status 200
   #   server rabbitmq rabbitmq-cluster.rabbitmq-nap-alpha.svc.starix.k3sdr:15672 check inter 1s resolvers k8s init-addr none
  
-  # #NAP-Session-State
-  # frontend nap_session_state_fe
-  #   bind :42424
-  #   option tcplog
-  #   mode tcp
-  #   default_backend nap_asp_state_be
+  #NAP-Session-State
+  frontend nap_session_state_fe
+    bind :42424
+    option tcplog
+    mode tcp
+    default_backend nap_asp_state_be
 
-  # backend nap_asp_state_be
-  #   mode tcp
-  #   option tcplog
-  #   option tcp-check
-  #   default-server inter 2s fall 5 rise 5
-  #   server state_58_137_42424 10.148.58.137:42424 check
-  #   server state_58_138_42424 10.148.58.138:42424 check backup
+  backend nap_asp_state_be
+    mode tcp
+    option tcplog
+    option tcp-check
+    default-server inter 2s fall 5 rise 5
+    server state_58_151_42424 10.6.58.151:42424 check
+    server state_58_152_42424 10.6.58.152:42424 check backup
 
