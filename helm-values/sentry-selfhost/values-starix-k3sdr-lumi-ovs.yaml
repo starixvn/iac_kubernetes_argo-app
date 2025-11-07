@@ -1,0 +1,258 @@
+hooks:
+  activeDeadlineSeconds: 2000
+  dbInit:
+    enabled: true
+    resources:
+      limits:
+        memory: 3200Mi
+      requests:
+        memory: 300Mi 
+
+user:
+  create: true
+  email: admin@sentry.local
+  password: "?nxhrJ3kfAsK"
+
+
+
+image:
+  repository: nexhub.ops-dr.nebula.prod/dr/base/sentry
+  tag: "9.1.2"
+
+
+web:
+  env:
+  - name: HTTP_PROXY
+    value: "http://lisasqd.nebula.prod:8801"
+  - name: HTTPS_PROXY
+    value: "http://lisasqd.nebula.prod:8801"
+  - name: NO_PROXY
+    value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.starix.k3sdr,.dr.starixplay.com,.nebula.prod"
+  nodeSelector:
+    sc-sentry-ovs: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: sc-sentry-ovs
+    value: "yes"
+
+cron:
+  nodeSelector:
+    sc-sentry-ovs: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: sc-sentry-ovs
+    value: "yes"  
+
+worker:
+  replicacount: 1
+  env:
+  - name: HTTP_PROXY
+    value: "http://lisasqd.nebula.prod:8801"
+  - name: HTTPS_PROXY
+    value: "http://lisasqd.nebula.prod:8801"
+  - name: NO_PROXY
+    value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.starix.k3sdr,.dr.starixplay.com,.nebula.prod"
+  nodeSelector:
+    sc-sentry-ovs: "yes"
+  tolerations:
+  - effect: NoSchedule
+    key: sc-sentry-ovs
+    value: "yes" 
+
+
+service:
+  name: sentry
+  type: ClusterIP
+
+
+filestore:
+  backend: filesystem
+  filesystem:
+    path: /var/lib/sentry/files
+    persistence:
+      enabled: true
+      storageClass: "local-path"
+      accessMode: ReadWriteOnce
+      size: 10Gi
+      persistentWorkers: true
+
+
+
+ingress:
+  enabled: true
+  hostnames:
+    - "sentrysc-ovs.dr.starixplay.com"
+    - "sentrysc-ovs.ops-dr.nebula.prod"
+  ingressClassName: "haproxy"
+
+
+postgresql:
+  clusterDomain: starix.k3sdr
+  image:
+    registry: nexhub.ops-dr.nebula.prod
+    repository: dr/base/bitnami/postgresql
+    tag: 11.5.0-debian-9-r60
+  volumePermissions:
+    image:
+      registry: nexhub.ops-dr.nebula.prod
+      repository: dr/base/bitnami/minideb
+      tag: stretch
+  nameOverride: sentry-postgresql
+  postgresqlConfiguration:
+    maxConnections: "1000"
+    listen_addresses: "'*'"
+  postgresqlDatabase: sentry
+  postgresqlUsername: postgres
+  existingSecret: sentry-postgresql-secret
+  existingSecretKey: postgresql-password
+  persistence:
+    enabled: true
+    storageClass: "local-path"
+  master:
+    nodeSelector:
+      sc-sentry-ovs: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: sc-sentry-ovs
+      value: "yes" 
+    
+
+
+
+redis:
+  cluster:
+    enabled: true
+    slaveCount: 1
+  image: 
+    registry: nexhub.ops-dr.nebula.prod
+    repository: dr/base/bitnami/redis
+    tag: 5.0.5-debian-9-r141
+  clusterDomain: starix.k3sdr
+  enabled: true
+  nameOverride: sentry-redis
+  password: redissentry
+  master:
+    persistence:
+      enabled: true
+      storageClass: "local-path"
+    nodeSelector:
+      sc-sentry-ovs: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: sc-sentry-ovs
+      value: "yes"
+  slave:
+    persistence:
+      enabled: true
+      storageClass: "local-path"
+    nodeSelector:
+      sc-sentry-ovs: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: sc-sentry-ovs
+      value: "yes"  
+      # If change pvc size redis.master.persistence.size: 20Gi
+
+
+# backups_path:
+#   alias: "s3b"
+#   url: "https://s3-api.starixsoft.com:9000"
+#   key: "sentry-backup"
+#   sec: "sFe9?iMnHhOQ"
+#   env: "prod"
+#   org: "lumi"
+
+
+# extraManifests:
+# - apiVersion: batch/v1
+#   kind: CronJob
+#   metadata:
+#     name: '{{ printf "%s-sentry-ovs-backup" .Release.Name }}'
+#     namespace: '{{ .Release.Namespace }}'
+#   spec:
+#     schedule: "0 3 * * *"
+#     concurrencyPolicy: Forbid
+#     successfulJobsHistoryLimit: 3
+#     failedJobsHistoryLimit: 3
+#     jobTemplate:
+#       spec:
+#         template:
+#           spec:
+#             restartPolicy: OnFailure
+#             containers:
+#               - name: sentry-ovs-backup-job
+#                 image: hub.nexdev.net/base/postgres-mc:11.5-deb
+#                 imagePullPolicy: Always
+#                 env:
+#                   - name: S3_ALIAS
+#                     value: "{{ .Values.backups_path.alias }}"
+#                   - name: S3_URL
+#                     value: "{{ .Values.backups_path.url }}"
+#                   - name: S3_KEY
+#                     value: "{{ .Values.backups_path.key }}"
+#                   - name: S3_SEC
+#                     value: "{{ .Values.backups_path.sec }}"
+#                   - name: SENTRY_ENV
+#                     value: "{{ .Values.backups_path.env }}"
+#                   - name: SENTRY_ORG
+#                     value: "{{ .Values.backups_path.org }}"
+#                   - name: PG_H
+#                     value: "{{ printf \"%s-sentry-postgresql\" .Release.Name }}"
+#                   - name: HTTP_PROXY
+#                     value: "iusqd.gamora.prod:8801"
+#                   - name: HTTPS_PROXY
+#                     value: "iusqd.gamora.prod:8801"
+#                   - name: NO_PROXY
+#                     value: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.svc,.k3suat"
+#                 command: ["/bin/bash","-lc"]
+#                 args:
+#                   - |
+#                     set -eu pipefail
+#                     export PATH="/opt/bitnami/postgresql/bin:$PATH"
+#                     date="$(date +%F)"
+#                     fileName="sentry-ovs-data-${SENTRY_ORG}-${SENTRY_ENV}_$date.sql"
+#                     dbName="sentry"
+#                     dbUser="postgres"
+#                     dbPass="very-secure-password"
+#                     dbHost="$PG_H"
+#                     dbPort="5432"
+#                     pathFile=/tmp/$fileName
+#                     userVerify="ken.nguyen@starixsoft.com"
+
+#                     # command backup
+#                     echo "$dbHost:$dbPort:$dbName:$dbUser:$dbPass" > .pgpass
+#                     chmod 600 ~/.pgpass
+#                     echo "[backup] start" >>/proc/1/fd/1
+#                     pg_dump -h $dbHost -U $dbUser -d $dbName -W -t auth_user -t auth_group -t auth_authenticator -t django_content_type -t contenttypes_contenttype -t sites_site -t sentry_email -t sentry_option -t sentry_repository -t sentry_user -t sentry_useremail -t sentry_userip -t south_migrationhistory -t auth_permission -t sentry_recentsearch -t sentry_team -t sentry_project -t sentry_projectoptions -t sentry_projectteam -t sentry_organizationmember_teams -t sentry_organizationmember -t sentry_counter -t sentry_projectbookmark -t sentry_projectkey -t sentry_projectoption -t sentry_rule -t sentry_savedsearch -t sentry_useroption  > $pathFile
+#                     echo "[backup] Done dump db: $pathFile" >>/proc/1/fd/1
+
+#                     # verify backup file
+#                     echo "[verify] start" >>/proc/1/fd/1
+#                     # [ -s $pathFile ] || { echo "[verify] FAIL: empty file" >>/proc/1/fd/2; exit 1; }
+#                     cat $pathFile | grep -q $userVerify || { echo "[verify] FAIL:  missing user $userVerify" >>/proc/1/fd/2; exit 1; }
+#                     echo "[verify] OK: $pathFile" >>/proc/1/fd/1
+                    
+
+#                     # zip backup file
+#                     echo "[zip] start" >>/proc/1/fd/1
+#                     gzip -f $pathFile
+#                     zipFileName=$(ls /tmp/ | grep gz)
+#                     zipPathFile="/tmp/$zipFileName"
+#                     echo "[zip] done -> $zipPathFile" >>/proc/1/fd/1
+
+#                     # push backup file to MinIO
+#                     echo "[push S3 MinIO] start" >>/proc/1/fd/1
+#                     mc alias set $S3_ALIAS $S3_URL $S3_KEY $S3_SEC
+#                     mc cp $zipPathFile $S3_ALIAS/sentry-backup-data/ovs/$SENTRY_ORG/$SENTRY_ENV/$zipFileName
+#                     echo "[push S3 MinIO] OK: => sentry-backup-data/ovs/$SENTRY_ORG/$SENTRY_ENV/$zipFileName" >>/proc/1/fd/1
+#                 resources:
+#                   requests:
+#                     cpu: 50m
+#                     memory: 64Mi
+#                   limits:
+#                     memory: 256Mi
+#                 securityContext:
+#                   runAsNonRoot: true
+#                   allowPrivilegeEscalation: false
+
+
