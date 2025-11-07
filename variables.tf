@@ -55,6 +55,7 @@ variable "kube_cluster_api" {
       sgprod  = "https://F74006CA89D990C1B0BAF42607B51B47.gr7.ap-southeast-1.eks.amazonaws.com"
       sguat   = "https://E6191EEBBB4840436E79DD857495912F.yl4.ap-southeast-1.eks.amazonaws.com"
       dr      = "https://sc-api-dr.starixplay.com:16443"
+      sgdr    = "https://B591EA77A7679676565B45BEF979F1A0.gr7.ap-southeast-1.eks.amazonaws.com"
     }
   }
 }

@@ -230,6 +230,17 @@ argo_projects = {
     ]
   }
 
+  tf-lumi-dr = {
+    src_repo = ["*"]
+    destinations = [
+      {
+        name      = "lumi-sgdr"
+        server    = "https://B591EA77A7679676565B45BEF979F1A0.gr7.ap-southeast-1.eks.amazonaws.com"
+        namespace = "*"
+      }
+    ]
+  }
+
 }
 
 # REQUIRED VARIABLE SET [git_helm_source,git_helm_value]
