@@ -2,7 +2,7 @@
 replicas: 3
 
 # hostname: rancher.ops-klprod.gamora.prod
-hostname: rancher-idc1.starixplay.com
+hostname: rancher.dr.starixplay.com
 
 agentTLSMode: system-store
 
