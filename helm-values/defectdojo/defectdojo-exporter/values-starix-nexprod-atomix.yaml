@@ -10,5 +10,5 @@ args:
   port: 8080
   concurrency: 5
   interval: 5m
-  use-engagement-update-check: true
+  # use-engagement-update-check: true
   timeout: 30s
