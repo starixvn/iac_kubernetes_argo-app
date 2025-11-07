@@ -36,6 +36,12 @@ argo_applications_by_team = {
         skip_crds     = true
       }
 
+      rancher = {
+        namespace     = "rancher"
+        helm_path     = "rancher"
+        chart_version = "2.10.2"
+      }
+
       prometheus = {
         namespace     = "monitoring"
         helm_path     = "monitoring/kube-prometheus"
