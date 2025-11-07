@@ -195,6 +195,7 @@ argo_applications_by_team = {
         chart_version = "26.6.0"
         auto_sync     = false
       }
+      #trigger
 
     }
   }
