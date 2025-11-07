@@ -96,7 +96,7 @@ controller:
       memory: 400Mi
 
   image:
-    repository: "lumhub.sc-t1prod.gamora.prod/aws/haproxytech/kubernetes-ingress"
+    repository: "lumhub.sc-t1prod.gamora.prod/aws/base/haproxytech/kubernetes-ingress"
 
 defaultBackend:
   image: "lumhub.sc-t1prod.gamora.prod/aws/base/nexops-tools/default-backend-ingress"
