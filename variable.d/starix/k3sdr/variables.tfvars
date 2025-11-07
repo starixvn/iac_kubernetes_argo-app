@@ -58,16 +58,6 @@ argo_applications_by_team = {
         auto_sync     = false
         value_files   = ["values-starix-k3sdr-starix-ovs.yaml"]
       }
-
-      nats = {
-        helm_path     = "nats"
-        chart_version = "1.2.10"
-      }
-      nats-nui = {
-        namespace     = "tf-lui-nats"
-        helm_path     = "nats/nats-nui"
-        chart_version = "0.1.3"
-      }
     }
   }
 
@@ -174,6 +164,24 @@ argo_applications_by_team = {
         chart_version = "4.3.3"
         auto_sync     = false
         value_files   = ["values-starix-k3sdr-lumi-ovs.yaml"]
+      }
+
+      ops-ingress = {
+        helm_path     = "kubernetes-ingress"
+        chart_version = "1.43.0"
+        auto_sync     = false
+        skip_crds     = true
+        value_files   = ["values-starix-k3sdr-sc-ops-ingress.yaml"]
+      }
+
+      nats = {
+        helm_path     = "nats"
+        chart_version = "1.2.10"
+      }
+      nats-nui = {
+        namespace     = "tf-lui-nats"
+        helm_path     = "nats/nats-nui"
+        chart_version = "0.1.3"
       }
 
     }
