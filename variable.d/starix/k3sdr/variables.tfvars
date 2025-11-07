@@ -160,7 +160,7 @@ argo_applications_by_team = {
       }
 
       sentry-ovs = {
-        namespace     = "sentry-st-ovs"
+        namespace     = "sentry-sc-ovs"
         helm_path     = "sentry-selfhost"
         chart_version = "4.3.3"
         auto_sync     = false
