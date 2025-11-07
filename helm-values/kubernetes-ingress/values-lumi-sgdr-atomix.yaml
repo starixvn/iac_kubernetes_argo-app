@@ -95,8 +95,11 @@ controller:
       cpu: 250m
       memory: 400Mi
 
+  image:
+    repository: "lumhub.sc-t1prod.gamora.prod/aws/haproxytech/kubernetes-ingress"
+
 defaultBackend:
-  image: "hub.lumigame.com/base/nexops-tools/default-backend-ingress"
+  image: "lumhub.sc-t1prod.gamora.prod/aws/base/nexops-tools/default-backend-ingress"
 
 clusterInfo: "eks-sc-sgdr"
 
