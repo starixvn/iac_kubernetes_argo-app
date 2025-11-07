@@ -1,7 +1,7 @@
 image:
   pullPolicy: IfNotPresent
   repository: hub.nexdev.net/base/defectdojo/defectdojo-exporter
-  tag: "v2.1.6"
+  tag: "v2.1.3"
 env:
   create: true
   DD_URL: "https://defectdojo.nexdev.net"
@@ -10,5 +10,5 @@ args:
   port: 8080
   concurrency: 5
   interval: 5m
-  useEngagementUpdate: false
+  use-engagement-update-check: true
   timeout: 30s
