@@ -39,7 +39,7 @@ controller:
     externalTrafficPolicy: "Cluster"
     ipFamilyPolicy: SingleStack
     ipFamilies: [IPv4]
-    loadBalancerIP: "10.143.58.203"
+    loadBalancerIP: "10.5.58.204"
 
     tcpPorts:
     - name: nats
