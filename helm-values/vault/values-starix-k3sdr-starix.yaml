@@ -1,0 +1,141 @@
+global:
+  enabled: true
+  tlsDisable: true
+injector:
+  enabled: true
+  image:
+    repository: "nexhub.ops-dr.nebula.prod/kbt/base/hashicorp/vault-k8s"
+  agentImage:
+    repository: "nexhub.ops-dr.nebula.prod/kbt/base/hashicorp/vault"
+  tolerations:
+  - key: node.role
+    operator: Equal
+    effect: NoSchedule
+    value: vault
+server:
+  image:
+    repository: "nexhub.ops-dr.nebula.prod/kbt/base/hashicorp/vault"
+
+  logLevel: "warn"
+
+  ingress:
+    activeService: true
+    ingressClassName: "haproxy"
+    enabled: true
+    hosts: 
+    - host: "vault-st.dr.starixplay.com"
+      paths: []
+    - host: "vault-st.ops-dr.nebula.prod"
+      paths: []
+
+  resources: {}
+    # limits:
+    #   memory: 2Gi
+
+  dataStorage:
+    enabled: true
+    size: 10Gi
+    mountPath: "/vault/data"
+    storageClass: longhorn-effort-2rep
+
+  auditStorage:
+    enabled: false
+
+  # Run Vault in "HA" mode.
+  ha:
+    enabled: true
+    replicas: 3
+    raft:
+      enabled: true
+      setNodeId: true
+
+      config: |
+        ui = true
+        cluster_name = "vault-integrated-storage"
+        default_max_request_duration = "7200s"
+        
+        listener "tcp" {
+          tls_disable = 1
+          address = "0.0.0.0:8200"
+          cluster_address = "0.0.0.0:8201"
+          x_forwarded_for_authorized_addrs = "10.42.0.0/16"
+          # Enable unauthenticated metrics access (necessary for Prometheus Operator)
+          telemetry {
+            unauthenticated_metrics_access = "true"
+          }
+        }
+
+        seal "awskms" {
+          region     = "ap-east-1"
+          kms_key_id = "0ff7b39a-cc1a-4bb1-96c2-6e52a4245371"
+        }
+
+        telemetry {
+          prometheus_retention_time = "24h",
+          disable_hostname = true
+        }
+
+        storage "raft" {
+          path = "/vault/data"
+          retry_join {
+            leader_api_addr = "http://vault-stx-k3sdr-0.vault-stx-k3sdr-internal:8200"
+          }
+          retry_join {
+            leader_api_addr = "http://vault-stx-k3sdr-1.vault-stx-k3sdr-internal:8200"
+          }
+          retry_join {
+            leader_api_addr = "http://vault-stx-k3sdr-2.vault-stx-k3sdr-internal:8200"
+          }
+        }
+
+        service_registration "kubernetes" {}
+
+  serviceAccount:
+    createSecret: true
+
+  readinessProbe:
+    enabled: true
+    path: "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
+  livenessProbe:
+    enabled: true
+    path: "/v1/sys/health?standbyok=true"
+    initialDelaySeconds: 60
+
+  updateStrategyType: "RollingUpdate"
+
+  extraEnvironmentVars:
+    HTTP_PROXY: lisasqd.nebula.prod:8801
+    HTTPS_PROXY: lisasqd.nebula.prod:8801
+    NO_PROXY: 127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.vault-stx-k3sdr-internal,.vault-stx-k3sdr-active,.vault-stx-k3sdr,.vault-stx-k3sdr-ui,.nebula.prod,.svc,.starix.k3sdr
+
+
+  extraSecretEnvironmentVars:
+  - envName: AWS_ACCESS_KEY_ID
+    secretName: eks-creds
+    secretKey: AWS_ACCESS_KEY_ID
+  - envName: AWS_SECRET_ACCESS_KEY
+    secretName: eks-creds
+    secretKey: AWS_SECRET_ACCESS_KEY
+
+  standalone:
+    enabled: false
+
+  tolerations:
+  - key: node.role
+    operator: Equal
+    effect: NoSchedule
+    value: vault
+
+  nodeSelector:
+    vault-workload: "yes"
+
+ui:
+  enabled: true
+  externalPort: 8200
+  targetPort: 8200
+  activeVaultPodOnly: false
+  serviceType: "ClusterIP"
+
+serverTelemetry:
+  serviceMonitor:
+    enabled: true
