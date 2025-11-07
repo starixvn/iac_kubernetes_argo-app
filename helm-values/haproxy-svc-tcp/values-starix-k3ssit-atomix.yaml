@@ -49,6 +49,19 @@ service:
     port: 42424
     targetPort: session-state
 
+
+  # RabbitMQ
+  - name: rabbitmq
+    protocol: TCP
+    port: 5672
+    targetPort: rabbitmq
+
+  - name: rabbitmq-admin
+    protocol: TCP
+    port: 15672
+    targetPort: rabbitmq-admin
+
+
 containerPorts:
 #NAP
 - name: redis-nap-m
@@ -59,6 +72,12 @@ containerPorts:
 
 - name: session-state
   containerPort: 42424
+
+- name: rabbitmq
+  containerPort: 5672
+
+- name: rabbitmq-admin
+  containerPort: 15672
 
 configuration: |
   global
@@ -128,4 +147,24 @@ configuration: |
     server state_4_65_42424 172.16.4.65:42424 check
     server state_4_66_42424 172.16.4.66:42424 check backup
 
+  # RabbitMQ
+  frontend rabbitmq_fe
+    bind :5672
+    default_backend rabbitmq_be
+
+  backend rabbitmq_be
+    mode tcp
+    server rabbitmq rabbitmq-cluster.rabbitmq.svc.starix.k3ssit:5672 check inter 1s resolvers k8s init-addr none
+
+  # RabbitMQ Management
+  frontend rabbitmq_admin_fe
+    bind :15672
+    default_backend rabbitmq_admin_be
+
+  backend rabbitmq_admin_be
+    option forwardfor
+    option http-server-close
+    option httpchk HEAD /
+    http-check expect status 200
+    server rabbitmq rabbitmq-cluster.rabbitmq.svc.starix.k3ssit:15672 check inter 1s resolvers k8s init-addr none
  
