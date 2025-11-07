@@ -17,6 +17,7 @@ argo_applications_by_team = {
         skip_crds     = true
         value_files = [
           "values-lumi-sgdr-atomix.yaml"
+        ### trigger
         ]
       }
 
