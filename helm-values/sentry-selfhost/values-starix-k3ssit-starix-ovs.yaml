@@ -80,6 +80,7 @@ ingress:
   hostnames:
     - "sentryst-ovs.ops-sit.nebula.sit"
     - "sentry.playonesit.com"
+    - "sentry-ovs.playonesit.com"
   ingressClassName: "haproxy"
 
 
