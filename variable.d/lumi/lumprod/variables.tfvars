@@ -230,7 +230,7 @@ argo_projects = {
     ]
   }
 
-  tf-lumi-dr = {
+  tf-lumi-sgdr = {
     src_repo = ["*"]
     destinations = [
       {
