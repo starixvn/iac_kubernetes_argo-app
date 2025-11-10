@@ -79,10 +79,12 @@ extraObjects:
     S3_ENDPOINT: "czMtYXBpLnN0YXJpeHNvZnQuY29t" #s3-api.starixsoft.com
     S3_PROVIDER: "TWluaW8=" #Minio
 
-# - apiVersion: mysql.presslabs.org/v1alpha1
-#   kind: MysqlBackup
-#   metadata:
-#     name: starix-nexprod-mysql-backup
-#   spec:
-#     clusterName: starix-nexprod-mysql-cluster
+- apiVersion: mysql.presslabs.org/v1alpha1
+  kind: MysqlBackup
+  metadata:
+    name: starix-nexprod-mysql-backup
+  spec:
+    clusterName: starix-nexprod-mysql-cluster
+    backupSecretName: starix-nexprod-mysql-backup-secret
+    backupURL: gs://mysql-opr-backup/nexprod/
 
