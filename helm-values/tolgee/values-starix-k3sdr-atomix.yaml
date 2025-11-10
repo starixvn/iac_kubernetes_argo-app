@@ -1,5 +1,5 @@
 image:
-  repository: lumhub.ops-dr.nebula.prod/kbt/base
+  repository: lumhub.ops-dr.nebula.prod/kbt/base/tolgee
   pullPolicy: IfNotPresent
   tag: v3.11.6
 
