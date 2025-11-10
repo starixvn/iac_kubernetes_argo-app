@@ -1,7 +1,7 @@
 nameOverride: ""
 fullnameOverride: ""
 namespaceOverride: ""
-clusterName: "lumi.dr"
+clusterName: "sc.dr"
 
 loglevel: debug
 
@@ -40,7 +40,7 @@ opencost:
   exporter:
     apiPort: 9003
     cloudProviderApiKey: ""
-    defaultClusterId: 'lumi.dr'
+    defaultClusterId: 'sc.dr'
     image:
       registry: lumhub.ops-dr.nebula.prod/kbt/base
       repository: opencost
@@ -48,7 +48,7 @@ opencost:
       pullPolicy: IfNotPresent
       fullImageName: null
     extraEnv:
-      CLUSTER_ID: "lumi.dr"
+      CLUSTER_ID: "sc.dr"
     extraArgs: []
     command: []
     replicas: 1
@@ -118,7 +118,7 @@ opencost:
     createConfigmap: true
     provider: custom
     costModel:
-      description: "Custom pricing configuration for lumi.dr environment"
+      description: "Custom pricing configuration for sc.dr environment"
       region: "on-prem"
       zone: "default-zone"
       CPU: 0.008333      # USD / vCPU / h
