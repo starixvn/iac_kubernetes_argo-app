@@ -86,10 +86,10 @@ service:
     targetPort: rabbitmq-admin
   
   #NAP-Session-State
-  - name: session-state
-    protocol: TCP
-    port: 42424
-    targetPort: session-state
+  # - name: session-state
+  #   protocol: TCP
+  #   port: 42424
+  #   targetPort: session-state
 
   - name: http
     port: 8080
@@ -123,8 +123,8 @@ containerPorts:
 - name: rabbitmq-admin
   containerPort: 15672
 
-- name: session-state
-  containerPort: 42424
+# - name: session-state
+#   containerPort: 42424
 
 - name: http
   containerPort: 8080
@@ -303,17 +303,17 @@ configuration: |
   #   server rabbitmq rabbitmq-cluster.rabbitmq-nap-alpha.svc.starix.k3sdr:15672 check inter 1s resolvers k8s init-addr none
  
   #NAP-Session-State
-  frontend nap_session_state_fe
-    bind :42424
-    option tcplog
-    mode tcp
-    default_backend nap_asp_state_be
+  # frontend nap_session_state_fe
+  #   bind :42424
+  #   option tcplog
+  #   mode tcp
+  #   default_backend nap_asp_state_be
 
-  backend nap_asp_state_be
-    mode tcp
-    option tcplog
-    option tcp-check
-    default-server inter 2s fall 5 rise 5
-    server state_58_151_42424 10.6.58.151:42424 check
-    server state_58_152_42424 10.6.58.152:42424 check backup
+  # backend nap_asp_state_be
+  #   mode tcp
+  #   option tcplog
+  #   option tcp-check
+  #   default-server inter 2s fall 5 rise 5
+  #   server state_58_151_42424 10.6.58.151:42424 check
+  #   server state_58_152_42424 10.6.58.152:42424 check backup
 
