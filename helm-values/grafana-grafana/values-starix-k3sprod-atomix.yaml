@@ -81,6 +81,9 @@ extraObjects:
           cpu:    200m
         limits:
           memory: 4Gi
+    backupSchedule: "0 0 0 * * *"
+    backupSecretName: starix-mysql-graf-backup-secret
+    backupURL: s3://mysql-opr-backup/klprod/grafana/
 
   ### Mysql Backup for Grafana
 - apiVersion: v1
