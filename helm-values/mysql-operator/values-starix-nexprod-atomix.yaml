@@ -86,4 +86,4 @@ extraObjects:
   spec:
     clusterName: starix-nexprod-mysql-cluster
     backupSecretName: starix-nexprod-mysql-backup-secret
-    backupURL: s3://mysql-opr-backup/backup.xtrabackup.gz
+    backupURL: gs://mysql-opr-backup/nexprod/
