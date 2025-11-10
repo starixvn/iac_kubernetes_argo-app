@@ -1,0 +1,104 @@
+replicas: 3
+ingress:
+  enabled: true
+  ingressClassName: haproxy
+  hosts:
+    - grafana.dr.starixplay.com
+    - grafanasc.dr.starixplay.com
+
+
+image:
+  registry: nexhub.ops-dr.nebula.prod
+  repository: dr/base/grafana/grafana
+  tag: 11.3.0
+
+
+resources:
+  limits:
+    memory: 4Gi
+  requests:
+    cpu: 100m
+    memory: 500Mi
+
+
+grafana.ini:
+  database:
+    host: "starix-mysql-graf-cluster-mysql-master"
+    name: "grafana-starix"
+    password: "sJ6E%cPeKzWQ"
+    type: "mysql"
+    user: "grafana-starix"
+
+# config to use plain text password
+assertNoLeakedSecrets: false
+
+
+# init user
+adminUser: admin
+adminPassword: RHk^QbNE0C5Q
+
+
+env:
+  HTTP_PROXY: "lisasqd.nebula.prod:8801"
+  HTTPS_PROXY: "lisasqd.nebula.prod:8801"
+  NO_PROXY: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.nebula.prod,.svc,.starix.k3sdr"
+  GF_SERVER_ROOT_URL: "https://grafana.dr.starixplay.com/"
+  GF_INSTALL_PLUGINS: "alexanderzobnin-zabbix-app,redis-datasource,yesoreyeram-infinity-datasource"
+
+
+### Mysql for Grafana
+extraObjects:
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: starix-mysql-graf-cluster-secret
+  type: Opaque
+  data:
+    ROOT_PASSWORD: "ZklAYWRES20xTXl0QVNnWko="
+    USER: "Z3JhZmFuYS1zdGFyaXg="
+    PASSWORD: "c0o2RSVjUGVLeldR"
+    DATABASE: "Z3JhZmFuYS1zdGFyaXg="
+
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: starix-mysql-graf-backup-secret
+  type: Opaque
+  data:
+    AWS_ACCESS_KEY_ID: "bmV4cHJvZC1iYWNrdXA=" #nexprod-backup
+    AWS_SECRET_ACCESS_KEY: "M0NjMX5UVzBqTTNL" #3Cc1~TW0jM3K
+    S3_ENDPOINT: "czMtYXBpLnN0YXJpeHNvZnQuY29tOjkwMDA=" #s3-api.starixsoft.com:9000
+    S3_PROVIDER: "TWluaW8=" #Minio
+
+- apiVersion: mysql.presslabs.org/v1alpha1
+  kind: MysqlCluster
+  metadata:
+    name: starix-mysql-graf-cluster
+  spec:
+    replicas: 3
+    secretName: starix-mysql-graf-cluster-secret
+    volumeSpec:
+      persistentVolumeClaim:
+        storageClassName: "longhorn-effort-2rep"
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 20Gi
+    podSpec:
+      resources:
+        requests:
+          memory: 1Gi
+          cpu:    200m
+        limits:
+          memory: 4Gi
+    initBucketURL: s3://mysql-opr-backup/klprod/starix-mysql-graf-backup.xbackup.gz
+    initBucketSecretName: starix-mysql-graf-backup-secret
+    # backupSchedule: "0 0 0 * * *"
+    # backupSecretName: starix-mysql-graf-backup-secret
+    # backupURL: s3://mysql-opr-backup/klprod/grafana/
+
+  ### Mysql Backup for Grafana
+
+
+
+

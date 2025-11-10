@@ -109,6 +109,16 @@ argo_applications_by_team = {
         ]
       }
 
+      grafana = {
+        helm_path     = "grafana-grafana"
+        chart_version = "8.4.8"
+        auto_sync     = true
+        value_files = [
+          "values-starix-k3sprod-atomix.yaml"
+        ]
+        # trigger install     
+      }
+
     }
   }
 
