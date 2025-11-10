@@ -19,6 +19,13 @@ argo_applications_by_team = {
           "values-alpha-dr-atomix.yaml",
          ]
        }
+      opencost = {
+        namespace     = "opencost"
+        helm_path     = "opencost"
+        chart_version = "2.1.9"
+        value_files   = ["values-alpha-dr-atomix.yaml"]
+        ## trigger
+      }
       ingress = {
         helm_path     = "kubernetes-ingress"
         chart_version = "1.43.0"
