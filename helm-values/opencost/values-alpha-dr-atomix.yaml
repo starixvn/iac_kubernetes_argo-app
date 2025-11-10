@@ -1,7 +1,7 @@
 nameOverride: ""
 fullnameOverride: ""
 namespaceOverride: ""
-clusterName: "cluster.local"
+clusterName: "alpha.dr"
 
 loglevel: debug
 
@@ -14,7 +14,7 @@ serviceAccount:
   name: opencost-atx-dr
 
 networkPolicies:
-  enabled: true
+  enabled: false
   prometheus:
     namespace: monitoring
     port: 9090
@@ -40,7 +40,7 @@ opencost:
   exporter:
     apiPort: 9003
     cloudProviderApiKey: ""
-    defaultClusterId: 'cluster.local'
+    defaultClusterId: 'alpha.dr'
     image:
       registry: nexhub.ops-dr.nebula.prod/kbt/base
       repository: opencost
@@ -48,7 +48,7 @@ opencost:
       pullPolicy: IfNotPresent
       fullImageName: null
     extraEnv:
-      CLUSTER_ID: "cluster.local"
+      CLUSTER_ID: "alpha.dr"
     extraArgs: []
     command: []
     replicas: 1

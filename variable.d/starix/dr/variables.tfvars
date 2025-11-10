@@ -20,6 +20,13 @@ argo_applications_by_team = {
           "values-starix-dr-atomix.yaml",
         ]
       }
+      opencost = {
+        namespace     = "opencost"
+        helm_path     = "opencost"
+        chart_version = "2.1.9"
+        value_files   = ["values-starix-dr-atomix.yaml"]
+        ## trigger
+      }
       ingress-nap = {
         namespace     = "ingress-nap"
         helm_path     = "kubernetes-ingress"
