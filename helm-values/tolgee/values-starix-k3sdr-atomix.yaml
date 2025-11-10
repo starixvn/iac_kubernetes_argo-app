@@ -1,0 +1,47 @@
+image:
+  repository: lumhub.ops-dr.nebula.prod/kbt/base
+  pullPolicy: IfNotPresent
+  tag: v3.11.6
+
+ingress:
+  enabled: true
+  className: "haproxy"
+  annotations: {}
+  hosts:
+    - host: vn-sc-tolgee.idc1.starixplay.com
+      paths:
+        - path: /
+          pathType: Prefix
+
+service:
+  type: NodePort
+  port: 8080
+
+postgresql:
+  enabled: true
+  image:
+    registry: lumhub.ops-dr.nebula.prod/kbt/base
+    repository: bitnami/postgresql
+    tag: 13.5.0
+  architecture: "standalone"
+  auth:
+    postgresPassword: "postgres"
+    database: "postgres"
+    username: "postgres"
+    password: "postgres"
+  primary:
+    service:
+      type: NodePort
+      nodePorts:
+        postgresql: 32432
+    persistence:
+      enabled: true
+      type: pvc
+      size: 2Gi
+      storageClass: longhorn
+
+tolgee:
+  persistence:
+    enabled: true
+    storageClass: longhorn
+    size: 1Gi
