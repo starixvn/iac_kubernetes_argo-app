@@ -114,7 +114,7 @@ argo_applications_by_team = {
         chart_version = "8.4.8"
         auto_sync     = true
         value_files = [
-          "values-starix-k3sprod-atomix.yaml"
+          "values-starix-k3sdr-atomix.yaml"
         ]
         # trigger install     
       }
