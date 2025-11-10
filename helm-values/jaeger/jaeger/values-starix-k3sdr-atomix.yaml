@@ -1,0 +1,144 @@
+storage:
+  type: elasticsearch
+  elasticsearch:
+    scheme: http
+    host: 10.5.58.202
+    port: 30920
+    anonymous: true
+    usePassword: false
+    nodesWanOnly: false
+    extraEnv:
+     - name: ES_SERVER_URLS
+       value: http://jaeger-elasticsearch-sc.ops-dr.nebula.prod
+    cmdlineParams:
+      {
+        es.server-urls: http://jaeger-elasticsearch-sc.ops-dr.nebula.prod
+      }
+    tls:
+      enabled: false
+      secretName: es-tls-secret
+      mountPath: /es-tls/ca-cert.pem
+      subPath: ca-cert.pem
+      ca: /es-tls/ca-cert.pem
+
+elasticsearch:
+ elasticsearch:
+   fullnameOverride: "elasticsearch"
+   image:
+     registry: ""
+     repository: docker.io/bitnami/elasticsearch
+     tag: ""
+   master:
+     masterOnly: false
+     replicaCount: 1
+     extraEnvVars:
+       - name: ES_JAVA_OPTS
+         value: "-Xmx2g -Xms2g"
+     persistence:
+       enabled: true
+       storageClass: "local-path"
+       accessModes: "ReadWriteOnce"
+       size: "2gb"
+
+collector:
+  enabled: true
+  image:
+    registry: ""
+    repository: jaegertracing/jaeger-collector
+    tag: ""
+    digest: ""
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+  dnsPolicy: ClusterFirst
+  extraEnv: []
+  envFrom: []
+  cmdlineParams: {}
+  basePath: /
+  replicaCount: 1
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    behavior: {}
+  service:
+    annotations: {}
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    type: NodePort
+    clusterIP: ""
+    grpc:
+      port: 14250
+
+    http:
+      port: 14268
+    zipkin:
+      {}
+    otlp:
+      grpc:
+        name: otlp-grpc
+        port: 4317
+        nodePort: 32317
+      http:
+        name: otlp-http
+        port: 4318
+        nodePort: 32318
+  ingress:
+    enabled: true
+    ingressClassName: "haproxy"
+    hosts:
+       - host: jaeger-elasticsearch-sc.ops-dr.nebula.prod
+         servicePort: 4317
+    pathType:
+
+query:
+  enabled: true
+  basePath: /
+  initContainers: []
+  oAuthSidecar:
+    enabled: false
+    resources:
+      {}
+    image:
+      registry: quay.io
+      repository: oauth2-proxy/oauth2-proxy
+      tag: v7.6.0
+
+  service:
+    annotations: {}
+    type: NodePort 
+    loadBalancerSourceRanges: []
+    port: 80
+    targetPort: 16686 
+    nodePort: 31686
+  ingress:
+    enabled: true
+    ingressClassName: haproxy
+    annotations: {}
+    hosts:
+      - vn-sc-jaeger.idc1.starixplay.com
+    pathType:
+    health:
+      exposed: true
+
+esIndexCleaner:
+  enabled: true
+  securityContext:
+    runAsUser: 1000
+  podSecurityContext:
+    runAsUser: 1000
+  annotations: {}
+  image:
+    registry: ""
+    repository: jaegertracing/jaeger-es-index-cleaner
+    tag: ""
+    digest: ""
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+  cmdlineParams: {}
+  extraEnv:
+    []
+  schedule: "0 */1 * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid
+  numberOfDays: 1

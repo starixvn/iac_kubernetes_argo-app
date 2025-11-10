@@ -82,6 +82,23 @@ argo_applications_by_team = {
           "values-starix-k3sdr-atomix.yaml"
         ]
       }
+      #- Jaeger -#
+      jaeger = {
+        namespace     = "jaeger-sc"
+        helm_path     = "jaeger/jaeger"
+        chart_version = "1.53.0"
+        value_files = [
+          "values-starix-k3sdr-atomix.yaml"
+        ]
+      }
+      jaeger-elasticsearch = {
+        namespace     = "jaeger-sc"
+        helm_path     = "jaeger/elasticsearch"
+        chart_version = "8.14.3"
+        value_files = [
+          "values-starix-k3sdr-atomix.yaml"
+        ]
+      }
 
     }
   }
