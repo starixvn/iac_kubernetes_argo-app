@@ -1,7 +1,7 @@
 nameOverride: ""
 fullnameOverride: ""
 namespaceOverride: ""
-clusterName: "cluster.local"
+clusterName: "sc.dr"
 
 loglevel: debug
 
@@ -40,7 +40,7 @@ opencost:
   exporter:
     apiPort: 9003
     cloudProviderApiKey: ""
-    defaultClusterId: ''
+    defaultClusterId: 'sc.dr'
     image:
       registry: lumhub.ops-dr.nebula.prod/kbt/base
       repository: opencost
@@ -48,7 +48,7 @@ opencost:
       pullPolicy: IfNotPresent
       fullImageName: null
     extraEnv:
-      CLUSTER_ID: ""
+      CLUSTER_ID: "sc.dr"
     extraArgs: []
     command: []
     replicas: 1
