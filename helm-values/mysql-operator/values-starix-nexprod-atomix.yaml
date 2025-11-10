@@ -63,9 +63,9 @@ extraObjects:
         limits:
           memory: 4Gi
     # ### Mysql Backup
-    # backupSecretName: starix-nexprod-mysql-backup-secret
-    # # backupSchedule: "0 2 * * *" # daily at 2am
-    # backupURL: "s3://mysql-opr-backup/"
+    backupSchedule: "" # daily at 2am
+    backupSecretName: starix-nexprod-mysql-backup-secret
+    backupURL: gs://mysql-opr-backup/nexprod/
 
 
 - apiVersion: v1
@@ -79,11 +79,10 @@ extraObjects:
     S3_ENDPOINT: "czMtYXBpLnN0YXJpeHNvZnQuY29t" #s3-api.starixsoft.com
     S3_PROVIDER: "TWluaW8=" #Minio
 
-- apiVersion: mysql.presslabs.org/v1alpha1
-  kind: MysqlBackup
-  metadata:
-    name: starix-nexprod-mysql-backup
-  spec:
-    clusterName: starix-nexprod-mysql-cluster
-    backupSecretName: starix-nexprod-mysql-backup-secret
-    backupURL: gs://mysql-opr-backup/nexprod/
+# - apiVersion: mysql.presslabs.org/v1alpha1
+#   kind: MysqlBackup
+#   metadata:
+#     name: starix-nexprod-mysql-backup
+#   spec:
+#     clusterName: starix-nexprod-mysql-cluster
+
