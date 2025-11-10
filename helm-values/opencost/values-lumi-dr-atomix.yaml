@@ -40,7 +40,7 @@ opencost:
   exporter:
     apiPort: 9003
     cloudProviderApiKey: ""
-    defaultClusterId: 'cluster.local'
+    defaultClusterId: ''
     image:
       registry: lumhub.ops-dr.nebula.prod/kbt/base
       repository: opencost
@@ -48,7 +48,7 @@ opencost:
       pullPolicy: IfNotPresent
       fullImageName: null
     extraEnv:
-      CLUSTER_ID: "cluster.local"
+      CLUSTER_ID: ""
     extraArgs: []
     command: []
     replicas: 1
