@@ -14,7 +14,7 @@ serviceAccount:
   name: opencost-atx-dr
 
 networkPolicies:
-  enabled: true
+  enabled: false
   prometheus:
     namespace: monitoring
     port: 9090
