@@ -13,7 +13,7 @@ resources:
 
 orchestrator:
   image:
-    repository: nnexhub.ops-dr.nebula.prod/dr/base/bitpoke/mysql-operator-orchestrator
+    repository: nexhub.ops-dr.nebula.prod/dr/base/bitpoke/mysql-operator-orchestrator
     pullPolicy: IfNotPresent
     tag: "v0.6.3"
   persistence:
