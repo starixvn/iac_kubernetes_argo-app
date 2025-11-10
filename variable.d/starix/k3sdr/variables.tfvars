@@ -82,7 +82,7 @@ argo_applications_by_team = {
           "values-starix-k3sdr-atomix.yaml"
         ]
       }
-      #- Jaeger -#
+      #- Jaeger -##
       jaeger = {
         namespace     = "jaeger-sc"
         helm_path     = "jaeger/jaeger"

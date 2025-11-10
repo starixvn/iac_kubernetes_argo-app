@@ -26,4 +26,4 @@ master:
     storageClass: longhorn
     accessModes:
       - ReadWriteOnce
-    size: 30Gi
+    size: 10Gi
