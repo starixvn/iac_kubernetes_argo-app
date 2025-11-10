@@ -74,9 +74,9 @@ extraObjects:
     name: starix-nexprod-mysql-backup-secret
   type: Opaque
   data:
-    AWS_ACCESS_KEY_ID: "nexprod-backup"
-    AWS_SECRET_ACCESS_KEY: "3Cc1~TW0jM3K"
-    S3_ENDPOINT: "https://s3-api.starixsoft.com"
+    AWS_ACCESS_KEY_ID: "bmV4cHJvZC1iYWNrdXA=" #nexprod-backup
+    AWS_SECRET_ACCESS_KEY: "M0NjMX5UVzBqTTNL" #3Cc1~TW0jM3K
+    S3_ENDPOINT: "aHR0cHM6Ly9zMy1hcGkuc3Rhcml4c29mdC5jb20=" #https://s3-api.starixsoft.com
 
 - apiVersion: mysql.presslabs.org/v1alpha1
   kind: MysqlBackup
