@@ -3,7 +3,7 @@ fullnameOverride: ""
 namespaceOverride: ""
 clusterName: "lumi.dr"
 
-loglevel: info
+loglevel: debug
 
 imagePullSecrets: []
 
