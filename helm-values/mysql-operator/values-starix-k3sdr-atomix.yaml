@@ -1,0 +1,30 @@
+---
+replicaCount: 3
+image:
+  repository: nexhub.ops-dr.nebula.prod/dr/base/bitpoke/mysql-operator
+  tag: v0.6.3
+
+resources:
+  limits:
+    memory: 4Gi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+orchestrator:
+  image:
+    repository: nexhub.ops-dr.nebula.prod/dr/base/bitpoke/mysql-operator-orchestrator
+    pullPolicy: IfNotPresent
+    tag: "v0.6.3"
+  persistence:
+    accessMode: "ReadWriteOnce"
+    storageClass: "longhorn-effort-2rep"
+    size: 10Gi
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      cpu: 100m
+      memory: 500Mi
+
+

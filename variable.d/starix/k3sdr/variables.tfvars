@@ -72,6 +72,17 @@ argo_applications_by_team = {
         auto_sync     = false
         value_files   = ["values-starix-k3sdr-starix-ovs.yaml"]
       }
+
+      mysql-operator = {
+        helm_path     = "mysql-operator"
+        chart_version = "0.6.3"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-starix-k3sdr-atomix.yaml"
+        ]
+      }
+
     }
   }
 
