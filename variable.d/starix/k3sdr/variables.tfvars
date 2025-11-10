@@ -50,6 +50,14 @@ argo_applications_by_team = {
         value_files   = ["values-starix-k3sdr-atomix.yaml"]
       }
 
+      opencost = {
+        namespace     = "opencost"
+        helm_path     = "opencost"
+        chart_version = "2.1.9"
+        value_files   = ["values-starix-k3sdr-atomix.yaml"]
+        ## trigger
+      }
+
       harbor = {
         helm_path     = "registry/harbor"
         chart_version = "2.11.0"
