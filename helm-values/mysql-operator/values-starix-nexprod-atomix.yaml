@@ -62,10 +62,10 @@ extraObjects:
           cpu:    200m
         limits:
           memory: 4Gi
-    ### Mysql Backup
-    backupSecretName: starix-nexprod-mysql-backup-secret
-    # backupSchedule: "0 2 * * *" # daily at 2am
-    backupURL: "s3://mysql-opr-backup/"
+    # ### Mysql Backup
+    # backupSecretName: starix-nexprod-mysql-backup-secret
+    # # backupSchedule: "0 2 * * *" # daily at 2am
+    # backupURL: "s3://mysql-opr-backup/"
 
 
 - apiVersion: v1
@@ -84,3 +84,5 @@ extraObjects:
     name: starix-nexprod-mysql-backup
   spec:
     clusterName: starix-nexprod-mysql-cluster
+    backupSecretName: starix-nexprod-mysql-backup-secret
+    backupURL: "s3://mysql-opr-backup/test-backup.gz"
