@@ -28,7 +28,7 @@ orchestrator:
       memory: 500Mi
 
 
-### Mysql for Grafana
+### Mysql 
 extraObjects:
 - apiVersion: v1
   kind: Secret
@@ -40,7 +40,7 @@ extraObjects:
     USER: "bXlzcWwtdXNlcg==" #mysql-user
     PASSWORD: "UGx+VWxoNFlnZlc=" #Pl+Ulh4YgeW
     DATABASE: "bXlzcWwtZGI=" #mysql-db
-
+  
 - apiVersion: mysql.presslabs.org/v1alpha1
   kind: MysqlCluster
   metadata:
@@ -62,4 +62,29 @@ extraObjects:
           cpu:    200m
         limits:
           memory: 4Gi
+    # ### Mysql Backup
+    backupSchedule: "" # daily at 2am
+    backupSecretName: starix-nexprod-mysql-backup-secret
+    backupURL: gs://mysql-opr-backup/nexprod/
+
+
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: starix-nexprod-mysql-backup-secret
+  type: Opaque
+  data:
+    AWS_ACCESS_KEY_ID: "bmV4cHJvZC1iYWNrdXA=" #nexprod-backup
+    AWS_SECRET_ACCESS_KEY: "M0NjMX5UVzBqTTNL" #3Cc1~TW0jM3K
+    S3_ENDPOINT: "czMtYXBpLnN0YXJpeHNvZnQuY29t" #s3-api.starixsoft.com
+    S3_PROVIDER: "TWluaW8=" #Minio
+
+- apiVersion: mysql.presslabs.org/v1alpha1
+  kind: MysqlBackup
+  metadata:
+    name: starix-nexprod-mysql-backup
+  spec:
+    clusterName: starix-nexprod-mysql-cluster
+    backupSecretName: starix-nexprod-mysql-backup-secret
+    backupURL: gs://mysql-opr-backup/nexprod/
 
