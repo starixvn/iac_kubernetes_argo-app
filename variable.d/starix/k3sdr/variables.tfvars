@@ -99,6 +99,15 @@ argo_applications_by_team = {
           "values-starix-k3sdr-atomix.yaml"
         ]
       }
+      #- Tolgee -#
+      tolgee = {
+        namespace     = "tolgee-sc"
+        helm_path     = "tolgee"
+        chart_version = "3.120.0"
+        value_files = [
+          "values-starix-k3sdr-atomix.yaml"
+        ]
+      }
 
     }
   }
