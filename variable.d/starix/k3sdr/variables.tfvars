@@ -99,7 +99,7 @@ argo_applications_by_team = {
           "values-starix-k3sdr-atomix.yaml"
         ]
       }
-      #- Tolgee -#
+      #- Tolgee -##
       tolgee = {
         namespace     = "tolgee-sc"
         helm_path     = "tolgee"
