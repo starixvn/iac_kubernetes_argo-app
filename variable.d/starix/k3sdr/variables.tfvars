@@ -4,7 +4,7 @@ cluster_env = "k3sdr"
 
 default_project = "tf-starix-k3sdr"
 
-# Main Image Reg Addr: nexhub.ops-dr.nebula.prod/kbt/base
+#HUB: nexhub.ops-dr.nebula.prod/kbt/base
 
 # ARGO APPLICATIONS
 argo_applications_by_team = {

@@ -4,6 +4,8 @@ cluster_env = "k3sprod"
 
 default_project = "tf-starix-k3sprod"
 
+#HUB: nexhub.ops-klprod.gamora.prod/kbt/base
+
 # ARGO APPLICATIONS
 argo_applications_by_team = {
   atx = {
@@ -169,7 +171,19 @@ argo_applications_by_team = {
         chart_version = "0.22.1"
         auto_sync     = false
         skip_crds     = false
-        value_files = ["values-starix-k3sprod-atomix.yaml"]
+        value_files   = ["values-starix-k3sprod-atomix.yaml"]
+      }
+
+      #- MinIO -#
+      minio-operator = {
+        namespace     = "minio"
+        helm_path     = "minio/operator"
+        chart_version = "6.0.4"
+      }
+      minio-oprelay = {
+        helm_path     = "minio/tenant"
+        chart_version = "6.0.4"
+        value_files   = ["values-starix-k3sprod-minio-oprelay.yaml"]
       }
 
 
@@ -281,7 +295,7 @@ argo_applications_by_team = {
         value_files = [
           "values-starix-k3sprod-wabisabi.yaml"
         ]
-      # trigger
+        # trigger
       }
 
     }
@@ -306,7 +320,7 @@ argo_applications_by_team = {
         value_files = [
           "values-starix-k3sprod-subarashi.yaml"
         ]
-      # trigger
+        # trigger
       }
 
     }

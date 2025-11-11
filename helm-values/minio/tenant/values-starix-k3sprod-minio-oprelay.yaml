@@ -1,0 +1,68 @@
+---
+tenant:
+  name: oprelay
+  configuration:
+    name: myminio-env-configuration
+  configSecret:
+    name: myminio-env-configuration
+    accessKey: nexops
+    secretKey: Ilu@n3xc3l12
+
+
+  pools:
+  - servers: 2
+    name: pool-0
+    volumesPerServer: 1
+    storageClassName: local-path
+    nodeSelector:
+      open-replay: "yes"
+
+  metrics:
+    enabled: true
+    port: 9000
+    protocol: http
+
+  certificate:
+    requestAutoCert: false
+
+  features:
+    bucketDNS: false
+    domains: { }
+    enableSFTP: false
+
+  buckets: [ ]
+  users: [ ]
+
+  prometheusOperator: true
+
+  env:
+  - name: MINIO_PROMETHEUS_URL
+    value: "http://prometheus-atx-k3sprod-kub-prometheus.monitoring.svc:9090"
+  - name: MINIO_STORAGE_CLASS_STANDARD
+    value: "EC:1"
+
+
+ingress:
+  api:
+    enabled: false
+    ingressClassName: "haproxy"
+    annotations:
+      haproxy.org/ssl-redirect: "false"
+    tls: [ ]
+    # hosts:
+    # - host: "s3i-oprelay.gamora.prod"
+    #   paths: []
+    # tls:
+    # - hosts:
+    #   - s3-oprelay.gamora.prod
+    pathType: Prefix
+  console:
+    enabled: false
+    ingressClassName: "haproxy"
+    annotations:
+      haproxy.org/ssl-redirect: "false"
+    tls: [ ]
+    # hosts:
+    # - host: "s3-oprelay.gamora.prod"
+    #   paths: []
+    pathType: Prefix
