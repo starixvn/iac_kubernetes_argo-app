@@ -180,10 +180,10 @@ argo_applications_by_team = {
         helm_path     = "minio/operator"
         chart_version = "6.0.4"
       }
-      minio-oprelay = {
+      minio-opreplay = {
         helm_path     = "minio/tenant"
         chart_version = "6.0.4"
-        value_files   = ["values-starix-k3sprod-minio-oprelay.yaml"]
+        value_files   = ["values-starix-k3sprod-minio-opreplay.yaml"]
       }
 
 
