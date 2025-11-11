@@ -2,8 +2,8 @@
 operator:
   image:
     repository: nexhub.ops-klprod.gamora.prod/kbt/base/minio/operator
-    sidecarImage:
-      repository: nexhub.ops-klprod.gamora.prod/kbt/base/minio/operator-sidecar
+  sidecarImage:
+    repository: nexhub.ops-klprod.gamora.prod/kbt/base/minio/operator-sidecar
 
   env:
   - name: MINIO_OPERATOR_RUNTIME
