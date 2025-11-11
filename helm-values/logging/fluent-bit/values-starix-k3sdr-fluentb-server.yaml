@@ -80,16 +80,6 @@ extraPorts:
 
 config:
   inputs: |
-    # [INPUT]
-    #   Name forward
-    #   Tag forward.haproxy.sc.t1prod
-    #   Listen 0.0.0.0
-    #   Port 24224
-    #   Buffer_Chunk_Size 1M
-    #   Buffer_Max_Size 6M
-    #   Security.Users fluentbit 29a2VG8BnWXsr3hX
-    #   Self_Hostname flb-klp.server.local
-
     [INPUT]
       Name syslog
       Tag scpt2.haproxy
@@ -98,13 +88,13 @@ config:
       Mode udp
       Source_Address_Key host
 
-    [INPUT]
-      Name syslog
-      Tag scut2.haproxy
-      Listen 0.0.0.0
-      Port 5171
-      Mode udp
-      Source_Address_Key host
+    # [INPUT]
+    #   Name syslog
+    #   Tag scut2.haproxy
+    #   Listen 0.0.0.0
+    #   Port 5171
+    #   Mode udp
+    #   Source_Address_Key host
 
     [INPUT]
       Name syslog
@@ -130,13 +120,13 @@ config:
       Mode udp
       Source_Address_Key host
 
-    [INPUT]
-      Name syslog
-      Tag stut2.haproxy
-      Listen 0.0.0.0
-      Port 5175
-      Mode udp
-      Source_Address_Key host
+    # [INPUT]
+    #   Name syslog
+    #   Tag stut2.haproxy
+    #   Listen 0.0.0.0
+    #   Port 5175
+    #   Mode udp
+    #   Source_Address_Key host
 
     [INPUT]
       Name syslog
@@ -315,21 +305,21 @@ config:
       HTTP_User logstash
       HTTP_Passwd logstash
       Suppress_Type_Name On
-      Index logstash-haproxy-ing-sc-klprod
+      Index logstash-haproxy-ing-sc-t2prod
       Replace_Dots On
 
-    [OUTPUT]
-      Name opensearch
-      Match scut2.haproxy
-      Host opsi.ops-dr.nebula.prod
-      Port 443
-      tls On
-      tls.verify Off
-      HTTP_User logstash
-      HTTP_Passwd logstash
-      Suppress_Type_Name On
-      Index logstash-haproxy-ing-sc-uat
-      Replace_Dots On
+    # [OUTPUT]
+    #   Name opensearch
+    #   Match scut2.haproxy
+    #   Host opsi.ops-dr.nebula.prod
+    #   Port 443
+    #   tls On
+    #   tls.verify Off
+    #   HTTP_User logstash
+    #   HTTP_Passwd logstash
+    #   Suppress_Type_Name On
+    #   Index logstash-haproxy-ing-sc-uat
+    #   Replace_Dots On
 
     [OUTPUT]
       Name opensearch
@@ -341,7 +331,7 @@ config:
       HTTP_User logstash
       HTTP_Passwd logstash
       Suppress_Type_Name On
-      Index logstash-haproxy-swarm-starix-klprod
+      Index logstash-haproxy-st-t2prod
       Replace_Dots On
 
     [OUTPUT]
@@ -354,7 +344,7 @@ config:
       HTTP_User logstash
       HTTP_Passwd logstash
       Suppress_Type_Name On
-      Index logstash-haproxy-swarm-starix-alphaklprod
+      Index logstash-haproxy-st-alp-t2prod
       Replace_Dots On
 
     [OUTPUT]
@@ -367,21 +357,21 @@ config:
       HTTP_User logstash
       HTTP_Passwd logstash
       Suppress_Type_Name On
-      Index logstash-haproxy-swarm-fpsklprod-klprod
+      Index logstash-haproxy-st-was-t2prod
       Replace_Dots On
 
-    [OUTPUT]
-      Name opensearch
-      Match stut2.haproxy
-      Host opsi.ops-dr.nebula.prod
-      Port 443
-      tls On
-      tls.verify Off
-      HTTP_User logstash
-      HTTP_Passwd logstash
-      Suppress_Type_Name On
-      Index logstash-haproxy-ing-sc-uat
-      Replace_Dots On
+    # [OUTPUT]
+    #   Name opensearch
+    #   Match stut2.haproxy
+    #   Host opsi.ops-dr.nebula.prod
+    #   Port 443
+    #   tls On
+    #   tls.verify Off
+    #   HTTP_User logstash
+    #   HTTP_Passwd logstash
+    #   Suppress_Type_Name On
+    #   Index logstash-haproxy-ing-sc-uat
+    #   Replace_Dots On
 
     [OUTPUT]
       Name opensearch
@@ -393,18 +383,18 @@ config:
       HTTP_User logstash
       HTTP_Passwd logstash
       Suppress_Type_Name On
-      Index logstash-haproxy-ing-k3sprod-prod
+      Index logstash-haproxy-st-k3sdr
       Replace_Dots On
 
-    [OUTPUT]
-      Name opensearch
-      Match dout2.haproxy
-      Host opsi.ops-dr.nebula.prod
-      Port 443
-      tls On
-      tls.verify Off
-      HTTP_User logstash
-      HTTP_Passwd logstash
-      Suppress_Type_Name On
-      Index logstash-haproxy-ing-k3suat-uat
-      Replace_Dots On
+    # [OUTPUT]
+    #   Name opensearch
+    #   Match dout2.haproxy
+    #   Host opsi.ops-dr.nebula.prod
+    #   Port 443
+    #   tls On
+    #   tls.verify Off
+    #   HTTP_User logstash
+    #   HTTP_Passwd logstash
+    #   Suppress_Type_Name On
+    #   Index logstash-haproxy-ing-k3suat-uat
+    #   Replace_Dots On
