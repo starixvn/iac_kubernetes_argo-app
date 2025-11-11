@@ -16,6 +16,12 @@ prometheus:
       http: 9090
     nodePorts:
       http: "30062"
+  ingress:
+    enabled: true
+    ingressClassName: "haproxy"
+    pathType: ImplementationSpecific
+    hostname: prometheus-st.dr.starixplay.com
+    path: /
 
   retention: 7d
   retentionSize: "50GB"
