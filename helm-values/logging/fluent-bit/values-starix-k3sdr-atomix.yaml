@@ -1,0 +1,87 @@
+image:
+  repository: nexhub.ops-dr.nebula.prod/kbt/base/fluent/fluent-bit
+  tag: 4.0.3-geoip
+
+# nodeSelector:
+#   node-role.kubernetes.io/control-plane: "true"
+#   node-role.kubernetes.io/etcd: "true"
+#   node-role.kubernetes.io/master: "true"
+
+config:
+  inputs: |
+    [INPUT]
+      Name tail
+      Tag kube.kubesystem
+      Path /var/log/containers/coredns*.log,/var/log/containers/kube*.log
+      multiline.parser docker, cri
+      Mem_Buf_Limit 10MB
+      Skip_Long_Lines On
+
+    [INPUT]
+      Name systemd
+      Tag host.kubesystem
+      Systemd_Filter _SYSTEMD_UNIT=k3s.service
+      Systemd_Filter _SYSTEMD_UNIT=k3s-node.service
+      Read_From_Tail On
+      Strip_Underscores On
+
+    [INPUT]
+      Name systemd
+      Tag host.all
+      Read_From_Tail On
+      Strip_Underscores On
+      
+  filters: |
+    [FILTER]
+      Name modify
+      Match *
+      Add env prod
+      Add region ak
+      Add org devops
+      Add engine k3s
+
+    [FILTER]
+      Name kubernetes
+      Match kube.kubesystem*
+      Kube_Tag_Prefix kube.kubesystem.
+      Merge_Log On
+      Keep_Log Off
+      K8S-Logging.Parser On
+      K8S-Logging.Exclude On
+
+  outputs: |
+    [OUTPUT]
+      Name opensearch
+      Match host.kubesystem
+      Host opsearch-atx-k3sdr.logging
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-kubesystem-systemd
+      Replace_Dots On
+
+    [OUTPUT]
+      Name opensearch
+      Match host.all
+      Host opsearch-atx-k3sdr.logging
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-system-journal-prod
+      Replace_Dots On
+
+    [OUTPUT]
+      Name opensearch
+      Match kube.kubesystem.*
+      Host opsearch-atx-k3sdr.logging
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-kubesystem-container-log
+      Replace_Dots On

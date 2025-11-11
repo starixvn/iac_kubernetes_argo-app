@@ -4,7 +4,7 @@ cluster_env = "k3sdr"
 
 default_project = "tf-starix-k3sdr"
 
-# Main Image Reg Addr: nexhub.ops-dr.nebula.prod/kbt/base
+#HUB: nexhub.ops-dr.nebula.prod/kbt/base
 
 # ARGO APPLICATIONS
 argo_applications_by_team = {
@@ -82,7 +82,7 @@ argo_applications_by_team = {
           "values-starix-k3sdr-atomix.yaml"
         ]
       }
-      #- Jaeger -#
+      #- Jaeger -##
       jaeger = {
         namespace     = "jaeger-sc"
         helm_path     = "jaeger/jaeger"
@@ -116,9 +116,49 @@ argo_applications_by_team = {
         value_files = [
           "values-starix-k3sdr-atomix.yaml"
         ]
-        # trigger install     
       }
 
+
+      #############
+      #- Logging -#
+      #############
+      opsearch-operator = {
+        namespace     = "logging"
+        helm_path     = "logging/opensearch-operator"
+        chart_version = "2.7.0"
+      }
+      opsearch = {
+        namespace     = "logging"
+        helm_path     = "logging/opensearch-cluster"
+        chart_version = "3.0.0"
+      }
+      logstash = {
+        namespace     = "logging"
+        helm_path     = "logging/logstash"
+        chart_version = "8.5.1"
+        value_files = [
+          "values-global.yaml",
+          "values-starix-k3sdr-atomix.yaml",
+        ]
+      }
+      fluent-bit = {
+        namespace     = "logging"
+        helm_path     = "logging/fluent-bit"
+        chart_version = "0.50.0"
+        value_files = [
+          "values-global.yaml",
+          "values-starix-k3sdr-atomix.yaml",
+        ]
+      }
+      fluentb-server = {
+        namespace     = "logging"
+        helm_path     = "logging/fluent-bit"
+        chart_version = "0.50.0"
+        value_files = [
+          "values-global.yaml",
+          "values-starix-k3sdr-fluentb-server.yaml",
+        ]
+      }
     }
   }
 
@@ -205,12 +245,12 @@ argo_applications_by_team = {
       #     "values-starix-k3sprod-wabisabi.yaml",
       #   ]
       # }
-      # opsearch = {
-      #   namespace     = "logging-fps"
-      #   helm_path     = "logging/opensearch-cluster"
-      #   chart_version = "3.0.0"
-      # }
 
+      opsearch = {
+        namespace     = "logging-fps"
+        helm_path     = "logging/opensearch-cluster"
+        chart_version = "3.0.0"
+      }
       rds-opr-fps = {
         helm_path     = "redis-operator/replication-sentinel"
         chart_version = "1.0.0"

@@ -1,0 +1,161 @@
+---
+cluster:
+  general:
+    httpPort: 9200
+    version: 2.19.2
+    image: nexhub.ops-dr.nebula.prod/kbt/base/opensearchproject/opensearch
+    drainDataNodes: false
+    monitoring:
+      enable: false
+      pluginUrl: "https://s3-api.starixsoft.com:9000/awx-install/prometheus-exporter-2.19.2.zip"
+      scrapeInterval: 30s
+      tlsConfig:
+        insecureSkipVerify: true
+
+  dashboards:
+    enable: true
+    replicas: 1
+    version: 2.19.2
+    image: nexhub.ops-dr.nebula.prod/kbt/base/opensearchproject/opensearch-dashboards
+    opensearchCredentialsSecret: 
+      name: ops-admin-creds
+    resources:
+      requests:
+        memory: "1Gi"
+        cpu: "500m"
+      limits:
+        memory: "4Gi"
+        cpu: "4"
+    additionalConfig:
+      opensearch.hosts: "['https://opsearch-was-k3sdr:9200']"
+      opensearchDashboards.index: ".kibana"
+      opensearch_security.multitenancy.enabled: "true"
+      opensearch_security.readonly_mode.roles: "[kibana_read_only]"
+      opensearch.requestHeadersWhitelist: "[authorization, securitytenant]"
+
+  nodePools:
+  - component: masters
+    diskSize: "10Gi"
+    replicas: 2
+    jvm: "-Xmx2G -Xms2G -Dhttp.proxyHost=lisasqd.nebula.prod -Dhttp.proxyPort=8801 -Dhttps.proxyHost=lisasqd.nebula.prod -Dhttps.proxyPort=8801"
+    roles:
+    - "master"
+    - "ingest"
+    persistence:
+      pvc:
+        storageClass: longhorn
+        accessModes:
+        - ReadWriteOnce
+    resources: {}
+    nodeSelector:
+      opsearch-master: "yes"
+      node-role.kubernetes.io/fps-opsearch: ""
+    tolerations:
+    - key: "node.role"
+      value: "fps-opsearch"
+      operator: Equal
+      effect: NoSchedule
+      
+  - component: nodes-hot
+    diskSize: "1000Gi"
+    replicas: 2
+    jvm: "-Xmx16G -Xms16G -Dhttp.proxyHost=lisasqd.nebula.prod -Dhttp.proxyPort=8801 -Dhttps.proxyHost=lisasqd.nebula.prod -Dhttps.proxyPort=8801"
+    roles:
+    - "data"
+    additionalConfig:
+      node.attr.temp: hot
+    persistence:
+      pvc:
+        storageClass: local-path
+        accessModes:
+        - ReadWriteOnce
+    resources: {}
+    nodeSelector:
+      opsearch-hot: "yes"
+      node-role.kubernetes.io/fps-opsearch: ""
+    tolerations:
+    - key: "node.role"
+      value: "fps-opsearch"
+      operator: Equal
+      effect: NoSchedule
+
+  - component: nodes-cold
+    diskSize: "2000Gi"
+    replicas: 1
+    jvm: "-Xmx4G -Xms4G -Dhttp.proxyHost=lisasqd.nebula.prod -Dhttp.proxyPort=8801 -Dhttps.proxyHost=lisasqd.nebula.prod -Dhttps.proxyPort=8801"
+    roles:
+    - "data"
+    additionalConfig:
+      node.attr.temp: cold
+    persistence:
+      pvc:
+        storageClass: local-path
+        accessModes:
+        - ReadWriteOnce
+    resources: {}
+    nodeSelector:
+      opsearch-cold: "yes"
+      node-role.kubernetes.io/fps-opsearch: ""
+    tolerations:
+    - key: "node.role"
+      value: "fps-opsearch"
+      operator: Equal
+      effect: NoSchedule
+
+
+  security:
+    config:
+      adminCredentialsSecret:
+        name: ops-admin-creds
+      ## Warning: Using securityConfigSecret will overwrite data being created directly in opensearch dashboard 
+      # securityConfigSecret:
+      #   name: ops-securityconfig
+
+  ingress:
+    opensearch:
+      enabled: true
+      className: "haproxy"
+      annotations:
+        haproxy.org/ssl-passthrough: 'false'
+        haproxy.org/server-ssl: 'true'
+      hosts:
+      - host: opsi-fps.dr.starixplay.com
+        paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+    dashboards:
+      enabled: true
+      className: "haproxy"
+      hosts:
+      - host: ops-fps.dr.starixplay.com
+        paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+# -- List of Opensearch Resources
+roles: []
+tenants:
+- name: "swat"
+actionGroups: []
+
+# extraResources: {}
+# - |
+#   apiVersion: ingress.v1.haproxy.org/v1
+#   kind: TCP
+#   metadata:
+#     name: opensearch-fps-nexprod-tcp
+#     namespace: logging-fps
+#     annotations:
+#       ingress.class: fps-ops-ingress
+#   spec:
+#   - name: opensearch-fps-nexprod-tcp
+#     frontend:
+#       name: opensearch-fps-nexprod-tcp
+#       tcplog: true
+#       binds:
+#       - name: opensearch-fps-nexprod-tcp
+#         port: 9200
+#     service:
+#       name: fps-cluster
+#       port: 9200
