@@ -86,7 +86,7 @@ collector:
     enabled: true
     ingressClassName: "haproxy"
     hosts:
-       - host: jaeger-elasticsearch-sc.ops-dr.nebula.prod
+       - host: jaeger-collector-sc.ops-dr.nebula.prod
          servicePort: 4317
     pathType:
 
