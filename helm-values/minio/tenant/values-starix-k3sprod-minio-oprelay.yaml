@@ -19,7 +19,7 @@ tenant:
       open-replay: "yes"
     tolerations:
     - effect: NoSchedule
-      key: open-relay
+      key: open-replay
       value: "yes"
 
   metrics:
