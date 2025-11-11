@@ -228,7 +228,7 @@ config:
       Name modify
       Match_Regex scpt2.*
       Add env prod
-      Add region kl
+      Add region ak
       Add org lumi
       Add team pentagon
       Add engine k8s
@@ -237,7 +237,7 @@ config:
       Name modify
       Match_Regex scut2.*
       Add env uat
-      Add region kl
+      Add region ak
       Add org lumi
       Add team pentagon
       Add engine k8s
@@ -246,7 +246,7 @@ config:
       Name modify
       Match_Regex stpt2.*
       Add env prod
-      Add region kl
+      Add region ak
       Add org starix
       Add team starix
       Add engine k8s
@@ -255,7 +255,7 @@ config:
       Name modify
       Match_Regex alpt2.*
       Add env prod
-      Add region kl
+      Add region ak
       Add org starix
       Add team alpha
       Add engine k8s
@@ -264,7 +264,7 @@ config:
       Name modify
       Match_Regex wspt2.*
       Add env prod
-      Add region kl
+      Add region ak
       Add org starix
       Add team wabisabi
       Add engine k8s
@@ -273,7 +273,7 @@ config:
       Name modify
       Match_Regex stut2.*
       Add env uat
-      Add region kl
+      Add region ak
       Add org starix
       Add team starix
       Add engine k8s
@@ -282,7 +282,7 @@ config:
       Name modify
       Match dopt2.*
       Add env prod
-      Add region kl
+      Add region ak
       Add org devops
       Add engine k3s
 
@@ -290,7 +290,7 @@ config:
       Name modify
       Match dout2.*
       Add env uat
-      Add region kl
+      Add region ak
       Add org devops
       Add engine k3s
 
