@@ -31,18 +31,18 @@ prometheus:
   remoteWrite:
     - name: "sre-mimir"
       url: "http://mimir.sgt1pkl.oneops.net/api/v1/push"
-      # proxy_url: "http://iusqd.gamora.prod:8801"
+      proxyUrl: "http://iusqd.gamora.prod:8801"
       headers:
         X-Scope-OrgID: "k8s-sc-prod"
-      queue_config:
-        retry_on_rate_limit: true
+      queueConfig:
+        retryOnRateLimit: true
         capacity: 50000
-        max_shards: 100
-        min_shards: 20
-        max_samples_per_send: 10000
-        batch_send_deadline: 5s
-        min_backoff: 60ms
-        max_backoff: 10s
+        maxShards: 100
+        minShards: 20
+        maxSamplesPerSend: 10000
+        batchSendDeadline: 5s
+        minBackoff: 60ms
+        maxBackoff: 10s
 
 
   resourcesPreset: "xlarge"
