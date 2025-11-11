@@ -652,8 +652,8 @@ resources:
   limits:
     memory: "1500Mi"
 
-nodeSelector:
-  logstash: "yes"
+# nodeSelector:
+#   logstash: "yes"
 
 httpPort: 9600
 extraPorts:
