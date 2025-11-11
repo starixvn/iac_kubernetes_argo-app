@@ -16,6 +16,10 @@ tenant:
     storageClassName: local-path
     nodeSelector:
       open-replay: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: open-relay
+      value: "yes"
 
   metrics:
     enabled: true
