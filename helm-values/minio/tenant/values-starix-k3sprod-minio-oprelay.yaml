@@ -44,6 +44,8 @@ tenant:
     value: "http://prometheus-atx-k3sprod-kub-prometheus.monitoring.svc:9090"
   - name: MINIO_STORAGE_CLASS_STANDARD
     value: "EC:1"
+  - name: MINIO_STORAGE_CLASS_RRS
+    value: "EC:0"
 
 
 ingress:
