@@ -27,3 +27,9 @@ master:
     accessModes:
       - ReadWriteOnce
     size: 10Gi
+
+sysctlImage:
+  enabled: true
+  registry: lumhub.ops-dr.nebula.prod/kbt/base
+  repository: os-shell
+  tag: 12-debian-12-r16
