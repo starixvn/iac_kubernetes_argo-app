@@ -53,17 +53,13 @@ controller:
       targetPort: http
       nodePort: 31088
 
-  # logging:
-  #   traffic:
-  #     # address: "logstash-atx-k3sprod-logstash.logging.svc"
-  #     # port: "5045"
-  #     # format: "rfc3164"
-  #     # facility: "local1"
-  #     address: "flb.ops-klprod.gamora.prod"
-  #     port: "31178"
-  #     format: "rfc5424"
-  #     facility: "local1"
-  #     length: "65535"
+  logging:
+    traffic:
+      address: "flb.ops-dr.nebula.prod"
+      port: "31172"
+      format: "rfc5424"
+      facility: "local1"
+      length: "65535"
 
   resources:
     requests:
