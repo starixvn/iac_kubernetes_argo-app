@@ -1,9 +1,11 @@
 controller:
   kind: DaemonSet
-  # image:
-  #   registry: "nexhub.ops-klprod.gamora.prod"
-  #   image:  "kbt/base/ingress-nginx/controller"
-  #   tag: "v1.13.0"
+  image:
+    registry: "nexhub.ops-klprod.gamora.prod"
+    image:  "kbt/base/ingress-nginx/controller"
+    tag: "v1.13.0"
+    digest: ""
+    digestChroot: ""
   
   config:
     strict-validate-path-type: "false"
