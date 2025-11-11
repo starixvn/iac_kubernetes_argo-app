@@ -1,6 +1,6 @@
 ---
 tenant:
-  name: oprelay
+  name: opreplay
   configuration:
     name: myminio-env-configuration
   configSecret:
