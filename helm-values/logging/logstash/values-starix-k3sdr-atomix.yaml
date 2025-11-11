@@ -56,28 +56,6 @@ logstashPipeline:
       }
     }
 
-  beats_filter.conf: |
-    filter {
-      if [type] == "beats" {
-        if [@metadata][beat] == "winlogbeat" {
-          if "uat" in [tags] {
-            mutate {
-              add_field => {"env" => "uat"}
-            }
-          }
-          else if "prod" in [tags] {
-            mutate {
-              add_field => {"env" => "prod"}
-            }
-          }
-
-          mutate {
-            add_tag => ["winlogbeat"]
-          }
-        }
-      }
-    }
-
   vault_filter.conf: |
     filter {
       if [type] == "vault" {
@@ -102,177 +80,6 @@ logstashPipeline:
       }
     }
 
-  syslog_filter.conf: |
-    filter {
-      if [type] == "syslog" {
-        if [program] == "haproxy" {
-          if [facility_label] == "local1" {
-            mutate {
-              add_tag => ["haproxy_access", "hap-ing", "k3sprod"]
-              add_field => { "env" => "prod" }
-              add_field => { "org" => "starix" }
-              add_field => { "region" => "kl" }
-              add_field => { "engine" => "k3s" }
-            }
-          } 
-          else if [facility_label] == "local3" {
-            mutate {
-              add_tag => ["haproxy_access", "hap-swarm", "st", "alphaklprod"]
-              add_field => { "env" => "prod" }
-              add_field => { "org" => "alpha" }
-              add_field => { "region" => "kl" }
-              add_field => { "engine" => "swarm" }
-            }
-          }
-          else if [facility_label] == "local4" {
-            mutate {
-              add_tag => ["haproxy_access", "hap-swarm", "st", "stklprod"]
-              add_field => { "env" => "prod" }
-              add_field => { "org" => "starix" }
-              add_field => { "region" => "kl" }
-              add_field => { "engine" => "swarm" }
-            }
-          }
-          else if [facility_label] == "local5" {
-            mutate {
-              add_tag => ["haproxy_access", "hap-swarm", "st", "fpsklprod"]
-              add_field => { "env" => "prod" }
-              add_field => { "org" => "fps" }
-              add_field => { "region" => "kl" }
-              add_field => { "engine" => "swarm" }
-            }
-          }
-          else if [facility_label] == "local7" {
-            mutate {
-              add_tag => ["haproxy_access", "hap-ing", "sc", "scklprod"]
-              add_field => { "env" => "prod" }
-              add_field => { "org" => "lumi" }
-              add_field => { "region" => "kl" }
-              add_field => { "engine" => "k8s" }
-            }
-          }
-          else {
-            mutate {
-              add_tag => ["haproxy_access"]
-            }
-          }
-        }
-      }
-
-      if "haproxy_access" in [tags] {
-        grok {
-          match => {
-            "message" => [
-              "%{HAPROXYHTTPBASE}",
-              "%{HAPROXYHTTP}",
-              "%{HAPROXYTCP}",
-              "%{HAPROXYGW}"
-            ]
-          }
-        }
-        if ![accept_date] {
-          grok { match => ["message", "%{HAPROXYDATE:accept_date}"] }
-        }
-        if [captured_request_headers] {
-          grok { match => {
-              "captured_request_headers" => [
-                "%{DATA:request_host}\|%{DATA:user-agent}\|%{DATA:request_referer}\|(%{IP:TrueClientIP})?" 
-              ]
-            }
-          }
-
-          # Define expected headers
-          mutate {
-            add_field => {
-              "[_tmp][header_names]" => "Host|User-Agent|Referer|X-Forwarded-For"
-            }
-          }
-
-          # Standarized headers field
-          ruby {
-            code => '
-              raw_header = event.get("captured_request_headers")
-              if raw_header.is_a?(String)
-                split_headers = raw_header.split("|", -1)
-                event.set("captured_request_headers", split_headers)
-              end
-              raw_header_name = event.get("[_tmp][header_names]")
-              if raw_header_name.is_a?(String)
-                split_headers = raw_header_name.split("|", -1)
-                event.set("[_tmp][header_names]", split_headers)
-              end
-              header_keys = event.get("[_tmp][header_names]")
-              header_vals = event.get("captured_request_headers")
-
-              if header_keys.is_a?(Array) && header_vals.is_a?(Array)
-                if header_keys.length == header_vals.length
-                  headers = header_keys.zip(header_vals).map do |k, v|
-                    { "name" => k, "value" => v }
-                  end
-                  event.set("[httpRequest][headers]", headers)
-                else
-                  event.tag("header_parse_mismatch")
-                  event.set("[httpRequest][headers_parse_error]", {
-                    "expected_keys" => header_keys.length,
-                    "actual_values" => header_vals.length
-                  })
-                end
-              else
-                event.tag("header_parse_error")
-              end
-            '
-          }
-
-          # Cleanup temporary fields
-          mutate {
-            remove_field => ["_tmp"]
-          }
-        }
-        mutate {
-          remove_field => ["captured_response_cookie","haproxy_time","haproxy_month","haproxy_hour","srvconn","backend_queue","retries","termination_state"]
-          remove_field => ["haproxy_monthday","time_backend_connect","pid","srv_queue","beat","beconn","client_port","haproxy_milliseconds","@version"]
-          remove_field => ["haproxy_minute","offset","haproxy_second","actconn","program","haproxy_year","feconn","http_version"]
-          remove_field => ["prospector","time_duration","time_queue","syslog_timestamp","captured_request_cookie","timestamp8601"]
-          convert => {
-            "http_status_code" => "integer"
-            "time_backend_response" => "integer"
-          }
-        }
-        if "hap-swarm" in [tags] {
-          date {
-            match => ["accept_date", "dd/MMM/yyyy:HH:mm:ss.SSS"]
-            timezone => "Asia/Taipei"
-          }
-        }
-        else if "hap-ing" in [tags] {
-          date {
-            match => ["accept_date", "dd/MMM/yyyy:HH:mm:ss.SSS"]
-            timezone => "UTC"
-          }
-        }
-        if [TrueClientIP] {
-          geoip { source => "TrueClientIP" }
-        }
-
-        if "hap-gw" in [tags] {
-        }
-        else if "k3sprod" in [tags] {
-          if [http_status_code] == 200 and [time_backend_response] < 5000 { drop {} }
-          else if [backend_name] == "stats" { drop {} }
-        }
-        else if "hap-swarm" in [tags] {
-          if [captured_request_headers] =~ /^(Zabbix|Prometheus|sentry|sonarqube|portainer|axios|grafana|whoami|ansible|deploy|rocketor|kibana|haproxy|logs.lumigame.com|npm.lumigame.com)/ { drop {} }
-          else if [message] =~ /^(Zabbix|Prometheus|sentry|sonarqube|portainer|axios|health|whoami|healthz|grafana|ansible|deploy|rocketor|kibana|haproxy|logs.lumigame.com|npm.lumigame.com)/ { drop {} }
-          # else if [http_status_code] == 200 and [time_backend_response] < 5000 { drop {} }
-        }
-        else if "hap-ing" in [tags] {
-          if [captured_request_headers] =~ /^(Zabbix|Prometheus|sentry|sonarqube|portainer|axios|grafana|whoami|ansible|deploy|rocketor|kibana|haproxy|logs.lumigame.com|npm.lumigame.com)/ { drop {} }
-          else if [message] =~ /^(Zabbix|Prometheus|sentry|sonarqube|portainer|axios|health|whoami|healthz|grafana|ansible|deploy|rocketor|kibana|haproxy|logs.lumigame.com|npm.lumigame.com)/ { drop {} }
-          else if [backend_name] == "stats" { drop {} }
-        }
-      }
-    }
-
   debug_filter.conf: |
     filter {
       if [type] == "debug" {
@@ -289,44 +96,6 @@ logstashPipeline:
         }
       }
     }
-    # filter {
-    #   if [type] == "debug" {
-    #     grok {
-    #       match => {
-    #         "message" => [
-    #           "%{HAPROXYHTTPBASE}",
-    #           "%{HAPROXYHTTP}",
-    #           "%{HAPROXYTCP}",
-    #           "%{HAPROXYGW}"
-    #         ]
-    #       }
-    #     }
-    #     if ![accept_date] {
-    #       grok { match => ["message", "%{HAPROXYDATE:accept_date}"] }
-    #     }
-    #     if [captured_request_headers] {
-    #       grok { match => {
-    #           "captured_request_headers" => [ "%{HTTP_CAPTURED_HEADER}" ]
-    #         }
-    #       }
-    #     }
-    #     mutate {
-    #       remove_field => ["captured_response_cookie","haproxy_time","haproxy_month","haproxy_hour","srvconn","backend_queue","retries","termination_state"]
-    #       remove_field => ["haproxy_monthday","time_backend_connect","pid","srv_queue","beat","beconn","client_port","haproxy_milliseconds","@version"]
-    #       remove_field => ["haproxy_minute","offset","haproxy_second","actconn","source","program","haproxy_year","feconn","http_version"]
-    #       remove_field => ["prospector","time_duration","time_queue","syslog_timestamp","captured_request_cookie","timestamp8601"]
-    #       convert => {
-    #         "http_status_code" => "integer"
-    #         "time_backend_response" => "integer"
-    #       }
-    #     }
-    #     date {
-    #       match => ["accept_date", "dd/MMM/yyyy:HH:mm:ss.SSS"]
-    #       timezone => "Asia/Taipei"
-    #     }
-    #     geoip {source => "TrueClientIP"}
-    #   }
-    # }
 
   http_app_pioneers.conf: |
     filter {
@@ -341,22 +110,6 @@ logstashPipeline:
             remove_field => ["[headers][request_path]", "[headers][http_host]", "[headers][content_type]", "[headers][content_length]", "host"]
           }
         }
-        # if [Properties][Team] == "Pioneers" {
-        #   mutate {
-        #     remove_field => ["[Renderings]", "[Properties][HttpLog]", "MessageTemplate", "[Properties][Elapsed]", "[Properties][SourceContext]"]
-        #   }
-        #   if [Properties][RequestPath] == "/" { drop {} }
-        #   if [Properties][Application] == "Deposit.ApiGateways" {
-        #     mutate {
-        #       add_tag => ["deposit-apigw"]
-        #     }
-        #   }
-        #   if [Properties][Application] == "Licensee.AdminSetting.API" {
-        #     mutate {
-        #       add_tag => ["licensee-adminsetting"]
-        #     }
-        #   }
-        # }
       }
     }
 
@@ -418,7 +171,7 @@ logstashPipeline:
             password => "logstash"
             ssl => true
             ssl_certificate_verification => false
-            index => "logstash-vault-audit-starix-klprod"
+            index => "logstash-vault-audit-st-prod"
             action => "create"
           }        
         }
@@ -429,81 +182,9 @@ logstashPipeline:
             password => "logstash"
             ssl => true
             ssl_certificate_verification => false
-            index => "logstash-vault-unknown"
-            action => "create"
-          }       
-        }
-      }
-    }
-
-  syslog_output.conf: |
-    output {
-      if [type] == "syslog" {
-        if [engine] == "swarm" and [env] == "prod" and [org] == "alpha" {
-          opensearch {
-            hosts => ["https://opsearch-atx-k3sdr.logging:9200"]
-            user => "logstash"
-            password => "logstash"
-            ssl => true
-            ssl_certificate_verification => false
-            index => "logstash-haproxy-swarm-starix-alphaklprod"
-            action => "create"
-          }
-        }
-        else if [engine] == "swarm" and [env] == "prod" and [org] == "starix" {
-          opensearch {
-            hosts => ["https://opsearch-atx-k3sdr.logging:9200"]
-            user => "logstash"
-            password => "logstash"
-            ssl => true
-            ssl_certificate_verification => false
-            index => "logstash-haproxy-swarm-starix-klprod"
-            action => "create"
-          }
-        }
-        else if [engine] == "swarm" and [env] == "prod" and [org] == "fps" {
-          opensearch {
-            hosts => ["https://opsearch-atx-k3sdr.logging:9200"]
-            user => "logstash"
-            password => "logstash"
-            ssl => true
-            ssl_certificate_verification => false
-            index => "logstash-haproxy-swarm-fpsklprod-klprod"
-            action => "create"
-          }
-        }
-        else if [engine] == "k3s" and [env] == "prod" and [org] == "starix" {
-          opensearch {
-            hosts => ["https://opsearch-atx-k3sdr.logging:9200"]
-            user => "logstash"
-            password => "logstash"
-            ssl => true
-            ssl_certificate_verification => false
-            index => "logstash-haproxy-ing-k3sprod-prod"
-            action => "create"
-          }
-        }
-        else if [engine] == "k8s" and [env] == "prod" and [org] == "lumi" {
-          opensearch {
-            hosts => ["https://opsearch-atx-k3sdr.logging:9200"]
-            user => "logstash"
-            password => "logstash"
-            ssl => true
-            ssl_certificate_verification => false
-            index => "logstash-haproxy-ing-sc-klprod"
-            action => "create"
-          }
-        }
-        else {
-          opensearch {
-            hosts => ["https://opsearch-atx-k3sdr.logging:9200"]
-            user => "logstash"
-            password => "logstash"
-            ssl => true
-            ssl_certificate_verification => false
             index => "logstash-unknown"
             action => "create"
-          }         
+          }       
         }
       }
     }
@@ -534,7 +215,7 @@ logstashPipeline:
               password => "logstash"
               ssl => true
               ssl_certificate_verification => false
-              index => "logstash-alpha-apiext-klprod"
+              index => "logstash-alpha-apiext-prod"
               action => "create"
             }
           }
@@ -545,7 +226,7 @@ logstashPipeline:
               password => "logstash"
               ssl => true
               ssl_certificate_verification => false
-              index => "logstash-pioneers-klprod-haproxy-nexcel"
+              index => "logstash-pioneers-prod-haproxy-nexcel"
               action => "create"
             }
           }
@@ -556,7 +237,7 @@ logstashPipeline:
               password => "logstash"
               ssl => true
               ssl_certificate_verification => false
-              index => "logstash-pioneers-klprod-default"
+              index => "logstash-pioneers-prod-default"
               action => "create"
             }
           }
@@ -569,7 +250,7 @@ logstashPipeline:
               password => "logstash"
               ssl => true
               ssl_certificate_verification => false
-              index => "logstash-subarashi-deposit-api-klprod"
+              index => "logstash-subarashi-deposit-api-prod"
               action => "create"
             }
           }
@@ -580,7 +261,7 @@ logstashPipeline:
               password => "logstash"
               ssl => true
               ssl_certificate_verification => false
-              index => "logstash-subarashi-klprod-default"
+              index => "logstash-subarashi-prod-default"
               action => "create"
             }
           }
@@ -610,7 +291,7 @@ logstashPipeline:
               password => "logstash"
               ssl => true
               ssl_certificate_verification => false
-              index => "logstash-subarashi-klprod-default"
+              index => "logstash-subarashi-prod-default"
               action => "create"
             }
           }
