@@ -10,10 +10,10 @@ tenant:
 
 
   pools:
-  - servers: 2
+  - servers: 1
     name: pool-0
     volumesPerServer: 2
-    size: 150Gi
+    size: 300Gi
     storageClassName: local-path
     nodeSelector:
       open-replay: "yes"
