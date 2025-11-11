@@ -8,6 +8,9 @@ tenant:
     accessKey: nexops
     secretKey: Ilu@n3xc3l12
 
+  image:
+    repository: nexhub.ops-klprod.gamora.prod/kbt/base/minio/minio
+    tag: RELEASE.2024-10-02T17-50-41Z
 
   pools:
   - servers: 1
