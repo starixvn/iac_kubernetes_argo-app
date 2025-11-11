@@ -4,6 +4,7 @@ operator:
     repository: nexhub.ops-klprod.gamora.prod/kbt/base/minio/operator
   sidecarImage:
     repository: nexhub.ops-klprod.gamora.prod/kbt/base/minio/operator-sidecar
+    tag: v6.0.2
 
   env:
   - name: MINIO_OPERATOR_RUNTIME
