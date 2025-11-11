@@ -31,7 +31,7 @@ prometheus:
   remoteWrite:
     - name: "sre-mimir"
       url: "http://mimir.sgt1pkl.oneops.net/api/v1/push"
-      proxy_url: "http://iusqd.gamora.prod:8801"
+      # proxy_url: "http://iusqd.gamora.prod:8801"
       headers:
         X-Scope-OrgID: "k8s-sc-prod"
       queue_config:
