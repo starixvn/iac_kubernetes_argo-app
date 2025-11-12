@@ -82,9 +82,9 @@ config:
       Name modify
       Match *
       Add env prod
-      Add region kl
-      Add org lumi
-      Add team pentagon
+      Add region ak
+      Add org starix
+      Add team alpha
       Add engine k8s
 
   outputs: |
