@@ -1,0 +1,8 @@
+global:
+  image:
+    repository: https://hub.nexdev.net/base/goauthentik/server
+    tag: "2025.10"
+geoip:
+  image:
+    repository: hub.nexdev.net/base/maxmind/geoipupdate
+    tag: v7.1.1
