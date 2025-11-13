@@ -168,12 +168,7 @@ argo_applications_by_team = {
         ]
       }
       #
-      authentik = {
-        namespace     = "authentik"
-        helm_path     = "authentik"
-        chart_version = "2025.10"
-        value_files = ["values-starix-nexprod-atomix.yaml",]
-      }      
+
 
     }
   }
