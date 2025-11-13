@@ -1,8 +1,8 @@
 global:
-  image:
-    repository: hub.nexdev.net/base/goauthentik/server
-    tag: "2025.10.1"
-    pullPolicy: IfNotPresent
+  # image:
+  #   repository: hub.nexdev.net/base/goauthentik/server
+  #   tag: "2025.10.1"
+  #   pullPolicy: IfNotPresent
 server:
   resources:
     requests:
@@ -19,7 +19,7 @@ server:
 #     limits:
 #       memory: 128Mi
 
-## Authentik configuration
-authentik:
-  outposts:
-    container_image_base: hub.nexdev.net/base/goauthentik/%(type)s:%(version)s
+# ## Authentik configuration
+# authentik:
+#   outposts:
+#     container_image_base: hub.nexdev.net/base/goauthentik/%(type)s:%(version)s
