@@ -27,7 +27,7 @@ databases:
         effect: "NoSchedule"
     persistence:
       size: 30Gi
-      storageClass: "longhorn-stricted"
+      storageClass: "longhorn-effort-2rep"
 
   minio:
     enabled: false
@@ -47,9 +47,9 @@ databases:
       - key: "open-replay"
         value: "yes"
         effect: "NoSchedule"
-    persistence:
-      size: 10Gi
-      storageClass: "longhorn-stricted"
+      persistence:
+        size: 10Gi
+        storageClass: "longhorn-effort-2rep"
 
 
   clickhouse:
