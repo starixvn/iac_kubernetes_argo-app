@@ -97,7 +97,7 @@ The `helm-values` folder contains Helm chart values files for all managed applic
 
 ---
 
-## How It Works: Detailed Workflow
+## How It Works:
 
 1. **Select Organization & Environment**
    - User or pipeline chooses the target organization (`lumi` or `starix`) and environment (e.g., `prod`, `dr`, `k3sprod`).
