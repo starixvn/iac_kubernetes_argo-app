@@ -1,0 +1,343 @@
+fromVersion: "v1.22.0"
+skipMigration: true
+
+tags:
+  db: true
+  app: true
+
+
+databases:
+  postgresql:
+    fullnameOverride: openreplay-postgresql
+    image:
+      registry: nexhub.ops-klprod.gamora.prod
+      repository: kbt/base/bitnami/postgresql
+      tag: 17.4.0-debian-12-r13
+    resources:
+      requests:
+        memory: 256Mi
+      limits:
+        memory: 4000Mi
+    master:
+      nodeSelector:
+        open-replay: "yes"
+      tolerations:
+      - key: "open-replay"
+        value: "yes"
+        effect: "NoSchedule"
+    persistence:
+      size: 30Gi
+      storageClass: "longhorn-effort-2rep"
+
+  minio:
+    enabled: false
+  redis:
+    image:
+      registry: nexhub.ops-klprod.gamora.prod
+      repository: kbt/base/bitnami/redis
+      tag: 7.2.5-debian-12-r4
+    fullnameOverride: openreplay-redis
+    usePassword: false
+    cluster:
+      enabled: false
+    master:
+      nodeSelector:
+        open-replay: "yes"
+      tolerations:
+      - key: "open-replay"
+        value: "yes"
+        effect: "NoSchedule"
+      persistence:
+        size: 10Gi
+        storageClass: "longhorn-effort-2rep"
+
+
+  clickhouse:
+    enabled: true
+    fullnameOverride: "openreplay-clickhouse"
+    nameOverride: "openreplay-clickhouse"
+    image:
+      repository: nexhub.ops-klprod.gamora.prod/kbt/base/clickhouse/clickhouse-server
+      tag: "25.1-alpine"
+    backupImage:
+      repository: nexhub.ops-klprod.gamora.prod/kbt/base/alexakulov/clickhouse-backup
+      pullPolicy: IfNotPresent
+      tag: "latest"
+    nodeSelector:
+      open-replay: "yes"
+    tolerations:
+    - key: "open-replay"
+      value: "yes"
+      effect: "NoSchedule"
+  storageSize: 50Gi
+  storageClass: "longhorn-stricted"
+
+openreplay:
+  # skipMigration: true
+  ingress-nginx:
+    enabled: false
+
+  connector:
+    enabled: false
+
+  quickwit:
+    enbled: false
+    image:
+      repository: nexhub.ops-klprod.gamora.prod/kbt/base/quickwit/quickwit
+      pullPolicy: IfNotPresent
+      tag: "latest"
+
+  global:
+    clusterDomain: "svc.starix.k3sprod"
+
+  chalice:
+    env:
+      CH_COMPRESSION: "false"
+      SKIP_H_SSL: true
+      CLUSTER_URL: "svc.starix.k3sprod"
+    replicaCount: 2
+    nodeSelector:
+      open-replay: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: open-replay
+      value: "yes"    
+
+  alerts:
+    replicaCount: 2
+    nodeSelector:
+      open-replay: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: open-replay
+      value: "yes"
+
+  analytics:
+    replicaCount: 2
+    nodeSelector:
+      open-replay: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: open-replay
+      value: "yes"
+
+  assets:
+    replicaCount: 2
+    nodeSelector:
+      open-replay: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: open-replay
+      value: "yes"
+
+  assist:
+    replicaCount: 2
+    nodeSelector:
+      open-replay: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: open-replay
+      value: "yes"
+
+  canvases:
+    replicaCount: 2
+    nodeSelector:
+      open-replay: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: open-replay
+      value: "yes"
+
+  db:
+    replicaCount: 2
+    nodeSelector:
+      open-replay: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: open-replay
+      value: "yes"
+
+  ender:
+    replicaCount: 2
+    nodeSelector:
+      open-replay: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: open-replay
+      value: "yes"
+
+  frontend:
+    replicaCount: 2
+    nodeSelector:
+      open-replay: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: open-replay
+      value: "yes"
+
+  heuristics:
+    replicaCount: 2
+    nodeSelector:
+      open-replay: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: open-replay
+      value: "yes"
+  
+  http:
+    replicaCount: 2
+    nodeSelector:
+      open-replay: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: open-replay
+      value: "yes"
+  
+  images:
+    replicaCount: 2
+    nodeSelector:
+      open-replay: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: open-replay
+      value: "yes"
+  
+  integrations:
+    replicaCount: 2
+    nodeSelector:
+      open-replay: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: open-replay
+      value: "yes"
+
+  sink:
+    replicaCount: 2
+    nodeSelector:
+      open-replay: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: open-replay
+      value: "yes"
+
+  sourcemapreader:
+    replicaCount: 2
+    nodeSelector:
+      open-replay: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: open-replay
+      value: "yes"
+
+  spot:
+    replicaCount: 2
+    nodeSelector:
+      open-replay: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: open-replay
+      value: "yes"
+
+  storage:
+    replicaCount: 2
+    nodeSelector:
+      open-replay: "yes"
+    tolerations:
+    - effect: NoSchedule
+      key: open-replay
+      value: "yes"
+
+
+
+
+clickhouse: &clickhouse
+  enabled: true
+  chHost: clickhouse-openreplay-clickhouse
+  username: default
+  password: ""
+  service:
+    webPort: 9000
+    dataPort: 8123
+  
+
+kafka: &kafka
+  enabled: false
+
+redis: &redis
+  enabled: true
+  redisHost: "openreplay-redis-master"
+  redisPort: "6379"
+
+minio:
+  # Disable this if you use an external object storage service (s3)
+  enabled: false
+  global:
+    minio:
+      accessKey: &accessKey "openreplay"
+      secretKey: &secretKey "8~Hb2+_210l$1IzXZxc"
+
+# For enterpriseEdition
+quickwit: &quickwit
+  enabled: false
+
+
+# For enterpriseEdition
+connector: &connector
+  enabled: false
+
+postgresql: &postgres
+  postgresqlPassword: "super-secure-password"
+  postgresqlHost: "openreplay-postgresql"
+  postgresqlPort: "5432"
+  postgresqlUser: "postgres"
+  postgresqlDatabase: "postgres"
+
+ingress: &nginx-ingress
+  className: "nginx"
+  controller:
+    ingressClassResource:
+      name: "nginx"
+    ingressClassName: "nginx"
+    ingressClass: nginx
+
+
+global:
+  ingress: *nginx-ingress
+  postgresql: *postgres
+  kafka: *kafka
+  redis: *redis
+  quickwit: *quickwit
+  clickhouse: *clickhouse
+  connector: *connector
+  openReplayContainerRegistry: "nexhub.ops-klprod.gamora.prod/kbt/ecr-proxy/p1t3u8a3"
+  assistKey: "p^qVt8cfqp-YyP6Cb?lI"
+  assistJWTSecret: "p^qVt8cfqp-YyP6Cb?lI"
+  jwtSecret: "p^qVt8cfqp-YyP6Cb?lI"
+  jwtSpotSecret: "p^qVt8cfqp-YyP6Cb?lI"
+  tokenSecret: "p^qVt8cfqp-YyP6Cb?lI"
+  pvcRWXName: "openreplay-rwx"
+  clusterDomain: "svc.starix.k3sprod"
+  s3:
+    region: "minio"
+    endpoint: "http://minio:9000"
+    assetsBucket: "openreplay-sessions-assets"
+    recordingsBucket: "openreplay-mobs"
+    sourcemapsBucket: "openreplay-sourcemaps"
+    spotsBucket: "openreplay-spots"
+    # if you're using one node installation, where
+    # you're using local s3, make sure these variables
+    # are same as minio.global.minio.accesskey and  secretKey
+    accessKey: *accessKey
+    secretKey: *secretKey  
+  domainName: "replay.sabagame.com"
+  env:
+    HTTP_PROXY: "http://iusqd.gamora.prod:8801"
+    HTTPS_PROXY: "http://iusqd.gamora.prod:8801"
+    NO_PROXY: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.starix.k3sprod,.tf-atx-minio-opreplay,.svc,clickhouse-openreplay-clickhouse"
+
+
+chalice:
+  env:
+    JWT_REFRESH_SECRET: "p^qVt8cfqp-YyP6Cb?lI"
+    JWT_SPOT_REFRESH_SECRET: "p^qVt8cfqp-YyP6Cb?lI"
+
