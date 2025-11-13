@@ -18,3 +18,8 @@ server:
 #       memory: 128Mi
 #     limits:
 #       memory: 128Mi
+
+## Authentik configuration
+authentik:
+  outposts:
+    container_image_base: hub.nexdev.net/base/goauthentik/%(type)s:%(version)s
