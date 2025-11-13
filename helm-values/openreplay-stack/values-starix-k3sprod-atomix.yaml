@@ -333,7 +333,7 @@ global:
   env:
     HTTP_PROXY: "http://iusqd.gamora.prod:8801"
     HTTPS_PROXY: "http://iusqd.gamora.prod:8801"
-    NO_PROXY: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.starix.k3sprod,.tf-atx-minio-opreplay,.svc"
+    NO_PROXY: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.starix.k3sprod,.tf-atx-minio-opreplay,.svc,clickhouse-openreplay-clickhouse"
 
 
 chalice:
