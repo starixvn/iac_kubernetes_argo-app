@@ -73,7 +73,7 @@ databases:
   storageClass: "longhorn-stricted"
 
 openreplay:
-  skipMigration: true
+  # skipMigration: true
   ingress-nginx:
     enabled: false
 
