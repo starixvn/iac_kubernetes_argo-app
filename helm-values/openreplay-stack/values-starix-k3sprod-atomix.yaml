@@ -3,7 +3,7 @@ skipMigration: true
 
 tags:
   db: true
-  app: false
+  app: true
 
 
 databases:
