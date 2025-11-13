@@ -1,4 +1,4 @@
-global:
+# global:
   # image:
   #   repository: hub.nexdev.net/base/goauthentik/server
   #   tag: "2025.10.1"
