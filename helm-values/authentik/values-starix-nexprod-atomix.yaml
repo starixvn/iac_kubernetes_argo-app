@@ -1,8 +1,10 @@
 global:
   image:
-    repository: https://hub.nexdev.net/base/goauthentik/server
+    repository: hub.nexdev.net/base/goauthentik/server
     tag: "2025.10"
+    pullPolicy: IfNotPresent
 geoip:
   image:
     repository: hub.nexdev.net/base/maxmind/geoipupdate
-    tag: v7.1.1
+    tag: "v7.1.1"
+    pullPolicy: IfNotPresent
