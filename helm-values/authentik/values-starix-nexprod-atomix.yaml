@@ -1,3 +1,8 @@
+global:
+  image:
+    repository: ghcr.io/goauthentik/server
+    tag: "2025.10.1"
+    pullPolicy: IfNotPresent
 server:
   resources:
     requests:
@@ -6,10 +11,10 @@ server:
     limits:
       memory: 512Mi
 
-geoip:
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      memory: 128Mi
+# geoip:
+#   resources:
+#     requests:
+#       cpu: 100m
+#       memory: 128Mi
+#     limits:
+#       memory: 128Mi
