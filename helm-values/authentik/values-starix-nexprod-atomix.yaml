@@ -39,28 +39,26 @@ server:
             - authentik.nexdev.net
 
 ## authentik worker
-worker:
-  # resources:
-  #   requests:
-  #     cpu: 100m
-  #     memory: 512Mi
-  #   limits:
-  #     memory: 512Mi
-  securityContext:
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 1000
-  # -- authentik worker container-level security context
-  containerSecurityContext:
-    # Not all of the following has been tested. Use at your own risk.
-    runAsNonRoot: true
-    readOnlyRootFilesystem: true
-    allowPrivilegeEscalation: false
-    seccomProfile:
-      type: RuntimeDefault
-    capabilities:
-      drop:
-        - ALL
+# worker:
+#   resources:
+#     requests:
+#       cpu: 100m
+#       memory: 512Mi
+#     limits:
+#       memory: 512Mi
+#   securityContext:
+#     runAsUser: 1000
+#     runAsGroup: 1000
+#     fsGroup: 1000
+#   containerSecurityContext:
+#     runAsNonRoot: true
+#     readOnlyRootFilesystem: true
+#     allowPrivilegeEscalation: false
+#     seccomProfile:
+#       type: RuntimeDefault
+#     capabilities:
+#       drop:
+#         - ALL
 
 # geoip:
 #   # -- enable GeoIP sidecars for the authentik server and worker pods
