@@ -19,7 +19,23 @@
 #     limits:
 #       memory: 128Mi
 
-# ## Authentik configuration
-# authentik:
-#   outposts:
-#     container_image_base: hub.nexdev.net/base/goauthentik/%(type)s:%(version)s
+## Authentik configuration
+authentik:
+  secret_key: "vTueira+5JX5k1x4uovH9i71K/lR9Bad0yY/OPKkz/aulaLIbr5RyfrRMXtYBriuSQdJTtBzZMzGm+km"
+  error_reporting:
+    enabled: true
+  postgresql:
+    password: "mujQIawBoV8OOd3LRPiVmDkWfTGxx8HIQxWBUizoBEo3tTh6AK"
+postgresql:
+  enabled: true
+  auth:
+    password: "mujQIawBoV8OOd3LRPiVmDkWfTGxx8HIQxWBUizoBEo3tTh6AK"
+redis:
+  enabled: true
+server:
+    ingress:
+        # Specify kubernetes ingress controller class name
+        ingressClassName: nginx
+        enabled: true
+        hosts:
+            - authentik.nexdev.net
