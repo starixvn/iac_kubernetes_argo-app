@@ -40,12 +40,12 @@ server:
 
 ## authentik worker
 worker:
-  resources:
-    requests:
-      cpu: 100m
-      memory: 512Mi
-    limits:
-      memory: 512Mi
+  # resources:
+  #   requests:
+  #     cpu: 100m
+  #     memory: 512Mi
+  #   limits:
+  #     memory: 512Mi
   securityContext:
     runAsUser: 1000
     runAsGroup: 1000
@@ -62,31 +62,31 @@ worker:
       drop:
         - ALL
 
-geoip:
-  # -- enable GeoIP sidecars for the authentik server and worker pods
-  enabled: false
-  image:
-    repository: hub.nexdev.net/base/maxmind/geoipupdate
-    tag: "v7.1.1"
-    pullPolicy: IfNotPresent
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      memory: 128Mi
+# geoip:
+#   # -- enable GeoIP sidecars for the authentik server and worker pods
+#   enabled: false
+#   image:
+#     repository: hub.nexdev.net/base/maxmind/geoipupdate
+#     tag: "v7.1.1"
+#     pullPolicy: IfNotPresent
+#   resources:
+#     requests:
+#       cpu: 100m
+#       memory: 128Mi
+#     limits:
+#       memory: 128Mi
 
-  # -- GeoIP container-level security context
-  containerSecurityContext:
-    # Not all of the following has been tested. Use at your own risk.
-    runAsNonRoot: true
-    readOnlyRootFilesystem: true
-    allowPrivilegeEscalation: false
-    seccomProfile:
-      type: RuntimeDefault
-    capabilities:
-      drop:
-        - ALL
+#   # -- GeoIP container-level security context
+#   containerSecurityContext:
+#     # Not all of the following has been tested. Use at your own risk.
+#     runAsNonRoot: true
+#     readOnlyRootFilesystem: true
+#     allowPrivilegeEscalation: false
+#     seccomProfile:
+#       type: RuntimeDefault
+#     capabilities:
+#       drop:
+#         - ALL
 
 
 # prometheus:
