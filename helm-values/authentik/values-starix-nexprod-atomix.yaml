@@ -65,7 +65,7 @@ worker:
 
 geoip:
   # -- enable GeoIP sidecars for the authentik server and worker pods
-  enabled: true
+  enabled: false
   image:
     repository: hub.nexdev.net/base/maxmind/geoipupdate
     tag: "v7.1.1"
