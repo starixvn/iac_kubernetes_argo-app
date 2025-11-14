@@ -175,7 +175,6 @@ argo_applications_by_team = {
         auto_sync     = false
         value_files = ["values-starix-nexprod-atomix.yaml",]
       }
-
     }
   }
   stx = {
