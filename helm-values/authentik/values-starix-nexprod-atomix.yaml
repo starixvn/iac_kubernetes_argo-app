@@ -39,13 +39,13 @@ server:
             - authentik.nexdev.net
 
 ## authentik worker
-# worker:
-#   resources:
-#     requests:
-#       cpu: 100m
-#       memory: 512Mi
-#     limits:
-#       memory: 512Mi
+worker:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      memory: 512Mi
 #   securityContext:
 #     runAsUser: 1000
 #     runAsGroup: 1000
