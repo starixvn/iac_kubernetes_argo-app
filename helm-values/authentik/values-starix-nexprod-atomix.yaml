@@ -3,13 +3,13 @@
   #   repository: hub.nexdev.net/base/goauthentik/server
   #   tag: "2025.10.1"
   #   pullPolicy: IfNotPresent
-server:
-  resources:
-    requests:
-      cpu: 100m
-      memory: 512Mi
-    limits:
-      memory: 512Mi
+# server:
+#   resources:
+#     requests:
+#       cpu: 100m
+#       memory: 512Mi
+#     limits:
+#       memory: 512Mi
 
 # geoip:
 #   resources:
