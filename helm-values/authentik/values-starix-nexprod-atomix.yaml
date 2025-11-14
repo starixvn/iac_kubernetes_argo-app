@@ -116,15 +116,15 @@ authentik:
 
 postgresql:
   enabled: true
-  image:
-    repository: hub.nexdev.net/base/authentik/postgres
-    tag: "17.6-bookworm"
-    pullPolicy: IfNotPresent
+  # image:
+  #   repository: hub.nexdev.net/base/authentik/postgres
+  #   tag: "17.6-bookworm"
+  #   pullPolicy: IfNotPresent
   auth:
     password: "mujQIawBoV8OOd3LRPiVmDkWfTGxx8HIQxWBUizoBEo3tTh6AK"
 redis:
   enabled: true
-  image:
-    repository: hub.nexdev.net/base/authentik/redis
-    tag: "8.2.1"
-    pullPolicy: IfNotPresent
+  # image:
+  #   repository: hub.nexdev.net/base/authentik/redis
+  #   tag: "8.2.1"
+  #   pullPolicy: IfNotPresent
