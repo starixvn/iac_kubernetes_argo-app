@@ -116,6 +116,7 @@ alertmanager:
           *Description:* `{{ .CommonAnnotations.description }}`
         color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
 
+
     - name: dev-services
       slack_configs:
       - channel: "#dev-services"
