@@ -1,23 +1,111 @@
-# global:
-  # image:
-  #   repository: hub.nexdev.net/base/goauthentik/server
-  #   tag: "2025.10.1"
-  #   pullPolicy: IfNotPresent
-# server:
-#   resources:
-#     requests:
-#       cpu: 100m
-#       memory: 512Mi
-#     limits:
-#       memory: 512Mi
+## Globally shared configuration for authentik components.
+global:
+  image:
+    repository: hub.nexdev.net/base/goauthentik/server
+    tag: "2025.10.1"
+    pullPolicy: IfNotPresent
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
 
-# geoip:
-#   resources:
-#     requests:
-#       cpu: 100m
-#       memory: 128Mi
-#     limits:
-#       memory: 128Mi
+## authentik server
+server:
+  # -- Resource limits and requests for the authentik server
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+  containerSecurityContext:
+    # Not all of the following has been tested. Use at your own risk.
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    seccomProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+        - ALL
+    ingress:
+        # Specify kubernetes ingress controller class name
+        ingressClassName: nginx
+        enabled: true
+        hosts:
+            - authentik.nexdev.net
+
+## authentik worker
+worker:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+  # -- authentik worker container-level security context
+  containerSecurityContext:
+    # Not all of the following has been tested. Use at your own risk.
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    seccomProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+        - ALL
+
+geoip:
+  # -- enable GeoIP sidecars for the authentik server and worker pods
+  enabled: true
+  image:
+    repository: hub.nexdev.net/base/maxmind/geoipupdate
+    tag: "v7.1.1"
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      memory: 128Mi
+
+  # -- GeoIP container-level security context
+  containerSecurityContext:
+    # Not all of the following has been tested. Use at your own risk.
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    seccomProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+        - ALL
+
+
+# prometheus:
+#   rules:
+#     enabled: false
+#     # -- PrometheusRule namespace
+#     namespace: ""
+#     # -- PrometheusRule selector
+#     selector: {}
+#       # prometheus: kube-prometheus
+
+#     # -- PrometheusRule labels
+#     labels: {}
+#     # -- PrometheusRule annotations
+#     annotations: {}
+#     # -- PrometheusRuleGroup additional annotations
+#     additionalRuleGroupAnnotations: {}
+
 
 ## Authentik configuration
 authentik:
@@ -26,16 +114,18 @@ authentik:
     enabled: true
   postgresql:
     password: "mujQIawBoV8OOd3LRPiVmDkWfTGxx8HIQxWBUizoBEo3tTh6AK"
+
 postgresql:
   enabled: true
+  image:
+    repository: hub.nexdev.net/base/postgres
+    tag: "17.6-bookworm"
+    pullPolicy: IfNotPresent
   auth:
     password: "mujQIawBoV8OOd3LRPiVmDkWfTGxx8HIQxWBUizoBEo3tTh6AK"
 redis:
   enabled: true
-server:
-    ingress:
-        # Specify kubernetes ingress controller class name
-        ingressClassName: nginx
-        enabled: true
-        hosts:
-            - authentik.nexdev.net
+  image:
+    repository: hub.nexdev.net/base/redis
+    tag: "8.2.1"
+    pullPolicy: IfNotPresent
