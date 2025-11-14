@@ -16,7 +16,7 @@ server:
       cpu: 100m
       memory: 512Mi
     limits:
-      memory: 512Mi
+      memory: 1Gi
   securityContext:
     runAsUser: 1000
     runAsGroup: 1000
