@@ -8,7 +8,6 @@ global:
     runAsUser: 1000
     runAsGroup: 1000
     fsGroup: 1000
-
 ## authentik server
 server:
   # -- Resource limits and requests for the authentik server
@@ -118,7 +117,7 @@ authentik:
 postgresql:
   enabled: true
   image:
-    repository: hub.nexdev.net/base/postgres
+    repository: hub.nexdev.net/base/authentik/postgres
     tag: "17.6-bookworm"
     pullPolicy: IfNotPresent
   auth:
@@ -126,6 +125,6 @@ postgresql:
 redis:
   enabled: true
   image:
-    repository: hub.nexdev.net/base/redis
+    repository: hub.nexdev.net/base/authentik/redis
     tag: "8.2.1"
     pullPolicy: IfNotPresent
