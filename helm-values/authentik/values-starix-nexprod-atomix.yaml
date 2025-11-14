@@ -21,16 +21,16 @@ server:
     runAsUser: 1000
     runAsGroup: 1000
     fsGroup: 1000
-  containerSecurityContext:
-    # Not all of the following has been tested. Use at your own risk.
-    runAsNonRoot: true
-    readOnlyRootFilesystem: true
-    allowPrivilegeEscalation: false
-    seccomProfile:
-      type: RuntimeDefault
-    capabilities:
-      drop:
-        - ALL
+  # containerSecurityContext:
+  #   # Not all of the following has been tested. Use at your own risk.
+  #   runAsNonRoot: true
+  #   readOnlyRootFilesystem: true
+  #   allowPrivilegeEscalation: false
+  #   seccomProfile:
+  #     type: RuntimeDefault
+  #   capabilities:
+  #     drop:
+  #       - ALL
     ingress:
         # Specify kubernetes ingress controller class name
         ingressClassName: nginx
