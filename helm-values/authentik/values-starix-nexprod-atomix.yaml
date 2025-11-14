@@ -46,19 +46,19 @@ worker:
       memory: 512Mi
     limits:
       memory: 512Mi
-#   securityContext:
-#     runAsUser: 1000
-#     runAsGroup: 1000
-#     fsGroup: 1000
-#   containerSecurityContext:
-#     runAsNonRoot: true
-#     readOnlyRootFilesystem: true
-#     allowPrivilegeEscalation: false
-#     seccomProfile:
-#       type: RuntimeDefault
-#     capabilities:
-#       drop:
-#         - ALL
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+  containerSecurityContext:
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    seccomProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+        - ALL
 
 # geoip:
 #   # -- enable GeoIP sidecars for the authentik server and worker pods
