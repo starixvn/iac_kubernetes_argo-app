@@ -15,10 +15,10 @@ prometheus:
     nodePorts:
       http: "30062"
   retention: 7d
-  retentionSize: "30GB"
+  retentionSize: "40GB"
   persistence:
     enabled: true
-    size: 20Gi
+    size: 30Gi
 
   # remoteWrite:
   #   - url: http://nginx-mimir.nexdev.net/api/v1/push
