@@ -54,11 +54,11 @@ worker:
     runAsNonRoot: true
     readOnlyRootFilesystem: true
     allowPrivilegeEscalation: false
-    seccomProfile:
-      type: RuntimeDefault
-    capabilities:
-      drop:
-        - ALL
+    # seccomProfile:
+    #   type: RuntimeDefault
+    # capabilities:
+    #   drop:
+    #     - ALL
 
 # geoip:
 #   # -- enable GeoIP sidecars for the authentik server and worker pods
