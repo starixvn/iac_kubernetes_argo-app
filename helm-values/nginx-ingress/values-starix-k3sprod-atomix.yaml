@@ -11,6 +11,7 @@ controller:
     strict-validate-path-type: "false"
     allow-snippet-annotations: "true"
     annotations-risk-level: "Critical"
+    ssl-redirect: "false"
   nodeSelector:
     open-replay: "yes"
   service:
