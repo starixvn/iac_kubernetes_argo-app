@@ -64,8 +64,8 @@ alertmanager:
       http_config:
         proxy_url: "http://lisasqd.nebula.prod:8801"
 
-    # route:
-    #   receiver: default-receiver
+    route:
+      receiver: default-receiver
     #   routes:
     #   - receiver: 'null'
     #     match_re:
@@ -103,7 +103,7 @@ alertmanager:
     #   group_interval: 5m
     #   repeat_interval: 12h
 
-    # receivers:
+    receivers:
     #   - name: 'null'
     #   - name: 'alert-nx-atomix'
     #     slack_configs:
@@ -200,7 +200,7 @@ alertmanager:
     #         url: "https://ops-klp.starixplay.com/app/data-explorer/discover/?security_tenant=private#/view/da533070-81a4-11f0-941a-9d0249d23087?_g=%28filters%3A%21%28%29%2CrefreshInterval%3A%28pause%3A%21t%2Cvalue%3A0%29%2Ctime%3A%28from%3Anow-15m%2Cto%3Anow%29%29"
 
 
-    #   - name: default-receiver
+      - name: default-receiver
 
 node-exporter:
   resourcesPreset: "medium"
