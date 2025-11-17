@@ -95,8 +95,8 @@ alertmanager:
       http_config:
         proxy_url: "http://lisasqd.nebula.prod:8801"
 
-#     route:
-#       receiver: 'default-receiver'
+    route:
+      receiver: 'default-receiver'
 #       routes:
 #       - receiver: 'null'
 #         match_re:
@@ -148,7 +148,7 @@ alertmanager:
 #       group_interval: 5m
 #       repeat_interval: 4h
 
-#     receivers:
+    receivers:
 #     - name: 'null'
 #     - name: 'longhorn_alerts'
 #       slack_configs:
@@ -238,7 +238,7 @@ alertmanager:
 #           color: '{{ if eq .Status "firing" }}#FF4500{{ else }}#2ECC71{{ end }}'
 #           send_resolved: true
 
-#     - name: default-receiver
+    - name: default-receiver
 
 # blackboxExporter:
 #   configuration: |
