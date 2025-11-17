@@ -6,13 +6,16 @@ controller:
     tag: "v1.13.0"
     digest: ""
     digestChroot: ""
-  
+
+  extraArgs:
+    default-ssl-certificate: "tf-atx-nginx-ingress/saba-cert-manual"
+
   config:
     strict-validate-path-type: "false"
     allow-snippet-annotations: "true"
     annotations-risk-level: "Critical"
-    ssl-redirect: "false"
-    force-ssl-redirect: "false"
+    # ssl-redirect: "false"
+    # force-ssl-redirect: "false"
     proxy-body-size: "10m"
     use-gzip: true
     max-worker-connections: 0
