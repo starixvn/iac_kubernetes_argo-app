@@ -17,8 +17,8 @@ argo_applications_by_team = {
         value_files = [
           "values-global.yaml",
           "values-starix-dr-atomix.yaml",
-        ]
-      }
+         ]
+       }
       opencost = {
         namespace     = "opencost"
         helm_path     = "opencost"
