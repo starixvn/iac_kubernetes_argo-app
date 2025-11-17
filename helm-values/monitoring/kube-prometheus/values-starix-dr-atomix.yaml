@@ -17,7 +17,7 @@ prometheus:
     nodePorts:
       http: "30062"
   ingress:
-    enabled: false
+    enabled: true
     ingressClassName: "haproxy"
     pathType: ImplementationSpecific
     hostname: prometheus-st.dr.starixplay.com
