@@ -8,6 +8,11 @@ global:
     runAsUser: 1000
     runAsGroup: 1000
     fsGroup: 1000
+  envFrom:
+    # - configMapRef:
+    #     name: config-map-name
+    - secretRef:
+        name: secret-name
 
 ## authentik server
 server:
