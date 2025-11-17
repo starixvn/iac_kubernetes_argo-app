@@ -21,12 +21,12 @@ server:
   #   runAsUser: 1000
   #   runAsGroup: 1000
   #   fsGroup: 1000
-    ingress:
-        # Specify kubernetes ingress controller class name
-        ingressClassName: nginx
-        enabled: true
-        hosts:
-            - authentik.nexdev.net
+    # ingress:
+    #     # Specify kubernetes ingress controller class name
+    #     ingressClassName: nginx
+    #     enabled: true
+    #     hosts:
+    #         - authentik.nexdev.net
 
 ## authentik worker
 worker:
