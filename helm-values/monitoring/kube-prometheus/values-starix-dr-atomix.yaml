@@ -67,9 +67,9 @@ alertmanager:
     route:
       receiver: default-receiver
       routes:
-    #   - receiver: 'null'
-    #     match_re:
-    #       pod: ".*website1.*|.*cost.*|calico.*"
+      - receiver: 'null'
+        match_re:
+          pod: ".*website1.*|.*cost.*|calico.*"
     #   - receiver: 'null'
     #     match_re:
     #      namespace: "logging|kubescape|etcd-backup"
@@ -98,12 +98,12 @@ alertmanager:
     #     - alertname="KubescapeRuleViolated"
     #     - severity!="low"
     #     group_by: ['uid', 'pid']
-    #   group_by: ['alertname', 'cluster', 'namespace', 'pod', 'description', 'instance']
-    #   group_wait: 30s
-    #   group_interval: 5m
-    #   repeat_interval: 12h
+      group_by: ['alertname', 'cluster', 'namespace', 'pod', 'description', 'instance']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 12h
 
-    # receivers:
+    receivers:
     #   - name: 'null'
     #   - name: 'alert-nx-atomix'
     #     slack_configs:
