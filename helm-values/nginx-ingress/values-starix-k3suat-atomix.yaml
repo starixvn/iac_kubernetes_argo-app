@@ -1,0 +1,44 @@
+controller:
+  kind: DaemonSet
+  image:
+    registry: "nexhub.ops-klprod.gamora.prod"
+    image:  "kbt/base/ingress-nginx/controller"
+    tag: "v1.13.0"
+    digest: ""
+    digestChroot: ""
+
+  # extraArgs:
+  #   default-ssl-certificate: "tf-atx-nginx-ingress/saba-cert-manual"
+
+  config:
+    strict-validate-path-type: "false"
+    allow-snippet-annotations: "true"
+    annotations-risk-level: "Critical"
+    # ssl-redirect: "false"
+    # force-ssl-redirect: "false"
+    # proxy-body-size: "10m"
+    # use-gzip: true
+    # max-worker-connections: 0
+  # addHeaders:
+  #   X-XSS-Protection: "1; mode=block"
+  #   X-Content-Type-Options: "nosniff"
+  #   Referrer-Policy: "same-origin"
+  
+  nodeSelector:
+    node-role.kubernetes.io/master: "true"
+  service:
+    loadBalancerIP: "10.143.58.185"
+    nodePorts:
+      http: "32028"
+      https: "31922"
+  # tolerations:
+  # - key: "open-replay"
+  #   value: "yes"
+  #   effect: "NoSchedule"
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 500Mi
+
+

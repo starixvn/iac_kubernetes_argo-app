@@ -75,6 +75,13 @@ argo_applications_by_team = {
         value_files = ["values-starix-k3suat-atomix.yaml"]
       }
 
+      nginx-ingress = {
+        helm_path     = "nginx-ingress"
+        chart_version = "1.13.0"
+        auto_sync     = true
+        value_files   = ["values-starix-k3suat-atomix.yaml"]
+      }
+
     }
   }
 
