@@ -172,7 +172,6 @@ argo_applications_by_team = {
         namespace     = "authentik"
         helm_path     = "authentik"
         chart_version = "2025.10"
-        auto_sync     = false
         value_files = ["values-starix-nexprod-atomix.yaml",]
       }
     }
