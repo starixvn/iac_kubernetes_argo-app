@@ -8,8 +8,8 @@ operator:
   enabled: true
 
 prometheus:
-  nodeSelector:
-    nexops-tools: "yes"
+  # nodeSelector:
+  #   nexops-tools: "yes"
   service:
     type: NodePort
     ports:
