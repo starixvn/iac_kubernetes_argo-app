@@ -26,12 +26,14 @@ server:
   #   runAsUser: 1000
   #   runAsGroup: 1000
   #   fsGroup: 1000
-    ingress:
-        # Specify kubernetes ingress controller class name
-        ingressClassName: haproxy
-        enabled: true
-        hosts:
-            - authentik.nexdev.net
+  ingress:
+    # -- enable an ingress resource for the authentik server
+    enabled: true
+    ingressClassName: "haproxy"
+    hosts:
+      - authentik.nexdev.net
+    # -- uses `server.service.servicePortHttps` instead of `server.service.servicePortHttp`
+    https: true
 
 ## authentik worker
 worker:
