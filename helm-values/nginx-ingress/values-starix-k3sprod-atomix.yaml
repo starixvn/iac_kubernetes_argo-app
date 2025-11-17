@@ -16,13 +16,13 @@ controller:
     annotations-risk-level: "Critical"
     # ssl-redirect: "false"
     # force-ssl-redirect: "false"
-    proxy-body-size: "10m"
-    use-gzip: true
-    max-worker-connections: 0
-  addHeaders:
-    X-XSS-Protection: "1; mode=block"
-    X-Content-Type-Options: "nosniff"
-    Referrer-Policy: "same-origin"
+    # proxy-body-size: "10m"
+    # use-gzip: true
+    # max-worker-connections: 0
+  # addHeaders:
+  #   X-XSS-Protection: "1; mode=block"
+  #   X-Content-Type-Options: "nosniff"
+  #   Referrer-Policy: "same-origin"
   
   nodeSelector:
     open-replay: "yes"
