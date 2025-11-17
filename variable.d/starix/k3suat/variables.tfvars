@@ -82,6 +82,16 @@ argo_applications_by_team = {
         value_files   = ["values-starix-k3suat-atomix.yaml"]
       }
 
+      openreplay = {
+        namespace     = "tf-atx-minio-opreplay"
+        helm_path     = "openreplay-stack"
+        chart_version = "0.1.0"
+        auto_sync     = false
+        value_files   = ["values-starix-k3suat-atomix.yaml"]
+        ##trigger
+      }
+
+
     }
   }
 
