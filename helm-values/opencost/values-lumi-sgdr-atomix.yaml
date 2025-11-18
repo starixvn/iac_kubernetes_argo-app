@@ -127,7 +127,7 @@ opencost:
       tls: []
 
   customPricing:
-    enabled: false
+    enabled: true
     configmapName: custom-pricing-model
     configPath: /tmp/custom-config
     createConfigmap: true
@@ -156,7 +156,7 @@ opencost:
 
   cloudCost:
     # -- Enable cloud cost ingestion and querying, dependant on valid integration credentials
-    enabled: true
+    enabled: false
     # -- Number of hours between each run of the Cloud Cost pipeline
     refreshRateHours: 6
     # -- Number of days into the past that a Cloud Cost standard run will query for
