@@ -122,6 +122,7 @@ storage:
     nexops-tools: "yes"
 
   cleanupInterval: "168h"
+  disableVirtualCRDs: true
 
 nodeAgent:
   name: node-agent
