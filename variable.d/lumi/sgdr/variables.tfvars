@@ -21,17 +21,16 @@ argo_applications_by_team = {
         ]
       }
 
-
-      # prometheus = {
-      #   namespace     = "monitoring"
-      #   helm_path     = "monitoring/kube-prometheus"
-      #   chart_version = "9.5.11"
-      #   skip_crds     = true
-      #   value_files = [
-      #     "values-global.yaml",
-      #     "values-lumi-sgprod-atomix.yaml"
-      #   ]
-      # }
+      prometheus = {
+        namespace     = "monitoring"
+        helm_path     = "monitoring/kube-prometheus"
+        chart_version = "9.5.11"
+        skip_crds     = true
+        value_files = [
+          "values-global.yaml",
+          "values-lumi-sgdr-atomix.yaml"
+        ]
+      }
 
       # fluent-bit = {
       #   namespace     = "logging"
