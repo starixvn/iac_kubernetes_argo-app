@@ -20,7 +20,7 @@ argo_applications_by_team = {
         ### trigger
         ]
       }
-
+      #
       prometheus = {
         namespace     = "monitoring"
         helm_path     = "monitoring/kube-prometheus"
