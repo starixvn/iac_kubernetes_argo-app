@@ -27,7 +27,7 @@ prometheus:
   retentionSize: "25GB"
 
   persistence:
-    enabled: true
+    enabled: false
     size: 30Gi
 
   ## @param prometheus.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if prometheus.resources is set (prometheus.resources is recommended for production).
@@ -69,7 +69,7 @@ alertmanager:
   nodeSelector:
     nexops-mon: "yes"
   resourcesPreset: "none"
-  enabled: false
+  enabled: true
   config:
     global:
       resolve_timeout: 15m
