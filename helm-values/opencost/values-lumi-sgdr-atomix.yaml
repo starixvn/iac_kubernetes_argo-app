@@ -206,7 +206,7 @@ opencost:
       url: ""
     internal:
       enabled: true
-      serviceName: prometheus-atx-sgprod-kube-prometheus
+      serviceName: 	prometheus-atx-sgdr-kube-p-prometheus
       namespaceName: monitoring
       port: 9090
       scheme: http
