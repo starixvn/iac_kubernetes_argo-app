@@ -4,6 +4,7 @@ cluster_env = "dr"
 
 default_project = "tf-lumi-dr"
 
+#HUB: lumhub.ops-dr.nebula.prod/kbt/base
 # ARGO APPLICATIONS
 argo_applications_by_team = {
   atx = {
@@ -17,9 +18,9 @@ argo_applications_by_team = {
         value_files = [
           "values-global.yaml",
           "values-lumi-dr-atomix.yaml",
-         ]
-       }
-      
+        ]
+      }
+
       opencost = {
         namespace     = "opencost"
         helm_path     = "opencost"
@@ -68,6 +69,12 @@ argo_applications_by_team = {
         chart_version = "1.43.0"
         auto_sync     = false
         skip_crds     = true
+      }
+
+      kubescape-op = {
+        namespace     = "kubescape"
+        helm_path     = "kubescape/kubescape-operator"
+        chart_version = "1.29.6"
       }
 
     }
