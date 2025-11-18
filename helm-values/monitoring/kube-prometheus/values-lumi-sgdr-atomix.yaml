@@ -69,7 +69,7 @@ alertmanager:
   nodeSelector:
     nexops-mon: "yes"
   resourcesPreset: "none"
-  enabled: true
+  enabled: false
   config:
     global:
       resolve_timeout: 15m
