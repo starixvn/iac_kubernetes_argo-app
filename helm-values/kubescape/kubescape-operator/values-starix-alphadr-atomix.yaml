@@ -1,6 +1,6 @@
 clusterName: "alpha.dr"
 
-excludeNamespaces: "haproxy-ingress,kubescape,kube-system,kube-public,kube-node-lease,kubeconfig,gmp-system,gmp-public"
+excludeNamespaces: "cattle-fleet-system,cattle-impersonation-system,cattle-system,etcd-backup,kube-node-lease,kube-public,kube-system,kubescape,local,local-path-storage,longhorn-system,velero"
 # includeNamespaces: ""
 
 capabilities:
@@ -122,6 +122,7 @@ storage:
     nexops-tools: "yes"
 
   cleanupInterval: "168h"
+  disableVirtualCRDs: true
 
 nodeAgent:
   name: node-agent
