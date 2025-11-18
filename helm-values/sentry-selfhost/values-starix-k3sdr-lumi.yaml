@@ -40,9 +40,9 @@ auth:
   register: false
 
 ingress:
-  hostname: "sentrysc-ovs.dr.starixplay.com"
+  hostname: "sentrysc.dr.starixplay.com"
   additionalHostNames:
-  - "sentry-sc.ops-dr.nebula.prod"
+  - "sentrysc.ops-dr.nebula.prod"
   ingressClassName: "haproxy"
 
 
