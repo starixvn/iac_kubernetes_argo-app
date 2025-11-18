@@ -25,13 +25,17 @@ argo_applications_by_team = {
         helm_path     = "opencost"
         chart_version = "2.1.9"
         value_files   = ["values-alpha-dr-atomix.yaml"]
-        ## trigger
       }
       ingress = {
         helm_path     = "kubernetes-ingress"
         chart_version = "1.43.0"
         auto_sync     = false
         skip_crds     = true
+      }
+      kubescape-op = {
+        namespace     = "kubescape"
+        helm_path     = "kubescape/kubescape-operator"
+        chart_version = "1.29.6"
       }
       fluent-bit = {
         namespace     = "logging"
