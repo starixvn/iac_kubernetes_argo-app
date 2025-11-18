@@ -136,6 +136,10 @@ opencost:
       description: "Custom pricing configuration for lumi.sgdr environment"
       region: "ap-southeast-1"
       zone: "default-zone"
+      awsSpotDataRegion: "ap-southeast-1"
+      awsSpotDataBucket: "vn-lumi-starix-tf-state"
+      awsSpotDataPrefix: "opencost-eks-uat-spot-data"
+      projectID: "014999276089"
       # CPU: 0.008333      # USD / vCPU / h
       # RAM: 0.002778      # USD / GB RAM / h
       # storage: 0.019444  # USD / GB disk / h
@@ -156,7 +160,7 @@ opencost:
 
   cloudCost:
     # -- Enable cloud cost ingestion and querying, dependant on valid integration credentials
-    enabled: false
+    enabled: true
     # -- Number of hours between each run of the Cloud Cost pipeline
     refreshRateHours: 6
     # -- Number of days into the past that a Cloud Cost standard run will query for
