@@ -28,21 +28,21 @@ prometheus:
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
 
-  # remoteWrite:
-  #   - name: "sre-mimir"
-  #     url: "http://mimir.sgt1pkl.oneops.net/api/v1/push"
-  #     proxyUrl: "http://iusqd.gamora.prod:8801"
-  #     headers:
-  #       X-Scope-OrgID: "k8s-sc-prod"
-  #     queueConfig:
-  #       retryOnRateLimit: true
-  #       capacity: 50000
-  #       maxShards: 100
-  #       minShards: 20
-  #       maxSamplesPerSend: 10000
-  #       batchSendDeadline: 5s
-  #       minBackoff: 60ms
-  #       maxBackoff: 10s
+  remoteWrite:
+    - name: "sre-mimir"
+      url: "http://mimir.sgt1pkl.oneops.net/api/v1/push"
+      proxyUrl: "http://iusqd.gamora.prod:8801"
+      headers:
+        X-Scope-OrgID: "k8s-sc-prod"
+      queueConfig:
+        retryOnRateLimit: true
+        capacity: 50000
+        maxShards: 100
+        minShards: 20
+        maxSamplesPerSend: 10000
+        batchSendDeadline: 5s
+        minBackoff: 60ms
+        maxBackoff: 10s
 
 
   resourcesPreset: "xlarge"
