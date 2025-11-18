@@ -4,6 +4,7 @@ cluster_env = "dr"
 
 default_project = "tf-starix-dr"
 
+#HUB: nexhub.ops-dr.nebula.prod/kbt/base
 # ARGO APPLICATIONS
 argo_applications_by_team = {
   atx = {
@@ -17,8 +18,8 @@ argo_applications_by_team = {
         value_files = [
           "values-global.yaml",
           "values-starix-dr-atomix.yaml",
-         ]
-       }
+        ]
+      }
       opencost = {
         namespace     = "opencost"
         helm_path     = "opencost"
@@ -32,7 +33,7 @@ argo_applications_by_team = {
         chart_version = "1.43.0"
         auto_sync     = false
         skip_crds     = true
-        value_files = ["values-starix-napdr-atomix.yaml"]
+        value_files   = ["values-starix-napdr-atomix.yaml"]
       }
 
       ingress-fps = {
@@ -41,7 +42,13 @@ argo_applications_by_team = {
         chart_version = "1.43.0"
         auto_sync     = false
         skip_crds     = true
-        value_files = ["values-starix-fpsdr-atomix.yaml"]
+        value_files   = ["values-starix-fpsdr-atomix.yaml"]
+      }
+
+      kubescape-op = {
+        namespace     = "kubescape"
+        helm_path     = "kubescape/kubescape-operator"
+        chart_version = "1.29.6"
       }
 
     }
