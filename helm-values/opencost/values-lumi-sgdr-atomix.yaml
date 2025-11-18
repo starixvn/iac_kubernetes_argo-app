@@ -133,13 +133,10 @@ opencost:
     createConfigmap: true
     provider: aws
     costModel:
+      costModel:
       description: "Custom pricing configuration for lumi.sgdr environment"
       region: "ap-southeast-1"
       zone: "default-zone"
-      awsSpotDataRegion: "ap-southeast-1"
-      awsSpotDataBucket: "vn-lumi-starix-tf-state"
-      awsSpotDataPrefix: "opencost-eks-uat-spot-data"
-      projectID: "014999276089"
       # CPU: 0.008333      # USD / vCPU / h
       # RAM: 0.002778      # USD / GB RAM / h
       # storage: 0.019444  # USD / GB disk / h
@@ -147,6 +144,10 @@ opencost:
       # LBIngressDataCost: 0.00
       # FirstFiveForwardingRulesCost: 0.0
       # AdditionalForwardingRuleCost: 0.0
+      awsSpotDataRegion: "ap-southeast-1"
+      awsSpotDataBucket: "vn-lumi-starix-tf-state"
+      awsSpotDataPrefix: "opencost-eks-uat-spot-data"
+      projectID: "014999276089"
 
       athenaBucketName: "s3://vn-lumi-starix-tf-state/opencost-cur-results/"
       athenaDatabase: "athenacurcfn_nx_opencost_cur"

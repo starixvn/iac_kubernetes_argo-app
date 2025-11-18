@@ -122,7 +122,7 @@ alertmanager:
       routes:
       - receiver: 'null'
         match_re:
-          pod: ".*website1.*|.*cost.*|calico.*"
+          pod: ".*website1.*|.*cost.*|calico.*|prometheus.*"
       - receiver: 'null'
         match_re:
          namespace: "logging|kubescape|etcd-backup"
