@@ -20,7 +20,7 @@ argo_applications_by_team = {
       #   auto_sync              = true                         # optional - default: true
       # }
       rancher = {
-        namespace     = "rancher"
+        namespace     = "cattle-system"
         helm_path     = "rancher"
         chart_version = "2.12.3"
       }
