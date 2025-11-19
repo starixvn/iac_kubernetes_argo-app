@@ -1,5 +1,5 @@
 nameOverride: ""
-fullnameOverride: ""
+fullnameOverride: "opencost-atx-scdr"
 namespaceOverride: ""
 clusterName: "sc.dr"
 
@@ -146,7 +146,7 @@ opencost:
       scrapeInterval: 30s
       scrapeTimeout: 10s
       honorLabels: true
-      relabelings: "opencost-atx-scdr"
+      relabelings: []
       metricRelabelings: []
       extraEndpoints: []
       scheme: http
