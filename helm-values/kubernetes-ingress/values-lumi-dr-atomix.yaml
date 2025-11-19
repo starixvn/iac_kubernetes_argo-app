@@ -58,7 +58,6 @@ controller:
 
   nodeSelector:
     node-role.kubernetes.io/ingress: ""
-    node-role.kubernetes.io/worker: ""
 
   tolerations:
   - effect: NoSchedule
