@@ -22,7 +22,7 @@ argo_applications_by_team = {
       rancher = {
         namespace     = "rancher"
         helm_path     = "rancher"
-        chart_version = "2.10.2"
+        chart_version = "2.12.3"
       }
 
       prometheus = {
@@ -35,13 +35,13 @@ argo_applications_by_team = {
           "values-starix-nexprod-atomix.yaml",
         ]
       }
-      
+
       #defectdojo-exporter
       defectdojo-exporter = {
         namespace     = "defectdojo-starix"
         helm_path     = "defectdojo/defectdojo-exporter"
         chart_version = "0.1.0"
-        value_files = ["values-starix-nexprod-atomix.yaml",]
+        value_files   = ["values-starix-nexprod-atomix.yaml", ]
       }
 
       #############
@@ -172,7 +172,7 @@ argo_applications_by_team = {
         namespace     = "authentik"
         helm_path     = "authentik"
         chart_version = "2025.10"
-        value_files = ["values-starix-nexprod-atomix.yaml",]
+        value_files   = ["values-starix-nexprod-atomix.yaml", ]
       }
     }
   }
