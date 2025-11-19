@@ -318,8 +318,8 @@ global:
   pvcRWXName: "openreplay-rwx"
   clusterDomain: "svc.starix.k3sprod"
   s3:
-    region: "minio"
-    endpoint: "http://10.143.58.204:30392"
+    region: "us-east-1"
+    endpoint: "http://minio:9000"
     assetsBucket: "openreplay-sessions-assets"
     recordingsBucket: "openreplay-mobs"
     sourcemapsBucket: "openreplay-sourcemaps"
@@ -333,7 +333,7 @@ global:
   env:
     HTTP_PROXY: "http://iusqd.gamora.prod:8801"
     HTTPS_PROXY: "http://iusqd.gamora.prod:8801"
-    NO_PROXY: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.starix.k3sprod,.tf-atx-minio-opreplay,.svc,clickhouse-openreplay-clickhouse"
+    NO_PROXY: "0.0.0.0,localhost,127.0.0.1,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.starix.k3sprod,.tf-atx-minio-opreplay,minio:9000,.svc,clickhouse-openreplay-clickhouse"
 
 
 chalice:
