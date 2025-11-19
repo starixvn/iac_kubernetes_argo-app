@@ -1,5 +1,5 @@
 nameOverride: ""
-fullnameOverride: ""
+fullnameOverride: "opencost-atx-stdr"
 namespaceOverride: ""
 clusterName: "starix.dr"
 

@@ -1,5 +1,5 @@
 nameOverride: ""
-fullnameOverride: ""
+fullnameOverride: "opencost-atx-scprod"
 namespaceOverride: ""
 clusterName: "lumi.prod"
 
