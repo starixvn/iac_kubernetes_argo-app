@@ -146,7 +146,7 @@ opencost:
       scrapeInterval: 30s
       scrapeTimeout: 10s
       honorLabels: true
-      relabelings: []
+      relabelings: "opencost-atx-scdr"
       metricRelabelings: []
       extraEndpoints: []
       scheme: http
