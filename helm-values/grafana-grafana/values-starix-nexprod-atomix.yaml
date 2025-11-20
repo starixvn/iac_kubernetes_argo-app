@@ -73,7 +73,7 @@ grafana.ini:
   #   root_url: "https://grafana-nexprod.nexdev.net"
   auth:
     signout_redirect_url: "https://authentik.nexdev.net/application/o/grafana-demo/end-session/"
-    oauth_auto_login: true
+    oauth_auto_login: false
     disable_login_form: false
   auth.generic_oauth:
     name: authentik
