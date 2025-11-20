@@ -84,5 +84,5 @@ grafana.ini:
     token_url: "https://authentik.nexdev.net/application/o/token/"
     api_url: "https://authentik.nexdev.net/application/o/userinfo/"
     # Optionally map user groups to Grafana roles
-    role_attribute_path: contains(groups, 'Server Grafana') && 'GrafanaAdmin' || groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
+    role_attribute_path: contains(groups, 'Server Grafana') && 'GrafanaAdmin' || contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || contains(groups, 'Grafana Viewer') && 'Viewer'
     allow_assign_grafana_admin: true
