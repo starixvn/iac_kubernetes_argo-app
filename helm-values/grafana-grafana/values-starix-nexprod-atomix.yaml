@@ -1,4 +1,4 @@
-replicas: 3
+replicas: 2
 ingress:
   enabled: true
   ingressClassName: haproxy
@@ -26,6 +26,43 @@ assertNoLeakedSecrets: false
 # init user
 adminUser: admin
 adminPassword: RHk^QbNE0C5Q
+
+
+### Mysql for Grafana
+extraObjects:
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: nexprod-mysql-graf-cluster-secret
+  type: Opaque
+  data:
+    ROOT_PASSWORD: "ZklAYWRES20xTXl0QVNnWko="
+    USER: "Z3JhZmFuYS1sdW1p"
+    PASSWORD: "dGlHLUVxOWVPMXNa"
+    DATABASE: "Z3JhZmFuYS1sdW1p"
+
+- apiVersion: mysql.presslabs.org/v1alpha1
+  kind: MysqlCluster
+  metadata:
+    name: nexprod-mysql-graf-cluster
+  spec:
+    replicas: 1
+    secretName: nexprod-mysql-graf-cluster-secret
+    volumeSpec:
+      persistentVolumeClaim:
+        storageClassName: "longhorn-effort-2rep"
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 5Gi
+    podSpec:
+      resources:
+        requests:
+          memory: 512Mi
+          cpu:    200m
+        limits:
+          memory: 256Mi          
+
 
 # grafana.ini:
 #   server:
