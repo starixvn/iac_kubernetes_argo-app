@@ -21,9 +21,11 @@ config:
   inputs: |
     [INPUT]
       Name tail
+      # Tag kube.kubesystem.*
+      Tag kube.kubesystem.<namespace_name>.<pod_name>.<container_name>.<container_id>
+      Tag_Regex (?<pod_name>[a-z0-9](?:[-a-z0-9]*[a-z0-9])?(?:\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)_(?<namespace_name>[^_]+)_(?<container_name>.+)-(?<container_id>[a-z0-9]{64})\.log$
       Path /var/log/containers/calico*.log,/var/log/containers/dns*.log,/var/log/containers/kube*.log,/var/log/containers/nodelocaldns*.log
       multiline.parser docker, cri
-      Tag kube.kubesystem.*
       Mem_Buf_Limit 10MB
       Skip_Long_Lines On
 
@@ -53,13 +55,16 @@ config:
   filters: |
     [FILTER]
       Name kubernetes
-      Match kube.kubesystem*
-      Kube_Tag_Prefix kube.kubesystem.var.log.containers.
+      Match kube.kubesystem.*
+      Kube_Tag_Prefix kube.kubesystem.
+      Regex_Parser kubernetes-filter-custom-tag
       Merge_Log On
       Merge_Log_Key kube
       Keep_Log Off
-      K8S-Logging.Parser On
-      K8S-Logging.Exclude On
+      Use_Tag_For_Meta On
+      # Kube_Tag_Prefix kube.kubesystem.var.log.containers.
+      # K8S-Logging.Parser On
+      # K8S-Logging.Exclude On
 
     [FILTER]
       Name grep
