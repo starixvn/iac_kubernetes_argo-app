@@ -105,6 +105,9 @@ clickhouse:
 
 zookeeper:
   clusterDomain: starix.k3suat
+  autopurge:
+    snapRetainCount: 3
+    purgeInterval: 1
   image:
     registry: nexhub.ops-klprod.gamora.prod
     repository: kbt/base/bitnami/zookeeper
