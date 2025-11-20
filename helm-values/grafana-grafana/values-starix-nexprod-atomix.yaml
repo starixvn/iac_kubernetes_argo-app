@@ -1,4 +1,4 @@
-replicas: 2
+replicas: 1
 ingress:
   enabled: true
   ingressClassName: haproxy
@@ -14,7 +14,7 @@ image:
 
 resources:
   limits:
-    memory: 500Mi
+    memory: 1Gi
   requests:
     cpu: 100m
     memory: 128Mi
@@ -69,8 +69,8 @@ extraObjects:
 
 
 grafana.ini:
-  server:
-    root_url: "https://grafana-nexprod.nexdev.net"
+  # server:
+  #   root_url: "https://grafana-nexprod.nexdev.net"
   auth:
     signout_redirect_url: "https://authentik.nexdev.net/application/o/grafana-demo/end-session/"
     oauth_auto_login: true
