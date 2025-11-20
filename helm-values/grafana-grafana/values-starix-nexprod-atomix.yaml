@@ -68,22 +68,22 @@ extraObjects:
           memory: 256Mi          
 
 
-# grafana.ini:
+grafana.ini:
   # server:
   #   root_url: "https://grafana-nexprod.nexdev.net"
-  # auth:
-  #   signout_redirect_url: "https://authentik.nexdev.net/application/o/grafana-demo/end-session/"
-  #   oauth_auto_login: false
-  #   disable_login_form: false
-  # auth.generic_oauth:
-  #   name: authentik
-  #   enabled: true
-  #   client_id: "UoaKRUyjlpvKjkihMxm8XQ5oFySHPYzup8evrEWA"
-  #   client_secret: "YsDcFvE7KFUZpc7gWJZc7jWTR2d2KYW0Uq3jgj09VanJzUTNlFmsV0Gmcj337z4lu1TeOL9Kcu76QJfpDFkaGGrEcibU6GAVHx0xRhOUx8qUk4fMI7Dp0hBO2XKhWeya"
-  #   scopes: "openid profile email"
-  #   auth_url: "https://authentik.nexdev.net/application/o/authorize/"
-  #   token_url: "https://authentik.nexdev.net/application/o/token/"
-  #   api_url: "https://authentik.nexdev.net/application/o/userinfo/"
-  #   # Optionally map user groups to Grafana roles
-  #   role_attribute_path: contains(groups, 'Server Grafana') && 'GrafanaAdmin' || contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || contains(groups, 'Grafana Viewer') && 'Viewer'
-  #   allow_assign_grafana_admin: true
+  auth:
+    signout_redirect_url: "https://authentik.nexdev.net/application/o/grafana-demo/end-session/"
+    oauth_auto_login: false
+    disable_login_form: false
+  auth.generic_oauth:
+    name: authentik
+    enabled: true
+    client_id: "UoaKRUyjlpvKjkihMxm8XQ5oFySHPYzup8evrEWA"
+    client_secret: "YsDcFvE7KFUZpc7gWJZc7jWTR2d2KYW0Uq3jgj09VanJzUTNlFmsV0Gmcj337z4lu1TeOL9Kcu76QJfpDFkaGGrEcibU6GAVHx0xRhOUx8qUk4fMI7Dp0hBO2XKhWeya"
+    scopes: "openid profile email"
+    auth_url: "https://authentik.nexdev.net/application/o/authorize/"
+    token_url: "https://authentik.nexdev.net/application/o/token/"
+    api_url: "https://authentik.nexdev.net/application/o/userinfo/"
+    # Optionally map user groups to Grafana roles
+    role_attribute_path: contains(groups, 'Server Grafana') && 'GrafanaAdmin' || contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || contains(groups, 'Grafana Viewer') && 'Viewer'
+    allow_assign_grafana_admin: true
