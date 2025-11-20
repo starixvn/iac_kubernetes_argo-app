@@ -1,0 +1,29 @@
+replicas: 3
+# ingress:
+#   enabled: true
+#   ingressClassName: haproxy
+#   hosts:
+#     - vn-grafana-scklprod.byb6181.com
+
+
+image:
+  registry: hub.nexdev.net
+  repository: base/grafana/grafana
+  tag: 11.3.0
+
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# config to use plain text password
+assertNoLeakedSecrets: false
+
+
+# init user
+adminUser: admin
+adminPassword: RHk^QbNE0C5Q

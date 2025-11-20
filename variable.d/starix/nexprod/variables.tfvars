@@ -168,6 +168,16 @@ argo_applications_by_team = {
           "values-starix-nexprod-atomix.yaml"
         ]
       }
+
+      grafana-test = {
+        namespace     = "grafana-test"
+        helm_path     = "grafana-grafana"
+        chart_version = "8.4.8"
+        value_files = [
+          "values-starix-nexprod-atomix.yaml"
+        ]   
+      }
+
       #
       authentik = {
         namespace     = "authentik"
