@@ -29,7 +29,7 @@ adminPassword: RHk^QbNE0C5Q
 
 grafana.ini:
     auth:
-        signout_redirect_url: "https://grafana-nexprod.nexdev.net/application/o/grafana-demo/end-session/"
+        signout_redirect_url: "https://authentik.nexdev.net/application/o/grafana-demo/end-session/"
         oauth_auto_login: true
     auth.generic_oauth:
         name: authentik
@@ -37,8 +37,8 @@ grafana.ini:
         client_id: "oVKSJoVcufp2gMcr7JgOAGRLX6fcsMSHC2l7l8ci"
         client_secret: "KP6RPAddI1gM0GS0eWjwwhZhqIFAExItBmPtChjTHJIngZi2Ro99pjT6edYb0SiKpsvrJSrbr5iKsk5RNLNVp1DlVG86JqB8kzmWIlxQXCjKjXdGPLZNfr1a6xBWiofS"
         scopes: "openid profile email"
-        auth_url: "https://grafana-nexprod.nexdev.net/application/o/authorize/"
-        token_url: "https://grafana-nexprod.nexdev.net/application/o/token/"
-        api_url: "https://grafana-nexprod.nexdev.net/application/o/userinfo/"
+        auth_url: "https://authentik.nexdev.net/application/o/authorize/"
+        token_url: "https://authentik.nexdev.net/application/o/token/"
+        api_url: "https://authentik.nexdev.net/application/o/userinfo/"
         # Optionally map user groups to Grafana roles
         role_attribute_path: contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
