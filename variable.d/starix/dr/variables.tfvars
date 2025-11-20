@@ -51,6 +51,16 @@ argo_applications_by_team = {
         chart_version = "1.29.6"
       }
 
+      fluent-bit = {
+        namespace     = "logging"
+        helm_path     = "logging/fluent-bit"
+        chart_version = "0.50.0"
+        value_files = [
+          "values-global.yaml",
+          "values-starix-dr-atomix.yaml",
+        ]
+      }
+
     }
   }
 }

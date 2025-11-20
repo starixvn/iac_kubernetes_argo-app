@@ -1,0 +1,145 @@
+image:
+  repository: lumhub.ops-dr.nebula.prod/kbt/base/fluent/fluent-bit
+  tag: 4.0.3-geoip
+
+# nodeSelector:
+#   node-role.kubernetes.io/control-plane: ""
+#   node-role.kubernetes.io/master: ""
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+tolerations:
+- operator: Exists
+
+config:
+  inputs: |
+    [INPUT]
+      Name tail
+      Tag kube.kubesystem.<namespace_name>.<pod_name>.<container_name>.<container_id>
+      Tag_Regex (?<pod_name>[a-z0-9](?:[-a-z0-9]*[a-z0-9])?(?:\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)_(?<namespace_name>[^_]+)_(?<container_name>.+)-(?<container_id>[a-z0-9]{64})\.log$
+      Path /var/log/containers/calico*.log,/var/log/containers/dns*.log,/var/log/containers/kube*.log,/var/log/containers/nodelocaldns*.log
+      multiline.parser docker, cri
+      Mem_Buf_Limit 10MB
+      Skip_Long_Lines On
+
+    [INPUT]
+      Name tail
+      Tag kube.kubescape
+      Path /var/log/containers/node-agent-*.log
+      multiline.parser docker, cri
+      Mem_Buf_Limit 10MB
+      Skip_Long_Lines On
+
+    [INPUT]
+      Name tail
+      Tag tail.kubeaudit
+      Path /var/log/kube-apiserver-log.json
+      Parser json
+      Buffer_Max_Size 1MB
+      Mem_Buf_Limit 10MB
+      Skip_Long_Lines On
+
+    [INPUT]
+      Name systemd
+      Tag host.all
+      Read_From_Tail On
+      Strip_Underscores On
+      
+  filters: |
+    [FILTER]
+      Name kubernetes
+      Match kube.kubesystem.*
+      Kube_Tag_Prefix kube.kubesystem.
+      Regex_Parser kubernetes-filter-custom-tag
+      Merge_Log On
+      Merge_Log_Key kube
+      Keep_Log Off
+      Use_Tag_For_Meta On
+      K8S-Logging.Parser On
+      K8S-Logging.Exclude On
+
+    [FILTER]
+      Name grep
+      Match kube.kubescape*
+      Regex log BaseRuntimeMetadata
+
+    [FILTER]
+      Name parser
+      Match kube.kubescape*
+      Key_Name log
+      Parser json_kubescape
+      Reserve_Data On
+
+    [FILTER]
+      Name lua
+      Match kube.kubescape*
+      Script /fluent-bit/scripts/kubescape_handler.lua
+      call parser
+
+    [FILTER]
+      Name modify
+      Match *
+      Add env prod
+      Add region ak
+      Add org lumi
+      Add team pentagon
+      Add engine k8s
+
+  outputs: |
+    [OUTPUT]
+      Name opensearch
+      Match host.all
+      Host opsi.ops-dr.nebula.prod
+      Port 443
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-system-journal-prod
+      Replace_Dots On
+
+    [OUTPUT]
+      Name opensearch
+      Match kube.kubesystem.*
+      Host opsi.ops-dr.nebula.prod
+      Port 443
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-kubesystem-container-log
+      Replace_Dots On
+
+    [OUTPUT]
+      Name opensearch
+      Match kube.kubescape*
+      Host opsi.ops-dr.nebula.prod
+      Port 443
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-kubescape-sc-t2prod
+      Replace_Dots On
+
+    [OUTPUT]
+      Name opensearch
+      Match tail.kubeaudit
+      Host opsi.ops-dr.nebula.prod
+      Port 443
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-kube-audit
+      Replace_Dots On

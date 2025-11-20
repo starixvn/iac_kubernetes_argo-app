@@ -21,7 +21,6 @@ config:
   inputs: |
     [INPUT]
       Name tail
-      # Tag kube.kubesystem.*
       Tag kube.kubesystem.<namespace_name>.<pod_name>.<container_name>.<container_id>
       Tag_Regex (?<pod_name>[a-z0-9](?:[-a-z0-9]*[a-z0-9])?(?:\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)_(?<namespace_name>[^_]+)_(?<container_name>.+)-(?<container_id>[a-z0-9]{64})\.log$
       Path /var/log/containers/calico*.log,/var/log/containers/dns*.log,/var/log/containers/kube*.log,/var/log/containers/nodelocaldns*.log
@@ -130,7 +129,7 @@ config:
       HTTP_User logstash
       HTTP_Passwd logstash
       Suppress_Type_Name On
-      Index logstash-kubescape-sc-t2prod
+      Index logstash-kubescape-st-alp-t2prod
       Replace_Dots On
 
     [OUTPUT]
