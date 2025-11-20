@@ -219,6 +219,11 @@ config:
 
   customParsers: |
     [PARSER]
+      Name    kubernetes-filter-custom-tag
+      Format  regex
+      Regex   ^(?<namespace_name>[^_]+)\.(?<pod_name>[a-z0-9](?:[-a-z0-9]*[a-z0-9])?(?:\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)\.(?<container_name>.+)\.(?<container_id>[a-z0-9]{64})
+
+    [PARSER]
       Name docker_no_time
       Format json
       Time_Keep Off
