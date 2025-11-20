@@ -39,7 +39,7 @@ config:
     [INPUT]
       Name tail
       Tag tail.kubeaudit
-      Path /var/log/kube-apiserver-log.json
+      Path /var/log/kubernetes/audit/kube-apiserver-log.json
       Parser json
       Buffer_Max_Size 1MB
       Mem_Buf_Limit 10MB
