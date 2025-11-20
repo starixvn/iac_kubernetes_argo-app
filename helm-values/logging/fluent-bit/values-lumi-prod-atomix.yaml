@@ -21,9 +21,10 @@ config:
   inputs: |
     [INPUT]
       Name tail
+      Tag kube.kubesystem.<namespace_name>.<pod_name>.<container_name>.<container_id>
+      Tag_Regex (?<pod_name>[a-z0-9](?:[-a-z0-9]*[a-z0-9])?(?:\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)_(?<namespace_name>[^_]+)_(?<container_name>.+)-(?<container_id>[a-z0-9]{64})\.log$
       Path /var/log/containers/calico*.log,/var/log/containers/dns*.log,/var/log/containers/kube*.log,/var/log/containers/nodelocaldns*.log
       multiline.parser docker, cri
-      Tag kube.kubesystem.*
       Mem_Buf_Limit 10MB
       Skip_Long_Lines On
 
@@ -36,13 +37,13 @@ config:
       Skip_Long_Lines On
 
     [INPUT]
-      Name systemd
-      Tag host.kubesystem
-      Systemd_Filter _SYSTEMD_UNIT=containerd.service
-      Systemd_Filter _SYSTEMD_UNIT=etcd.service
-      Systemd_Filter _SYSTEMD_UNIT=kubelet.service
-      Read_From_Tail On
-      Strip_Underscores On
+      Name tail
+      Tag tail.kubeaudit
+      Path /var/log/kubernetes/audit/kube-apiserver-log.json
+      Parser json
+      Buffer_Max_Size 1MB
+      Mem_Buf_Limit 10MB
+      Skip_Long_Lines On
 
     [INPUT]
       Name systemd
@@ -53,10 +54,13 @@ config:
   filters: |
     [FILTER]
       Name kubernetes
-      Match kube.kubesystem*
+      Match kube.kubesystem.*
       Kube_Tag_Prefix kube.kubesystem.
+      Regex_Parser kubernetes-filter-custom-tag
       Merge_Log On
+      Merge_Log_Key kube
       Keep_Log Off
+      Use_Tag_For_Meta On
       K8S-Logging.Parser On
       K8S-Logging.Exclude On
 
@@ -88,19 +92,6 @@ config:
       Add engine k8s
 
   outputs: |
-    [OUTPUT]
-      Name opensearch
-      Match host.kubesystem
-      Host opsi.ops-klprod.gamora.prod
-      Port 443
-      tls On
-      tls.verify Off
-      HTTP_User logstash
-      HTTP_Passwd logstash
-      Suppress_Type_Name On
-      Index logstash-kubesystem-systemd
-      Replace_Dots On
-
     [OUTPUT]
       Name opensearch
       Match host.all
@@ -139,3 +130,17 @@ config:
       Suppress_Type_Name On
       Index logstash-kubescape-scpt2
       Replace_Dots On
+
+    [OUTPUT]
+      Name opensearch
+      Match tail.kubeaudit
+      Host opsi.ops-klprod.gamora.prod
+      Port 443
+      tls On
+      tls.verify Off
+      HTTP_User logstash
+      HTTP_Passwd logstash
+      Suppress_Type_Name On
+      Index logstash-kube-audit
+      Replace_Dots On
+      
