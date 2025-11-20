@@ -27,20 +27,20 @@ assertNoLeakedSecrets: false
 adminUser: admin
 adminPassword: RHk^QbNE0C5Q
 
-grafana.ini:
-  server:
-    root_url: "https://grafana-nexprod.nexdev.net"
-  auth:
-    signout_redirect_url: "https://authentik.nexdev.net/application/o/grafana-demo/end-session/"
-    oauth_auto_login: true
-  auth.generic_oauth:
-    name: authentik
-    enabled: true
-    client_id: "UoaKRUyjlpvKjkihMxm8XQ5oFySHPYzup8evrEWA"
-    client_secret: "YsDcFvE7KFUZpc7gWJZc7jWTR2d2KYW0Uq3jgj09VanJzUTNlFmsV0Gmcj337z4lu1TeOL9Kcu76QJfpDFkaGGrEcibU6GAVHx0xRhOUx8qUk4fMI7Dp0hBO2XKhWeya"
-    scopes: "openid profile email"
-    auth_url: "https://authentik.nexdev.net/application/o/authorize/"
-    token_url: "https://authentik.nexdev.net/application/o/token/"
-    api_url: "https://authentik.nexdev.net/application/o/userinfo/"
-    # Optionally map user groups to Grafana roles
-    role_attribute_path: contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
+# grafana.ini:
+#   server:
+#     root_url: "https://grafana-nexprod.nexdev.net"
+#   auth:
+#     signout_redirect_url: "https://authentik.nexdev.net/application/o/grafana-demo/end-session/"
+#     oauth_auto_login: true
+#   auth.generic_oauth:
+#     name: authentik
+#     enabled: true
+#     client_id: "UoaKRUyjlpvKjkihMxm8XQ5oFySHPYzup8evrEWA"
+#     client_secret: "YsDcFvE7KFUZpc7gWJZc7jWTR2d2KYW0Uq3jgj09VanJzUTNlFmsV0Gmcj337z4lu1TeOL9Kcu76QJfpDFkaGGrEcibU6GAVHx0xRhOUx8qUk4fMI7Dp0hBO2XKhWeya"
+#     scopes: "openid profile email"
+#     auth_url: "https://authentik.nexdev.net/application/o/authorize/"
+#     token_url: "https://authentik.nexdev.net/application/o/token/"
+#     api_url: "https://authentik.nexdev.net/application/o/userinfo/"
+#     # Optionally map user groups to Grafana roles
+#     role_attribute_path: contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
