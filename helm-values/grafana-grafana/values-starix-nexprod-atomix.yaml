@@ -1,9 +1,9 @@
 replicas: 3
-# ingress:
-#   enabled: true
-#   ingressClassName: haproxy
-#   hosts:
-#     - vn-grafana-scklprod.byb6181.com
+ingress:
+  enabled: true
+  ingressClassName: haproxy
+  hosts:
+    - grafana-nexprod.nexdev.net
 
 
 image:
