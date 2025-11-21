@@ -78,6 +78,7 @@ grafana.ini:
   auth.generic_oauth:
     name: authentik
     enabled: true
+    allow_sign_up: true
     client_id: "UoaKRUyjlpvKjkihMxm8XQ5oFySHPYzup8evrEWA"
     client_secret: "YsDcFvE7KFUZpc7gWJZc7jWTR2d2KYW0Uq3jgj09VanJzUTNlFmsV0Gmcj337z4lu1TeOL9Kcu76QJfpDFkaGGrEcibU6GAVHx0xRhOUx8qUk4fMI7Dp0hBO2XKhWeya"
     scopes: "openid profile email"
