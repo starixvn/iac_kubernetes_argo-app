@@ -1,0 +1,25 @@
+---
+replicas: 3
+
+hostname: rancher-test.nexdev.net
+
+agentTLSMode: system-store
+
+tls: external
+ingress:
+  ingressClassName: haproxy
+
+# privateCA: true
+
+auditLog:
+  image:
+    repository: hub.nexdev.net/base/rancher/mirrored-bci-micro
+
+rancherImage: hub.nexdev.net/base/rancher/rancher
+
+postDelete:
+  image:
+    repository: hub.nexdev.net/base/rancher/shell
+
+
+extraResources: []

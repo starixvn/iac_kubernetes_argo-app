@@ -19,6 +19,14 @@ argo_applications_by_team = {
           "values-starix-local-atomix.yaml",
         ]
       }
+
+      rancher-test = {
+        namespace     = "rancher-test"
+        helm_path     = "rancher"
+        chart_version = "2.12.3"
+        value_files = ["values-starix-local-atomix.yaml",]
+      }
+
       kubernetes-etcd-backup = {
         namespace     = "etcd-backup"
         helm_path     = "kubernetes-etcd-backup"
