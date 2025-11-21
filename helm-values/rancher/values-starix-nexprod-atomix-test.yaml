@@ -10,7 +10,7 @@ replicas: 2
 #   ingressClassName: haproxy
 
 # privateCA: true
-
+priorityClassName: rancher-test-critical
 auditLog:
   image:
     repository: hub.nexdev.net/base/rancher/mirrored-bci-micro
@@ -20,6 +20,4 @@ rancherImage: hub.nexdev.net/base/rancher/rancher
 postDelete:
   image:
     repository: hub.nexdev.net/base/rancher/shell
-
-
 extraResources: []
