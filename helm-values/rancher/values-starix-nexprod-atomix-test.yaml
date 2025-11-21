@@ -10,7 +10,7 @@ ingress:
   ingressClassName: haproxy
 
 # privateCA: true
-priorityClassName: rancher-test-critical
+
 auditLog:
   image:
     repository: hub.nexdev.net/base/rancher/mirrored-bci-micro
@@ -20,4 +20,13 @@ rancherImage: hub.nexdev.net/base/rancher/rancher
 postDelete:
   image:
     repository: hub.nexdev.net/base/rancher/shell
-extraResources: []
+
+priorityClassName: rancher-test-critical
+extraResources:
+  - apiVersion: scheduling.k8s.io/v1
+    kind: PriorityClass
+    metadata:
+      name: rancher-test-critical
+    value: 1000000000  
+    globalDefault: false
+    description: "Priority class for rancher test deployment"
