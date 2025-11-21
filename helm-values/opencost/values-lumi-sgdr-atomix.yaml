@@ -10,7 +10,7 @@ imagePullSecrets: []
 serviceAccount:
   create: true
   annotations: 
-  eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:role/OpenCostSpotFeedRole
+  eks.amazonaws.com/role-arn: arn:aws:iam::014999276089:role/OpenCostSpotFeedRole-DR
   automountServiceAccountToken: true
   name: "opencost-atx-sgdr"
 
@@ -144,7 +144,7 @@ opencost:
       # AdditionalForwardingRuleCost: 0.0
       awsSpotDataRegion: "ap-southeast-1"
       awsSpotDataBucket: "vn-lumi-starix-tf-state"
-      awsSpotDataPrefix: "opencost-eks-uat-spot-data"
+      awsSpotDataPrefix: "opencost-eks-dr-spot-data"
       projectID: "014999276089"
 
       # athenaBucketName: "s3://vn-lumi-starix-tf-state/opencost-cur-results/"
