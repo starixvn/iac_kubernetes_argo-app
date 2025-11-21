@@ -3,9 +3,9 @@ replicas: 3
 
 hostname: rancher-test.nexdev.net
 
-agentTLSMode: system-store
+# agentTLSMode: system-store
 
-tls: external
+# tls: external
 ingress:
   ingressClassName: haproxy
 
@@ -20,3 +20,13 @@ rancherImage: hub.nexdev.net/base/rancher/rancher
 postDelete:
   image:
     repository: hub.nexdev.net/base/rancher/shell
+noDefaultPriorityClass: true
+priorityClassName: rancher-test-critical
+extraResources:
+  - apiVersion: scheduling.k8s.io/v1
+    kind: PriorityClass
+    metadata:
+      name: rancher-test-critical
+    value: 1000000000
+    globalDefault: false
+    description: "Priority class for rancher test deployment"
