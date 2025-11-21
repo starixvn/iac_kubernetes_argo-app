@@ -62,10 +62,10 @@ extraObjects:
     podSpec:
       resources:
         requests:
-          memory: 256Mi
+          memory: 512Mi
           cpu:    200m
         limits:
-          memory: 512Mi          
+          memory: 1Gi          
 
 
 grafana.ini:
