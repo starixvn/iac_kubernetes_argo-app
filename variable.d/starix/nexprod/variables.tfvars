@@ -30,6 +30,7 @@ argo_applications_by_team = {
         helm_path     = "rancher"
         chart_version = "2.12.3"
         value_files = ["values-starix-nexprod-atomix-test.yaml",]
+      # trigger
       }
 
       prometheus = {
