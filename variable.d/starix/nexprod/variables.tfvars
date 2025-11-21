@@ -25,14 +25,6 @@ argo_applications_by_team = {
         chart_version = "2.12.3"
       }
 
-      rancher-test = {
-        namespace     = "rancher-test"
-        helm_path     = "rancher"
-        chart_version = "2.12.3"
-        value_files = ["values-starix-nexprod-atomix-test.yaml",]
-      # trigger
-      }
-
       prometheus = {
         namespace     = "monitoring"
         helm_path     = "monitoring/kube-prometheus"
