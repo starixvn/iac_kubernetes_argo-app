@@ -1,13 +1,13 @@
 ---
-replicas: 2
+replicas: 3
 
-# hostname: rancher.nexdev.net
+hostname: rancher-test.nexdev.net
 
-# agentTLSMode: system-store
+agentTLSMode: system-store
 
-# tls: external
-# ingress:
-#   ingressClassName: haproxy
+tls: external
+ingress:
+  ingressClassName: haproxy
 
 # privateCA: true
 priorityClassName: rancher-test-critical
