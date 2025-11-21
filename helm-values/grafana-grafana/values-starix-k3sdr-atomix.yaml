@@ -36,8 +36,8 @@ grafana.ini:
   auth.generic_oauth:
     name: authentik
     enabled: true
-    client_id: "0pDE6we9lOBswQm0WhAeniP8O4S3PT9SdCKPVzCH"
-    client_secret: "C1Hp7IAmU6HQQdNMCuKBaRW174spf2bn2YqahEqLLNvUr02Z9E49MwxqwFIXu5xzUm5CVyw8iBrWSHKz7MFICoN6b08dFib2yRcchhBUJB9keUaya7UuwBddm8IAb6To"
+    client_id: "HrgnG16yT55Hg9vPiC71H0GZGk6WATAHaMOwQ6oh"
+    client_secret: "4zOCROGBJS46iarBUtgtLu3X29TpVvpw8OD0MJCc7lV8vMufHB2YVKLaW9R2sxy6eLeFaLgKBK8E45f7U4tx8gCAgXZMMNQXTpn9r981og5iZOXJX5BBPF5eJ2P6h60n"
     scopes: "openid profile email"
     auth_url: "https://authentik.nexdev.net/application/o/authorize/"
     token_url: "https://authentik.nexdev.net/application/o/token/"
