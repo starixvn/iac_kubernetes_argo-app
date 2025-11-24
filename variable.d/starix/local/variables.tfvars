@@ -20,13 +20,22 @@ argo_applications_by_team = {
         ]
       }
 
+      fluent-bit = {
+        namespace     = "logging"
+        helm_path     = "logging/fluent-bit"
+        chart_version = "0.50.0"
+        value_files = [
+          "values-global.yaml",
+          "values-starix-dr-atomix.yaml",
+        ]
+      }
 
       kubernetes-etcd-backup = {
         namespace     = "etcd-backup"
         helm_path     = "kubernetes-etcd-backup"
         chart_version = "1.0.0"
         skip_crds     = true
-        value_files = ["values-starix-local-atomix.yaml"]
+        value_files   = ["values-starix-local-atomix.yaml"]
       }
 
 
