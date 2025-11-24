@@ -26,7 +26,7 @@ argo_applications_by_team = {
         chart_version = "0.50.0"
         value_files = [
           "values-global.yaml",
-          "values-starix-dr-atomix.yaml",
+          "values-starix-local-atomix.yaml",
         ]
       }
 
