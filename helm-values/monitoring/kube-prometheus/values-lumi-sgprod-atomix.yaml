@@ -33,6 +33,27 @@ prometheus:
   ## @param prometheus.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if prometheus.resources is set (prometheus.resources is recommended for production).
   ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
   ##
+
+  remoteWrite:
+    - name: "sre-mimir"
+      url: "http://mimir.sgt1pkl.oneops.net/api/v1/push"
+      headers:
+        X-Scope-OrgID: "eks-sc-sgprod"
+      queueConfig:
+        retryOnRateLimit: true
+        capacity: 50000
+        maxShards: 100
+        minShards: 20
+        maxSamplesPerSend: 10000
+        batchSendDeadline: 5s
+        minBackoff: 60ms
+        maxBackoff: 10s
+
+
+
+
+
+
   resourcesPreset: "xlarge"
 
   ##
