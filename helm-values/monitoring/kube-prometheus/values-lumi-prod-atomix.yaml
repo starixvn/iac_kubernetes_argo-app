@@ -45,7 +45,7 @@ prometheus:
         maxBackoff: 10s
 
 
-  resourcesPreset: "xlarge"
+  resourcesPreset: "2xlarge"
 
   additionalScrapeConfigs:
     enabled: false
