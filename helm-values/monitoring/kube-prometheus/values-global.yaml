@@ -112,6 +112,27 @@ prometheus:
                 summary: "API Server Down"
                 description: "The Kubernetes API server is down."
 
+            - alert: Kubernetes Cluster Pod Usage Above 80% - WEB role
+              expr: |
+                (
+                  sum(
+                    kube_pod_container_status_running{container!="POD"}
+                    * on(pod) group_left(node) kube_pod_info
+                    * on(node) group_left() kube_node_role{role="web"}
+                  )
+                  /
+                  sum(
+                    kube_node_status_allocatable{resource="pods"}
+                    * on(node) group_left() kube_node_role{role="web"}
+                  )
+                ) * 100 > 80
+              for: 5m
+              labels:
+                severity: warning
+              annotations:
+                summary: "Pod usage exceeds 80% of total allocatable pods in the cluster"
+                description: 'Pod usage is currently {{ printf "%.0f" $value }}% of the total cluster pod capacity (WEB Role).'
+
             - alert: Kubernetes Cluster Pod Usage Above 80%
               expr: |
                 (
