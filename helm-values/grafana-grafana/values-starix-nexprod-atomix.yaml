@@ -109,7 +109,7 @@ ldap:
     search_base_dns = ["OU=NEXSOL,DC=spvn,DC=local"]
     
     [[servers.group_mappings]]
-    group_dn = "OU=UsersGroups,OU=Nexops,OU=Atomix,OU=Workstations,OU=NEXSOL,DC=spvn,DC=local"
+    group_dn = "CN=Owen Dang,OU=UsersGroups,OU=Nexops,OU=Atomix,OU=Workstations,OU=NEXSOL,DC=spvn,DC=local"
     org_role = "Admin"
 
     [[servers.group_mappings]]
