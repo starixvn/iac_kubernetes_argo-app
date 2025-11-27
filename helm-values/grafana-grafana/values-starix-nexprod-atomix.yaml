@@ -107,3 +107,12 @@ ldap:
     bind_password = 'D5TcVuqk%L'
     search_filter = "(sAMAccountName=%s)"
     search_base_dns = ["OU=NEXSOL,DC=spvn,DC=local"]
+    [[servers.attributes]]
+    name = "givenName"
+    surname = "sn"
+    username = "sAMAccountName"
+    member_of = "memberOf"
+    email =  "email"
+    [[servers.group_mappings]]
+    group_dn = "OU=Nexops,OU=UsersGroups,OU=Atomix,OU=Workstations,OU=NEXSOL,DC=spvn,DC=local"
+    org_role = "Admin"
