@@ -116,7 +116,7 @@ ldap:
     email =  "email"
     
     [[servers.group_mappings]]
-    group_dn = "CN=Nexops,OU=UsersGroups,OU=Nexops,OU=Atomix,OU=Workstations,OU=NEXSOL,DC=spvn,DC=local"
+    group_dn = "CN=grafana_nexops_adm,OU=UsersGroups,OU=Nexops,OU=Atomix,OU=Workstations,OU=NEXSOL,DC=spvn,DC=local"
     org_role = "Admin"
     grafana_admin = true
 
