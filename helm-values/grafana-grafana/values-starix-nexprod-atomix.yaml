@@ -98,7 +98,7 @@ ldap:
   config: |-
     verbose_logging = true
     [[servers]]
-    host = "10.18.200.101"
+    host = "dc.spvn.local"
     port = 389
     use_ssl = false
     start_tls = false
@@ -108,12 +108,6 @@ ldap:
     search_filter = "(sAMAccountName=%s)"
     search_base_dns = ["OU=NEXSOL,DC=spvn,DC=local"]
     
-    [servers.attributes]
-    name = "givenName"
-    surname = "sn"
-    username = "sAMAccountName"
-    member_of = "memberOf"
-    email =  "email"
     
     [[servers.group_mappings]]
     group_dn = "CN=Nexops,OU=UsersGroups,OU=Nexops,OU=Atomix,OU=Workstations,OU=NEXSOL,DC=spvn,DC=local"
