@@ -108,6 +108,12 @@ ldap:
     search_filter = "(sAMAccountName=%s)"
     search_base_dns = ["OU=NEXSOL,DC=spvn,DC=local"]
     
+    [servers.attributes]
+    name = "givenName"
+    surname = "sn"
+    username = "sAMAccountName"
+    member_of = "memberOf"
+    email =  "email"
     
     [[servers.group_mappings]]
     group_dn = "CN=Nexops,OU=UsersGroups,OU=Nexops,OU=Atomix,OU=Workstations,OU=NEXSOL,DC=spvn,DC=local"
