@@ -98,7 +98,7 @@ ldap:
   config: |-
     verbose_logging = true
     [[servers]]
-    host = "dc.spvn.local"
+    host = "10.18.200.101"
     port = 636
     use_ssl = true
     start_tls = false
