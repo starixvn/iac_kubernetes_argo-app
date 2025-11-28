@@ -99,8 +99,8 @@ ldap:
     verbose_logging = true
     [[servers]]
     host = "dc.spvn.local"
-    port = 389
-    use_ssl = false
+    port = 636
+    use_ssl = true
     start_tls = false
     ssl_skip_verify = false
     bind_dn = "CN=ldapnex,OU=ServicesAccounts,OU=UsersGroups,OU=IT,OU=ServersLabs,OU=NEXSOL,DC=spvn,DC=local"
