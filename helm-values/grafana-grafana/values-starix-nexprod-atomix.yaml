@@ -121,5 +121,5 @@ ldap:
     grafana_admin = true
 
     [[servers.group_mappings]]
-    group_dn = "CN=grafana_dev_viewer,OU=UsersGroups,OU=Nexops,OU=Atomix,OU=Workstations,OU=NEXSOL,DC=spvn,DC=local"
+    group_dn = "*"
     org_role = "Viewer"
