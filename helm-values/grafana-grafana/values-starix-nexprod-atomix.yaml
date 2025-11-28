@@ -118,6 +118,7 @@ ldap:
     [[servers.group_mappings]]
     group_dn = "CN=Nexops,OU=UsersGroups,OU=Nexops,OU=Atomix,OU=Workstations,OU=NEXSOL,DC=spvn,DC=local"
     org_role = "Admin"
+    grafana_admin = true
 
     [[servers.group_mappings]]
     group_dn = "CN=grafana_dev_viewer,OU=UsersGroups,OU=Nexops,OU=Atomix,OU=Workstations,OU=NEXSOL,DC=spvn,DC=local"
