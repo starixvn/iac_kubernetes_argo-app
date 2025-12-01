@@ -22,7 +22,7 @@ volumes:
   backupPath: /backup
 
 minio:
-  endpoint: http://s3-api.starixsoft.com
+  endpoint: https://s3-api.starixsoft.com:9000
   bucket: etcd-backup/lumi/sit
   secretName: etcd-backup-lumi-sit
 
