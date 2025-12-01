@@ -353,6 +353,7 @@ argo_projects = {
         name      = "starix-aws12b"
         server    = "https://CAE3D73347B8A70FD5B1819202EDDB42.yl4.ap-northeast-1.eks.amazonaws.com"
         namespace = "*"
+        # trigger
       }
     ]
   }
