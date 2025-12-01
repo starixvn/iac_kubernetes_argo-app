@@ -16,6 +16,13 @@ argo_applications_by_team = {
         auto_sync     = false
         skip_crds     = true
       }
+      kubernetes-etcd-backup = {
+        namespace     = "etcd-backup"
+        helm_path     = "kubernetes-etcd-backup"
+        chart_version = "1.0.0"
+        skip_crds     = true
+        value_files = ["values-starix-sit-atomix.yaml"]
+      }
       prometheus = {
         namespace     = "monitoring"
         helm_path     = "monitoring/kube-prometheus"

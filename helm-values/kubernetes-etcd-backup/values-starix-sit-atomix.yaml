@@ -1,0 +1,29 @@
+schedule: "0 2 * * *"
+
+image:
+  repository: nexhub.ops-sit.nebula.sit/kbt/base/etcd-backup-mc
+  tag: v3.5.7
+  pullPolicy: IfNotPresent
+
+nodeSelector:
+  etcd-backup: "true"
+
+tolerations:
+  - key: "node-role.kubernetes.io/control-plane"
+    operator: "Exists"
+    effect: "NoSchedule"
+  - key: "node-role.kubernetes.io/master"
+    operator: "Exists"
+    effect: "NoSchedule"
+
+volumes:
+  etcdEnvPath: /etc/etcd.env
+  etcdCertsPath: /etc/ssl/etcd
+  backupPath: /backup
+
+minio:
+  endpoint: https://s3-api.starixsoft.com:9000
+  bucket: etcd-backup/starix/sit
+  secretName: etcd-backup-starix-sit
+
+retentionDays: 3
