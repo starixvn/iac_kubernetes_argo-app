@@ -105,7 +105,7 @@ alertmanager:
           cronjob: ".*trim.*"
       - receiver: 'alert-nx-atomix'
         match_re:
-          alertname: "Kubernetes Cluster Pod Usage Above 80%"
+          alertname: "Kubernetes Cluster Pod Usage Above 80%.*"
       - receiver: 'kubernetes_sc_local'
         match_re:
           alertname: "Kubernetes.*"

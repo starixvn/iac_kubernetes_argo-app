@@ -140,7 +140,7 @@ alertmanager:
           namespace: "nexpe|gosql|tw|starix"
       - receiver: 'alert-nx-atomix'
         match_re:
-          alertname: "Kubernetes Cluster Pod Usage Above 80%"
+          alertname: "Kubernetes Cluster Pod Usage Above 80%.*"
       - receiver: 'kubernetes_nexprod_lumprod'
         match_re:
           alertname: "Kubernetes.*"

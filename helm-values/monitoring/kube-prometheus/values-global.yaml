@@ -133,7 +133,7 @@ prometheus:
                 summary: "Pod usage exceeds 80% of total allocatable pods in the cluster"
                 description: 'Pod usage is currently {{ printf "%.0f" $value }}% of the total cluster pod capacity (WEB Role).'
 
-            - alert: Kubernetes Cluster Pod Usage Above 80%
+            - alert: Kubernetes Cluster Pod Usage Above 80% - All role
               expr: |
                 (
                   sum(
