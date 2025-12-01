@@ -232,6 +232,22 @@ roles:
     allowedActions:
     - kibana_all_write
 
+- name: "synergy-member"
+  clusterPermissions:
+  - cluster_composite_ops
+  - cluster_monitor
+  indexPermissions:
+  - indexPatterns:
+    - "*synergy*"
+    allowedActions:
+    - index
+    - read
+  tenantPermissions:
+  - tenantPatterns:
+    - synergy
+    allowedActions:
+    - kibana_all_write
+
 - name: "pentagon-member"
   clusterPermissions:
   - cluster_composite_ops
