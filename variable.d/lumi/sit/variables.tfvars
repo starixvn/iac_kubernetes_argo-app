@@ -27,6 +27,13 @@ argo_applications_by_team = {
           "values-lumi-sit-atomix.yaml",
         ]
       }
+      kubernetes-etcd-backup = {
+        namespace     = "etcd-backup"
+        helm_path     = "kubernetes-etcd-backup"
+        chart_version = "1.0.0"
+        skip_crds     = true
+        value_files = ["values-lumi-sit-atomix.yaml"]
+      }
       opencost = {
         helm_path     = "opencost"
         chart_version = "2.1.9"

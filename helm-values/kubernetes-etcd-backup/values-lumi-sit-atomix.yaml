@@ -1,0 +1,29 @@
+schedule: "0 2 * * *"
+
+image:
+  repository: lumhub.ops-sit.nebula.sit/kbt/base/etcd-backup-mc
+  tag: v3.5.7
+  pullPolicy: IfNotPresent
+
+nodeSelector:
+  etcd-backup: "true"
+
+tolerations:
+  - key: "node-role.kubernetes.io/control-plane"
+    operator: "Exists"
+    effect: "NoSchedule"
+  - key: "node-role.kubernetes.io/master"
+    operator: "Exists"
+    effect: "NoSchedule"
+
+volumes:
+  etcdEnvPath: /etc/etcd.env
+  etcdCertsPath: /etc/ssl/etcd
+  backupPath: /backup
+
+minio:
+  endpoint: http://s3-api.starixsoft.com
+  bucket: etcd-backup/lumi/sit
+  secretName: etcd-backup-lumi-sit
+
+retentionDays: 3
