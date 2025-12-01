@@ -25,6 +25,7 @@ argo_applications_by_team = {
         auto_sync     = false
         skip_crds     = true
         value_files   = ["values-starix-aws12b-atomix.yaml"]
+        # trigger
       }
 
     }
