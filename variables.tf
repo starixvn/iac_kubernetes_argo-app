@@ -44,6 +44,7 @@ variable "kube_cluster_api" {
       k3sdr   = "https://st-api-k3sdr.starixplay.com:26443"
       dr      = "https://st-api-dr.starixplay.com:16444"
       alphadr = "https://alp-api-dr.starixplay.com:16445"
+      aws12b  = "https://CAE3D73347B8A70FD5B1819202EDDB42.yl4.ap-northeast-1.eks.amazonaws.com"
 
     }
     lumi = {
