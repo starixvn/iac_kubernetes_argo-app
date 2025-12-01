@@ -1,7 +1,7 @@
 schedule: "0 2 * * *"
 
 image:
-  repository: lumhub.ops-sit.nebula.sit/kbt/base/etcd-backup-mc
+  repository: nexhub.ops-sit.nebula.sit/kbt/base/etcd-backup-mc
   tag: v3.5.7
   pullPolicy: IfNotPresent
 
