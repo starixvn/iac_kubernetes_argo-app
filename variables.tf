@@ -44,8 +44,6 @@ variable "kube_cluster_api" {
       k3sdr   = "https://st-api-k3sdr.starixplay.com:26443"
       dr      = "https://st-api-dr.starixplay.com:16444"
       alphadr = "https://alp-api-dr.starixplay.com:16445"
-      aws12b  = "https://CAE3D73347B8A70FD5B1819202EDDB42.yl4.ap-northeast-1.eks.amazonaws.com"
-
     }
     lumi = {
       lumprod = "https://kubernetes.default.svc"
@@ -57,6 +55,9 @@ variable "kube_cluster_api" {
       sguat   = "https://E6191EEBBB4840436E79DD857495912F.yl4.ap-southeast-1.eks.amazonaws.com"
       dr      = "https://sc-api-dr.starixplay.com:16443"
       sgdr    = "https://B591EA77A7679676565B45BEF979F1A0.gr7.ap-southeast-1.eks.amazonaws.com"
+    }
+    "12b-tools" = {
+      prod = "https://CAE3D73347B8A70FD5B1819202EDDB42.yl4.ap-northeast-1.eks.amazonaws.com"
     }
   }
 }
