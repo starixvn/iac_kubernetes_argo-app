@@ -346,11 +346,11 @@ argo_projects = {
     ]
   }
 
-  tf-starix-aws12b = {
+  tf-12b-tools-prod = {
     src_repo = ["*"]
     destinations = [
       {
-        name      = "starix-aws12b"
+        name      = "12b_tools-prod"
         server    = "https://CAE3D73347B8A70FD5B1819202EDDB42.yl4.ap-northeast-1.eks.amazonaws.com"
         namespace = "*"
         # trigger
