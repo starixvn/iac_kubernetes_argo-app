@@ -1,5 +1,5 @@
 #####
-cluster_org = "12b-tools"
+cluster_org = "12b_tools"
 cluster_env = "prod"
 
 default_project = "tf-12b-tools-prod"
