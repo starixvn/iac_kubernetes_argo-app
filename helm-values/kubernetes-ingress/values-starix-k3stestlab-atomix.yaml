@@ -1,0 +1,76 @@
+---
+controller:
+  kind: DaemonSet
+
+  # podAnnotations:
+  #   vault.hashicorp.com/agent-inject: 'true'
+  #   vault.hashicorp.com/role: 'cert-injector'
+  #   vault.hashicorp.com/agent-inject-secret-config.txt: 'nexops/certs'
+
+  config:
+    # ssl-certificate: "haproxy-ingress/nebula-cert"
+    timeout-connect: "5s"
+    scale-server-slots: "7"
+    maxconn: "20000"
+    forwarded-for: "true"
+    dontlognull: "true"
+    stats-config-snippet: |
+      stats auth nexops:NexOps!QAZ
+      stats refresh 300s
+      stats show-legends
+      stats show-node
+      stats show-modules
+
+  # nodeSelector:
+  #   haproxy: "yes"
+
+  extraArgs:
+  - --disable-ipv6
+  - --configmap-tcp-services=haproxy-ingress/tcp-configmap
+  
+  service:
+    externalTrafficPolicy: "Local"
+    type: LoadBalancer
+    ipFamilyPolicy: SingleStack
+    ipFamilies: [IPv4]
+    # tcpPorts:
+    # - name: logstash
+    #   port: 15044
+    #   targetPort: 15044
+    #   protocol: TCP
+
+    # tcpPorts:
+    # - name: opensearch-http
+    #   port: 9200
+    #   targetPort: 9200
+    # - name: opensearch-transport
+    #   port: 9300
+    #   targetPort: 9300
+    #  - name: http-alt
+    #    port: 8080
+    #    targetPort: http-alt
+    #    nodePort: 32080
+
+  logging:
+    level: info
+    traffic:
+      address: "stdout"
+      format: "raw"
+      facility: "daemon"
+
+  nodeSelector:
+    node-role.kubernetes.io/master: "true"
+    node-role.kubernetes.io/control-plane: "true"
+
+  serviceMonitor:
+    enabled: true
+    extraLabels: {}
+    endpoints:
+      - port: stat
+        path: /metrics
+        scheme: http
+        interval: 30s
+      - port: http
+        path: /metrics
+        scheme: http
+        interval: 30s
