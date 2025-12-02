@@ -1,8 +1,8 @@
 #####
-cluster_org = "starix"
-cluster_env = "aws12b"
+cluster_org = "12b-tools"
+cluster_env = "prod"
 
-default_project = "tf-starix-aws12b"
+default_project = "tf-12b-tools-prod"
 
 # ARGO APPLICATIONS
 argo_applications_by_team = {
@@ -24,7 +24,7 @@ argo_applications_by_team = {
         chart_version = "1.43.0"
         auto_sync     = false
         skip_crds     = true
-        value_files   = ["values-starix-aws12b-atomix.yaml"]
+        value_files   = ["values-12b_tools-prod-atomix.yaml"]
         # trigger
       }
 
