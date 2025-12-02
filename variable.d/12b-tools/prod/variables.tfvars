@@ -1,5 +1,5 @@
 #####
-cluster_org = "12b_tools"
+cluster_org = "12b-tools"
 cluster_env = "prod"
 
 default_project = "tf-12b-tools-prod"
@@ -24,7 +24,7 @@ argo_applications_by_team = {
         chart_version = "1.43.0"
         auto_sync     = false
         skip_crds     = true
-        value_files   = ["values-12b_tools-prod-atomix.yaml"]
+        value_files   = ["values-12b-tools-prod-atomix.yaml"]
         # trigger
       }
 
