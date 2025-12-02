@@ -3,7 +3,7 @@ resource "argocd_application" "argo_app" {
   for_each = { for entry in local.applications : "${entry.app_name}" => entry }
   metadata {
     name      = each.key
-    namespace = "argocd"
+    namespace = each.value.argocd_app_namespace
     labels = {
       name = each.key
       team = each.value.team

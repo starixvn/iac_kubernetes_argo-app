@@ -2,7 +2,8 @@
 cluster_org = "12b-tools"
 cluster_env = "prod"
 
-default_project = "tf-12b-tools-prod"
+default_project              = "tf-12b-tools-prod"
+default_argocd_app_namespace = "argocd-12b"
 
 # ARGO APPLICATIONS
 argo_applications_by_team = {

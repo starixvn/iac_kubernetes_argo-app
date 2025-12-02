@@ -3,13 +3,14 @@ locals {
   applications = flatten([
     for team, team_details in var.argo_applications_by_team : [
       for app, app_details in team_details.applications : {
-        app_name   = "${app}-${team}-${var.cluster_env}"
-        team       = "${team_details.team_name}"
-        env        = "${var.cluster_env}"
-        namespace  = lookup(app_details, "namespace", "tf-${team}-${app}")
-        project    = lookup(app_details, "project", var.default_project)
-        helm_path  = "${app_details.helm_path}/${app_details.chart_version}"
-        value_path = "Kubernetes/argo-app/helm-values/${app_details.helm_path}"
+        app_name             = "${app}-${team}-${var.cluster_env}"
+        team                 = "${team_details.team_name}"
+        env                  = "${var.cluster_env}"
+        namespace            = lookup(app_details, "namespace", "tf-${team}-${app}")
+        project              = lookup(app_details, "project", var.default_project)
+        argocd_app_namespace = lookup(app_details, "argocd_app_namespace", var.default_argocd_app_namespace)
+        helm_path            = "${app_details.helm_path}/${app_details.chart_version}"
+        value_path           = "Kubernetes/argo-app/helm-values/${app_details.helm_path}"
         value_files = length(lookup(app_details, "value_files", [])) > 0 ? [
           for file in app_details.value_files : "$values/helm-values/${app_details.helm_path}/${file}"
         ] : ["$values/helm-values/${app_details.helm_path}/values-${var.cluster_org}-${var.cluster_env}-${team_details.team_name}.yaml"]

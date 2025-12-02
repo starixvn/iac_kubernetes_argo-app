@@ -14,6 +14,12 @@ variable "default_project" {
   default     = "default"
 }
 
+variable "default_argocd_app_namespace" {
+  description = "Namespace to store Argocd Applications CRDs on Controller Cluster"
+  type        = string
+  default     = "argocd"
+}
+
 variable "helm_source_repo" {
   type    = string
   default = "git@gitlab.nexdev.net:NEXOPS/helm-charts/helm-nexops-tools.git"
