@@ -65,8 +65,9 @@ variable "kube_cluster_api" {
 variable "argo_controller_addr" {
   description = "Nested map of ArgoCD Server Addr: org > url"
   default = {
-    starix = "argocd.nexdev.net"
-    lumi   = "argocd.lumigame.com"
+    starix      = "argocd.nexdev.net"
+    lumi        = "argocd.lumigame.com"
+    "12b-tools" = "argocd.nexdev.net"
   }
 }
 
