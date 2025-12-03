@@ -290,26 +290,26 @@ configuration: |
     server redis-2 redis-suba-repl-2.redis-suba-repl-headless.tf-suba-rds-opr-oddfeed.svc.starix.k3sdr:6379 check inter 1s resolvers k8s init-addr none
 
 
-  # # RabbitMQ
-  # frontend rabbitmq_fe
-  #   bind :5672
-  #   default_backend rabbitmq_be
+  # RabbitMQ
+  frontend rabbitmq_fe
+    bind :5672
+    default_backend rabbitmq_be
 
-  # backend rabbitmq_be
-  #   mode tcp
-  #   server rabbitmq rabbitmq-cluster.rabbitmq-nap-alpha.svc.starix.k3sdr:5672 check inter 1s resolvers k8s init-addr none
+  backend rabbitmq_be
+    mode tcp
+    server rabbitmq rabbitmq-cluster.rabbitmq-nap-alpha.svc.starix.k3sdr:5672 check inter 1s resolvers k8s init-addr none
 
-  # # RabbitMQ Management
-  # frontend rabbitmq_admin_fe
-  #   bind :15672
-  #   default_backend rabbitmq_admin_be
+  # RabbitMQ Management
+  frontend rabbitmq_admin_fe
+    bind :15672
+    default_backend rabbitmq_admin_be
 
-  # backend rabbitmq_admin_be
-  #   option forwardfor
-  #   option http-server-close
-  #   option httpchk HEAD /
-  #   http-check expect status 200
-  #   server rabbitmq rabbitmq-cluster.rabbitmq-nap-alpha.svc.starix.k3sdr:15672 check inter 1s resolvers k8s init-addr none
+  backend rabbitmq_admin_be
+    option forwardfor
+    option http-server-close
+    option httpchk HEAD /
+    http-check expect status 200
+    server rabbitmq rabbitmq-cluster.rabbitmq-nap-alpha.svc.starix.k3sdr:15672 check inter 1s resolvers k8s init-addr none
  
   #NAP-Session-State
   frontend nap_session_state_fe
