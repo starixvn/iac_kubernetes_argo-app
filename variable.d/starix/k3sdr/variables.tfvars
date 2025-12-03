@@ -76,6 +76,16 @@ argo_applications_by_team = {
         value_files   = ["values-starix-k3sdr-starix-ovs.yaml"]
       }
 
+      rabbitmq = {
+        namespace     = "rabbitmq-nap-alpha"
+        helm_path     = "rabbitmq-cluster-operator"
+        chart_version = "4.3.15"
+        auto_sync     = false
+        value_files = [
+          "values-starix-k3sdr.yaml"
+        ]
+      }
+
       mysql-operator = {
         helm_path     = "mysql-operator"
         chart_version = "0.6.3"
@@ -228,17 +238,17 @@ argo_applications_by_team = {
   was = {
     team_name = "wabisabi"
     applications = {
+      rabbitmq = {
+        namespace     = "rabbitmq-fps"
+        helm_path     = "rabbitmq-cluster-operator"
+        chart_version = "4.3.15"
+        auto_sync     = false
+        skip_crds     = true
+        value_files = [
+          "values-fps-k3sdr.yaml"
+        ]
+      }
 
-      # rabbitmq = {
-      #   namespace     = "rabbitmq-fps"
-      #   helm_path     = "rabbitmq-cluster-operator"
-      #   chart_version = "4.3.15"
-      #   auto_sync     = false
-      #   skip_crds     = true
-      #   value_files = [
-      #     "values-fps-k3sprod.yaml"
-      #   ]
-      # }
       # logstash = {
       #   namespace     = "logging-fps"
       #   helm_path     = "logging/logstash"
