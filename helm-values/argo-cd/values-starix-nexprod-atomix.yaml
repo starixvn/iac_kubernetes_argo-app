@@ -89,12 +89,27 @@ configs:
     controller.kubectl.parallelism.limit: "50"
     controller.operation.processors: "200"
     controller.status.processors: "100"
-  tls:
-    create: true
+  rbac:
+    policy.csv: |
+      g, nexpe, role:admin
+      p, role:tf-controller, projects, *, *, allow
+      p, role:tf-controller, applications, *, *, allow
+      p, role:tf-controller, repositories, *, *, allow
+      p, role:tf-controller, clusters, get, *, allow
+      g, nexops, role:tf-controller
 
 redis-ha:
   enabled: true
   dynamicClusterDistribution: false
+  IPv6:
+    enabled: false
+  nodeSelector:
+    argocd: "yes"
+  tolerations:
+  - key: cattle.io/os
+    value: argocd
+    operator: Equal
+    effect: NoSchedule
 
 controller:
   replicas: 3
