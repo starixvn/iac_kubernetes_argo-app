@@ -1,4 +1,5 @@
 ---
+# Running with Argo-CD Helm Chart version 9.1.4
 global:
   domain: argocd.nexdev.net
   image: 
