@@ -84,6 +84,7 @@ argo_applications_by_team = {
         value_files = [
           "values-starix-k3sdr.yaml"
         ]
+        # trigger
       }
 
       mysql-operator = {
