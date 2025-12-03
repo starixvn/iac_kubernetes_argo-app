@@ -7,6 +7,8 @@ controller:
   #   vault.hashicorp.com/role: 'cert-injector'
   #   vault.hashicorp.com/agent-inject-secret-config.txt: 'nexops/certs'
 
+  ingressClass: testlab-ingress-b
+
   config:
     # ssl-certificate: "haproxy-ingress/nebula-cert"
     timeout-connect: "5s"
