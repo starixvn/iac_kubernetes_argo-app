@@ -307,7 +307,7 @@ extraDeploy:
     - source_labels: [__param_target]
       target_label: instance
     - target_label: __address__
-      replacement: localhost:19115
+      replacement: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
 
 # - |
 #   apiVersion: monitoring.coreos.com/v1
