@@ -27,22 +27,22 @@ argo_applications_by_team = {
         value_files   = ["values-starix-dr-atomix.yaml"]
         ## trigger
       }
-      ingress-nap = {
-        namespace     = "ingress-nap"
+      mew-ingress = {
+        namespace     = "mew-ingress"
         helm_path     = "kubernetes-ingress"
         chart_version = "1.43.0"
         auto_sync     = false
         skip_crds     = true
-        value_files   = ["values-starix-napdr-atomix.yaml"]
+        value_files   = ["values-starix-mewdr-atomix.yaml"]
       }
 
-      ingress-fps = {
-        namespace     = "ingress-fps"
+      abra-ingress = {
+        namespace     = "abra-ingress"
         helm_path     = "kubernetes-ingress"
         chart_version = "1.43.0"
         auto_sync     = false
         skip_crds     = true
-        value_files   = ["values-starix-fpsdr-atomix.yaml"]
+        value_files   = ["values-starix-abradr-atomix.yaml"]
       }
 
       kubescape-op = {

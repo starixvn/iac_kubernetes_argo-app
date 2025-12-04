@@ -1,0 +1,49 @@
+global:
+  storageClass: longhorn
+  storageSize: 15Gi
+
+rabbitCluster:
+  user: admin
+  password: rabbitadmin!@
+  resources:
+    maxMemory: 3Gi
+  image: nexhub.ops-dr.nebula.prod/kbt/base/bitnamilegacy/rabbitmq:3.13.5-debian-12-r1
+
+  service:
+    amqp:
+      nodePort: 30672
+    manager:
+      nodePort: 31672
+
+  nodeSelector:
+    rabbit: "yes"
+  tolerations:
+    - key: rabbit
+      operator: "Equal"
+      value: "yes"
+      effect: "NoSchedule"
+
+clusterOperator:
+  nodeSelector:
+    rabbit: "yes"
+  tolerations:
+    - key: rabbit
+      operator: "Equal"
+      value: "yes"
+      effect: "NoSchedule"
+  image:
+    registry: nexhub.ops-dr.nebula.prod
+    repository: kbt/base/bitnami/rabbitmq-cluster-operator
+    tag: 2.9.0-debian-12-r5
+
+msgTopologyOperator:
+  nodeSelector:
+    rabbit: "yes"
+  tolerations:
+    - key: rabbit
+      operator: "Equal"
+      value: "yes"
+  image:
+    registry: nexhub.ops-dr.nebula.prod
+    repository: kbt/base/bitnami/rmq-messaging-topology-operator
+    tag: 1.14.2-debian-12-r2

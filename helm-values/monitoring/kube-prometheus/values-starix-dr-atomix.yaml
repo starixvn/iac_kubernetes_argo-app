@@ -18,7 +18,7 @@ prometheus:
       http: "30062"
   ingress:
     enabled: true
-    ingressClassName: "ingress-nap"
+    ingressClassName: "mew-ing"
     pathType: ImplementationSpecific
     hostname: prometheus-st.dr.starixplay.com
     path: /
