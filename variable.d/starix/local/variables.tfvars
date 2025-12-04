@@ -67,6 +67,15 @@ argo_applications_by_team = {
         value_files   = ["values-starix-mewlocal-atomix.yaml"]
       }
 
+      abra-ingress = {
+        namespace     = "abra-ingress"
+        helm_path     = "kubernetes-ingress"
+        chart_version = "1.43.0"
+        auto_sync     = false
+        skip_crds     = true
+        value_files   = ["values-starix-abralocal-atomix.yaml"]
+      }
+
     }
   }
 }
