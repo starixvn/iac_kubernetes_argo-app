@@ -43,15 +43,15 @@ controller:
     ipFamilies: [IPv4]
 
     nodePorts:
-      http: 31080
-      https: 31443
+      http: 31081
+      https: 31444
       stat: 31024
 
-    tcpPorts:
-    - name: http-office
-      port: 8088
-      targetPort: http
-      nodePort: 31088
+    # tcpPorts:
+    # - name: http-office
+    #   port: 8088
+    #   targetPort: http
+    #   nodePort: 31088
 
   # logging:
   #   traffic:
