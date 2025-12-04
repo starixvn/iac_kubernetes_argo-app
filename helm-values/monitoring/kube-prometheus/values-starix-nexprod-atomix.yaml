@@ -401,9 +401,6 @@ blackboxExporter:
           query_name: "{{ .Target }}"
           query_type: "A"
           valid_rcodes: ["NOERROR"]
-          validate_answer_rrs:
-            fail_if_matches_regexp:
-              - "NXDOMAIN"
 
   domains: 
     - https://intp22.focapts.com/main/health/
