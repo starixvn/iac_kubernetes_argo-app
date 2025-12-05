@@ -94,8 +94,11 @@ controller:
       cpu: 250m
       memory: 500Mi
 
+  image:
+    repository: "nexhub.ops.strawberry.com/aws/base/haproxytech/kubernetes-ingress"
+
 defaultBackend:
-  image: "hub.nexdev.net/base/nexops-tools/default-backend-ingress"
+  image: "nexhub.ops.strawberry.com/aws/base/nexops-tools/default-backend-ingress"
 
 clusterInfo: "eks-starix-aws12b"
 
