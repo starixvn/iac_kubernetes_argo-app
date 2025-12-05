@@ -53,6 +53,17 @@ argo_applications_by_team = {
         value_files   = ["values-12b-tools-prod-atomix.yaml"]
       }
 
+      rds-atomix = {
+        helm_path     = "redis-operator/replication-sentinel"
+        chart_version = "1.0.0"
+        skip_crds     = false
+        auto_sync     = false
+        value_files = [
+          "values-12b-tools-prod-atomix.yaml"
+        ]
+        # trigger
+      }
+
     }
   }
 }
