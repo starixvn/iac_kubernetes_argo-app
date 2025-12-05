@@ -36,6 +36,14 @@ argo_applications_by_team = {
         value_files   = ["values-12b-tools-prod-atomix.yaml"]
       }
 
+      haproxy-service = {
+        namespace     = "haproxy-service-core"
+        helm_path     = "haproxy-svc-tcp"
+        chart_version = "2.1.4"
+        auto_sync     = false
+        value_files   = ["values-12b-tools-prod-atomix.yaml"]
+      }
+
     }
   }
 }

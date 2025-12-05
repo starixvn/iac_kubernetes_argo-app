@@ -1,0 +1,159 @@
+
+image:
+  registry: hub.nexdev.net
+  repository: base/bitnamilegacy/haproxy
+  tag: 3.0.4-debian-12-r2
+
+
+
+# setting HA for service
+replicaCount: 3
+podAntiAffinityPreset: hard
+
+updateStrategy: 
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0
+
+
+
+resources:
+  requests:
+    memory: 2Gi
+  limits:
+    memory: 2Gi
+
+nodeSelector:
+  haproxy: "yes"
+
+
+service:
+  type: LoadBalancer
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags: Dept=VNTeam,Team=12B,ManageBy=vnArgoCD,map-migrated=migQK0IMQ5LFK,Environment=PROD,Name=12b-tools-prod-eks-haproxy-svc-lb
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+    service.beta.kubernetes.io/aws-load-balancer-name: 12b-tools-prod-eks-haproxy-svc-lb
+    service.beta.kubernetes.io/aws-load-balancer-subnets: subnet-071344c53d872b97e,subnet-03e4a4b234a406be4,subnet-0ae4fa62cdde25537 
+    service.beta.kubernetes.io/aws-load-balancer-type: nlb
+  ports:
+#NAP
+  - name: redis-m
+    protocol: TCP
+    port: 16777
+    targetPort: redis-m
+
+
+  - name: rabbitmq
+    protocol: TCP
+    port: 5672
+    targetPort: rabbitmq
+
+  - name: rabbitmq-admin
+    protocol: TCP
+    port: 15672
+    targetPort: rabbitmq-admin
+  
+
+  - name: http
+    port: 8080
+    targetPort: http
+
+
+
+containerPorts:
+#NAP
+- name: redis-nap-m
+  containerPort: 16777
+
+
+- name: rabbitmq
+  containerPort: 5672
+
+- name: rabbitmq-admin
+  containerPort: 15672
+
+
+- name: http
+  containerPort: 8080
+
+configuration: |
+  global
+    log stdout format raw local0
+    maxconn 10240
+
+  defaults
+    log global
+    timeout connect 360s
+    timeout client 3h
+    timeout server 3h
+
+  resolvers k8s
+    nameserver dns1 kube-dns.kube-system:53
+    resolve_retries 3
+    timeout resolve 1s
+    timeout retry 1s
+    hold valid 10s
+    hold obsolete 30s
+
+  frontend fe_main
+    bind :8080
+    mode http
+    stats enable
+    stats uri /stats
+    stats refresh 300s
+    stats show-legends
+    stats show-node
+    stats auth nexcel:NexOps!QAZ
+    default_backend default_backend_nodes
+
+  backend default_backend_nodes
+    mode http
+    http-request return status 503 content-type "text/plain"  lf-string "503 Service Unavailable ! Pls contact NexOps if you think this is a mistake... EKS 12B PROD"
+
+  frontend redis_nap_master_fe
+    bind :16777
+    default_backend redis_nap_master_be
+
+
+
+  backend redis_nap_master_be
+    option tcp-check
+    tcp-check send AUTH\ foo1@bared\r\n
+    tcp-check expect string +OK
+    tcp-check send PING\r\n
+    tcp-check expect string PONG
+    tcp-check send info\ replication\r\n
+    tcp-check expect string role:master
+    tcp-check send QUIT\r\n
+    tcp-check expect string +OK
+    server redis-0 redis-nap-repl-0.redis-nap-repl-headless.tf-omfl-rds-opr-nap.svc.starix.k3sdr:6379 check inter 1s resolvers k8s init-addr none
+    server redis-1 redis-nap-repl-1.redis-nap-repl-headless.tf-omfl-rds-opr-nap.svc.starix.k3sdr:6379 check inter 1s resolvers k8s init-addr none
+    server redis-2 redis-nap-repl-2.redis-nap-repl-headless.tf-omfl-rds-opr-nap.svc.starix.k3sdr:6379 check inter 1s resolvers k8s init-addr none
+
+
+
+
+
+  # RabbitMQ
+  frontend rabbitmq_fe
+    bind :5672
+    default_backend rabbitmq_be
+
+  backend rabbitmq_be
+    mode tcp
+    server rabbitmq rabbitmq-cluster.rabbitmq-nap-alpha.svc.starix.k3sdr:5672 check inter 1s resolvers k8s init-addr none
+
+  # RabbitMQ Management
+  frontend rabbitmq_admin_fe
+    bind :15672
+    default_backend rabbitmq_admin_be
+
+  backend rabbitmq_admin_be
+    option forwardfor
+    option http-server-close
+    option httpchk HEAD /
+    http-check expect status 200
+    server rabbitmq rabbitmq-cluster.rabbitmq-nap-alpha.svc.starix.k3sdr:15672 check inter 1s resolvers k8s init-addr none
+ 
