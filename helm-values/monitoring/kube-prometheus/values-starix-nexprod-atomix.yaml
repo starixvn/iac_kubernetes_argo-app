@@ -120,7 +120,7 @@ alertmanager:
         - receiver: "velero_alerts"
           match:
             service: "Velero.*"
-        - receiver: "alerts-test" #"alert-nx-atomix-domains"
+        - receiver: "alert-nx-atomix-domains"
           match_re:
             alertname: "SSLCertificate.*|StatusCodeUnexpected|TCPEndpointStatus"
         - receiver: "nexpe-services-alert-domains"
