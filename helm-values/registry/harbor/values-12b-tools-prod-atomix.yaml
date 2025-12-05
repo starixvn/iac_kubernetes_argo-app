@@ -1,0 +1,77 @@
+expose:
+  tls:
+    enabled: false
+  ingress:
+    className: "haproxy"
+    hosts:
+      core: nexhub.ops.starwberry.com
+externalURL: https://nexhub.ops.starwberry.com
+
+
+persistence:
+  persistentVolumeClaim:
+    registry:
+      storageClass: "ebs-aws"
+      size: 50Gi
+    jobservice:
+      jobLog:
+        storageClass: "ebs-aws"
+        size: 5Gi
+    database:
+      storageClass: "ebs-aws"
+      size: 10Gi
+    redis:
+      storageClass: "ebs-aws"
+      size: 10Gi
+
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true  
+
+
+proxy:
+  httpProxy: "http://prod-infra-proxy.strawberry.com:8801"
+  httpsProxy: "http://prod-infra-proxy.strawberry.com:8801"
+  noProxy: "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.starwberry.com"
+  components:
+    - core
+    - jobservice
+    - trivy
+
+
+cache:
+  enabled: true
+  expireHours: 24
+
+
+portal:
+  nodeSelector:
+    nexops-mon: "yes"
+core:
+  nodeSelector:
+    nexops-mon: "yes"
+jobservice:
+  nodeSelector:
+    nexops-mon: "yes"
+
+registry:
+  nodeSelector:
+    nexops-mon: "yes"
+
+trivy:
+  enabled: false
+
+database:
+  internal:
+    nodeSelector:
+      nexops-mon: "yes"
+redis:
+  internal:
+    nodeSelector:
+      nexops-mon: "yes"
+exporter:
+  nodeSelector:
+    nexops-mon: "yes"
+
