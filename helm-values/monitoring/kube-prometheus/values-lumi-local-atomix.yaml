@@ -116,6 +116,7 @@ alertmanager:
         matchers:
         - alertname="KubescapeRuleViolated"
         - severity!="low"
+        - rule_name="Unexpected domain request"
         group_by: ['uid']
       group_by: ['alertname', 'cluster', 'namespace', 'pod', 'description', 'instance']
       group_wait: 30s

@@ -29,6 +29,13 @@ argo_applications_by_team = {
         # trigger
       }
 
+      harbor = {
+        helm_path     = "registry/harbor"
+        chart_version = "2.11.0"
+        auto_sync     = false
+        value_files   = ["values-12b-tools-prod-atomix.yaml"]
+      }
+
     }
   }
 }
