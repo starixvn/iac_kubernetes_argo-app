@@ -23,7 +23,7 @@ global:
       memory: "2048Mi"
 
   # Storage
-  storageClass: &storage_class "ebs-aws"
+  storageClass: &storage_class "ebs-aws-multi"
   storage_size: &size "10Gi"
 
   # Scheduling 
