@@ -301,26 +301,33 @@ extraDeploy:
           {{- range .Values.blackboxExporter.domains }}
                     - {{ . | quote }}
           {{- end }}
+  relabel_configs:
+    - source_labels: [__address__]
+      target_label: __param_target
+    - source_labels: [__param_target]
+      target_label: instance
+    - target_label: __address__
+      replacement: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
 
-- |
-  apiVersion: monitoring.coreos.com/v1
-  kind: Probe
-  metadata:
-    name: dns-probe
-    namespace: monitoring
-    labels:
-      prometheus: main
-  spec:
-    interval: 60s
-    module: dns_check
-    prober:
-      url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
-    targets:
-      staticConfig:
-        static:
-          {{- range .Values.blackboxExporter.cdn }}
-                    - {{ . | quote }}
-          {{- end }}
+# - |
+#   apiVersion: monitoring.coreos.com/v1
+#   kind: Probe
+#   metadata:
+#     name: dns-probe
+#     namespace: monitoring
+#     labels:
+#       prometheus: main
+#   spec:
+#     interval: 60s
+#     module: dns_check
+#     prober:
+#       url: prometheus-atx-nexprod-kub-blackbox-exporter.monitoring.svc.starix.nexprod:19115
+#     targets:
+#       staticConfig:
+#         static:
+#           {{- range .Values.blackboxExporter.cdn }}
+#                     - {{ . | quote }}
+#           {{- end }}
 
 - |
   ### TCP Monitor
@@ -387,13 +394,13 @@ blackboxExporter:
       icmp_cdn:
         prober: icmp
 
-      dns_check:
-        prober: dns
-        timeout: 5s
-        dns:
-          query_name: "nexdev.net"
-          query_type: "A"
-          valid_rcodes: ["NOERROR"]
+      # dns_check:
+      #   prober: dns
+      #   timeout: 5s
+      #   dns:
+      #     query_name: "{{ .Target }}"
+      #     query_type: "A"
+      #     valid_rcodes: ["NOERROR"]
 
   domains: 
     - https://intp22.focapts.com/main/health/
