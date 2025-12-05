@@ -8,7 +8,7 @@ controller:
   ingressClass: abra-ing
 
   config:
-    # ssl-certificate: "haproxy-ingress/ops-dr-cert"
+    ssl-certificate: "abra-nexdev-cert"
     stats-config-snippet: |
       stats auth nexops:NexOps!QAZ
       stats refresh 300s
