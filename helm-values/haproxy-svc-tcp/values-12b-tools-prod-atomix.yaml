@@ -1,7 +1,7 @@
 
 image:
-  registry: hub.nexdev.net
-  repository: base/bitnamilegacy/haproxy
+  registry: nexhub.ops.strawberry.com
+  repository: aws/base/bitnamilegacy/haproxy
   tag: 3.0.4-debian-12-r2
 
 
